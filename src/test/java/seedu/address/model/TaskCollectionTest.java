@@ -23,29 +23,29 @@ import seedu.address.model.task.Task;
 import seedu.address.model.task.exceptions.DuplicateTaskException;
 import seedu.address.testutil.PersonBuilder;
 
-public class AddressBookTest {
+public class TaskCollectionTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    private final AddressBook addressBook = new AddressBook();
+    private final TaskCollection taskCollection = new TaskCollection();
 
     @Test
     public void constructor() {
-        assertEquals(Collections.emptyList(), addressBook.getTaskList());
+        assertEquals(Collections.emptyList(), taskCollection.getTaskList());
     }
 
     @Test
     public void resetData_null_throwsNullPointerException() {
         thrown.expect(NullPointerException.class);
-        addressBook.resetData(null);
+        taskCollection.resetData(null);
     }
 
     @Test
     public void resetData_withValidReadOnlyAddressBook_replacesData() {
-        AddressBook newData = getTypicalAddressBook();
-        addressBook.resetData(newData);
-        assertEquals(newData, addressBook);
+        TaskCollection newData = getTypicalAddressBook();
+        taskCollection.resetData(newData);
+        assertEquals(newData, taskCollection);
     }
 
     @Test
@@ -55,52 +55,52 @@ public class AddressBookTest {
             .withTags(VALID_TAG_HUSBAND)
             .build();
         List<Task> newTasks = Arrays.asList(ALICE, editedAlice);
-        AddressBookStub newData = new AddressBookStub(newTasks);
+        TaskCollectionStub newData = new TaskCollectionStub(newTasks);
 
         thrown.expect(DuplicateTaskException.class);
-        addressBook.resetData(newData);
+        taskCollection.resetData(newData);
     }
 
     @Test
     public void hasPerson_nullPerson_throwsNullPointerException() {
         thrown.expect(NullPointerException.class);
-        addressBook.hasTask(null);
+        taskCollection.hasTask(null);
     }
 
     @Test
     public void hasPerson_personNotInAddressBook_returnsFalse() {
-        assertFalse(addressBook.hasTask(ALICE));
+        assertFalse(taskCollection.hasTask(ALICE));
     }
 
     @Test
     public void hasPerson_personInAddressBook_returnsTrue() {
-        addressBook.addPerson(ALICE);
-        assertTrue(addressBook.hasTask(ALICE));
+        taskCollection.addPerson(ALICE);
+        assertTrue(taskCollection.hasTask(ALICE));
     }
 
     @Test
     public void hasPerson_personWithSameIdentityFieldsInAddressBook_returnsTrue() {
-        addressBook.addPerson(ALICE);
+        taskCollection.addPerson(ALICE);
         Task editedAlice = new PersonBuilder(ALICE).withAddress(VALID_ADDRESS_BOB)
             .withTags(VALID_TAG_HUSBAND)
             .build();
-        assertTrue(addressBook.hasTask(editedAlice));
+        assertTrue(taskCollection.hasTask(editedAlice));
     }
 
     @Test
     public void getPersonList_modifyList_throwsUnsupportedOperationException() {
         thrown.expect(UnsupportedOperationException.class);
-        addressBook.getTaskList().remove(0);
+        taskCollection.getTaskList().remove(0);
     }
 
     /**
-     * A stub ReadOnlyAddressBook whose tasks list can violate interface constraints.
+     * A stub ReadOnlyTaskCollection whose tasks list can violate interface constraints.
      */
-    private static class AddressBookStub implements ReadOnlyAddressBook {
+    private static class TaskCollectionStub implements ReadOnlyTaskCollection {
 
         private final ObservableList<Task> tasks = FXCollections.observableArrayList();
 
-        AddressBookStub(Collection<Task> tasks) {
+        TaskCollectionStub(Collection<Task> tasks) {
             this.tasks.setAll(tasks);
         }
 

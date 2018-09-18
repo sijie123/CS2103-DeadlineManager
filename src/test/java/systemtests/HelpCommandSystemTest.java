@@ -20,7 +20,7 @@ import seedu.address.ui.StatusBarFooter;
 /**
  * A system test class for the help window, which contains interaction with other UI components.
  */
-public class HelpCommandSystemTest extends AddressBookSystemTest {
+public class HelpCommandSystemTest extends TaskCollectionSystemTest {
 
     private static final String ERROR_MESSAGE =
         "ATTENTION!!!! : On some computers, this test may fail when run on "

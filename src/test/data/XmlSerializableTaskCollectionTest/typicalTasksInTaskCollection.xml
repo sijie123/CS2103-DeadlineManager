@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<!-- AddressBook save file which contains the same Task values as in TypicalPersons#getTypicalAddressBook() -->
+<!-- TaskCollection save file which contains the same Task values as in TypicalPersons#getTypicalAddressBook() -->
 <addressbook>
     <tasks>
         <name>Alice Pauline</name>

@@ -48,7 +48,7 @@ import seedu.address.model.task.Task;
 import seedu.address.testutil.PersonBuilder;
 import seedu.address.testutil.PersonUtil;
 
-public class EditCommandSystemTest extends AddressBookSystemTest {
+public class EditCommandSystemTest extends TaskCollectionSystemTest {
 
     @Test
     public void edit() {
@@ -283,12 +283,12 @@ public class EditCommandSystemTest extends AddressBookSystemTest {
      * expectedResultMessage}.<br> 3. Asserts that the browser url and selected card update
      * accordingly depending on the card at {@code expectedSelectedCardIndex}.<br> 4. Asserts that
      * the status bar's sync status changes.<br> 5. Asserts that the command box has the default
-     * style class.<br> Verifications 1 and 2 are performed by {@code AddressBookSystemTest
+     * style class.<br> Verifications 1 and 2 are performed by {@code TaskCollectionSystemTest
      * #assertApplicationDisplaysExpected(String,
      * String, Model)}.<br>
      *
-     * @see AddressBookSystemTest#assertApplicationDisplaysExpected(String, String, Model)
-     * @see AddressBookSystemTest#assertSelectedCardChanged(Index)
+     * @see TaskCollectionSystemTest#assertApplicationDisplaysExpected(String, String, Model)
+     * @see TaskCollectionSystemTest#assertSelectedCardChanged(Index)
      */
     private void assertCommandSuccess(String command, Model expectedModel,
                                       String expectedResultMessage,
@@ -310,9 +310,9 @@ public class EditCommandSystemTest extends AddressBookSystemTest {
      * command}.<br> 2. Asserts that result display box displays {@code expectedResultMessage}.<br>
      * 3. Asserts that the browser url, selected card and status bar remain unchanged.<br> 4.
      * Asserts that the command box has the error style.<br> Verifications 1 and 2 are performed by
-     * {@code AddressBookSystemTest#assertApplicationDisplaysExpected(String, String, Model)}.<br>
+     * {@code TaskCollectionSystemTest#assertApplicationDisplaysExpected(String, String, Model)}.<br>
      *
-     * @see AddressBookSystemTest#assertApplicationDisplaysExpected(String, String, Model)
+     * @see TaskCollectionSystemTest#assertApplicationDisplaysExpected(String, String, Model)
      */
     private void assertCommandFailure(String command, String expectedResultMessage) {
         Model expectedModel = getModel();

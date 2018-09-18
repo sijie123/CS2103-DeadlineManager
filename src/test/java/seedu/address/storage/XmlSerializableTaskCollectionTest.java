@@ -11,19 +11,19 @@ import org.junit.rules.ExpectedException;
 
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.commons.util.XmlUtil;
-import seedu.address.model.AddressBook;
+import seedu.address.model.TaskCollection;
 import seedu.address.testutil.TypicalPersons;
 
-public class XmlSerializableAddressBookTest {
+public class XmlSerializableTaskCollectionTest {
 
     private static final Path TEST_DATA_FOLDER = Paths
-        .get("src", "test", "data", "XmlSerializableAddressBookTest");
+        .get("src", "test", "data", "XmlSerializableTaskCollectionTest");
     private static final Path TYPICAL_PERSONS_FILE = TEST_DATA_FOLDER
-        .resolve("typicalPersonsAddressBook.xml");
+        .resolve("typicalTasksInTaskCollection.xml");
     private static final Path INVALID_PERSON_FILE = TEST_DATA_FOLDER
-        .resolve("invalidPersonAddressBook.xml");
+        .resolve("invalidTaskInTaskCollection.xml");
     private static final Path DUPLICATE_PERSON_FILE = TEST_DATA_FOLDER
-        .resolve("duplicatePersonAddressBook.xml");
+        .resolve("duplicateTaskInTaskCollection.xml");
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -32,9 +32,9 @@ public class XmlSerializableAddressBookTest {
     public void toModelType_typicalPersonsFile_success() throws Exception {
         XmlSerializableAddressBook dataFromFile = XmlUtil.getDataFromFile(TYPICAL_PERSONS_FILE,
             XmlSerializableAddressBook.class);
-        AddressBook addressBookFromFile = dataFromFile.toModelType();
-        AddressBook typicalPersonsAddressBook = TypicalPersons.getTypicalAddressBook();
-        assertEquals(addressBookFromFile, typicalPersonsAddressBook);
+        TaskCollection taskCollectionFromFile = dataFromFile.toModelType();
+        TaskCollection typicalPersonsTaskCollection = TypicalPersons.getTypicalAddressBook();
+        assertEquals(taskCollectionFromFile, typicalPersonsTaskCollection);
     }
 
     @Test

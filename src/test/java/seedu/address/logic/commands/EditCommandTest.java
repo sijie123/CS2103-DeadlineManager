@@ -21,9 +21,9 @@ import seedu.address.commons.core.Messages;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.CommandHistory;
 import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
-import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
+import seedu.address.model.TaskCollection;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.task.Task;
 import seedu.address.testutil.EditPersonDescriptorBuilder;
@@ -46,7 +46,7 @@ public class EditCommandTest {
 
         String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, editedTask);
 
-        Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()),
+        Model expectedModel = new ModelManager(new TaskCollection(model.getAddressBook()),
             new UserPrefs());
         expectedModel.updatePerson(model.getFilteredPersonList().get(0), editedTask);
         expectedModel.commitAddressBook();
@@ -69,7 +69,7 @@ public class EditCommandTest {
 
         String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, editedTask);
 
-        Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()),
+        Model expectedModel = new ModelManager(new TaskCollection(model.getAddressBook()),
             new UserPrefs());
         expectedModel.updatePerson(lastTask, editedTask);
         expectedModel.commitAddressBook();
@@ -84,7 +84,7 @@ public class EditCommandTest {
 
         String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, editedTask);
 
-        Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()),
+        Model expectedModel = new ModelManager(new TaskCollection(model.getAddressBook()),
             new UserPrefs());
         expectedModel.commitAddressBook();
 
@@ -103,7 +103,7 @@ public class EditCommandTest {
 
         String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, editedTask);
 
-        Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()),
+        Model expectedModel = new ModelManager(new TaskCollection(model.getAddressBook()),
             new UserPrefs());
         expectedModel.updatePerson(model.getFilteredPersonList().get(0), editedTask);
         expectedModel.commitAddressBook();
@@ -170,7 +170,7 @@ public class EditCommandTest {
         Task taskToEdit = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(editedTask).build();
         EditCommand editCommand = new EditCommand(INDEX_FIRST_PERSON, descriptor);
-        Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()),
+        Model expectedModel = new ModelManager(new TaskCollection(model.getAddressBook()),
             new UserPrefs());
         expectedModel.updatePerson(taskToEdit, editedTask);
         expectedModel.commitAddressBook();
@@ -216,7 +216,7 @@ public class EditCommandTest {
         Task editedTask = new PersonBuilder().build();
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(editedTask).build();
         EditCommand editCommand = new EditCommand(INDEX_FIRST_PERSON, descriptor);
-        Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()),
+        Model expectedModel = new ModelManager(new TaskCollection(model.getAddressBook()),
             new UserPrefs());
 
         showPersonAtIndex(model, INDEX_SECOND_PERSON);

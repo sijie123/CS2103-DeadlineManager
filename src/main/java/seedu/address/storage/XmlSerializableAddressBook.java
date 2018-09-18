@@ -8,12 +8,12 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import seedu.address.commons.exceptions.IllegalValueException;
-import seedu.address.model.AddressBook;
-import seedu.address.model.ReadOnlyAddressBook;
+import seedu.address.model.ReadOnlyTaskCollection;
+import seedu.address.model.TaskCollection;
 import seedu.address.model.task.Task;
 
 /**
- * An Immutable AddressBook that is serializable to XML format
+ * An Immutable TaskCollection that is serializable to XML format
  */
 @XmlRootElement(name = "addressbook")
 public class XmlSerializableAddressBook {
@@ -34,28 +34,28 @@ public class XmlSerializableAddressBook {
     /**
      * Conversion
      */
-    public XmlSerializableAddressBook(ReadOnlyAddressBook src) {
+    public XmlSerializableAddressBook(ReadOnlyTaskCollection src) {
         this();
         tasks.addAll(
             src.getTaskList().stream().map(XmlAdaptedTask::new).collect(Collectors.toList()));
     }
 
     /**
-     * Converts this addressbook into the model's {@code AddressBook} object.
+     * Converts this addressbook into the model's {@code TaskCollection} object.
      *
      * @throws IllegalValueException if there were any data constraints violated or duplicates in
      *                               the {@code XmlAdaptedTask}.
      */
-    public AddressBook toModelType() throws IllegalValueException {
-        AddressBook addressBook = new AddressBook();
+    public TaskCollection toModelType() throws IllegalValueException {
+        TaskCollection taskCollection = new TaskCollection();
         for (XmlAdaptedTask p : tasks) {
             Task task = p.toModelType();
-            if (addressBook.hasTask(task)) {
+            if (taskCollection.hasTask(task)) {
                 throw new IllegalValueException(MESSAGE_DUPLICATE_PERSON);
             }
-            addressBook.addPerson(task);
+            taskCollection.addPerson(task);
         }
-        return addressBook;
+        return taskCollection;
     }
 
     @Override

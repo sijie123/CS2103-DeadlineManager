@@ -11,7 +11,7 @@ import seedu.address.model.task.UniqueTaskList;
 /**
  * Wraps all data at the address-book level Duplicates are not allowed (by .isSameTask comparison)
  */
-public class AddressBook implements ReadOnlyAddressBook {
+public class TaskCollection implements ReadOnlyTaskCollection {
 
     private final UniqueTaskList tasks;
 
@@ -26,13 +26,13 @@ public class AddressBook implements ReadOnlyAddressBook {
         tasks = new UniqueTaskList();
     }
 
-    public AddressBook() {
+    public TaskCollection() {
     }
 
     /**
-     * Creates an AddressBook using the Persons in the {@code toBeCopied}
+     * Creates an TaskCollection using the Persons in the {@code toBeCopied}
      */
-    public AddressBook(ReadOnlyAddressBook toBeCopied) {
+    public TaskCollection(ReadOnlyTaskCollection toBeCopied) {
         this();
         resetData(toBeCopied);
     }
@@ -48,9 +48,9 @@ public class AddressBook implements ReadOnlyAddressBook {
     }
 
     /**
-     * Resets the existing data of this {@code AddressBook} with {@code newData}.
+     * Resets the existing data of this {@code TaskCollection} with {@code newData}.
      */
-    public void resetData(ReadOnlyAddressBook newData) {
+    public void resetData(ReadOnlyTaskCollection newData) {
         requireNonNull(newData);
 
         setTasks(newData.getTaskList());
@@ -85,7 +85,7 @@ public class AddressBook implements ReadOnlyAddressBook {
     }
 
     /**
-     * Removes {@code key} from this {@code AddressBook}. {@code key} must exist in the address
+     * Removes {@code key} from this {@code TaskCollection}. {@code key} must exist in the address
      * book.
      */
     public void removeTask(Task key) {
@@ -108,8 +108,8 @@ public class AddressBook implements ReadOnlyAddressBook {
     @Override
     public boolean equals(Object other) {
         return other == this // short circuit if same object
-            || (other instanceof AddressBook // instanceof handles nulls
-            && tasks.equals(((AddressBook) other).tasks));
+            || (other instanceof TaskCollection // instanceof handles nulls
+            && tasks.equals(((TaskCollection) other).tasks));
     }
 
     @Override

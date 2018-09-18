@@ -18,12 +18,12 @@ public interface Model {
     /**
      * Clears existing backing model and replaces with the provided new data.
      */
-    void resetData(ReadOnlyAddressBook newData);
+    void resetData(ReadOnlyTaskCollection newData);
 
     /**
-     * Returns the AddressBook
+     * Returns the TaskCollection
      */
-    ReadOnlyAddressBook getAddressBook();
+    ReadOnlyTaskCollection getAddressBook();
 
     /**
      * Returns true if a task with the same identity as {@code task} exists in the address book.

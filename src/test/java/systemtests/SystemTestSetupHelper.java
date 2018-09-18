@@ -9,7 +9,7 @@ import org.testfx.api.FxToolkit;
 import guitests.guihandles.MainWindowHandle;
 import javafx.stage.Stage;
 import seedu.address.TestApp;
-import seedu.address.model.ReadOnlyAddressBook;
+import seedu.address.model.ReadOnlyTaskCollection;
 
 /**
  * Contains helper methods that system tests require.
@@ -22,7 +22,7 @@ public class SystemTestSetupHelper {
     /**
      * Sets up a new {@code TestApp} and returns it.
      */
-    public TestApp setupApplication(Supplier<ReadOnlyAddressBook> addressBook,
+    public TestApp setupApplication(Supplier<ReadOnlyTaskCollection> addressBook,
                                     Path saveFileLocation) {
         try {
             FxToolkit.registerStage(Stage::new);
