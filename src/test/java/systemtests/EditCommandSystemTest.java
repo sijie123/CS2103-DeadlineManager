@@ -39,12 +39,12 @@ import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.RedoCommand;
 import seedu.address.logic.commands.UndoCommand;
 import seedu.address.model.Model;
+import seedu.address.model.tag.Tag;
 import seedu.address.model.task.Address;
 import seedu.address.model.task.Email;
 import seedu.address.model.task.Name;
-import seedu.address.model.task.Task;
 import seedu.address.model.task.Phone;
-import seedu.address.model.tag.Tag;
+import seedu.address.model.task.Task;
 import seedu.address.testutil.PersonBuilder;
 import seedu.address.testutil.PersonUtil;
 
@@ -283,7 +283,8 @@ public class EditCommandSystemTest extends AddressBookSystemTest {
      * expectedResultMessage}.<br> 3. Asserts that the browser url and selected card update
      * accordingly depending on the card at {@code expectedSelectedCardIndex}.<br> 4. Asserts that
      * the status bar's sync status changes.<br> 5. Asserts that the command box has the default
-     * style class.<br> Verifications 1 and 2 are performed by {@code AddressBookSystemTest#assertApplicationDisplaysExpected(String,
+     * style class.<br> Verifications 1 and 2 are performed by {@code AddressBookSystemTest
+     * #assertApplicationDisplaysExpected(String,
      * String, Model)}.<br>
      *
      * @see AddressBookSystemTest#assertApplicationDisplaysExpected(String, String, Model)
