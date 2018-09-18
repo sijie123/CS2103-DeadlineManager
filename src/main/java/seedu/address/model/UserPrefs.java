@@ -12,7 +12,7 @@ import seedu.address.commons.core.GuiSettings;
 public class UserPrefs {
 
     private GuiSettings guiSettings;
-    private Path addressBookFilePath = Paths.get("data" , "addressbook.xml");
+    private Path addressBookFilePath = Paths.get("data", "addressbook.xml");
 
     public UserPrefs() {
         setGuiSettings(500, 500, 0, 0);
@@ -50,7 +50,7 @@ public class UserPrefs {
         UserPrefs o = (UserPrefs) other;
 
         return Objects.equals(guiSettings, o.guiSettings)
-                && Objects.equals(addressBookFilePath, o.addressBookFilePath);
+            && Objects.equals(addressBookFilePath, o.addressBookFilePath);
     }
 
     @Override

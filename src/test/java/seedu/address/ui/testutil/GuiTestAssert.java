@@ -14,10 +14,12 @@ import seedu.address.model.person.Task;
  * A set of assertion methods useful for writing GUI tests.
  */
 public class GuiTestAssert {
+
     /**
      * Asserts that {@code actualCard} displays the same values as {@code expectedCard}.
      */
-    public static void assertCardEquals(PersonCardHandle expectedCard, PersonCardHandle actualCard) {
+    public static void assertCardEquals(PersonCardHandle expectedCard,
+                                        PersonCardHandle actualCard) {
         assertEquals(expectedCard.getId(), actualCard.getId());
         assertEquals(expectedCard.getAddress(), actualCard.getAddress());
         assertEquals(expectedCard.getEmail(), actualCard.getEmail());
@@ -34,15 +36,17 @@ public class GuiTestAssert {
         assertEquals(expectedTask.getPhone().value, actualCard.getPhone());
         assertEquals(expectedTask.getEmail().value, actualCard.getEmail());
         assertEquals(expectedTask.getAddress().value, actualCard.getAddress());
-        assertEquals(expectedTask.getTags().stream().map(tag -> tag.tagName).collect(Collectors.toList()),
-                actualCard.getTags());
+        assertEquals(expectedTask.getTags().stream().map(tag -> tag.tagName)
+                .collect(Collectors.toList()),
+            actualCard.getTags());
     }
 
     /**
-     * Asserts that the list in {@code personListPanelHandle} displays the details of {@code tasks} correctly and
-     * in the correct order.
+     * Asserts that the list in {@code personListPanelHandle} displays the details of {@code tasks}
+     * correctly and in the correct order.
      */
-    public static void assertListMatching(PersonListPanelHandle personListPanelHandle, Task... tasks) {
+    public static void assertListMatching(PersonListPanelHandle personListPanelHandle,
+                                          Task... tasks) {
         for (int i = 0; i < tasks.length; i++) {
             personListPanelHandle.navigateToCard(i);
             assertCardDisplaysPerson(tasks[i], personListPanelHandle.getPersonCardHandle(i));
@@ -50,10 +54,11 @@ public class GuiTestAssert {
     }
 
     /**
-     * Asserts that the list in {@code personListPanelHandle} displays the details of {@code tasks} correctly and
-     * in the correct order.
+     * Asserts that the list in {@code personListPanelHandle} displays the details of {@code tasks}
+     * correctly and in the correct order.
      */
-    public static void assertListMatching(PersonListPanelHandle personListPanelHandle, List<Task> tasks) {
+    public static void assertListMatching(PersonListPanelHandle personListPanelHandle,
+                                          List<Task> tasks) {
         assertListMatching(personListPanelHandle, tasks.toArray(new Task[0]));
     }
 
@@ -68,7 +73,8 @@ public class GuiTestAssert {
     /**
      * Asserts the message shown in {@code resultDisplayHandle} equals to {@code expected}.
      */
-    public static void assertResultMessage(ResultDisplayHandle resultDisplayHandle, String expected) {
+    public static void assertResultMessage(ResultDisplayHandle resultDisplayHandle,
+                                           String expected) {
         assertEquals(expected, resultDisplayHandle.getText());
     }
 }

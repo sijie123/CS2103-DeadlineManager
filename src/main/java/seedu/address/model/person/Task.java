@@ -10,8 +10,8 @@ import java.util.Set;
 import seedu.address.model.tag.Tag;
 
 /**
- * Represents a Task in the address book.
- * Guarantees: details are present and not null, field values are validated, immutable.
+ * Represents a Task in the address book. Guarantees: details are present and not null, field values
+ * are validated, immutable.
  */
 public class Task {
 
@@ -53,30 +53,32 @@ public class Task {
     }
 
     /**
-     * Returns an immutable tag set, which throws {@code UnsupportedOperationException}
-     * if modification is attempted.
+     * Returns an immutable tag set, which throws {@code UnsupportedOperationException} if
+     * modification is attempted.
      */
     public Set<Tag> getTags() {
         return Collections.unmodifiableSet(tags);
     }
 
     /**
-     * Returns true if both persons of the same name have at least one other identity field that is the same.
-     * This defines a weaker notion of equality between two persons.
+     * Returns true if both task of the same name have at least one other identity field that is the
+     * same. This defines a weaker notion of equality between two task.
      */
-    public boolean isSamePerson(Task otherTask) {
+    // TODO: check if method is still required
+    public boolean isSameTask(Task otherTask) {
         if (otherTask == this) {
             return true;
         }
 
         return otherTask != null
-                && otherTask.getName().equals(getName())
-                && (otherTask.getPhone().equals(getPhone()) || otherTask.getEmail().equals(getEmail()));
+            && otherTask.getName().equals(getName())
+            && (otherTask.getPhone().equals(getPhone()) || otherTask.getEmail()
+            .equals(getEmail()));
     }
 
     /**
-     * Returns true if both persons have the same identity and data fields.
-     * This defines a stronger notion of equality between two persons.
+     * Returns true if both persons have the same identity and data fields. This defines a stronger
+     * notion of equality between two persons.
      */
     @Override
     public boolean equals(Object other) {
@@ -90,10 +92,10 @@ public class Task {
 
         Task otherTask = (Task) other;
         return otherTask.getName().equals(getName())
-                && otherTask.getPhone().equals(getPhone())
-                && otherTask.getEmail().equals(getEmail())
-                && otherTask.getAddress().equals(getAddress())
-                && otherTask.getTags().equals(getTags());
+            && otherTask.getPhone().equals(getPhone())
+            && otherTask.getEmail().equals(getEmail())
+            && otherTask.getAddress().equals(getAddress())
+            && otherTask.getTags().equals(getTags());
     }
 
     @Override
@@ -106,13 +108,13 @@ public class Task {
     public String toString() {
         final StringBuilder builder = new StringBuilder();
         builder.append(getName())
-                .append(" Phone: ")
-                .append(getPhone())
-                .append(" Email: ")
-                .append(getEmail())
-                .append(" Address: ")
-                .append(getAddress())
-                .append(" Tags: ");
+            .append(" Phone: ")
+            .append(getPhone())
+            .append(" Email: ")
+            .append(getEmail())
+            .append(" Address: ")
+            .append(getAddress())
+            .append(" Tags: ");
         getTags().forEach(builder::append);
         return builder.toString();
     }

@@ -34,7 +34,8 @@ public class EditCommand extends Command {
 
     public static final String COMMAND_WORD = "edit";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Edits the details of the task identified "
+    public static final String MESSAGE_USAGE =
+        COMMAND_WORD + ": Edits the details of the task identified "
             + "by the index number used in the displayed task list. "
             + "Existing values will be overwritten by the input values.\n"
             + "Parameters: INDEX (must be a positive integer) "
@@ -55,7 +56,7 @@ public class EditCommand extends Command {
     private final EditPersonDescriptor editPersonDescriptor;
 
     /**
-     * @param index of the task in the filtered task list to edit
+     * @param index                of the task in the filtered task list to edit
      * @param editPersonDescriptor details to edit the task with
      */
     public EditCommand(Index index, EditPersonDescriptor editPersonDescriptor) {
@@ -78,7 +79,7 @@ public class EditCommand extends Command {
         Task taskToEdit = lastShownList.get(index.getZeroBased());
         Task editedTask = createEditedPerson(taskToEdit, editPersonDescriptor);
 
-        if (!taskToEdit.isSamePerson(editedTask) && model.hasPerson(editedTask)) {
+        if (!taskToEdit.isSameTask(editedTask) && model.hasPerson(editedTask)) {
             throw new CommandException(MESSAGE_DUPLICATE_PERSON);
         }
 
@@ -89,10 +90,11 @@ public class EditCommand extends Command {
     }
 
     /**
-     * Creates and returns a {@code Task} with the details of {@code taskToEdit}
-     * edited with {@code editPersonDescriptor}.
+     * Creates and returns a {@code Task} with the details of {@code taskToEdit} edited with {@code
+     * editPersonDescriptor}.
      */
-    private static Task createEditedPerson(Task taskToEdit, EditPersonDescriptor editPersonDescriptor) {
+    private static Task createEditedPerson(Task taskToEdit,
+                                           EditPersonDescriptor editPersonDescriptor) {
         assert taskToEdit != null;
 
         Name updatedName = editPersonDescriptor.getName().orElse(taskToEdit.getName());
@@ -119,7 +121,7 @@ public class EditCommand extends Command {
         // state check
         EditCommand e = (EditCommand) other;
         return index.equals(e.index)
-                && editPersonDescriptor.equals(e.editPersonDescriptor);
+            && editPersonDescriptor.equals(e.editPersonDescriptor);
     }
 
     /**
@@ -127,17 +129,18 @@ public class EditCommand extends Command {
      * corresponding field value of the task.
      */
     public static class EditPersonDescriptor {
+
         private Name name;
         private Phone phone;
         private Email email;
         private Address address;
         private Set<Tag> tags;
 
-        public EditPersonDescriptor() {}
+        public EditPersonDescriptor() {
+        }
 
         /**
-         * Copy constructor.
-         * A defensive copy of {@code tags} is used internally.
+         * Copy constructor. A defensive copy of {@code tags} is used internally.
          */
         public EditPersonDescriptor(EditPersonDescriptor toCopy) {
             setName(toCopy.name);
@@ -187,20 +190,20 @@ public class EditCommand extends Command {
         }
 
         /**
-         * Sets {@code tags} to this object's {@code tags}.
-         * A defensive copy of {@code tags} is used internally.
+         * Sets {@code tags} to this object's {@code tags}. A defensive copy of {@code tags} is used
+         * internally.
          */
         public void setTags(Set<Tag> tags) {
             this.tags = (tags != null) ? new HashSet<>(tags) : null;
         }
 
         /**
-         * Returns an unmodifiable tag set, which throws {@code UnsupportedOperationException}
-         * if modification is attempted.
-         * Returns {@code Optional#empty()} if {@code tags} is null.
+         * Returns an unmodifiable tag set, which throws {@code UnsupportedOperationException} if
+         * modification is attempted. Returns {@code Optional#empty()} if {@code tags} is null.
          */
         public Optional<Set<Tag>> getTags() {
-            return (tags != null) ? Optional.of(Collections.unmodifiableSet(tags)) : Optional.empty();
+            return (tags != null) ? Optional.of(Collections.unmodifiableSet(tags))
+                : Optional.empty();
         }
 
         @Override
@@ -219,10 +222,10 @@ public class EditCommand extends Command {
             EditPersonDescriptor e = (EditPersonDescriptor) other;
 
             return getName().equals(e.getName())
-                    && getPhone().equals(e.getPhone())
-                    && getEmail().equals(e.getEmail())
-                    && getAddress().equals(e.getAddress())
-                    && getTags().equals(e.getTags());
+                && getPhone().equals(e.getPhone())
+                && getEmail().equals(e.getEmail())
+                && getAddress().equals(e.getAddress())
+                && getTags().equals(e.getTags());
         }
     }
 }

@@ -80,7 +80,8 @@ public class ConfigUtilTest {
         return config;
     }
 
-    private Optional<Config> read(String configFileInTestDataFolder) throws DataConversionException {
+    private Optional<Config> read(String configFileInTestDataFolder)
+        throws DataConversionException {
         Path configFilePath = addToTestDataPathIfNotNull(configFileInTestDataFolder);
         return ConfigUtil.readConfig(configFilePath);
     }
@@ -123,8 +124,8 @@ public class ConfigUtilTest {
 
     private Path addToTestDataPathIfNotNull(String configFileInTestDataFolder) {
         return configFileInTestDataFolder != null
-                                  ? TEST_DATA_FOLDER.resolve(configFileInTestDataFolder)
-                                  : null;
+            ? TEST_DATA_FOLDER.resolve(configFileInTestDataFolder)
+            : null;
     }
 
 

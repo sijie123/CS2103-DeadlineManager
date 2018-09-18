@@ -11,19 +11,21 @@ import seedu.address.commons.core.EventsCenter;
 import seedu.address.commons.events.BaseEvent;
 
 /**
- * Represents a distinct part of the UI. e.g. Windows, dialogs, panels, status bars, etc.
- * It contains a scene graph with a root node of type {@code T}.
+ * Represents a distinct part of the UI. e.g. Windows, dialogs, panels, status bars, etc. It
+ * contains a scene graph with a root node of type {@code T}.
  */
 public abstract class UiPart<T> {
 
-    /** Resource folder where FXML files are stored. */
+    /**
+     * Resource folder where FXML files are stored.
+     */
     public static final String FXML_FILE_FOLDER = "/view/";
 
     private final FXMLLoader fxmlLoader = new FXMLLoader();
 
     /**
-     * Constructs a UiPart with the specified FXML file URL.
-     * The FXML file must not specify the {@code fx:controller} attribute.
+     * Constructs a UiPart with the specified FXML file URL. The FXML file must not specify the
+     * {@code fx:controller} attribute.
      */
     public UiPart(URL fxmlFileUrl) {
         loadFxmlFile(fxmlFileUrl, null);
@@ -31,6 +33,7 @@ public abstract class UiPart<T> {
 
     /**
      * Constructs a UiPart using the specified FXML file within {@link #FXML_FILE_FOLDER}.
+     *
      * @see #UiPart(URL)
      */
     public UiPart(String fxmlFileName) {
@@ -38,15 +41,17 @@ public abstract class UiPart<T> {
     }
 
     /**
-     * Constructs a UiPart with the specified FXML file URL and root object.
-     * The FXML file must not specify the {@code fx:controller} attribute.
+     * Constructs a UiPart with the specified FXML file URL and root object. The FXML file must not
+     * specify the {@code fx:controller} attribute.
      */
     public UiPart(URL fxmlFileUrl, T root) {
         loadFxmlFile(fxmlFileUrl, root);
     }
 
     /**
-     * Constructs a UiPart with the specified FXML file within {@link #FXML_FILE_FOLDER} and root object.
+     * Constructs a UiPart with the specified FXML file within {@link #FXML_FILE_FOLDER} and root
+     * object.
+     *
      * @see #UiPart(URL, T)
      */
     public UiPart(String fxmlFileName, T root) {
@@ -62,7 +67,6 @@ public abstract class UiPart<T> {
 
     /**
      * Raises the event via {@link EventsCenter#post(BaseEvent)}
-     * @param event
      */
     protected void raise(BaseEvent event) {
         EventsCenter.getInstance().post(event);
@@ -70,6 +74,7 @@ public abstract class UiPart<T> {
 
     /**
      * Registers the object as an event handler at the {@link EventsCenter}
+     *
      * @param handler usually {@code this}
      */
     protected void registerAsAnEventHandler(Object handler) {
@@ -78,8 +83,9 @@ public abstract class UiPart<T> {
 
     /**
      * Loads the object hierarchy from a FXML document.
+     *
      * @param location Location of the FXML document.
-     * @param root Specifies the root of the object hierarchy.
+     * @param root     Specifies the root of the object hierarchy.
      */
     private void loadFxmlFile(URL location, T root) {
         requireNonNull(location);

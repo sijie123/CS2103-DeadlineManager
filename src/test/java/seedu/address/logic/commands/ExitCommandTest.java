@@ -14,6 +14,7 @@ import seedu.address.model.ModelManager;
 import seedu.address.ui.testutil.EventsCollectorRule;
 
 public class ExitCommandTest {
+
     @Rule
     public final EventsCollectorRule eventsCollectorRule = new EventsCollectorRule();
 
@@ -24,7 +25,8 @@ public class ExitCommandTest {
     public void execute_exit_success() {
         CommandResult result = new ExitCommand().execute(model, commandHistory);
         assertEquals(MESSAGE_EXIT_ACKNOWLEDGEMENT, result.feedbackToUser);
-        assertTrue(eventsCollectorRule.eventsCollector.getMostRecent() instanceof ExitAppRequestEvent);
+        assertTrue(
+            eventsCollectorRule.eventsCollector.getMostRecent() instanceof ExitAppRequestEvent);
         assertTrue(eventsCollectorRule.eventsCollector.getSize() == 1);
     }
 }

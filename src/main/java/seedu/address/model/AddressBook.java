@@ -6,15 +6,14 @@ import java.util.List;
 
 import javafx.collections.ObservableList;
 import seedu.address.model.person.Task;
-import seedu.address.model.person.UniquePersonList;
+import seedu.address.model.person.UniqueTaskList;
 
 /**
- * Wraps all data at the address-book level
- * Duplicates are not allowed (by .isSamePerson comparison)
+ * Wraps all data at the address-book level Duplicates are not allowed (by .isSameTask comparison)
  */
 public class AddressBook implements ReadOnlyAddressBook {
 
-    private final UniquePersonList persons;
+    private final UniqueTaskList persons;
 
     /*
      * The 'unusual' code block below is an non-static initialization block, sometimes used to avoid duplication
@@ -24,10 +23,11 @@ public class AddressBook implements ReadOnlyAddressBook {
      *   among constructors.
      */
     {
-        persons = new UniquePersonList();
+        persons = new UniqueTaskList();
     }
 
-    public AddressBook() {}
+    public AddressBook() {
+    }
 
     /**
      * Creates an AddressBook using the Persons in the {@code toBeCopied}
@@ -40,8 +40,8 @@ public class AddressBook implements ReadOnlyAddressBook {
     //// list overwrite operations
 
     /**
-     * Replaces the contents of the task list with {@code tasks}.
-     * {@code tasks} must not contain duplicate tasks.
+     * Replaces the contents of the task list with {@code tasks}. {@code tasks} must not contain
+     * duplicate tasks.
      */
     public void setPersons(List<Task> tasks) {
         this.persons.setPersons(tasks);
@@ -67,17 +67,16 @@ public class AddressBook implements ReadOnlyAddressBook {
     }
 
     /**
-     * Adds a task to the address book.
-     * The task must not already exist in the address book.
+     * Adds a task to the address book. The task must not already exist in the address book.
      */
     public void addPerson(Task p) {
         persons.add(p);
     }
 
     /**
-     * Replaces the given task {@code target} in the list with {@code editedTask}.
-     * {@code target} must exist in the address book.
-     * The task identity of {@code editedTask} must not be the same as another existing task in the address book.
+     * Replaces the given task {@code target} in the list with {@code editedTask}. {@code target}
+     * must exist in the address book. The task identity of {@code editedTask} must not be the same
+     * as another existing task in the address book.
      */
     public void updatePerson(Task target, Task editedTask) {
         requireNonNull(editedTask);
@@ -86,8 +85,8 @@ public class AddressBook implements ReadOnlyAddressBook {
     }
 
     /**
-     * Removes {@code key} from this {@code AddressBook}.
-     * {@code key} must exist in the address book.
+     * Removes {@code key} from this {@code AddressBook}. {@code key} must exist in the address
+     * book.
      */
     public void removePerson(Task key) {
         persons.remove(key);
@@ -109,8 +108,8 @@ public class AddressBook implements ReadOnlyAddressBook {
     @Override
     public boolean equals(Object other) {
         return other == this // short circuit if same object
-                || (other instanceof AddressBook // instanceof handles nulls
-                && persons.equals(((AddressBook) other).persons));
+            || (other instanceof AddressBook // instanceof handles nulls
+            && persons.equals(((AddressBook) other).persons));
     }
 
     @Override

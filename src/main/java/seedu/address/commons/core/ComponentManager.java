@@ -4,10 +4,11 @@ import seedu.address.commons.events.BaseEvent;
 
 /**
  * Base class for *Manager classes
- *
+ * <p>
  * Registers the class' event handlers in eventsCenter
  */
 public abstract class ComponentManager {
+
     protected EventsCenter eventsCenter;
 
     /**

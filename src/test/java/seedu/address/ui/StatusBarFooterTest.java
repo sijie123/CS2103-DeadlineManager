@@ -26,7 +26,8 @@ public class StatusBarFooterTest extends GuiUnitTest {
     private static final Path STUB_SAVE_LOCATION = Paths.get("Stub");
     private static final Path RELATIVE_PATH = Paths.get(".");
 
-    private static final AddressBookChangedEvent EVENT_STUB = new AddressBookChangedEvent(new AddressBook());
+    private static final AddressBookChangedEvent EVENT_STUB = new AddressBookChangedEvent(
+        new AddressBook());
 
     private static final Clock originalClock = StatusBarFooter.getClock();
     private static final Clock injectedClock = Clock.fixed(Instant.now(), ZoneId.systemDefault());
@@ -56,17 +57,18 @@ public class StatusBarFooterTest extends GuiUnitTest {
     @Test
     public void display() {
         // initial state
-        assertStatusBarContent(RELATIVE_PATH.resolve(STUB_SAVE_LOCATION).toString(), SYNC_STATUS_INITIAL);
+        assertStatusBarContent(RELATIVE_PATH.resolve(STUB_SAVE_LOCATION).toString(),
+            SYNC_STATUS_INITIAL);
 
         // after address book is updated
         postNow(EVENT_STUB);
         assertStatusBarContent(RELATIVE_PATH.resolve(STUB_SAVE_LOCATION).toString(),
-                String.format(SYNC_STATUS_UPDATED, new Date(injectedClock.millis()).toString()));
+            String.format(SYNC_STATUS_UPDATED, new Date(injectedClock.millis()).toString()));
     }
 
     /**
-     * Asserts that the save location matches that of {@code expectedSaveLocation}, and the
-     * sync status matches that of {@code expectedSyncStatus}.
+     * Asserts that the save location matches that of {@code expectedSaveLocation}, and the sync
+     * status matches that of {@code expectedSyncStatus}.
      */
     private void assertStatusBarContent(String expectedSaveLocation, String expectedSyncStatus) {
         assertEquals(expectedSaveLocation, statusBarFooterHandle.getSaveLocation());

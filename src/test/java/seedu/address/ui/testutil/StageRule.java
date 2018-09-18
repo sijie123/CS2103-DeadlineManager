@@ -9,6 +9,7 @@ import org.testfx.api.FxToolkit;
  * Properly sets up and tears down a JavaFx stage for our testing purposes.
  */
 public class StageRule implements TestRule {
+
     protected void before() throws Throwable {
         FxToolkit.registerPrimaryStage();
     }

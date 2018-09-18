@@ -20,7 +20,7 @@ import seedu.address.model.tag.Tag;
 /**
  * JAXB-friendly version of the Task.
  */
-public class XmlAdaptedPerson {
+public class XmlAdaptedTask {
 
     public static final String MISSING_FIELD_MESSAGE_FORMAT = "Task's %s field is missing!";
 
@@ -37,15 +37,16 @@ public class XmlAdaptedPerson {
     private List<XmlAdaptedTag> tagged = new ArrayList<>();
 
     /**
-     * Constructs an XmlAdaptedPerson.
-     * This is the no-arg constructor that is required by JAXB.
+     * Constructs an XmlAdaptedTask. This is the no-arg constructor that is required by JAXB.
      */
-    public XmlAdaptedPerson() {}
+    public XmlAdaptedTask() {
+    }
 
     /**
-     * Constructs an {@code XmlAdaptedPerson} with the given task details.
+     * Constructs an {@code XmlAdaptedTask} with the given task details.
      */
-    public XmlAdaptedPerson(String name, String phone, String email, String address, List<XmlAdaptedTag> tagged) {
+    public XmlAdaptedTask(String name, String phone, String email, String address,
+                          List<XmlAdaptedTag> tagged) {
         this.name = name;
         this.phone = phone;
         this.email = email;
@@ -58,22 +59,23 @@ public class XmlAdaptedPerson {
     /**
      * Converts a given Task into this class for JAXB use.
      *
-     * @param source future changes to this will not affect the created XmlAdaptedPerson
+     * @param source future changes to this will not affect the created XmlAdaptedTask
      */
-    public XmlAdaptedPerson(Task source) {
+    public XmlAdaptedTask(Task source) {
         name = source.getName().fullName;
         phone = source.getPhone().value;
         email = source.getEmail().value;
         address = source.getAddress().value;
         tagged = source.getTags().stream()
-                .map(XmlAdaptedTag::new)
-                .collect(Collectors.toList());
+            .map(XmlAdaptedTag::new)
+            .collect(Collectors.toList());
     }
 
     /**
      * Converts this jaxb-friendly adapted task object into the model's Task object.
      *
-     * @throws IllegalValueException if there were any data constraints violated in the adapted task
+     * @throws IllegalValueException if there were any data constraints violated in the adapted
+     *                               task
      */
     public Task toModelType() throws IllegalValueException {
         final List<Tag> personTags = new ArrayList<>();
@@ -82,7 +84,8 @@ public class XmlAdaptedPerson {
         }
 
         if (name == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Name.class.getSimpleName()));
+            throw new IllegalValueException(
+                String.format(MISSING_FIELD_MESSAGE_FORMAT, Name.class.getSimpleName()));
         }
         if (!Name.isValidName(name)) {
             throw new IllegalValueException(Name.MESSAGE_NAME_CONSTRAINTS);
@@ -90,7 +93,8 @@ public class XmlAdaptedPerson {
         final Name modelName = new Name(name);
 
         if (phone == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Phone.class.getSimpleName()));
+            throw new IllegalValueException(
+                String.format(MISSING_FIELD_MESSAGE_FORMAT, Phone.class.getSimpleName()));
         }
         if (!Phone.isValidPhone(phone)) {
             throw new IllegalValueException(Phone.MESSAGE_PHONE_CONSTRAINTS);
@@ -98,7 +102,8 @@ public class XmlAdaptedPerson {
         final Phone modelPhone = new Phone(phone);
 
         if (email == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Email.class.getSimpleName()));
+            throw new IllegalValueException(
+                String.format(MISSING_FIELD_MESSAGE_FORMAT, Email.class.getSimpleName()));
         }
         if (!Email.isValidEmail(email)) {
             throw new IllegalValueException(Email.MESSAGE_EMAIL_CONSTRAINTS);
@@ -106,7 +111,8 @@ public class XmlAdaptedPerson {
         final Email modelEmail = new Email(email);
 
         if (address == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Address.class.getSimpleName()));
+            throw new IllegalValueException(
+                String.format(MISSING_FIELD_MESSAGE_FORMAT, Address.class.getSimpleName()));
         }
         if (!Address.isValidAddress(address)) {
             throw new IllegalValueException(Address.MESSAGE_ADDRESS_CONSTRAINTS);
@@ -123,15 +129,15 @@ public class XmlAdaptedPerson {
             return true;
         }
 
-        if (!(other instanceof XmlAdaptedPerson)) {
+        if (!(other instanceof XmlAdaptedTask)) {
             return false;
         }
 
-        XmlAdaptedPerson otherPerson = (XmlAdaptedPerson) other;
+        XmlAdaptedTask otherPerson = (XmlAdaptedTask) other;
         return Objects.equals(name, otherPerson.name)
-                && Objects.equals(phone, otherPerson.phone)
-                && Objects.equals(email, otherPerson.email)
-                && Objects.equals(address, otherPerson.address)
-                && tagged.equals(otherPerson.tagged);
+            && Objects.equals(phone, otherPerson.phone)
+            && Objects.equals(email, otherPerson.email)
+            && Objects.equals(address, otherPerson.address)
+            && tagged.equals(otherPerson.tagged);
     }
 }

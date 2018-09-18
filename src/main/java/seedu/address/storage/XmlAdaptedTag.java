@@ -14,10 +14,10 @@ public class XmlAdaptedTag {
     private String tagName;
 
     /**
-     * Constructs an XmlAdaptedTag.
-     * This is the no-arg constructor that is required by JAXB.
+     * Constructs an XmlAdaptedTag. This is the no-arg constructor that is required by JAXB.
      */
-    public XmlAdaptedTag() {}
+    public XmlAdaptedTag() {
+    }
 
     /**
      * Constructs a {@code XmlAdaptedTag} with the given {@code tagName}.
@@ -38,7 +38,8 @@ public class XmlAdaptedTag {
     /**
      * Converts this jaxb-friendly adapted tag object into the model's Tag object.
      *
-     * @throws IllegalValueException if there were any data constraints violated in the adapted task
+     * @throws IllegalValueException if there were any data constraints violated in the adapted
+     *                               task
      */
     public Tag toModelType() throws IllegalValueException {
         if (!Tag.isValidTagName(tagName)) {

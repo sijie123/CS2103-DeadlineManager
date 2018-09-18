@@ -12,6 +12,7 @@ import seedu.address.model.person.Task;
  * Contains helper methods to set up {@code Model} for testing.
  */
 public class ModelHelper {
+
     private static final Predicate<Task> PREDICATE_MATCHING_NO_PERSONS = unused -> false;
 
     /**
@@ -19,7 +20,7 @@ public class ModelHelper {
      */
     public static void setFilteredList(Model model, List<Task> toDisplay) {
         Optional<Predicate<Task>> predicate =
-                toDisplay.stream().map(ModelHelper::getPredicateMatching).reduce(Predicate::or);
+            toDisplay.stream().map(ModelHelper::getPredicateMatching).reduce(Predicate::or);
         model.updateFilteredPersonList(predicate.orElse(PREDICATE_MATCHING_NO_PERSONS));
     }
 

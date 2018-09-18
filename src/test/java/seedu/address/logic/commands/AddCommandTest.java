@@ -44,7 +44,8 @@ public class AddCommandTest {
 
         CommandResult commandResult = new AddCommand(validTask).execute(modelStub, commandHistory);
 
-        assertEquals(String.format(AddCommand.MESSAGE_SUCCESS, validTask), commandResult.feedbackToUser);
+        assertEquals(String.format(AddCommand.MESSAGE_SUCCESS, validTask),
+            commandResult.feedbackToUser);
         assertEquals(Arrays.asList(validTask), modelStub.personsAdded);
         assertEquals(EMPTY_COMMAND_HISTORY, commandHistory);
     }
@@ -88,6 +89,7 @@ public class AddCommandTest {
      * A default model stub that have all of the methods failing.
      */
     private class ModelStub implements Model {
+
         @Override
         public void addPerson(Task task) {
             throw new AssertionError("This method should not be called.");
@@ -158,6 +160,7 @@ public class AddCommandTest {
      * A Model stub that contains a single task.
      */
     private class ModelStubWithPerson extends ModelStub {
+
         private final Task task;
 
         ModelStubWithPerson(Task task) {
@@ -168,7 +171,7 @@ public class AddCommandTest {
         @Override
         public boolean hasPerson(Task task) {
             requireNonNull(task);
-            return this.task.isSamePerson(task);
+            return this.task.isSameTask(task);
         }
     }
 
@@ -176,12 +179,13 @@ public class AddCommandTest {
      * A Model stub that always accept the task being added.
      */
     private class ModelStubAcceptingPersonAdded extends ModelStub {
+
         final ArrayList<Task> personsAdded = new ArrayList<>();
 
         @Override
         public boolean hasPerson(Task task) {
             requireNonNull(task);
-            return personsAdded.stream().anyMatch(task::isSamePerson);
+            return personsAdded.stream().anyMatch(task::isSameTask);
         }
 
         @Override

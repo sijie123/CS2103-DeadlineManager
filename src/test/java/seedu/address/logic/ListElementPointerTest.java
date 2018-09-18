@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class ListElementPointerTest {
+
     private static final String FIRST_ELEMENT = "first";
     private static final String SECOND_ELEMENT = "second";
     private List<String> pointerElements;
@@ -96,7 +97,8 @@ public class ListElementPointerTest {
         assertFalse(firstPointer.equals(null));
 
         // different elements -> returns false
-        ListElementPointer differentElementPointer = new ListElementPointer(Collections.singletonList(SECOND_ELEMENT));
+        ListElementPointer differentElementPointer = new ListElementPointer(
+            Collections.singletonList(SECOND_ELEMENT));
         assertFalse(firstPointer.equals(differentElementPointer));
 
         // different index -> returns false
@@ -105,8 +107,8 @@ public class ListElementPointerTest {
     }
 
     /**
-     * Asserts that {@code pointer#hasNext()} returns true and the return value
-     * of {@code pointer#next()} equals to {@code element}.
+     * Asserts that {@code pointer#hasNext()} returns true and the return value of {@code
+     * pointer#next()} equals to {@code element}.
      */
     private void assertNextSuccess(String element) {
         assertTrue(pointer.hasNext());
@@ -114,8 +116,8 @@ public class ListElementPointerTest {
     }
 
     /**
-     * Asserts that {@code pointer#hasPrevious()} returns true and the return value
-     * of {@code pointer#previous()} equals to {@code element}.
+     * Asserts that {@code pointer#hasPrevious()} returns true and the return value of {@code
+     * pointer#previous()} equals to {@code element}.
      */
     private void assertPreviousSuccess(String element) {
         assertTrue(pointer.hasPrevious());
@@ -123,8 +125,8 @@ public class ListElementPointerTest {
     }
 
     /**
-     * Asserts that {@code pointer#hasCurrent()} returns true and the return value
-     * of {@code pointer#current()} equals to {@code element}.
+     * Asserts that {@code pointer#hasCurrent()} returns true and the return value of {@code
+     * pointer#current()} equals to {@code element}.
      */
     private void assertCurrentSuccess(String element) {
         assertTrue(pointer.hasCurrent());
@@ -132,8 +134,8 @@ public class ListElementPointerTest {
     }
 
     /**
-     * Asserts that {@code pointer#hasNext()} returns false and the following
-     * {@code pointer#next()} call throws {@code NoSuchElementException}.
+     * Asserts that {@code pointer#hasNext()} returns false and the following {@code pointer#next()}
+     * call throws {@code NoSuchElementException}.
      */
     private void assertNextFailure() {
         assertFalse(pointer.hasNext());
@@ -146,8 +148,8 @@ public class ListElementPointerTest {
     }
 
     /**
-     * Asserts that {@code pointer#hasPrevious()} returns false and the following
-     * {@code pointer#previous()} call throws {@code NoSuchElementException}.
+     * Asserts that {@code pointer#hasPrevious()} returns false and the following {@code
+     * pointer#previous()} call throws {@code NoSuchElementException}.
      */
     private void assertPreviousFailure() {
         assertFalse(pointer.hasPrevious());
@@ -160,8 +162,8 @@ public class ListElementPointerTest {
     }
 
     /**
-     * Asserts that {@code pointer#hasCurrent()} returns false and the following
-     * {@code pointer#current()} call throws {@code NoSuchElementException}.
+     * Asserts that {@code pointer#hasCurrent()} returns false and the following {@code
+     * pointer#current()} call throws {@code NoSuchElementException}.
      */
     private void assertCurrentFailure() {
         assertFalse(pointer.hasCurrent());

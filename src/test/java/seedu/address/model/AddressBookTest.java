@@ -51,8 +51,9 @@ public class AddressBookTest {
     @Test
     public void resetData_withDuplicatePersons_throwsDuplicatePersonException() {
         // Two tasks with the same identity fields
-        Task editedAlice = new PersonBuilder(ALICE).withAddress(VALID_ADDRESS_BOB).withTags(VALID_TAG_HUSBAND)
-                .build();
+        Task editedAlice = new PersonBuilder(ALICE).withAddress(VALID_ADDRESS_BOB)
+            .withTags(VALID_TAG_HUSBAND)
+            .build();
         List<Task> newTasks = Arrays.asList(ALICE, editedAlice);
         AddressBookStub newData = new AddressBookStub(newTasks);
 
@@ -80,8 +81,9 @@ public class AddressBookTest {
     @Test
     public void hasPerson_personWithSameIdentityFieldsInAddressBook_returnsTrue() {
         addressBook.addPerson(ALICE);
-        Task editedAlice = new PersonBuilder(ALICE).withAddress(VALID_ADDRESS_BOB).withTags(VALID_TAG_HUSBAND)
-                .build();
+        Task editedAlice = new PersonBuilder(ALICE).withAddress(VALID_ADDRESS_BOB)
+            .withTags(VALID_TAG_HUSBAND)
+            .build();
         assertTrue(addressBook.hasPerson(editedAlice));
     }
 
@@ -95,6 +97,7 @@ public class AddressBookTest {
      * A stub ReadOnlyAddressBook whose tasks list can violate interface constraints.
      */
     private static class AddressBookStub implements ReadOnlyAddressBook {
+
         private final ObservableList<Task> tasks = FXCollections.observableArrayList();
 
         AddressBookStub(Collection<Task> tasks) {

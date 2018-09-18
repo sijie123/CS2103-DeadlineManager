@@ -11,7 +11,8 @@ import seedu.address.commons.events.ui.NewResultAvailableEvent;
 
 public class ResultDisplayTest extends GuiUnitTest {
 
-    private static final NewResultAvailableEvent NEW_RESULT_EVENT_STUB = new NewResultAvailableEvent("Stub");
+    private static final NewResultAvailableEvent NEW_RESULT_EVENT_STUB = new NewResultAvailableEvent(
+        "Stub");
 
     private ResultDisplayHandle resultDisplayHandle;
 
@@ -21,7 +22,7 @@ public class ResultDisplayTest extends GuiUnitTest {
         uiPartRule.setUiPart(resultDisplay);
 
         resultDisplayHandle = new ResultDisplayHandle(getChildNode(resultDisplay.getRoot(),
-                ResultDisplayHandle.RESULT_DISPLAY_ID));
+            ResultDisplayHandle.RESULT_DISPLAY_ID));
     }
 
     @Test

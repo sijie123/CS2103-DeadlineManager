@@ -9,13 +9,20 @@ import seedu.address.model.person.Task;
  * The API of the Model component.
  */
 public interface Model {
-    /** {@code Predicate} that always evaluate to true */
+
+    /**
+     * {@code Predicate} that always evaluate to true
+     */
     Predicate<Task> PREDICATE_SHOW_ALL_PERSONS = unused -> true;
 
-    /** Clears existing backing model and replaces with the provided new data. */
+    /**
+     * Clears existing backing model and replaces with the provided new data.
+     */
     void resetData(ReadOnlyAddressBook newData);
 
-    /** Returns the AddressBook */
+    /**
+     * Returns the AddressBook
+     */
     ReadOnlyAddressBook getAddressBook();
 
     /**
@@ -24,29 +31,30 @@ public interface Model {
     boolean hasPerson(Task task);
 
     /**
-     * Deletes the given task.
-     * The task must exist in the address book.
+     * Deletes the given task. The task must exist in the address book.
      */
     void deletePerson(Task target);
 
     /**
-     * Adds the given task.
-     * {@code task} must not already exist in the address book.
+     * Adds the given task. {@code task} must not already exist in the address book.
      */
     void addPerson(Task task);
 
     /**
-     * Replaces the given task {@code target} with {@code editedTask}.
-     * {@code target} must exist in the address book.
-     * The task identity of {@code editedTask} must not be the same as another existing task in the address book.
+     * Replaces the given task {@code target} with {@code editedTask}. {@code target} must exist in
+     * the address book. The task identity of {@code editedTask} must not be the same as another
+     * existing task in the address book.
      */
     void updatePerson(Task target, Task editedTask);
 
-    /** Returns an unmodifiable view of the filtered task list */
+    /**
+     * Returns an unmodifiable view of the filtered task list
+     */
     ObservableList<Task> getFilteredPersonList();
 
     /**
      * Updates the filter of the filtered task list to filter by the given {@code predicate}.
+     *
      * @throws NullPointerException if {@code predicate} is null.
      */
     void updateFilteredPersonList(Predicate<Task> predicate);

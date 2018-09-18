@@ -36,14 +36,14 @@ public class AddCommandIntegrationTest {
         expectedModel.commitAddressBook();
 
         assertCommandSuccess(new AddCommand(validTask), model, commandHistory,
-                String.format(AddCommand.MESSAGE_SUCCESS, validTask), expectedModel);
+            String.format(AddCommand.MESSAGE_SUCCESS, validTask), expectedModel);
     }
 
     @Test
     public void execute_duplicatePerson_throwsCommandException() {
         Task taskInList = model.getAddressBook().getPersonList().get(0);
         assertCommandFailure(new AddCommand(taskInList), model, commandHistory,
-                AddCommand.MESSAGE_DUPLICATE_PERSON);
+            AddCommand.MESSAGE_DUPLICATE_PERSON);
     }
 
 }

@@ -12,17 +12,18 @@ import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
 
 /**
- * A list of persons that enforces uniqueness between its elements and does not allow nulls.
- * A task is considered unique by comparing using {@code Task#isSamePerson(Task)}. As such, adding and updating of
- * persons uses Task#isSamePerson(Task) for equality so as to ensure that the task being added or updated is
- * unique in terms of identity in the UniquePersonList. However, the removal of a task uses Task#equals(Object) so
- * as to ensure that the task with exactly the same fields will be removed.
- *
+ * A list of persons that enforces uniqueness between its elements and does not allow nulls. A task
+ * is considered unique by comparing using {@code Task#isSameTask(Task)}. As such, adding and
+ * updating of persons uses Task#isSameTask(Task) for equality so as to ensure that the task being
+ * added or updated is unique in terms of identity in the UniqueTaskList. However, the removal of a
+ * task uses Task#equals(Object) so as to ensure that the task with exactly the same fields will be
+ * removed.
+ * <p>
  * Supports a minimal set of list operations.
  *
- * @see Task#isSamePerson(Task)
+ * @see Task#isSameTask(Task)
  */
-public class UniquePersonList implements Iterable<Task> {
+public class UniqueTaskList implements Iterable<Task> {
 
     private final ObservableList<Task> internalList = FXCollections.observableArrayList();
 
@@ -31,12 +32,11 @@ public class UniquePersonList implements Iterable<Task> {
      */
     public boolean contains(Task toCheck) {
         requireNonNull(toCheck);
-        return internalList.stream().anyMatch(toCheck::isSamePerson);
+        return internalList.stream().anyMatch(toCheck::isSameTask);
     }
 
     /**
-     * Adds a task to the list.
-     * The task must not already exist in the list.
+     * Adds a task to the list. The task must not already exist in the list.
      */
     public void add(Task toAdd) {
         requireNonNull(toAdd);
@@ -47,9 +47,9 @@ public class UniquePersonList implements Iterable<Task> {
     }
 
     /**
-     * Replaces the task {@code target} in the list with {@code editedTask}.
-     * {@code target} must exist in the list.
-     * The task identity of {@code editedTask} must not be the same as another existing task in the list.
+     * Replaces the task {@code target} in the list with {@code editedTask}. {@code target} must
+     * exist in the list. The task identity of {@code editedTask} must not be the same as another
+     * existing task in the list.
      */
     public void setPerson(Task target, Task editedTask) {
         requireAllNonNull(target, editedTask);
@@ -59,7 +59,7 @@ public class UniquePersonList implements Iterable<Task> {
             throw new PersonNotFoundException();
         }
 
-        if (!target.isSamePerson(editedTask) && contains(editedTask)) {
+        if (!target.isSameTask(editedTask) && contains(editedTask)) {
             throw new DuplicatePersonException();
         }
 
@@ -67,8 +67,7 @@ public class UniquePersonList implements Iterable<Task> {
     }
 
     /**
-     * Removes the equivalent task from the list.
-     * The task must exist in the list.
+     * Removes the equivalent task from the list. The task must exist in the list.
      */
     public void remove(Task toRemove) {
         requireNonNull(toRemove);
@@ -77,14 +76,14 @@ public class UniquePersonList implements Iterable<Task> {
         }
     }
 
-    public void setPersons(UniquePersonList replacement) {
+    public void setPersons(UniqueTaskList replacement) {
         requireNonNull(replacement);
         internalList.setAll(replacement.internalList);
     }
 
     /**
-     * Replaces the contents of this list with {@code tasks}.
-     * {@code tasks} must not contain duplicate tasks.
+     * Replaces the contents of this list with {@code tasks}. {@code tasks} must not contain
+     * duplicate tasks.
      */
     public void setPersons(List<Task> tasks) {
         requireAllNonNull(tasks);
@@ -110,8 +109,8 @@ public class UniquePersonList implements Iterable<Task> {
     @Override
     public boolean equals(Object other) {
         return other == this // short circuit if same object
-                || (other instanceof UniquePersonList // instanceof handles nulls
-                        && internalList.equals(((UniquePersonList) other).internalList));
+            || (other instanceof UniqueTaskList // instanceof handles nulls
+            && internalList.equals(((UniqueTaskList) other).internalList));
     }
 
     @Override
@@ -125,7 +124,7 @@ public class UniquePersonList implements Iterable<Task> {
     private boolean personsAreUnique(List<Task> tasks) {
         for (int i = 0; i < tasks.size() - 1; i++) {
             for (int j = i + 1; j < tasks.size(); j++) {
-                if (tasks.get(i).isSamePerson(tasks.get(j))) {
+                if (tasks.get(i).isSameTask(tasks.get(j))) {
                     return false;
                 }
             }

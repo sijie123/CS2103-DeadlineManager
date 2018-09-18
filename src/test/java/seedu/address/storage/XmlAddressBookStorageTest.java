@@ -21,7 +21,9 @@ import seedu.address.model.AddressBook;
 import seedu.address.model.ReadOnlyAddressBook;
 
 public class XmlAddressBookStorageTest {
-    private static final Path TEST_DATA_FOLDER = Paths.get("src", "test", "data", "XmlAddressBookStorageTest");
+
+    private static final Path TEST_DATA_FOLDER = Paths
+        .get("src", "test", "data", "XmlAddressBookStorageTest");
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -35,14 +37,16 @@ public class XmlAddressBookStorageTest {
         readAddressBook(null);
     }
 
-    private java.util.Optional<ReadOnlyAddressBook> readAddressBook(String filePath) throws Exception {
-        return new XmlAddressBookStorage(Paths.get(filePath)).readAddressBook(addToTestDataPathIfNotNull(filePath));
+    private java.util.Optional<ReadOnlyAddressBook> readAddressBook(String filePath)
+        throws Exception {
+        return new XmlAddressBookStorage(Paths.get(filePath))
+            .readAddressBook(addToTestDataPathIfNotNull(filePath));
     }
 
     private Path addToTestDataPathIfNotNull(String prefsFileInTestDataFolder) {
         return prefsFileInTestDataFolder != null
-                ? TEST_DATA_FOLDER.resolve(prefsFileInTestDataFolder)
-                : null;
+            ? TEST_DATA_FOLDER.resolve(prefsFileInTestDataFolder)
+            : null;
     }
 
     @Test
@@ -62,13 +66,15 @@ public class XmlAddressBookStorageTest {
     }
 
     @Test
-    public void readAddressBook_invalidPersonAddressBook_throwDataConversionException() throws Exception {
+    public void readAddressBook_invalidPersonAddressBook_throwDataConversionException()
+        throws Exception {
         thrown.expect(DataConversionException.class);
         readAddressBook("invalidPersonAddressBook.xml");
     }
 
     @Test
-    public void readAddressBook_invalidAndValidPersonAddressBook_throwDataConversionException() throws Exception {
+    public void readAddressBook_invalidAndValidPersonAddressBook_throwDataConversionException()
+        throws Exception {
         thrown.expect(DataConversionException.class);
         readAddressBook("invalidAndValidPersonAddressBook.xml");
     }
@@ -111,7 +117,7 @@ public class XmlAddressBookStorageTest {
     private void saveAddressBook(ReadOnlyAddressBook addressBook, String filePath) {
         try {
             new XmlAddressBookStorage(Paths.get(filePath))
-                    .saveAddressBook(addressBook, addToTestDataPathIfNotNull(filePath));
+                .saveAddressBook(addressBook, addToTestDataPathIfNotNull(filePath));
         } catch (IOException ioe) {
             throw new AssertionError("There should not be an error writing to the file.", ioe);
         }

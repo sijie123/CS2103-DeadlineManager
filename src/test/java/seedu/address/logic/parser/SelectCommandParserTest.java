@@ -11,6 +11,7 @@ import seedu.address.logic.commands.SelectCommand;
 
 /**
  * Test scope: similar to {@code DeleteCommandParserTest}.
+ *
  * @see DeleteCommandParserTest
  */
 public class SelectCommandParserTest {
@@ -24,6 +25,7 @@ public class SelectCommandParserTest {
 
     @Test
     public void parse_invalidArgs_throwsParseException() {
-        assertParseFailure(parser, "a", String.format(MESSAGE_INVALID_COMMAND_FORMAT, SelectCommand.MESSAGE_USAGE));
+        assertParseFailure(parser, "a",
+            String.format(MESSAGE_INVALID_COMMAND_FORMAT, SelectCommand.MESSAGE_USAGE));
     }
 }

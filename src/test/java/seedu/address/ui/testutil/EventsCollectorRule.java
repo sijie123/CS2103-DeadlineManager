@@ -16,6 +16,7 @@ import seedu.address.commons.events.BaseEvent;
  * Sets up an {@code EventsCollector} and tears it down after each test.
  */
 public class EventsCollectorRule implements TestRule {
+
     public final EventsCollector eventsCollector = new EventsCollector();
 
     protected void after() {
@@ -40,6 +41,7 @@ public class EventsCollectorRule implements TestRule {
      * A class that collects events raised by other classes.
      */
     public class EventsCollector {
+
         private List<BaseEvent> events = new ArrayList<BaseEvent>();
 
         public EventsCollector() {

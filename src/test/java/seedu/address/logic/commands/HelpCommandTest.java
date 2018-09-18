@@ -14,6 +14,7 @@ import seedu.address.model.ModelManager;
 import seedu.address.ui.testutil.EventsCollectorRule;
 
 public class HelpCommandTest {
+
     @Rule
     public final EventsCollectorRule eventsCollectorRule = new EventsCollectorRule();
 
@@ -23,8 +24,10 @@ public class HelpCommandTest {
 
     @Test
     public void execute_help_success() {
-        assertCommandSuccess(new HelpCommand(), model, commandHistory, SHOWING_HELP_MESSAGE, expectedModel);
-        assertTrue(eventsCollectorRule.eventsCollector.getMostRecent() instanceof ShowHelpRequestEvent);
+        assertCommandSuccess(new HelpCommand(), model, commandHistory, SHOWING_HELP_MESSAGE,
+            expectedModel);
+        assertTrue(eventsCollectorRule.eventsCollector
+            .getMostRecent() instanceof ShowHelpRequestEvent);
         assertTrue(eventsCollectorRule.eventsCollector.getSize() == 1);
     }
 }

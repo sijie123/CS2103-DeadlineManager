@@ -9,6 +9,7 @@ import java.util.List;
  * Stores the history of commands executed.
  */
 public class CommandHistory {
+
     private LinkedList<String> userInputHistory;
 
     public CommandHistory() {

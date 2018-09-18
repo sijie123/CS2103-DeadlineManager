@@ -37,8 +37,8 @@ public class IndexTest {
     }
 
     /**
-     * Executes {@code Index#fromZeroBased(int)} with {@code invalidZeroBasedIndex}, confirms that an
-     * {@code IndexOutOfBoundsException} is thrown.
+     * Executes {@code Index#fromZeroBased(int)} with {@code invalidZeroBasedIndex}, confirms that
+     * an {@code IndexOutOfBoundsException} is thrown.
      */
     private void assertCreateZeroBasedFailure(int invalidZeroBasedIndex) {
         assertCreateFailure(invalidZeroBasedIndex, true);
@@ -53,8 +53,9 @@ public class IndexTest {
     }
 
     /**
-     * Executes either {@code Index#fromZeroBased(int)} (if it is zero based), or {@code Index#fromOneBased(int)}
-     * (if it is one based), and confirms that an {@code IndexOutOfBoundsException} is thrown.
+     * Executes either {@code Index#fromZeroBased(int)} (if it is zero based), or {@code
+     * Index#fromOneBased(int)} (if it is one based), and confirms that an {@code
+     * IndexOutOfBoundsException} is thrown.
      */
     private void assertCreateFailure(int invalidIndex, boolean isZeroBased) {
         try {

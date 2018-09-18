@@ -10,6 +10,7 @@ import seedu.address.commons.events.BaseEvent;
  * Manages the event dispatching of the app.
  */
 public class EventsCenter {
+
     private static final Logger logger = LogsCenter.getLogger(EventsCenter.class);
     private static EventsCenter instance;
     private final EventBus eventBus;
@@ -37,7 +38,8 @@ public class EventsCenter {
      * Posts an event to the event bus.
      */
     public <E extends BaseEvent> EventsCenter post(E event) {
-        logger.info("------[Event Posted] " + event.getClass().getCanonicalName() + ": " + event.toString());
+        logger.info("------[Event Posted] " + event.getClass().getCanonicalName() + ": " + event
+            .toString());
         eventBus.post(event);
         return this;
     }

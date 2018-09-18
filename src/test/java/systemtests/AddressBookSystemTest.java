@@ -45,16 +45,18 @@ import seedu.address.ui.BrowserPanel;
 import seedu.address.ui.CommandBox;
 
 /**
- * A system test class for AddressBook, which provides access to handles of GUI components and helper methods
- * for test verification.
+ * A system test class for AddressBook, which provides access to handles of GUI components and
+ * helper methods for test verification.
  */
 public abstract class AddressBookSystemTest {
+
     @ClassRule
     public static ClockRule clockRule = new ClockRule();
 
-    private static final List<String> COMMAND_BOX_DEFAULT_STYLE = Arrays.asList("text-input", "text-field");
+    private static final List<String> COMMAND_BOX_DEFAULT_STYLE = Arrays
+        .asList("text-input", "text-field");
     private static final List<String> COMMAND_BOX_ERROR_STYLE =
-            Arrays.asList("text-input", "text-field", CommandBox.ERROR_STYLE_CLASS);
+        Arrays.asList("text-input", "text-field", CommandBox.ERROR_STYLE_CLASS);
 
     private MainWindowHandle mainWindowHandle;
     private TestApp testApp;
@@ -124,8 +126,8 @@ public abstract class AddressBookSystemTest {
     }
 
     /**
-     * Executes {@code command} in the application's {@code CommandBox}.
-     * Method returns after UI components have been updated.
+     * Executes {@code command} in the application's {@code CommandBox}. Method returns after UI
+     * components have been updated.
      */
     protected void executeCommand(String command) {
         rememberStates();
@@ -143,15 +145,18 @@ public abstract class AddressBookSystemTest {
      */
     protected void showAllPersons() {
         executeCommand(ListCommand.COMMAND_WORD);
-        assertEquals(getModel().getAddressBook().getPersonList().size(), getModel().getFilteredPersonList().size());
+        assertEquals(getModel().getAddressBook().getPersonList().size(),
+            getModel().getFilteredPersonList().size());
     }
 
     /**
-     * Displays all persons with any parts of their names matching {@code keyword} (case-insensitive).
+     * Displays all persons with any parts of their names matching {@code keyword}
+     * (case-insensitive).
      */
     protected void showPersonsWithName(String keyword) {
         executeCommand(FindCommand.COMMAND_WORD + " " + keyword);
-        assertTrue(getModel().getFilteredPersonList().size() < getModel().getAddressBook().getPersonList().size());
+        assertTrue(getModel().getFilteredPersonList().size() < getModel().getAddressBook()
+            .getPersonList().size());
     }
 
     /**
@@ -171,21 +176,24 @@ public abstract class AddressBookSystemTest {
     }
 
     /**
-     * Asserts that the {@code CommandBox} displays {@code expectedCommandInput}, the {@code ResultDisplay} displays
-     * {@code expectedResultMessage}, the storage contains the same task objects as {@code expectedModel}
-     * and the task list panel displays the persons in the model correctly.
+     * Asserts that the {@code CommandBox} displays {@code expectedCommandInput}, the {@code
+     * ResultDisplay} displays {@code expectedResultMessage}, the storage contains the same task
+     * objects as {@code expectedModel} and the task list panel displays the persons in the model
+     * correctly.
      */
-    protected void assertApplicationDisplaysExpected(String expectedCommandInput, String expectedResultMessage,
-            Model expectedModel) {
+    protected void assertApplicationDisplaysExpected(String expectedCommandInput,
+                                                     String expectedResultMessage,
+                                                     Model expectedModel) {
         assertEquals(expectedCommandInput, getCommandBox().getInput());
         assertEquals(expectedResultMessage, getResultDisplay().getText());
-        assertEquals(new AddressBook(expectedModel.getAddressBook()), testApp.readStorageAddressBook());
+        assertEquals(new AddressBook(expectedModel.getAddressBook()),
+            testApp.readStorageAddressBook());
         assertListMatching(getPersonListPanel(), expectedModel.getFilteredPersonList());
     }
 
     /**
-     * Calls {@code BrowserPanelHandle}, {@code PersonListPanelHandle} and {@code StatusBarFooterHandle} to remember
-     * their current state.
+     * Calls {@code BrowserPanelHandle}, {@code PersonListPanelHandle} and {@code
+     * StatusBarFooterHandle} to remember their current state.
      */
     private void rememberStates() {
         StatusBarFooterHandle statusBarFooterHandle = getStatusBarFooter();
@@ -196,8 +204,9 @@ public abstract class AddressBookSystemTest {
     }
 
     /**
-     * Asserts that the previously selected card is now deselected and the browser's url remains displaying the details
-     * of the previously selected task.
+     * Asserts that the previously selected card is now deselected and the browser's url remains
+     * displaying the details of the previously selected task.
+     *
      * @see BrowserPanelHandle#isUrlChanged()
      */
     protected void assertSelectedCardDeselected() {
@@ -206,8 +215,10 @@ public abstract class AddressBookSystemTest {
     }
 
     /**
-     * Asserts that the browser's url is changed to display the details of the task in the task list panel at
-     * {@code expectedSelectedCardIndex}, and only the card at {@code expectedSelectedCardIndex} is selected.
+     * Asserts that the browser's url is changed to display the details of the task in the task list
+     * panel at {@code expectedSelectedCardIndex}, and only the card at {@code
+     * expectedSelectedCardIndex} is selected.
+     *
      * @see BrowserPanelHandle#isUrlChanged()
      * @see PersonListPanelHandle#isSelectedPersonCardChanged()
      */
@@ -216,17 +227,21 @@ public abstract class AddressBookSystemTest {
         String selectedCardName = getPersonListPanel().getHandleToSelectedCard().getName();
         URL expectedUrl;
         try {
-            expectedUrl = new URL(BrowserPanel.SEARCH_PAGE_URL + selectedCardName.replaceAll(" ", "%20"));
+            expectedUrl = new URL(
+                BrowserPanel.SEARCH_PAGE_URL + selectedCardName.replaceAll(" ", "%20"));
         } catch (MalformedURLException mue) {
             throw new AssertionError("URL expected to be valid.", mue);
         }
         assertEquals(expectedUrl, getBrowserPanel().getLoadedUrl());
 
-        assertEquals(expectedSelectedCardIndex.getZeroBased(), getPersonListPanel().getSelectedCardIndex());
+        assertEquals(expectedSelectedCardIndex.getZeroBased(),
+            getPersonListPanel().getSelectedCardIndex());
     }
 
     /**
-     * Asserts that the browser's url and the selected card in the task list panel remain unchanged.
+     * Asserts that the browser's url and the selected card in the task list panel remain
+     * unchanged.
+     *
      * @see BrowserPanelHandle#isUrlChanged()
      * @see PersonListPanelHandle#isSelectedPersonCardChanged()
      */
@@ -259,8 +274,8 @@ public abstract class AddressBookSystemTest {
     }
 
     /**
-     * Asserts that only the sync status in the status bar was changed to the timing of
-     * {@code ClockRule#getInjectedClock()}, while the save location remains the same.
+     * Asserts that only the sync status in the status bar was changed to the timing of {@code
+     * ClockRule#getInjectedClock()}, while the save location remains the same.
      */
     protected void assertStatusBarUnchangedExceptSyncStatus() {
         StatusBarFooterHandle handle = getStatusBarFooter();
@@ -277,9 +292,10 @@ public abstract class AddressBookSystemTest {
         assertEquals("", getCommandBox().getInput());
         assertEquals("", getResultDisplay().getText());
         assertListMatching(getPersonListPanel(), getModel().getFilteredPersonList());
-        assertEquals(MainApp.class.getResource(FXML_FILE_FOLDER + DEFAULT_PAGE), getBrowserPanel().getLoadedUrl());
+        assertEquals(MainApp.class.getResource(FXML_FILE_FOLDER + DEFAULT_PAGE),
+            getBrowserPanel().getLoadedUrl());
         assertEquals(Paths.get(".").resolve(testApp.getStorageSaveLocation()).toString(),
-                getStatusBarFooter().getSaveLocation());
+            getStatusBarFooter().getSaveLocation());
         assertEquals(SYNC_STATUS_INITIAL, getStatusBarFooter().getSyncStatus());
     }
 

@@ -21,11 +21,11 @@ public class XmlSerializableAddressBook {
     public static final String MESSAGE_DUPLICATE_PERSON = "Persons list contains duplicate person(s).";
 
     @XmlElement
-    private List<XmlAdaptedPerson> tasks;
+    private List<XmlAdaptedTask> tasks;
 
     /**
-     * Creates an empty XmlSerializableAddressBook.
-     * This empty constructor is required for marshalling.
+     * Creates an empty XmlSerializableAddressBook. This empty constructor is required for
+     * marshalling.
      */
     public XmlSerializableAddressBook() {
         tasks = new ArrayList<>();
@@ -36,18 +36,19 @@ public class XmlSerializableAddressBook {
      */
     public XmlSerializableAddressBook(ReadOnlyAddressBook src) {
         this();
-        tasks.addAll(src.getPersonList().stream().map(XmlAdaptedPerson::new).collect(Collectors.toList()));
+        tasks.addAll(
+            src.getPersonList().stream().map(XmlAdaptedTask::new).collect(Collectors.toList()));
     }
 
     /**
      * Converts this addressbook into the model's {@code AddressBook} object.
      *
-     * @throws IllegalValueException if there were any data constraints violated or duplicates in the
-     * {@code XmlAdaptedPerson}.
+     * @throws IllegalValueException if there were any data constraints violated or duplicates in
+     *                               the {@code XmlAdaptedTask}.
      */
     public AddressBook toModelType() throws IllegalValueException {
         AddressBook addressBook = new AddressBook();
-        for (XmlAdaptedPerson p : tasks) {
+        for (XmlAdaptedTask p : tasks) {
             Task task = p.toModelType();
             if (addressBook.hasPerson(task)) {
                 throw new IllegalValueException(MESSAGE_DUPLICATE_PERSON);

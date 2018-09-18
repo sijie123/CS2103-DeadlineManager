@@ -19,6 +19,7 @@ import seedu.address.model.person.Task;
  * Panel containing the list of persons.
  */
 public class PersonListPanel extends UiPart<Region> {
+
     private static final String FXML = "PersonListPanel.fxml";
     private final Logger logger = LogsCenter.getLogger(PersonListPanel.class);
 
@@ -39,12 +40,12 @@ public class PersonListPanel extends UiPart<Region> {
 
     private void setEventHandlerForSelectionChangeEvent() {
         personListView.getSelectionModel().selectedItemProperty()
-                .addListener((observable, oldValue, newValue) -> {
-                    if (newValue != null) {
-                        logger.fine("Selection in task list panel changed to : '" + newValue + "'");
-                        raise(new PersonPanelSelectionChangedEvent(newValue));
-                    }
-                });
+            .addListener((observable, oldValue, newValue) -> {
+                if (newValue != null) {
+                    logger.fine("Selection in task list panel changed to : '" + newValue + "'");
+                    raise(new PersonPanelSelectionChangedEvent(newValue));
+                }
+            });
     }
 
     /**
@@ -64,9 +65,11 @@ public class PersonListPanel extends UiPart<Region> {
     }
 
     /**
-     * Custom {@code ListCell} that displays the graphics of a {@code Task} using a {@code PersonCard}.
+     * Custom {@code ListCell} that displays the graphics of a {@code Task} using a {@code
+     * PersonCard}.
      */
     class PersonListViewCell extends ListCell<Task> {
+
         @Override
         protected void updateItem(Task task, boolean empty) {
             super.updateItem(task, empty);

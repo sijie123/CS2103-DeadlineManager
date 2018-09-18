@@ -18,6 +18,7 @@ import seedu.address.model.person.Task;
  * Represents the in-memory model of the address book data.
  */
 public class ModelManager extends ComponentManager implements Model {
+
     private static final Logger logger = LogsCenter.getLogger(ModelManager.class);
 
     private final VersionedAddressBook versionedAddressBook;
@@ -30,7 +31,8 @@ public class ModelManager extends ComponentManager implements Model {
         super();
         requireAllNonNull(addressBook, userPrefs);
 
-        logger.fine("Initializing with address book: " + addressBook + " and user prefs " + userPrefs);
+        logger.fine(
+            "Initializing with address book: " + addressBook + " and user prefs " + userPrefs);
 
         versionedAddressBook = new VersionedAddressBook(addressBook);
         filteredTasks = new FilteredList<>(versionedAddressBook.getPersonList());
@@ -51,7 +53,9 @@ public class ModelManager extends ComponentManager implements Model {
         return versionedAddressBook;
     }
 
-    /** Raises an event to indicate the model has changed */
+    /**
+     * Raises an event to indicate the model has changed
+     */
     private void indicateAddressBookChanged() {
         raise(new AddressBookChangedEvent(versionedAddressBook));
     }
@@ -144,7 +148,7 @@ public class ModelManager extends ComponentManager implements Model {
         // state check
         ModelManager other = (ModelManager) obj;
         return versionedAddressBook.equals(other.versionedAddressBook)
-                && filteredTasks.equals(other.filteredTasks);
+            && filteredTasks.equals(other.filteredTasks);
     }
 
 }

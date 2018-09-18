@@ -9,6 +9,7 @@ import javafx.scene.input.KeyCode;
  * Provides a handle to the main menu of the app.
  */
 public class MainMenuHandle extends NodeHandle<Node> {
+
     public static final String MENU_BAR_ID = "#menuBar";
 
     public MainMenuHandle(Node mainMenuNode) {
@@ -23,8 +24,8 @@ public class MainMenuHandle extends NodeHandle<Node> {
     }
 
     /**
-     * Opens the {@code HelpWindow} by pressing the shortcut key associated
-     * with the menu bar in {@code MainWindow}.
+     * Opens the {@code HelpWindow} by pressing the shortcut key associated with the menu bar in
+     * {@code MainWindow}.
      */
     public void openHelpWindowUsingAccelerator() {
         guiRobot.push(KeyCode.F1);

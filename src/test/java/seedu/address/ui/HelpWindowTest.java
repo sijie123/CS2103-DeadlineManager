@@ -46,7 +46,7 @@ public class HelpWindowTest extends GuiUnitTest {
     }
 
     @Test
-    public void focus_helpWindowNotFocused_focused() throws Exception {
+    public void focus_helpWindowNotFocused_focused() {
         // TODO: This test skip can be removed once this bug is fixed:
         // https://github.com/javafxports/openjdk-jfx/issues/50
         //
@@ -56,7 +56,8 @@ public class HelpWindowTest extends GuiUnitTest {
         // stage2.isFocused() returns true. However, as reported in the bug report,
         // both stage1.isFocused() and stage2.isFocused() returns true,
         // which fails the test.
-        assumeFalse("Test skipped in headless mode: Window focus behavior is buggy.", guiRobot.isHeadlessMode());
+        assumeFalse("Test skipped in headless mode: Window focus behavior is buggy.",
+            guiRobot.isHeadlessMode());
         guiRobot.interact(helpWindow::show);
 
         // Focus on another stage to remove focus from the helpWindow

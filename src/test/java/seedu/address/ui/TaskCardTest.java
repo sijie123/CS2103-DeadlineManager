@@ -16,7 +16,7 @@ public class TaskCardTest extends GuiUnitTest {
     @Test
     public void display() {
         // no tags
-        Task taskWithNoTags = new PersonBuilder().withTags(new String[0]).build();
+        Task taskWithNoTags = new PersonBuilder().withTags().build();
         PersonCard personCard = new PersonCard(taskWithNoTags, 1);
         uiPartRule.setUiPart(personCard);
         assertCardDisplay(personCard, taskWithNoTags, 1);
@@ -55,8 +55,8 @@ public class TaskCardTest extends GuiUnitTest {
     }
 
     /**
-     * Asserts that {@code personCard} displays the details of {@code expectedTask} correctly and matches
-     * {@code expectedId}.
+     * Asserts that {@code personCard} displays the details of {@code expectedTask} correctly and
+     * matches {@code expectedId}.
      */
     private void assertCardDisplay(PersonCard personCard, Task expectedTask, int expectedId) {
         guiRobot.pauseForHuman();

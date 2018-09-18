@@ -21,14 +21,13 @@ public class XmlUtil {
      *
      * @param file           Points to a valid xml file containing data that match the {@code classToConvert}.
      *                       Cannot be null.
-     * @param classToConvert The class corresponding to the xml data.
-     *                       Cannot be null.
+     * @param classToConvert The class corresponding to the xml data. Cannot be null.
      * @throws FileNotFoundException Thrown if the file is missing.
      * @throws JAXBException         Thrown if the file is empty or does not have the correct format.
      */
     @SuppressWarnings("unchecked")
     public static <T> T getDataFromFile(Path file, Class<T> classToConvert)
-            throws FileNotFoundException, JAXBException {
+        throws FileNotFoundException, JAXBException {
 
         requireNonNull(file);
         requireNonNull(classToConvert);
@@ -49,10 +48,11 @@ public class XmlUtil {
      * @param file Points to a valid xml file containing data that match the {@code classToConvert}.
      *             Cannot be null.
      * @throws FileNotFoundException Thrown if the file is missing.
-     * @throws JAXBException         Thrown if there is an error during converting the data
-     *                               into xml and writing to the file.
+     * @throws JAXBException         Thrown if there is an error during converting the data into xml and
+     *                               writing to the file.
      */
-    public static <T> void saveDataToFile(Path file, T data) throws FileNotFoundException, JAXBException {
+    public static <T> void saveDataToFile(Path file, T data)
+        throws FileNotFoundException, JAXBException {
 
         requireNonNull(file);
         requireNonNull(data);

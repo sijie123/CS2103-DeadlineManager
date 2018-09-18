@@ -8,6 +8,7 @@ import seedu.address.ui.UiManager;
  * A handle for the {@code AlertDialog} of the UI.
  */
 public class AlertDialogHandle extends StageHandle {
+
     private final DialogPane dialogPane;
 
     public AlertDialogHandle(Stage stage) {

@@ -4,13 +4,13 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
 
 /**
- * Represents a Task's address in the address book.
- * Guarantees: immutable; is valid as declared in {@link #isValidAddress(String)}
+ * Represents a Task's address in the address book. Guarantees: immutable; is valid as declared in
+ * {@link #isValidAddress(String)}
  */
 public class Address {
 
     public static final String MESSAGE_ADDRESS_CONSTRAINTS =
-            "Addresses can take any values, and it should not be blank";
+        "Addresses can take any values, and it should not be blank";
 
     /*
      * The first character of the address must not be a whitespace,
@@ -46,8 +46,8 @@ public class Address {
     @Override
     public boolean equals(Object other) {
         return other == this // short circuit if same object
-                || (other instanceof Address // instanceof handles nulls
-                && value.equals(((Address) other).value)); // state check
+            || (other instanceof Address // instanceof handles nulls
+            && value.equals(((Address) other).value)); // state check
     }
 
     @Override
