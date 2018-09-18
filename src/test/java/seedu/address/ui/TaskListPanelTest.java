@@ -21,7 +21,7 @@ import javafx.collections.ObservableList;
 import seedu.address.commons.events.ui.JumpToListRequestEvent;
 import seedu.address.commons.util.FileUtil;
 import seedu.address.commons.util.XmlUtil;
-import seedu.address.model.person.Task;
+import seedu.address.model.task.Task;
 import seedu.address.storage.XmlSerializableAddressBook;
 
 public class TaskListPanelTest extends GuiUnitTest {

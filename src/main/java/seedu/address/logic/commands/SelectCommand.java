@@ -11,7 +11,7 @@ import seedu.address.commons.events.ui.JumpToListRequestEvent;
 import seedu.address.logic.CommandHistory;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
-import seedu.address.model.person.Task;
+import seedu.address.model.task.Task;
 
 /**
  * Selects a task identified using it's displayed index from the address book.

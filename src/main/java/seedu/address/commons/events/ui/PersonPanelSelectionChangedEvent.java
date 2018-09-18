@@ -1,7 +1,7 @@
 package seedu.address.commons.events.ui;
 
 import seedu.address.commons.events.BaseEvent;
-import seedu.address.model.person.Task;
+import seedu.address.model.task.Task;
 
 /**
  * Represents a selection change in the Task List Panel
