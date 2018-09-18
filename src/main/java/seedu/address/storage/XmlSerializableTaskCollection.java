@@ -16,7 +16,7 @@ import seedu.address.model.task.Task;
  * An Immutable TaskCollection that is serializable to XML format
  */
 @XmlRootElement(name = "addressbook")
-public class XmlSerializableAddressBook {
+public class XmlSerializableTaskCollection {
 
     public static final String MESSAGE_DUPLICATE_PERSON = "Persons list contains duplicate person(s).";
 
@@ -24,17 +24,17 @@ public class XmlSerializableAddressBook {
     private List<XmlAdaptedTask> tasks;
 
     /**
-     * Creates an empty XmlSerializableAddressBook. This empty constructor is required for
+     * Creates an empty XmlSerializableTaskCollection. This empty constructor is required for
      * marshalling.
      */
-    public XmlSerializableAddressBook() {
+    public XmlSerializableTaskCollection() {
         tasks = new ArrayList<>();
     }
 
     /**
      * Conversion
      */
-    public XmlSerializableAddressBook(ReadOnlyTaskCollection src) {
+    public XmlSerializableTaskCollection(ReadOnlyTaskCollection src) {
         this();
         tasks.addAll(
             src.getTaskList().stream().map(XmlAdaptedTask::new).collect(Collectors.toList()));
@@ -64,9 +64,9 @@ public class XmlSerializableAddressBook {
             return true;
         }
 
-        if (!(other instanceof XmlSerializableAddressBook)) {
+        if (!(other instanceof XmlSerializableTaskCollection)) {
             return false;
         }
-        return tasks.equals(((XmlSerializableAddressBook) other).tasks);
+        return tasks.equals(((XmlSerializableTaskCollection) other).tasks);
     }
 }

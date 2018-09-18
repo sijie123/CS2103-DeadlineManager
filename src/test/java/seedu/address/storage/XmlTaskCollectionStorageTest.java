@@ -39,7 +39,7 @@ public class XmlTaskCollectionStorageTest {
 
     private java.util.Optional<ReadOnlyTaskCollection> readAddressBook(String filePath)
         throws Exception {
-        return new XmlAddressBookStorage(Paths.get(filePath))
+        return new XmlTaskCollectionStorage(Paths.get(filePath))
             .readAddressBook(addToTestDataPathIfNotNull(filePath));
     }
 
@@ -83,7 +83,7 @@ public class XmlTaskCollectionStorageTest {
     public void readAndSaveAddressBook_allInOrder_success() throws Exception {
         Path filePath = testFolder.getRoot().toPath().resolve("TempAddressBook.xml");
         TaskCollection original = getTypicalAddressBook();
-        XmlAddressBookStorage xmlAddressBookStorage = new XmlAddressBookStorage(filePath);
+        XmlTaskCollectionStorage xmlAddressBookStorage = new XmlTaskCollectionStorage(filePath);
 
         //Save in new file and read back
         xmlAddressBookStorage.saveAddressBook(original, filePath);
@@ -116,7 +116,7 @@ public class XmlTaskCollectionStorageTest {
      */
     private void saveAddressBook(ReadOnlyTaskCollection addressBook, String filePath) {
         try {
-            new XmlAddressBookStorage(Paths.get(filePath))
+            new XmlTaskCollectionStorage(Paths.get(filePath))
                 .saveAddressBook(addressBook, addToTestDataPathIfNotNull(filePath));
         } catch (IOException ioe) {
             throw new AssertionError("There should not be an error writing to the file.", ioe);

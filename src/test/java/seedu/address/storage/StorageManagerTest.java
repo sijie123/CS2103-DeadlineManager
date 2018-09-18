@@ -32,7 +32,7 @@ public class StorageManagerTest {
 
     @Before
     public void setUp() {
-        XmlAddressBookStorage addressBookStorage = new XmlAddressBookStorage(getTempFilePath("ab"));
+        XmlTaskCollectionStorage addressBookStorage = new XmlTaskCollectionStorage(getTempFilePath("ab"));
         JsonUserPrefsStorage userPrefsStorage = new JsonUserPrefsStorage(getTempFilePath("prefs"));
         storageManager = new StorageManager(addressBookStorage, userPrefsStorage);
     }
@@ -60,7 +60,7 @@ public class StorageManagerTest {
     public void addressBookReadSave() throws Exception {
         /*
          * Note: This is an integration test that verifies the StorageManager is properly wired to the
-         * {@link XmlAddressBookStorage} class.
+         * {@link XmlTaskCollectionStorage} class.
          * More extensive testing of UserPref saving/reading is done in {@link XmlTaskCollectionStorageTest} class.
          */
         TaskCollection original = getTypicalAddressBook();
@@ -78,7 +78,7 @@ public class StorageManagerTest {
     public void handleAddressBookChangedEvent_exceptionThrown_eventRaised() {
         // Create a StorageManager while injecting a stub that  throws an exception when the save method is called
         Storage storage = new StorageManager(
-            new XmlAddressBookStorageExceptionThrowingStub(Paths.get("dummy")),
+            new XmlTaskCollectionStorageExceptionThrowingStub(Paths.get("dummy")),
             new JsonUserPrefsStorage(Paths.get("dummy")));
         storage.handleAddressBookChangedEvent(new AddressBookChangedEvent(new TaskCollection()));
         assertTrue(eventsCollectorRule.eventsCollector
@@ -89,9 +89,9 @@ public class StorageManagerTest {
     /**
      * A Stub class to throw an exception when the save method is called
      */
-    class XmlAddressBookStorageExceptionThrowingStub extends XmlAddressBookStorage {
+    class XmlTaskCollectionStorageExceptionThrowingStub extends XmlTaskCollectionStorage {
 
-        public XmlAddressBookStorageExceptionThrowingStub(Path filePath) {
+        public XmlTaskCollectionStorageExceptionThrowingStub(Path filePath) {
             super(filePath);
         }
 

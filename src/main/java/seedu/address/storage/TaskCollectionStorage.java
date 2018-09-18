@@ -11,7 +11,7 @@ import seedu.address.model.TaskCollection;
 /**
  * Represents a storage for {@link TaskCollection}.
  */
-public interface AddressBookStorage {
+public interface TaskCollectionStorage {
 
     /**
      * Returns the file path of the data file.
