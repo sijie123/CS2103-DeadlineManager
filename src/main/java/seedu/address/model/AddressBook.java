@@ -13,7 +13,7 @@ import seedu.address.model.task.UniqueTaskList;
  */
 public class AddressBook implements ReadOnlyAddressBook {
 
-    private final UniqueTaskList persons;
+    private final UniqueTaskList tasks;
 
     /*
      * The 'unusual' code block below is an non-static initialization block, sometimes used to avoid duplication
@@ -23,7 +23,7 @@ public class AddressBook implements ReadOnlyAddressBook {
      *   among constructors.
      */
     {
-        persons = new UniqueTaskList();
+        tasks = new UniqueTaskList();
     }
 
     public AddressBook() {
@@ -43,8 +43,8 @@ public class AddressBook implements ReadOnlyAddressBook {
      * Replaces the contents of the task list with {@code tasks}. {@code tasks} must not contain
      * duplicate tasks.
      */
-    public void setPersons(List<Task> tasks) {
-        this.persons.setPersons(tasks);
+    public void setTasks(List<Task> tasks) {
+        this.tasks.setTasks(tasks);
     }
 
     /**
@@ -53,7 +53,7 @@ public class AddressBook implements ReadOnlyAddressBook {
     public void resetData(ReadOnlyAddressBook newData) {
         requireNonNull(newData);
 
-        setPersons(newData.getPersonList());
+        setTasks(newData.getTaskList());
     }
 
     //// task-level operations
@@ -61,16 +61,16 @@ public class AddressBook implements ReadOnlyAddressBook {
     /**
      * Returns true if a task with the same identity as {@code task} exists in the address book.
      */
-    public boolean hasPerson(Task task) {
+    public boolean hasTask(Task task) {
         requireNonNull(task);
-        return persons.contains(task);
+        return tasks.contains(task);
     }
 
     /**
      * Adds a task to the address book. The task must not already exist in the address book.
      */
     public void addPerson(Task p) {
-        persons.add(p);
+        tasks.add(p);
     }
 
     /**
@@ -78,42 +78,42 @@ public class AddressBook implements ReadOnlyAddressBook {
      * must exist in the address book. The task identity of {@code editedTask} must not be the same
      * as another existing task in the address book.
      */
-    public void updatePerson(Task target, Task editedTask) {
+    public void updateTask(Task target, Task editedTask) {
         requireNonNull(editedTask);
 
-        persons.setPerson(target, editedTask);
+        tasks.setTask(target, editedTask);
     }
 
     /**
      * Removes {@code key} from this {@code AddressBook}. {@code key} must exist in the address
      * book.
      */
-    public void removePerson(Task key) {
-        persons.remove(key);
+    public void removeTask(Task key) {
+        tasks.remove(key);
     }
 
     //// util methods
 
     @Override
     public String toString() {
-        return persons.asUnmodifiableObservableList().size() + " persons";
+        return tasks.asUnmodifiableObservableList().size() + " tasks";
         // TODO: refine later
     }
 
     @Override
-    public ObservableList<Task> getPersonList() {
-        return persons.asUnmodifiableObservableList();
+    public ObservableList<Task> getTaskList() {
+        return tasks.asUnmodifiableObservableList();
     }
 
     @Override
     public boolean equals(Object other) {
         return other == this // short circuit if same object
             || (other instanceof AddressBook // instanceof handles nulls
-            && persons.equals(((AddressBook) other).persons));
+            && tasks.equals(((AddressBook) other).tasks));
     }
 
     @Override
     public int hashCode() {
-        return persons.hashCode();
+        return tasks.hashCode();
     }
 }

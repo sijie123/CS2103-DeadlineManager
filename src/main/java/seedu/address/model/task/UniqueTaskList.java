@@ -8,8 +8,8 @@ import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import seedu.address.model.task.exceptions.DuplicatePersonException;
-import seedu.address.model.task.exceptions.PersonNotFoundException;
+import seedu.address.model.task.exceptions.DuplicateTaskException;
+import seedu.address.model.task.exceptions.TaskNotFoundException;
 
 /**
  * A list of persons that enforces uniqueness between its elements and does not allow nulls. A task
@@ -41,7 +41,7 @@ public class UniqueTaskList implements Iterable<Task> {
     public void add(Task toAdd) {
         requireNonNull(toAdd);
         if (contains(toAdd)) {
-            throw new DuplicatePersonException();
+            throw new DuplicateTaskException();
         }
         internalList.add(toAdd);
     }
@@ -51,16 +51,16 @@ public class UniqueTaskList implements Iterable<Task> {
      * exist in the list. The task identity of {@code editedTask} must not be the same as another
      * existing task in the list.
      */
-    public void setPerson(Task target, Task editedTask) {
+    public void setTask(Task target, Task editedTask) {
         requireAllNonNull(target, editedTask);
 
         int index = internalList.indexOf(target);
         if (index == -1) {
-            throw new PersonNotFoundException();
+            throw new TaskNotFoundException();
         }
 
         if (!target.isSameTask(editedTask) && contains(editedTask)) {
-            throw new DuplicatePersonException();
+            throw new DuplicateTaskException();
         }
 
         internalList.set(index, editedTask);
@@ -72,11 +72,11 @@ public class UniqueTaskList implements Iterable<Task> {
     public void remove(Task toRemove) {
         requireNonNull(toRemove);
         if (!internalList.remove(toRemove)) {
-            throw new PersonNotFoundException();
+            throw new TaskNotFoundException();
         }
     }
 
-    public void setPersons(UniqueTaskList replacement) {
+    public void setTasks(UniqueTaskList replacement) {
         requireNonNull(replacement);
         internalList.setAll(replacement.internalList);
     }
@@ -85,10 +85,10 @@ public class UniqueTaskList implements Iterable<Task> {
      * Replaces the contents of this list with {@code tasks}. {@code tasks} must not contain
      * duplicate tasks.
      */
-    public void setPersons(List<Task> tasks) {
+    public void setTasks(List<Task> tasks) {
         requireAllNonNull(tasks);
-        if (!personsAreUnique(tasks)) {
-            throw new DuplicatePersonException();
+        if (!tasksAreUnique(tasks)) {
+            throw new DuplicateTaskException();
         }
 
         internalList.setAll(tasks);
@@ -121,7 +121,7 @@ public class UniqueTaskList implements Iterable<Task> {
     /**
      * Returns true if {@code tasks} contains only unique tasks.
      */
-    private boolean personsAreUnique(List<Task> tasks) {
+    private boolean tasksAreUnique(List<Task> tasks) {
         for (int i = 0; i < tasks.size() - 1; i++) {
             for (int j = i + 1; j < tasks.size(); j++) {
                 if (tasks.get(i).isSameTask(tasks.get(j))) {

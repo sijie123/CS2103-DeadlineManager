@@ -35,7 +35,7 @@ public class ModelManager extends ComponentManager implements Model {
             "Initializing with address book: " + addressBook + " and user prefs " + userPrefs);
 
         versionedAddressBook = new VersionedAddressBook(addressBook);
-        filteredTasks = new FilteredList<>(versionedAddressBook.getPersonList());
+        filteredTasks = new FilteredList<>(versionedAddressBook.getTaskList());
     }
 
     public ModelManager() {
@@ -63,12 +63,12 @@ public class ModelManager extends ComponentManager implements Model {
     @Override
     public boolean hasPerson(Task task) {
         requireNonNull(task);
-        return versionedAddressBook.hasPerson(task);
+        return versionedAddressBook.hasTask(task);
     }
 
     @Override
     public void deletePerson(Task target) {
-        versionedAddressBook.removePerson(target);
+        versionedAddressBook.removeTask(target);
         indicateAddressBookChanged();
     }
 
@@ -83,7 +83,7 @@ public class ModelManager extends ComponentManager implements Model {
     public void updatePerson(Task target, Task editedTask) {
         requireAllNonNull(target, editedTask);
 
-        versionedAddressBook.updatePerson(target, editedTask);
+        versionedAddressBook.updateTask(target, editedTask);
         indicateAddressBookChanged();
     }
 

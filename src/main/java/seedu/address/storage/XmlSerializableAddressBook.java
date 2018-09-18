@@ -37,7 +37,7 @@ public class XmlSerializableAddressBook {
     public XmlSerializableAddressBook(ReadOnlyAddressBook src) {
         this();
         tasks.addAll(
-            src.getPersonList().stream().map(XmlAdaptedTask::new).collect(Collectors.toList()));
+            src.getTaskList().stream().map(XmlAdaptedTask::new).collect(Collectors.toList()));
     }
 
     /**
@@ -50,7 +50,7 @@ public class XmlSerializableAddressBook {
         AddressBook addressBook = new AddressBook();
         for (XmlAdaptedTask p : tasks) {
             Task task = p.toModelType();
-            if (addressBook.hasPerson(task)) {
+            if (addressBook.hasTask(task)) {
                 throw new IllegalValueException(MESSAGE_DUPLICATE_PERSON);
             }
             addressBook.addPerson(task);
