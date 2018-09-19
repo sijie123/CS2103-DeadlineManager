@@ -24,7 +24,6 @@ public class TaskListPanel extends UiPart<Region> {
     private final Logger logger = LogsCenter.getLogger(TaskListPanel.class);
 
     @FXML
-    // TODO: rename to taskListView along with XML
     private ListView<Task> taskListView;
 
     public TaskListPanel(ObservableList<Task> taskList) {

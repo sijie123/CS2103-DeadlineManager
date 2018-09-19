@@ -13,7 +13,7 @@ import seedu.address.model.task.Task;
  */
 public class PersonListPanelHandle extends NodeHandle<ListView<Task>> {
 
-    public static final String PERSON_LIST_VIEW_ID = "#personListView";
+    public static final String PERSON_LIST_VIEW_ID = "#taskListView";
 
     private static final String CARD_PANE_ID = "#cardPane";
 

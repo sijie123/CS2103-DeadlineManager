@@ -18,6 +18,7 @@ import guitests.guihandles.PersonCardHandle;
 import guitests.guihandles.PersonListPanelHandle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import seedu.address.commons.events.ui.JumpToListRequestEvent;
 import seedu.address.commons.util.FileUtil;
 import seedu.address.commons.util.XmlUtil;
@@ -98,12 +99,12 @@ public class TaskListPanelTest extends GuiUnitTest {
         builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n");
         builder.append("<taskcollection>\n");
         for (int i = 0; i < personCount; i++) {
-            builder.append("<task>\n");
+            builder.append("<tasks>\n");
             builder.append("<name>").append(i).append("a</name>\n");
             builder.append("<phone>000</phone>\n");
             builder.append("<email>a@aa</email>\n");
             builder.append("<address>a</address>\n");
-            builder.append("</task>\n");
+            builder.append("</tasks>\n");
         }
         builder.append("</taskcollection>\n");
 
@@ -121,7 +122,6 @@ public class TaskListPanelTest extends GuiUnitTest {
     private void initUi(ObservableList<Task> backingList) {
         TaskListPanel taskListPanel = new TaskListPanel(backingList);
         uiPartRule.setUiPart(taskListPanel);
-
         personListPanelHandle = new PersonListPanelHandle(getChildNode(taskListPanel.getRoot(),
             PersonListPanelHandle.PERSON_LIST_VIEW_ID));
     }
