@@ -65,7 +65,7 @@ public class TaskListPanelTest extends GuiUnitTest {
     }
 
     /**
-     * Verifies that creating and deleting large number of persons in {@code PersonListPanel}
+     * Verifies that creating and deleting large number of persons in {@code TaskListPanel}
      * requires lesser than {@code CARD_CREATION_AND_DELETION_TIMEOUT} milliseconds to execute.
      */
     @Test
@@ -80,7 +80,7 @@ public class TaskListPanelTest extends GuiUnitTest {
 
     /**
      * Returns a list of persons containing {@code personCount} persons that is used to populate the
-     * {@code PersonListPanel}.
+     * {@code TaskListPanel}.
      */
     private ObservableList<Task> createBackingList(int personCount) throws Exception {
         Path xmlFile = createXmlFileWithPersons(personCount);
@@ -96,16 +96,16 @@ public class TaskListPanelTest extends GuiUnitTest {
     private Path createXmlFileWithPersons(int personCount) throws Exception {
         StringBuilder builder = new StringBuilder();
         builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n");
-        builder.append("<addressbook>\n");
+        builder.append("<taskcollection>\n");
         for (int i = 0; i < personCount; i++) {
-            builder.append("<persons>\n");
+            builder.append("<task>\n");
             builder.append("<name>").append(i).append("a</name>\n");
             builder.append("<phone>000</phone>\n");
             builder.append("<email>a@aa</email>\n");
             builder.append("<address>a</address>\n");
-            builder.append("</persons>\n");
+            builder.append("</task>\n");
         }
-        builder.append("</addressbook>\n");
+        builder.append("</taskcollection>\n");
 
         Path manyPersonsFile = Paths.get(TEST_DATA_FOLDER + "manyPersons.xml");
         FileUtil.createFile(manyPersonsFile);
@@ -115,14 +115,14 @@ public class TaskListPanelTest extends GuiUnitTest {
     }
 
     /**
-     * Initializes {@code personListPanelHandle} with a {@code PersonListPanel} backed by {@code
-     * backingList}. Also shows the {@code Stage} that displays only {@code PersonListPanel}.
+     * Initializes {@code personListPanelHandle} with a {@code TaskListPanel} backed by {@code
+     * backingList}. Also shows the {@code Stage} that displays only {@code TaskListPanel}.
      */
     private void initUi(ObservableList<Task> backingList) {
-        PersonListPanel personListPanel = new PersonListPanel(backingList);
-        uiPartRule.setUiPart(personListPanel);
+        TaskListPanel taskListPanel = new TaskListPanel(backingList);
+        uiPartRule.setUiPart(taskListPanel);
 
-        personListPanelHandle = new PersonListPanelHandle(getChildNode(personListPanel.getRoot(),
+        personListPanelHandle = new PersonListPanelHandle(getChildNode(taskListPanel.getRoot(),
             PersonListPanelHandle.PERSON_LIST_VIEW_ID));
     }
 }

@@ -50,7 +50,7 @@ public class XmlSerializableTaskCollectionTest {
         XmlSerializableTaskCollection dataFromFile = XmlUtil.getDataFromFile(DUPLICATE_PERSON_FILE,
             XmlSerializableTaskCollection.class);
         thrown.expect(IllegalValueException.class);
-        thrown.expectMessage(XmlSerializableTaskCollection.MESSAGE_DUPLICATE_PERSON);
+        thrown.expectMessage(XmlSerializableTaskCollection.MESSAGE_DUPLICATE_TASK);
         dataFromFile.toModelType();
     }
 

@@ -15,10 +15,10 @@ import seedu.address.model.task.Task;
 /**
  * An Immutable TaskCollection that is serializable to XML format
  */
-@XmlRootElement(name = "addressbook")
+@XmlRootElement(name = "taskcollection")
 public class XmlSerializableTaskCollection {
 
-    public static final String MESSAGE_DUPLICATE_PERSON = "Persons list contains duplicate person(s).";
+    public static final String MESSAGE_DUPLICATE_TASK = "Task list contains duplicate task(s).";
 
     @XmlElement
     private List<XmlAdaptedTask> tasks;
@@ -51,7 +51,7 @@ public class XmlSerializableTaskCollection {
         for (XmlAdaptedTask p : tasks) {
             Task task = p.toModelType();
             if (taskCollection.hasTask(task)) {
-                throw new IllegalValueException(MESSAGE_DUPLICATE_PERSON);
+                throw new IllegalValueException(MESSAGE_DUPLICATE_TASK);
             }
             taskCollection.addPerson(task);
         }
