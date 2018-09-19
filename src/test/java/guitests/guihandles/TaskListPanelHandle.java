@@ -11,7 +11,7 @@ import seedu.address.model.task.Task;
 /**
  * Provides a handle for {@code TaskListPanel} containing the list of {@code TaskCard}.
  */
-public class PersonListPanelHandle extends NodeHandle<ListView<Task>> {
+public class TaskListPanelHandle extends NodeHandle<ListView<Task>> {
 
     public static final String PERSON_LIST_VIEW_ID = "#taskListView";
 
@@ -19,18 +19,18 @@ public class PersonListPanelHandle extends NodeHandle<ListView<Task>> {
 
     private Optional<Task> lastRememberedSelectedPersonCard;
 
-    public PersonListPanelHandle(ListView<Task> personListPanelNode) {
+    public TaskListPanelHandle(ListView<Task> personListPanelNode) {
         super(personListPanelNode);
     }
 
     /**
-     * Returns a handle to the selected {@code PersonCardHandle}. A maximum of 1 item can be
+     * Returns a handle to the selected {@code TaskCardHandle}. A maximum of 1 item can be
      * selected at any time.
      *
      * @throws AssertionError        if no card is selected, or more than 1 card is selected.
      * @throws IllegalStateException if the selected card is currently not in the scene graph.
      */
-    public PersonCardHandle getHandleToSelectedCard() {
+    public TaskCardHandle getHandleToSelectedCard() {
         List<Task> selectedTaskList = getRootNode().getSelectionModel().getSelectedItems();
 
         if (selectedTaskList.size() != 1) {
@@ -38,7 +38,7 @@ public class PersonListPanelHandle extends NodeHandle<ListView<Task>> {
         }
 
         return getAllCardNodes().stream()
-            .map(PersonCardHandle::new)
+            .map(TaskCardHandle::new)
             .filter(handle -> handle.equals(selectedTaskList.get(0)))
             .findFirst()
             .orElseThrow(IllegalStateException::new);
@@ -104,9 +104,9 @@ public class PersonListPanelHandle extends NodeHandle<ListView<Task>> {
      *
      * @throws IllegalStateException if the selected card is currently not in the scene graph.
      */
-    public PersonCardHandle getPersonCardHandle(int index) {
+    public TaskCardHandle getPersonCardHandle(int index) {
         return getAllCardNodes().stream()
-            .map(PersonCardHandle::new)
+            .map(TaskCardHandle::new)
             .filter(handle -> handle.equals(getPerson(index)))
             .findFirst()
             .orElseThrow(IllegalStateException::new);

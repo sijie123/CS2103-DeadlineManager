@@ -14,11 +14,10 @@ import java.nio.file.Paths;
 
 import org.junit.Test;
 
-import guitests.guihandles.PersonCardHandle;
-import guitests.guihandles.PersonListPanelHandle;
+import guitests.guihandles.TaskCardHandle;
+import guitests.guihandles.TaskListPanelHandle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.Node;
 import seedu.address.commons.events.ui.JumpToListRequestEvent;
 import seedu.address.commons.util.FileUtil;
 import seedu.address.commons.util.XmlUtil;
@@ -37,16 +36,16 @@ public class TaskListPanelTest extends GuiUnitTest {
 
     private static final long CARD_CREATION_AND_DELETION_TIMEOUT = 2500;
 
-    private PersonListPanelHandle personListPanelHandle;
+    private TaskListPanelHandle taskListPanelHandle;
 
     @Test
     public void display() {
         initUi(TYPICAL_TASKS);
 
         for (int i = 0; i < TYPICAL_TASKS.size(); i++) {
-            personListPanelHandle.navigateToCard(TYPICAL_TASKS.get(i));
+            taskListPanelHandle.navigateToCard(TYPICAL_TASKS.get(i));
             Task expectedTask = TYPICAL_TASKS.get(i);
-            PersonCardHandle actualCard = personListPanelHandle.getPersonCardHandle(i);
+            TaskCardHandle actualCard = taskListPanelHandle.getPersonCardHandle(i);
 
             assertCardDisplaysPerson(expectedTask, actualCard);
             assertEquals(Integer.toString(i + 1) + ". ", actualCard.getId());
@@ -59,9 +58,9 @@ public class TaskListPanelTest extends GuiUnitTest {
         postNow(JUMP_TO_SECOND_EVENT);
         guiRobot.pauseForHuman();
 
-        PersonCardHandle expectedPerson = personListPanelHandle
+        TaskCardHandle expectedPerson = taskListPanelHandle
             .getPersonCardHandle(INDEX_SECOND_PERSON.getZeroBased());
-        PersonCardHandle selectedPerson = personListPanelHandle.getHandleToSelectedCard();
+        TaskCardHandle selectedPerson = taskListPanelHandle.getHandleToSelectedCard();
         assertCardEquals(expectedPerson, selectedPerson);
     }
 
@@ -116,13 +115,13 @@ public class TaskListPanelTest extends GuiUnitTest {
     }
 
     /**
-     * Initializes {@code personListPanelHandle} with a {@code TaskListPanel} backed by {@code
+     * Initializes {@code taskListPanelHandle} with a {@code TaskListPanel} backed by {@code
      * backingList}. Also shows the {@code Stage} that displays only {@code TaskListPanel}.
      */
     private void initUi(ObservableList<Task> backingList) {
         TaskListPanel taskListPanel = new TaskListPanel(backingList);
         uiPartRule.setUiPart(taskListPanel);
-        personListPanelHandle = new PersonListPanelHandle(getChildNode(taskListPanel.getRoot(),
-            PersonListPanelHandle.PERSON_LIST_VIEW_ID));
+        taskListPanelHandle = new TaskListPanelHandle(getChildNode(taskListPanel.getRoot(),
+            TaskListPanelHandle.PERSON_LIST_VIEW_ID));
     }
 }

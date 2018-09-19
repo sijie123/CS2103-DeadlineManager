@@ -27,9 +27,9 @@ import guitests.guihandles.BrowserPanelHandle;
 import guitests.guihandles.CommandBoxHandle;
 import guitests.guihandles.MainMenuHandle;
 import guitests.guihandles.MainWindowHandle;
-import guitests.guihandles.PersonListPanelHandle;
 import guitests.guihandles.ResultDisplayHandle;
 import guitests.guihandles.StatusBarFooterHandle;
+import guitests.guihandles.TaskListPanelHandle;
 import seedu.address.MainApp;
 import seedu.address.TestApp;
 import seedu.address.commons.core.EventsCenter;
@@ -105,7 +105,7 @@ public abstract class TaskCollectionSystemTest {
         return mainWindowHandle.getCommandBox();
     }
 
-    public PersonListPanelHandle getPersonListPanel() {
+    public TaskListPanelHandle getPersonListPanel() {
         return mainWindowHandle.getPersonListPanel();
     }
 
@@ -192,7 +192,7 @@ public abstract class TaskCollectionSystemTest {
     }
 
     /**
-     * Calls {@code BrowserPanelHandle}, {@code PersonListPanelHandle} and {@code
+     * Calls {@code BrowserPanelHandle}, {@code TaskListPanelHandle} and {@code
      * StatusBarFooterHandle} to remember their current state.
      */
     private void rememberStates() {
@@ -220,7 +220,7 @@ public abstract class TaskCollectionSystemTest {
      * expectedSelectedCardIndex} is selected.
      *
      * @see BrowserPanelHandle#isUrlChanged()
-     * @see PersonListPanelHandle#isSelectedPersonCardChanged()
+     * @see TaskListPanelHandle#isSelectedPersonCardChanged()
      */
     protected void assertSelectedCardChanged(Index expectedSelectedCardIndex) {
         getPersonListPanel().navigateToCard(getPersonListPanel().getSelectedCardIndex());
@@ -243,7 +243,7 @@ public abstract class TaskCollectionSystemTest {
      * unchanged.
      *
      * @see BrowserPanelHandle#isUrlChanged()
-     * @see PersonListPanelHandle#isSelectedPersonCardChanged()
+     * @see TaskListPanelHandle#isSelectedPersonCardChanged()
      */
     protected void assertSelectedCardUnchanged() {
         assertFalse(getBrowserPanel().isUrlChanged());

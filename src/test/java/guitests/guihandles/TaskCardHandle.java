@@ -13,7 +13,7 @@ import seedu.address.model.task.Task;
 /**
  * Provides a handle to a task card in the task list panel.
  */
-public class PersonCardHandle extends NodeHandle<Node> {
+public class TaskCardHandle extends NodeHandle<Node> {
 
     private static final String ID_FIELD_ID = "#id";
     private static final String NAME_FIELD_ID = "#name";
@@ -29,7 +29,7 @@ public class PersonCardHandle extends NodeHandle<Node> {
     private final Label emailLabel;
     private final List<Label> tagLabels;
 
-    public PersonCardHandle(Node cardNode) {
+    public TaskCardHandle(Node cardNode) {
         super(cardNode);
 
         idLabel = getChildNode(ID_FIELD_ID);
