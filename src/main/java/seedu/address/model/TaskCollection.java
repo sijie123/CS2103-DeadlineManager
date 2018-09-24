@@ -54,7 +54,7 @@ public class TaskCollection implements ReadOnlyTaskCollection {
      */
     public boolean hasTask(Task task) {
         requireNonNull(task);
-        return tasks.stream().anyMatch(task::isSameTask);
+        return tasks.contains(task);
     }
 
     /**

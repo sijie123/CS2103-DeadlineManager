@@ -79,15 +79,6 @@ public class TaskCollectionTest {
     }
 
     @Test
-    public void hasPerson_personWithSameIdentityFieldsInAddressBook_returnsTrue() {
-        taskCollection.addPerson(ALICE);
-        Task editedAlice = new PersonBuilder(ALICE).withAddress(VALID_ADDRESS_BOB)
-            .withTags(VALID_TAG_HUSBAND)
-            .build();
-        assertTrue(taskCollection.hasTask(editedAlice));
-    }
-
-    @Test
     public void getPersonList_modifyList_throwsUnsupportedOperationException() {
         thrown.expect(UnsupportedOperationException.class);
         taskCollection.getTaskList().remove(0);

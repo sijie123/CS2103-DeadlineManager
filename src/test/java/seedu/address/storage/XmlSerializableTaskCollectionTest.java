@@ -22,8 +22,6 @@ public class XmlSerializableTaskCollectionTest {
         .resolve("typicalTasksInTaskCollection.xml");
     private static final Path INVALID_PERSON_FILE = TEST_DATA_FOLDER
         .resolve("invalidTaskInTaskCollection.xml");
-    private static final Path DUPLICATE_PERSON_FILE = TEST_DATA_FOLDER
-        .resolve("duplicateTaskInTaskCollection.xml");
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -42,15 +40,6 @@ public class XmlSerializableTaskCollectionTest {
         XmlSerializableTaskCollection dataFromFile = XmlUtil.getDataFromFile(INVALID_PERSON_FILE,
             XmlSerializableTaskCollection.class);
         thrown.expect(IllegalValueException.class);
-        dataFromFile.toModelType();
-    }
-
-    @Test
-    public void toModelType_duplicatePersons_throwsIllegalValueException() throws Exception {
-        XmlSerializableTaskCollection dataFromFile = XmlUtil.getDataFromFile(DUPLICATE_PERSON_FILE,
-            XmlSerializableTaskCollection.class);
-        thrown.expect(IllegalValueException.class);
-        thrown.expectMessage(XmlSerializableTaskCollection.MESSAGE_DUPLICATE_TASK);
         dataFromFile.toModelType();
     }
 
