@@ -117,7 +117,8 @@ public class EditCommandTest {
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(firstTask).build();
         EditCommand editCommand = new EditCommand(INDEX_SECOND_PERSON, descriptor);
 
-        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased()));
+        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS,
+                model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased()));
 
         Model expectedModel = new ModelManager(new TaskCollection(model.getAddressBook()),
                 new UserPrefs());
