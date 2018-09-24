@@ -11,7 +11,7 @@ We are a team based in the http://www.comp.nus.edu.sg[School of Computing, Natio
 == Project Team
 
 === Bernard Teo Zhi Yi
-image::yl_coder.jpg[width="150", align="left"]
+image::btzy.jpg[width="150", align="left"]
 {empty}[http://github.com/btzy[github]] [<<btzy#, portfolio>>]
 
 Role: Team Lead +
