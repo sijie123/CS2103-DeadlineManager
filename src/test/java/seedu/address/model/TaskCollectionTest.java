@@ -49,7 +49,7 @@ public class TaskCollectionTest {
     }
 
     @Test
-    public void resetData_withDuplicatePersons_throwsDuplicatePersonException() {
+    public void resetData_withDuplicatePersons_doesNotThrow() {
         // Two tasks with the same identity fields
         Task editedAlice = new PersonBuilder(ALICE).withAddress(VALID_ADDRESS_BOB)
             .withTags(VALID_TAG_HUSBAND)
@@ -57,7 +57,7 @@ public class TaskCollectionTest {
         List<Task> newTasks = Arrays.asList(ALICE, editedAlice);
         TaskCollectionStub newData = new TaskCollectionStub(newTasks);
 
-        thrown.expect(DuplicateTaskException.class);
+        // make sure no exception gets thrown
         taskCollection.resetData(newData);
     }
 

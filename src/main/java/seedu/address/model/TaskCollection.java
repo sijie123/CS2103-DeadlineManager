@@ -4,19 +4,20 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.List;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seedu.address.model.task.Task;
-import seedu.address.model.task.UniqueTaskList;
+import seedu.address.model.task.exceptions.TaskNotFoundException;
 
 /**
  * Wraps all data at the address-book level Duplicates are not allowed (by .isSameTask comparison)
  */
 public class TaskCollection implements ReadOnlyTaskCollection {
 
-    private final UniqueTaskList tasks;
+    private final ObservableList<Task> tasks;
 
     public TaskCollection() {
-        tasks = new UniqueTaskList();
+        tasks = FXCollections.observableArrayList();
     }
 
     /**
@@ -34,7 +35,7 @@ public class TaskCollection implements ReadOnlyTaskCollection {
      * duplicate tasks.
      */
     public void setTasks(List<Task> tasks) {
-        this.tasks.setTasks(tasks);
+        this.tasks.setAll(tasks);
     }
 
     /**
@@ -53,14 +54,14 @@ public class TaskCollection implements ReadOnlyTaskCollection {
      */
     public boolean hasTask(Task task) {
         requireNonNull(task);
-        return tasks.contains(task);
+        return tasks.stream().anyMatch(task::isSameTask);
     }
 
     /**
      * Adds a task to the address book. The task must not already exist in the address book.
      */
-    public void addPerson(Task p) {
-        tasks.add(p);
+    public void addPerson(Task task) {
+        tasks.add(task);
     }
 
     /**
@@ -71,7 +72,12 @@ public class TaskCollection implements ReadOnlyTaskCollection {
     public void updateTask(Task target, Task editedTask) {
         requireNonNull(editedTask);
 
-        tasks.setTask(target, editedTask);
+        int index = tasks.indexOf(target);
+        if (index == -1) {
+            throw new TaskNotFoundException();
+        }
+
+        tasks.set(index, editedTask);
     }
 
     /**
@@ -86,13 +92,13 @@ public class TaskCollection implements ReadOnlyTaskCollection {
 
     @Override
     public String toString() {
-        return tasks.asUnmodifiableObservableList().size() + " tasks";
+        return tasks.size() + " tasks";
         // TODO: refine later
     }
 
     @Override
     public ObservableList<Task> getTaskList() {
-        return tasks.asUnmodifiableObservableList();
+        return FXCollections.unmodifiableObservableList(tasks);
     }
 
     @Override
