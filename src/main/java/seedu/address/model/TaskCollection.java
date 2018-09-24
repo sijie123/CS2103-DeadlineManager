@@ -15,25 +15,15 @@ public class TaskCollection implements ReadOnlyTaskCollection {
 
     private final UniqueTaskList tasks;
 
-    /*
-     * The 'unusual' code block below is an non-static initialization block, sometimes used to avoid duplication
-     * between constructors. See https://docs.oracle.com/javase/tutorial/java/javaOO/initial.html
-     *
-     * Note that non-static init blocks are not recommended to use. There are other ways to avoid duplication
-     *   among constructors.
-     */
-    {
-        tasks = new UniqueTaskList();
-    }
-
     public TaskCollection() {
+        tasks = new UniqueTaskList();
     }
 
     /**
      * Creates an TaskCollection using the Persons in the {@code toBeCopied}
      */
     public TaskCollection(ReadOnlyTaskCollection toBeCopied) {
-        this();
+        this(); // delegating construction to non-parameterized constructor
         resetData(toBeCopied);
     }
 
