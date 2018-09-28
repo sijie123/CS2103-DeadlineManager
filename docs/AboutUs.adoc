@@ -38,7 +38,7 @@ Responsibilities: CRUD, Recurring Tasks
 '''
 
 === Ranald Lam Yun Shao
-image::yl_coder.jpg[width="150", align="left"]
+image::ranaldmiao.jpg[width="150", align="left"]
 {empty}[http://github.com/ranaldmiao[github]] [<<ranaldmiao#, portfolio>>]
 
 Role: Developer +
