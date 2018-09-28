@@ -20,7 +20,6 @@ import org.junit.rules.ExpectedException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seedu.address.model.task.Task;
-import seedu.address.model.task.exceptions.DuplicateTaskException;
 import seedu.address.testutil.PersonBuilder;
 
 public class TaskCollectionTest {
@@ -49,7 +48,7 @@ public class TaskCollectionTest {
     }
 
     @Test
-    public void resetData_withDuplicatePersons_throwsDuplicatePersonException() {
+    public void resetData_withDuplicatePersons_doesNotThrow() {
         // Two tasks with the same identity fields
         Task editedAlice = new PersonBuilder(ALICE).withAddress(VALID_ADDRESS_BOB)
             .withTags(VALID_TAG_HUSBAND)
@@ -57,7 +56,7 @@ public class TaskCollectionTest {
         List<Task> newTasks = Arrays.asList(ALICE, editedAlice);
         TaskCollectionStub newData = new TaskCollectionStub(newTasks);
 
-        thrown.expect(DuplicateTaskException.class);
+        // make sure no exception gets thrown
         taskCollection.resetData(newData);
     }
 
@@ -76,15 +75,6 @@ public class TaskCollectionTest {
     public void hasPerson_personInAddressBook_returnsTrue() {
         taskCollection.addPerson(ALICE);
         assertTrue(taskCollection.hasTask(ALICE));
-    }
-
-    @Test
-    public void hasPerson_personWithSameIdentityFieldsInAddressBook_returnsTrue() {
-        taskCollection.addPerson(ALICE);
-        Task editedAlice = new PersonBuilder(ALICE).withAddress(VALID_ADDRESS_BOB)
-            .withTags(VALID_TAG_HUSBAND)
-            .build();
-        assertTrue(taskCollection.hasTask(editedAlice));
     }
 
     @Test

@@ -45,15 +45,6 @@ public class UniqueTaskListTest {
     }
 
     @Test
-    public void contains_personWithSameIdentityFieldsInList_returnsTrue() {
-        uniqueTaskList.add(ALICE);
-        Task editedAlice = new PersonBuilder(ALICE).withAddress(VALID_ADDRESS_BOB)
-            .withTags(VALID_TAG_HUSBAND)
-            .build();
-        assertTrue(uniqueTaskList.contains(editedAlice));
-    }
-
-    @Test
     public void add_nullPerson_throwsNullPointerException() {
         thrown.expect(NullPointerException.class);
         uniqueTaskList.add(null);

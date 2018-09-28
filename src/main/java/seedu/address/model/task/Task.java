@@ -61,22 +61,6 @@ public class Task {
     }
 
     /**
-     * Returns true if both task of the same name have at least one other identity field that is the
-     * same. This defines a weaker notion of equality between two task.
-     */
-    // TODO: check if method is still required
-    public boolean isSameTask(Task otherTask) {
-        if (otherTask == this) {
-            return true;
-        }
-
-        return otherTask != null
-            && otherTask.getName().equals(getName())
-            && (otherTask.getPhone().equals(getPhone()) || otherTask.getEmail()
-            .equals(getEmail()));
-    }
-
-    /**
      * Returns true if both persons have the same identity and data fields. This defines a stronger
      * notion of equality between two persons.
      */

@@ -112,27 +112,21 @@ public class EditCommandTest {
     }
 
     @Test
-    public void execute_duplicatePersonUnfilteredList_failure() {
+    public void execute_duplicatePersonUnfilteredList_success() {
         Task firstTask = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(firstTask).build();
         EditCommand editCommand = new EditCommand(INDEX_SECOND_PERSON, descriptor);
 
-        assertCommandFailure(editCommand, model, commandHistory,
-            EditCommand.MESSAGE_DUPLICATE_PERSON);
-    }
+        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS,
+                model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased()));
 
-    @Test
-    public void execute_duplicatePersonFilteredList_failure() {
-        showPersonAtIndex(model, INDEX_FIRST_PERSON);
+        Model expectedModel = new ModelManager(new TaskCollection(model.getAddressBook()),
+                new UserPrefs());
+        expectedModel.updatePerson(model.getFilteredPersonList().get(1), firstTask);
+        expectedModel.commitAddressBook();
 
-        // edit task in filtered list into a duplicate in address book
-        Task taskInList = model.getAddressBook().getTaskList()
-            .get(INDEX_SECOND_PERSON.getZeroBased());
-        EditCommand editCommand = new EditCommand(INDEX_FIRST_PERSON,
-            new EditPersonDescriptorBuilder(taskInList).build());
-
-        assertCommandFailure(editCommand, model, commandHistory,
-            EditCommand.MESSAGE_DUPLICATE_PERSON);
+        assertCommandSuccess(editCommand, model, commandHistory,
+                expectedMessage, expectedModel);
     }
 
     @Test

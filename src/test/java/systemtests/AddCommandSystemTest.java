@@ -115,29 +115,32 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
         selectPerson(Index.fromOneBased(1));
         assertCommandSuccess(CARL);
 
+        /* ---------------------- Perform add operation with duplicate task (should succeed) ----------------------- */
+
+        /* Case: add a duplicate task except with different phone -> added normally */
+        toAdd = new PersonBuilder(HOON).withPhone(VALID_PHONE_BOB).build();
+        command = PersonUtil.getAddCommand(toAdd);
+        assertCommandSuccess(command, toAdd);
+
+        /* Case: add a duplicate task except with different email -> added normally */
+        toAdd = new PersonBuilder(HOON).withEmail(VALID_EMAIL_BOB).build();
+        command = PersonUtil.getAddCommand(toAdd);
+        assertCommandSuccess(command, toAdd);
+
+        /* Case: add a duplicate task except with different address -> added normally */
+        toAdd = new PersonBuilder(HOON).withAddress(VALID_ADDRESS_BOB).build();
+        command = PersonUtil.getAddCommand(toAdd);
+        assertCommandSuccess(command, toAdd);
+
+        /* Case: add a duplicate task except with different tags -> added normally */
+        command = PersonUtil.getAddCommand(HOON) + " " + PREFIX_TAG.getPrefix() + "friends";
+        toAdd = new PersonBuilder(HOON).withTags("friends").build();
+        assertCommandSuccess(command, toAdd);
+
         /* ----------------------------------- Perform invalid add operations --------------------------------------- */
 
         /* Case: add a duplicate task -> rejected */
         command = PersonUtil.getAddCommand(HOON);
-        assertCommandFailure(command, AddCommand.MESSAGE_DUPLICATE_PERSON);
-
-        /* Case: add a duplicate task except with different phone -> rejected */
-        toAdd = new PersonBuilder(HOON).withPhone(VALID_PHONE_BOB).build();
-        command = PersonUtil.getAddCommand(toAdd);
-        assertCommandFailure(command, AddCommand.MESSAGE_DUPLICATE_PERSON);
-
-        /* Case: add a duplicate task except with different email -> rejected */
-        toAdd = new PersonBuilder(HOON).withEmail(VALID_EMAIL_BOB).build();
-        command = PersonUtil.getAddCommand(toAdd);
-        assertCommandFailure(command, AddCommand.MESSAGE_DUPLICATE_PERSON);
-
-        /* Case: add a duplicate task except with different address -> rejected */
-        toAdd = new PersonBuilder(HOON).withAddress(VALID_ADDRESS_BOB).build();
-        command = PersonUtil.getAddCommand(toAdd);
-        assertCommandFailure(command, AddCommand.MESSAGE_DUPLICATE_PERSON);
-
-        /* Case: add a duplicate task except with different tags -> rejected */
-        command = PersonUtil.getAddCommand(HOON) + " " + PREFIX_TAG.getPrefix() + "friends";
         assertCommandFailure(command, AddCommand.MESSAGE_DUPLICATE_PERSON);
 
         /* Case: missing name -> rejected */
