@@ -10,7 +10,7 @@ import java.util.Set;
 import seedu.address.model.tag.Tag;
 
 /**
- * Represents a Task in the address book. Guarantees: details are present and not null, field values
+ * Represents a Task in the deadline manager. Guarantees: details are present and not null, field values
  * are validated, immutable.
  */
 public class Task {

@@ -26,7 +26,7 @@ public class XmlFileStorage {
     }
 
     /**
-     * Returns address book in the file or an empty address book
+     * Returns deadline manager in the file or an empty deadline manager
      */
     public static XmlSerializableTaskCollection loadDataFromSaveFile(Path file)
         throws DataConversionException,

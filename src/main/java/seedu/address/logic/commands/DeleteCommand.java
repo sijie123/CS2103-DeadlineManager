@@ -12,7 +12,7 @@ import seedu.address.model.Model;
 import seedu.address.model.task.Task;
 
 /**
- * Deletes a task identified using it's displayed index from the address book.
+ * Deletes a task identified using it's displayed index from the deadline manager.
  */
 public class DeleteCommand extends Command {
 

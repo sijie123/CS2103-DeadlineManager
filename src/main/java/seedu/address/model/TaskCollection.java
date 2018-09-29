@@ -50,7 +50,7 @@ public class TaskCollection implements ReadOnlyTaskCollection {
     //// task-level operations
 
     /**
-     * Returns true if a task with the same identity as {@code task} exists in the address book.
+     * Returns true if a task with the same identity as {@code task} exists in the deadline manager.
      */
     public boolean hasTask(Task task) {
         requireNonNull(task);
@@ -58,7 +58,7 @@ public class TaskCollection implements ReadOnlyTaskCollection {
     }
 
     /**
-     * Adds a task to the address book. The task must not already exist in the address book.
+     * Adds a task to the deadline manager. The task must not already exist in the deadline manager.
      */
     public void addPerson(Task task) {
         tasks.add(task);
@@ -66,8 +66,8 @@ public class TaskCollection implements ReadOnlyTaskCollection {
 
     /**
      * Replaces the given task {@code target} in the list with {@code editedTask}. {@code target}
-     * must exist in the address book. The task identity of {@code editedTask} must not be the same
-     * as another existing task in the address book.
+     * must exist in the deadline manager. The task identity of {@code editedTask} must not be the same
+     * as another existing task in the deadline manager.
      */
     public void updateTask(Task target, Task editedTask) {
         requireNonNull(editedTask);

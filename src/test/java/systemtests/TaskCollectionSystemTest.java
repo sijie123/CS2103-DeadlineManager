@@ -141,7 +141,7 @@ public abstract class TaskCollectionSystemTest {
     }
 
     /**
-     * Displays all persons in the address book.
+     * Displays all persons in the deadline manager.
      */
     protected void showAllPersons() {
         executeCommand(ListCommand.COMMAND_WORD);
@@ -168,7 +168,7 @@ public abstract class TaskCollectionSystemTest {
     }
 
     /**
-     * Deletes all persons in the address book.
+     * Deletes all persons in the deadline manager.
      */
     protected void deleteAllPersons() {
         executeCommand(ClearCommand.COMMAND_WORD);

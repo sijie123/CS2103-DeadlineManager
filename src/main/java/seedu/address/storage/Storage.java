@@ -31,7 +31,7 @@ public interface Storage extends TaskCollectionStorage, UserPrefsStorage {
     void saveAddressBook(ReadOnlyTaskCollection addressBook) throws IOException;
 
     /**
-     * Saves the current version of the Address Book to the hard disk. Creates the data file if it
+     * Saves the current version of the deadline manager to the hard disk. Creates the data file if it
      * is missing. Raises {@link DataSavingExceptionEvent} if there was an error during saving.
      */
     void handleAddressBookChangedEvent(AddressBookChangedEvent abce);

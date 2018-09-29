@@ -15,7 +15,7 @@ import seedu.address.commons.events.model.AddressBookChangedEvent;
 import seedu.address.model.task.Task;
 
 /**
- * Represents the in-memory model of the address book data.
+ * Represents the in-memory model of the deadline manager data.
  */
 public class ModelManager extends ComponentManager implements Model {
 
@@ -32,7 +32,7 @@ public class ModelManager extends ComponentManager implements Model {
         requireAllNonNull(addressBook, userPrefs);
 
         logger.fine(
-            "Initializing with address book: " + addressBook + " and user prefs " + userPrefs);
+            "Initializing with deadline manager: " + addressBook + " and user prefs " + userPrefs);
 
         versionedAddressBook = new VersionedTaskCollection(addressBook);
         filteredTasks = new FilteredList<>(versionedAddressBook.getTaskList());

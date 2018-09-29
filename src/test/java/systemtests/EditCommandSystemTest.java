@@ -116,7 +116,7 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
 
         /* ------------------ Performing edit operation while a filtered list is being shown ------------------------ */
 
-        /* Case: filtered task list, edit index within bounds of address book and task list -> edited */
+        /* Case: filtered task list, edit index within bounds of deadline manager and task list -> edited */
         showPersonsWithName(KEYWORD_MATCHING_MEIER);
         index = INDEX_FIRST_PERSON;
         assertTrue(index.getZeroBased() < getModel().getFilteredPersonList().size());
@@ -125,7 +125,7 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
         editedTask = new PersonBuilder(taskToEdit).withName(VALID_NAME_BOB).build();
         assertCommandSuccess(command, index, editedTask);
 
-        /* Case: filtered task list, edit index within bounds of address book but out of bounds of task list
+        /* Case: filtered task list, edit index within bounds of deadline manager but out of bounds of task list
          * -> rejected
          */
         showPersonsWithName(KEYWORD_MATCHING_MEIER);

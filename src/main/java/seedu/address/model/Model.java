@@ -26,24 +26,24 @@ public interface Model {
     ReadOnlyTaskCollection getAddressBook();
 
     /**
-     * Returns true if a task with the same identity as {@code task} exists in the address book.
+     * Returns true if a task with the same identity as {@code task} exists in the deadline manager.
      */
     boolean hasPerson(Task task);
 
     /**
-     * Deletes the given task. The task must exist in the address book.
+     * Deletes the given task. The task must exist in the deadline manager.
      */
     void deletePerson(Task target);
 
     /**
-     * Adds the given task. {@code task} must not already exist in the address book.
+     * Adds the given task. {@code task} must not already exist in the deadline manager.
      */
     void addPerson(Task task);
 
     /**
      * Replaces the given task {@code target} with {@code editedTask}. {@code target} must exist in
-     * the address book. The task identity of {@code editedTask} must not be the same as another
-     * existing task in the address book.
+     * the deadline manager. The task identity of {@code editedTask} must not be the same as another
+     * existing task in the deadline manager.
      */
     void updatePerson(Task target, Task editedTask);
 
@@ -60,27 +60,27 @@ public interface Model {
     void updateFilteredPersonList(Predicate<Task> predicate);
 
     /**
-     * Returns true if the model has previous address book states to restore.
+     * Returns true if the model has previous deadline manager states to restore.
      */
     boolean canUndoAddressBook();
 
     /**
-     * Returns true if the model has undone address book states to restore.
+     * Returns true if the model has undone deadline manager states to restore.
      */
     boolean canRedoAddressBook();
 
     /**
-     * Restores the model's address book to its previous state.
+     * Restores the model's deadline manager to its previous state.
      */
     void undoAddressBook();
 
     /**
-     * Restores the model's address book to its previously undone state.
+     * Restores the model's deadline manager to its previously undone state.
      */
     void redoAddressBook();
 
     /**
-     * Saves the current address book state for undo/redo.
+     * Saves the current deadline manager state for undo/redo.
      */
     void commitAddressBook();
 }

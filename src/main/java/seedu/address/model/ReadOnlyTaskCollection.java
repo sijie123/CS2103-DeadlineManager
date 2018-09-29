@@ -4,7 +4,7 @@ import javafx.collections.ObservableList;
 import seedu.address.model.task.Task;
 
 /**
- * Unmodifiable view of an address book
+ * Unmodifiable view of an deadline manager
  */
 public interface ReadOnlyTaskCollection {
 
