@@ -4,36 +4,27 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.List;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seedu.address.model.task.Task;
-import seedu.address.model.task.UniqueTaskList;
+import seedu.address.model.task.exceptions.TaskNotFoundException;
 
 /**
  * Wraps all data at the address-book level Duplicates are not allowed (by .isSameTask comparison)
  */
 public class TaskCollection implements ReadOnlyTaskCollection {
 
-    private final UniqueTaskList tasks;
-
-    /*
-     * The 'unusual' code block below is an non-static initialization block, sometimes used to avoid duplication
-     * between constructors. See https://docs.oracle.com/javase/tutorial/java/javaOO/initial.html
-     *
-     * Note that non-static init blocks are not recommended to use. There are other ways to avoid duplication
-     *   among constructors.
-     */
-    {
-        tasks = new UniqueTaskList();
-    }
+    private final ObservableList<Task> tasks;
 
     public TaskCollection() {
+        tasks = FXCollections.observableArrayList();
     }
 
     /**
      * Creates an TaskCollection using the Persons in the {@code toBeCopied}
      */
     public TaskCollection(ReadOnlyTaskCollection toBeCopied) {
-        this();
+        this(); // delegating construction to non-parameterized constructor
         resetData(toBeCopied);
     }
 
@@ -44,7 +35,7 @@ public class TaskCollection implements ReadOnlyTaskCollection {
      * duplicate tasks.
      */
     public void setTasks(List<Task> tasks) {
-        this.tasks.setTasks(tasks);
+        this.tasks.setAll(tasks);
     }
 
     /**
@@ -69,8 +60,8 @@ public class TaskCollection implements ReadOnlyTaskCollection {
     /**
      * Adds a task to the deadline manager. The task must not already exist in the deadline manager.
      */
-    public void addPerson(Task p) {
-        tasks.add(p);
+    public void addPerson(Task task) {
+        tasks.add(task);
     }
 
     /**
@@ -81,7 +72,12 @@ public class TaskCollection implements ReadOnlyTaskCollection {
     public void updateTask(Task target, Task editedTask) {
         requireNonNull(editedTask);
 
-        tasks.setTask(target, editedTask);
+        int index = tasks.indexOf(target);
+        if (index == -1) {
+            throw new TaskNotFoundException();
+        }
+
+        tasks.set(index, editedTask);
     }
 
     /**
@@ -96,13 +92,13 @@ public class TaskCollection implements ReadOnlyTaskCollection {
 
     @Override
     public String toString() {
-        return tasks.asUnmodifiableObservableList().size() + " tasks";
+        return tasks.size() + " tasks";
         // TODO: refine later
     }
 
     @Override
     public ObservableList<Task> getTaskList() {
-        return tasks.asUnmodifiableObservableList();
+        return FXCollections.unmodifiableObservableList(tasks);
     }
 
     @Override

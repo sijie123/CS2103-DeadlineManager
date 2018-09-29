@@ -171,7 +171,7 @@ public class AddCommandTest {
         @Override
         public boolean hasPerson(Task task) {
             requireNonNull(task);
-            return this.task.isSameTask(task);
+            return this.task.equals(task);
         }
     }
 
@@ -185,7 +185,7 @@ public class AddCommandTest {
         @Override
         public boolean hasPerson(Task task) {
             requireNonNull(task);
-            return personsAdded.stream().anyMatch(task::isSameTask);
+            return personsAdded.contains(task);
         }
 
         @Override
