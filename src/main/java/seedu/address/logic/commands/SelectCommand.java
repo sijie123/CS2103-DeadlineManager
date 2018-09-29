@@ -14,7 +14,7 @@ import seedu.address.model.Model;
 import seedu.address.model.task.Task;
 
 /**
- * Selects a task identified using it's displayed index from the address book.
+ * Selects a task identified using it's displayed index from the deadline manager.
  */
 public class SelectCommand extends Command {
 

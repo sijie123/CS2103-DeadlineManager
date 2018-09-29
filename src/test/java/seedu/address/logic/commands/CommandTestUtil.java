@@ -97,7 +97,7 @@ public class CommandTestUtil {
 
     /**
      * Executes the given {@code command}, confirms that <br> - a {@code CommandException} is thrown
-     * <br> - the CommandException message matches {@code expectedMessage} <br> - the address book
+     * <br> - the CommandException message matches {@code expectedMessage} <br> - the deadline manager
      * and the filtered task list in the {@code actualModel} remain unchanged <br> - {@code
      * actualCommandHistory} remains unchanged.
      */
@@ -124,7 +124,7 @@ public class CommandTestUtil {
 
     /**
      * Updates {@code model}'s filtered list to show only the task at the given {@code targetIndex}
-     * in the {@code model}'s address book.
+     * in the {@code model}'s deadline manager.
      */
     public static void showPersonAtIndex(Model model, Index targetIndex) {
         assertTrue(targetIndex.getZeroBased() < model.getFilteredPersonList().size());
@@ -138,7 +138,7 @@ public class CommandTestUtil {
     }
 
     /**
-     * Deletes the first task in {@code model}'s filtered list from {@code model}'s address book.
+     * Deletes the first task in {@code model}'s filtered list from {@code model}'s deadline manager.
      */
     public static void deleteFirstPerson(Model model) {
         Task firstTask = model.getFilteredPersonList().get(0);

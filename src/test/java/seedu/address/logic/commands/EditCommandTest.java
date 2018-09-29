@@ -125,7 +125,7 @@ public class EditCommandTest {
     public void execute_duplicatePersonFilteredList_failure() {
         showPersonAtIndex(model, INDEX_FIRST_PERSON);
 
-        // edit task in filtered list into a duplicate in address book
+        // edit task in filtered list into a duplicate in deadline manager
         Task taskInList = model.getAddressBook().getTaskList()
             .get(INDEX_SECOND_PERSON.getZeroBased());
         EditCommand editCommand = new EditCommand(INDEX_FIRST_PERSON,
@@ -148,13 +148,13 @@ public class EditCommandTest {
 
     /**
      * Edit filtered list where index is larger than size of filtered list, but smaller than size of
-     * address book
+     * deadline manager
      */
     @Test
     public void execute_invalidPersonIndexFilteredList_failure() {
         showPersonAtIndex(model, INDEX_FIRST_PERSON);
         Index outOfBoundIndex = INDEX_SECOND_PERSON;
-        // ensures that outOfBoundIndex is still in bounds of address book list
+        // ensures that outOfBoundIndex is still in bounds of deadline manager list
         assertTrue(outOfBoundIndex.getZeroBased() < model.getAddressBook().getTaskList().size());
 
         EditCommand editCommand = new EditCommand(outOfBoundIndex,
@@ -196,11 +196,11 @@ public class EditCommandTest {
             .build();
         EditCommand editCommand = new EditCommand(outOfBoundIndex, descriptor);
 
-        // execution failed -> address book state not added into model
+        // execution failed -> deadline manager state not added into model
         assertCommandFailure(editCommand, model, commandHistory,
             Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
 
-        // single address book state in model -> undoCommand and redoCommand fail
+        // single deadline manager state in model -> undoCommand and redoCommand fail
         assertCommandFailure(new UndoCommand(), model, commandHistory, UndoCommand.MESSAGE_FAILURE);
         assertCommandFailure(new RedoCommand(), model, commandHistory, RedoCommand.MESSAGE_FAILURE);
     }

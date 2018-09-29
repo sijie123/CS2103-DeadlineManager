@@ -56,7 +56,7 @@ public class SelectCommandSystemTest extends TaskCollectionSystemTest {
 
         /* ------------------------ Perform select operations on the shown filtered list ---------------------------- */
 
-        /* Case: filtered task list, select index within bounds of address book but out of bounds of task list
+        /* Case: filtered task list, select index within bounds of deadline manager but out of bounds of task list
          * -> rejected
          */
         showPersonsWithName(KEYWORD_MATCHING_MEIER);
@@ -64,7 +64,7 @@ public class SelectCommandSystemTest extends TaskCollectionSystemTest {
         assertCommandFailure(SelectCommand.COMMAND_WORD + " " + invalidIndex,
             MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
 
-        /* Case: filtered task list, select index within bounds of address book and task list -> selected */
+        /* Case: filtered task list, select index within bounds of deadline manager and task list -> selected */
         Index validIndex = Index.fromOneBased(1);
         assertTrue(validIndex.getZeroBased() < getModel().getFilteredPersonList().size());
         command = SelectCommand.COMMAND_WORD + " " + validIndex.getOneBased();
@@ -96,7 +96,7 @@ public class SelectCommandSystemTest extends TaskCollectionSystemTest {
         /* Case: mixed case command word -> rejected */
         assertCommandFailure("SeLeCt 1", MESSAGE_UNKNOWN_COMMAND);
 
-        /* Case: select from empty address book -> rejected */
+        /* Case: select from empty deadline manager -> rejected */
         deleteAllPersons();
         assertCommandFailure(SelectCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased(),
             MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
