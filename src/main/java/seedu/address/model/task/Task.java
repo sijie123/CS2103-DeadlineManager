@@ -3,6 +3,7 @@ package seedu.address.model.task;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -21,19 +22,28 @@ public class Task {
     private final Email email;
 
     // Data fields
+    private final Deadline deadline;
     private final Address address;
     private final Set<Tag> tags = new HashSet<>();
 
     /**
      * Every field must be present and not null.
      */
-    public Task(Name name, Phone phone, Email email, Address address, Set<Tag> tags) {
-        requireAllNonNull(name, phone, email, address, tags);
+    public Task(Name name, Phone phone, Email email, Deadline deadline, Address address, Set<Tag> tags) {
+        requireAllNonNull(name, phone, email, deadline, address, tags);
         this.name = name;
         this.phone = phone;
         this.email = email;
+        this.deadline = deadline;
         this.address = address;
         this.tags.addAll(tags);
+    }
+
+    /**
+     * Convenience constructor, to be removed eventually
+     */
+    public Task(Name name, Phone phone, Email email, Address address, Set<Tag> tags) {
+        this(name, phone, email, new Deadline(new Date()), address, tags);
     }
 
     public Name getName() {
@@ -46,6 +56,10 @@ public class Task {
 
     public Email getEmail() {
         return email;
+    }
+
+    public Deadline getDeadline() {
+        return deadline;
     }
 
     public Address getAddress() {
