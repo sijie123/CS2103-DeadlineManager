@@ -66,6 +66,7 @@ public class Deadline implements Comparable<Deadline> {
         switch (operator) {
         case "=":
             return deadline -> deadline.equals(testDeadline);
+        case ":": // convenience operator, works the same as "<"
         case "<":
             return deadline -> deadline.compareTo(testDeadline) <= 0;
         case ">":
