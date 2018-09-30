@@ -45,6 +45,12 @@ public class FilterCommandParserTest {
         assertParseThrowsException(parser, "d<\'\'30/9/17");
         assertParseThrowsException(parser, "d<30/9/17\'\'");
         assertParseThrowsException(parser, "d<");
+        assertParseThrowsException(parser, "d=");
+        assertParseThrowsException(parser, "d>");
+        assertParseThrowsException(parser, "d");
+        assertParseThrowsException(parser, "=");
+        assertParseThrowsException(parser, ":");
+        assertParseThrowsException(parser, "-");
         assertParseThrowsException(parser, "test=test");
         assertParseThrowsException(parser, "=test");
     }
