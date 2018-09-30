@@ -4,12 +4,19 @@ import static java.util.Objects.requireNonNull;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+import java.util.function.Predicate;
+
+import seedu.address.model.task.exceptions.InvalidPredicateException;
+import seedu.address.model.task.exceptions.InvalidPredicateOperatorException;
+import seedu.address.model.task.exceptions.InvalidPredicateTestPhraseException;
 
 /**
  * Represents a Task's deadline in the deadline manager. Guarantees: immutable; represents a valid date
  */
-public class Deadline {
+public class Deadline implements Comparable<Deadline> {
 
     public static final String MESSAGE_DEADLINE_CONSTRAINTS =
             "Deadline has to be a valid date";
@@ -34,11 +41,37 @@ public class Deadline {
     public Deadline(String deadline) {
         requireNonNull(deadline);
 
-        DateFormat formatter = DateFormat.getInstance();
+        DateFormat formatter = new SimpleDateFormat("d/M/y", new Locale("en", "SG"));
+
         try {
             this.value = formatter.parse(deadline);
         } catch (ParseException e) {
             throw new IllegalArgumentException(MESSAGE_DEADLINE_CONSTRAINTS, e);
+        }
+    }
+
+    /**
+     * Constructs a predicate from the given operator and test phrase.
+     *
+     * @param operator The operator for this predicate.
+     * @param testPhrase The test phrase for this predicate.
+     */
+    public static Predicate<Deadline> makeFilter(String operator, String testPhrase) throws InvalidPredicateException {
+        Deadline testDeadline;
+        try {
+            testDeadline = new Deadline(testPhrase);
+        } catch (IllegalArgumentException e) {
+            throw new InvalidPredicateTestPhraseException(e);
+        }
+        switch (operator) {
+        case "=":
+            return deadline -> deadline.equals(testDeadline);
+        case "<":
+            return deadline -> deadline.compareTo(testDeadline) <= 0;
+        case ">":
+            return deadline -> deadline.compareTo(testDeadline) >= 0;
+        default:
+            throw new InvalidPredicateOperatorException();
         }
     }
 
@@ -58,5 +91,10 @@ public class Deadline {
     @Override
     public int hashCode() {
         return value.hashCode();
+    }
+
+    @Override
+    public int compareTo(Deadline other) {
+        return this.value.compareTo(other.value);
     }
 }
