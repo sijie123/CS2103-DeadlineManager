@@ -33,6 +33,15 @@ public class FilterCommandParserTest {
         assertParseSuccess(parser, "d <01/02/19");
         assertParseSuccess(parser, "d< 01/02/19");
         assertParseSuccess(parser, "d<01/02/19");
+        assertParseSuccess(parser, "d:01/02/19");
+
+        assertParseSuccess(parser, "n>Hello");
+        assertParseSuccess(parser, "n>\"Hello\"");
+        assertParseSuccess(parser, "n>\"Hello World\"");
+        assertParseSuccess(parser, "n=\"Hello World\"");
+        assertParseSuccess(parser, "n:\"Hello World\"");
+        assertParseSuccess(parser, "n<\"Hello World\"");
+        assertParseSuccess(parser, "n:Test");
     }
 
     @Test
@@ -45,8 +54,18 @@ public class FilterCommandParserTest {
         assertParseThrowsException(parser, "d<\'\'30/9/17");
         assertParseThrowsException(parser, "d<30/9/17\'\'");
         assertParseThrowsException(parser, "d<");
+        assertParseThrowsException(parser, "d=");
+        assertParseThrowsException(parser, "d>");
+        assertParseThrowsException(parser, "d");
+        assertParseThrowsException(parser, "=");
+        assertParseThrowsException(parser, ":");
+        assertParseThrowsException(parser, "-");
         assertParseThrowsException(parser, "test=test");
         assertParseThrowsException(parser, "=test");
+        assertParseThrowsException(parser, "name>");
+        assertParseThrowsException(parser, "name<");
+        assertParseThrowsException(parser, "name~");
+        assertParseThrowsException(parser, "name:");
     }
 
     /**
@@ -69,7 +88,7 @@ public class FilterCommandParserTest {
             parser.parse(str);
             fail("Expected a parse error");
         } catch (ParseException ignore) {
-            // TODO
+            // Do not do anything, because we just want to make sure that an exception is thrown
         }
     }
 

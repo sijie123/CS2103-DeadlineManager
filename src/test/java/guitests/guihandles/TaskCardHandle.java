@@ -77,7 +77,7 @@ public class TaskCardHandle extends NodeHandle<Node> {
      * Returns true if this handle contains {@code task}.
      */
     public boolean equals(Task task) {
-        return getName().equals(task.getName().fullName)
+        return getName().equals(task.getName().value)
             && getAddress().equals(task.getAddress().value)
             && getPhone().equals(task.getPhone().value)
             && getEmail().equals(task.getEmail().value)

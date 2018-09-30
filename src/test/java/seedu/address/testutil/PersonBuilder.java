@@ -1,10 +1,13 @@
 package seedu.address.testutil;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import seedu.address.model.attachment.Attachment;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.task.Address;
+import seedu.address.model.task.Deadline;
 import seedu.address.model.task.Email;
 import seedu.address.model.task.Name;
 import seedu.address.model.task.Phone;
@@ -24,15 +27,19 @@ public class PersonBuilder {
     private Name name;
     private Phone phone;
     private Email email;
+    private Deadline deadline;
     private Address address;
     private Set<Tag> tags;
+    private Set<Attachment> attachments;
 
     public PersonBuilder() {
         name = new Name(DEFAULT_NAME);
         phone = new Phone(DEFAULT_PHONE);
         email = new Email(DEFAULT_EMAIL);
+        deadline = new Deadline(new Date(2018, 10, 1));
         address = new Address(DEFAULT_ADDRESS);
         tags = new HashSet<>();
+        attachments = new HashSet<>();
     }
 
     /**
@@ -42,8 +49,10 @@ public class PersonBuilder {
         name = taskToCopy.getName();
         phone = taskToCopy.getPhone();
         email = taskToCopy.getEmail();
+        deadline = taskToCopy.getDeadline();
         address = taskToCopy.getAddress();
         tags = new HashSet<>(taskToCopy.getTags());
+        attachments = new HashSet<>(taskToCopy.getAttachments());
     }
 
     /**
@@ -88,7 +97,7 @@ public class PersonBuilder {
     }
 
     public Task build() {
-        return new Task(name, phone, email, address, tags);
+        return new Task(name, phone, email, deadline, address, tags, attachments);
     }
 
 }
