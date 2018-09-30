@@ -57,7 +57,7 @@ public interface Model {
      *
      * @throws NullPointerException if {@code predicate} is null.
      */
-    void updateFilteredPersonList(Predicate<Task> predicate);
+    void updateFilteredPersonList(Predicate<? super Task> predicate);
 
     /**
      * Returns true if the model has previous deadline manager states to restore.

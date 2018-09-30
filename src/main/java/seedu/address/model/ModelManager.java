@@ -99,7 +99,7 @@ public class ModelManager extends ComponentManager implements Model {
     }
 
     @Override
-    public void updateFilteredPersonList(Predicate<Task> predicate) {
+    public void updateFilteredPersonList(Predicate<? super Task> predicate) {
         requireNonNull(predicate);
         filteredTasks.setPredicate(predicate);
     }
