@@ -1,10 +1,10 @@
 package seedu.address.model.task;
 
+import static java.util.Objects.requireNonNull;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * Represents a Task's deadline in the deadline manager. Guarantees: immutable; represents a valid date
