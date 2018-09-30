@@ -33,6 +33,15 @@ public class FilterCommandParserTest {
         assertParseSuccess(parser, "d <01/02/19");
         assertParseSuccess(parser, "d< 01/02/19");
         assertParseSuccess(parser, "d<01/02/19");
+        assertParseSuccess(parser, "d:01/02/19");
+
+        assertParseSuccess(parser, "n>Hello");
+        assertParseSuccess(parser, "n>\"Hello\"");
+        assertParseSuccess(parser, "n>\"Hello World\"");
+        assertParseSuccess(parser, "n=\"Hello World\"");
+        assertParseSuccess(parser, "n:\"Hello World\"");
+        assertParseSuccess(parser, "n<\"Hello World\"");
+        assertParseSuccess(parser, "n:Test");
     }
 
     @Test
@@ -53,6 +62,10 @@ public class FilterCommandParserTest {
         assertParseThrowsException(parser, "-");
         assertParseThrowsException(parser, "test=test");
         assertParseThrowsException(parser, "=test");
+        assertParseThrowsException(parser, "name>");
+        assertParseThrowsException(parser, "name<");
+        assertParseThrowsException(parser, "name~");
+        assertParseThrowsException(parser, "name:");
     }
 
     /**

@@ -1,13 +1,12 @@
 package seedu.address.model.task;
 
-import seedu.address.commons.util.StringUtil;
-import seedu.address.model.task.exceptions.InvalidPredicateOperatorException;
-import seedu.address.model.task.exceptions.InvalidPredicateTestPhraseException;
+import static java.util.Objects.requireNonNull;
+import static seedu.address.commons.util.AppUtil.checkArgument;
 
 import java.util.function.Predicate;
 
-import static java.util.Objects.requireNonNull;
-import static seedu.address.commons.util.AppUtil.checkArgument;
+import seedu.address.commons.util.StringUtil;
+import seedu.address.model.task.exceptions.InvalidPredicateOperatorException;
 
 /**
  * Represents a Task's name in the deadline manager. Guarantees: immutable; is valid as declared in
@@ -50,7 +49,8 @@ public class Name {
      * @param operator The operator for this predicate.
      * @param testPhrase The test phrase for this predicate.
      */
-    public static Predicate<Name> makeFilter(String operator, String testPhrase) throws InvalidPredicateOperatorException {
+    public static Predicate<Name> makeFilter(String operator, String testPhrase)
+            throws InvalidPredicateOperatorException {
         switch (operator) {
         case "=":
             return name -> name.value.equals(testPhrase);
