@@ -75,6 +75,16 @@ public class StorageManager extends ComponentManager implements Storage {
     }
 
     @Override
+    public Optional<ReadOnlyTaskCollection> importTaskCollection() throws DataConversionException, IOException {
+        return Optional.empty();
+    }
+
+    @Override
+    public void exportTaskCollection(ReadOnlyTaskCollection taskCollection) throws IOException {
+
+    }
+
+    @Override
     public void saveTaskCollection(ReadOnlyTaskCollection addressBook, Path filePath) throws IOException {
         logger.fine("Attempting to write to data file: " + filePath);
         taskCollectionStorage.saveTaskCollection(addressBook, filePath);
