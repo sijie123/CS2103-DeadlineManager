@@ -2,12 +2,12 @@ package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.function.Predicate;
+
 import seedu.address.commons.core.Messages;
 import seedu.address.logic.CommandHistory;
 import seedu.address.model.Model;
 import seedu.address.model.task.Task;
-
-import java.util.function.Predicate;
 
 /**
  * Finds and lists all persons in deadline manager whose name contains any of the argument keywords.

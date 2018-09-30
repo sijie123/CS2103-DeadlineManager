@@ -64,20 +64,20 @@ public class FilterCommandParser implements Parser<FilterCommand> {
 
         try {
             switch (key) {
-                case "d": // fallthrough
-                case "due": {
-                    Predicate<Deadline> deadlinePredicate = Deadline.makeFilter(operator, testPhrase);
-                    predicate = task -> deadlinePredicate.test(task.getDeadline());
-                    break;
-                }
-                default:
-                    throw new ParseException(String.format(MESSAGE_INVALID_KEY_FORMAT, key));
+            case "d": // fallthrough
+            case "due": {
+                Predicate<Deadline> deadlinePredicate = Deadline.makeFilter(operator, testPhrase);
+                predicate = task -> deadlinePredicate.test(task.getDeadline());
+                break;
             }
-        } catch (InvalidPredicateOperatorException e){
+            default:
+                throw new ParseException(String.format(MESSAGE_INVALID_KEY_FORMAT, key));
+            }
+        } catch (InvalidPredicateOperatorException e) {
             throw new ParseException(String.format(MESSAGE_INVALID_OPERATOR_FORMAT, operator), e);
-        } catch (InvalidPredicateTestPhraseException e){
+        } catch (InvalidPredicateTestPhraseException e) {
             throw new ParseException(String.format(MESSAGE_INVALID_TESTPHRASE_FORMAT, testPhrase), e);
-        } catch (InvalidPredicateException e){
+        } catch (InvalidPredicateException e) {
             throw new ParseException(String.format(MESSAGE_INVALID_GENERAL_PREDICATE_FORMAT, trimmedArgs), e);
         }
 
