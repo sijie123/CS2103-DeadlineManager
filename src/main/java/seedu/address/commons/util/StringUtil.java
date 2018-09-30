@@ -58,7 +58,20 @@ public class StringUtil {
         fragment = fragment.trim();
         checkArgument(!fragment.isEmpty(), "Word parameter cannot be empty");
 
-        return phrase.contains(fragment);
+        return containsIgnoreCase(phrase, fragment);
+    }
+
+    /**
+     * Like String.contains, but ignoring case.
+     *
+     * @param phrase cannot be null
+     * @param fragment cannot be null
+     */
+    public static boolean containsIgnoreCase(String phrase, String fragment) {
+        requireNonNull(phrase);
+        requireNonNull(fragment);
+
+        return phrase.toLowerCase().contains(fragment.toLowerCase());
     }
 
     /**
