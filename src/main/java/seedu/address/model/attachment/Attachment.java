@@ -10,7 +10,7 @@ import java.io.File;
 public class Attachment {
     public final File file;
 
-    public Attachment(File file, String description) {
+    public Attachment(File file) {
         requireNonNull(file);
         this.file = file;
     }
