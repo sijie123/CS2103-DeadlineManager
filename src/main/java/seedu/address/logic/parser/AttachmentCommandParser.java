@@ -4,6 +4,9 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.commons.core.Messages.MESSAGE_UNKNOWN_COMMAND;
 import static seedu.address.logic.commands.AttachmentCommand.COMMAND_ADD_ACTION;
+import static seedu.address.logic.commands.AttachmentCommand.COMMAND_DELETE_ACTION;
+import static seedu.address.logic.commands.AttachmentCommand.COMMAND_GET_ACTION;
+import static seedu.address.logic.commands.AttachmentCommand.COMMAND_LIST_ACTION;
 import static seedu.address.logic.commands.AttachmentCommand.MESSAGE_MISSING_ARGUMENTS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_FILENAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_FILEPATH;
@@ -47,6 +50,12 @@ public class AttachmentCommandParser implements Parser<AttachmentCommand> {
 
         case COMMAND_ADD_ACTION:
             return parseAddAction(index, argMultimap);
+        case COMMAND_LIST_ACTION:
+            return parseListAction(index, argMultimap);
+        case COMMAND_DELETE_ACTION:
+            return parseDeleteAction(index, argMultimap);
+        case COMMAND_GET_ACTION:
+            return parseGetAction(index, argMultimap);
         default:
             throw new ParseException(MESSAGE_UNKNOWN_COMMAND);
         }
@@ -61,6 +70,43 @@ public class AttachmentCommandParser implements Parser<AttachmentCommand> {
         }
         String filePath = argMultimap.getValue(PREFIX_FILEPATH).get();
         AttachmentCommand.AttachmentAction action = new AttachmentCommand.AddAttachmentAction(filePath);
+        return new AttachmentCommand(index, action);
+    }
+
+
+    /**
+     * Generates the attachment command for a list attachment action.
+     */
+    private AttachmentCommand parseListAction(Index index, ArgumentMultimap argMultimap) throws ParseException {
+        AttachmentCommand.AttachmentAction action = new AttachmentCommand.ListAttachmentAction();
+        return new AttachmentCommand(index, action);
+    }
+
+    /**
+     * Generates the attachment command for a delete attachment action.
+     */
+    private AttachmentCommand parseDeleteAction(Index index, ArgumentMultimap argMultimap) throws ParseException {
+        if (!argMultimap.getValue(PREFIX_FILENAME).isPresent()) {
+            throw new ParseException(String.format(MESSAGE_MISSING_ARGUMENTS, "FILENAME", "delete"));
+        }
+        String fileName = argMultimap.getValue(PREFIX_FILENAME).get();
+        AttachmentCommand.AttachmentAction action = new AttachmentCommand.DeleteAttachmentAction(fileName);
+        return new AttachmentCommand(index, action);
+    }
+
+    /**
+     * Generates the attachment command for a delete attachment action.
+     */
+    private AttachmentCommand parseGetAction(Index index, ArgumentMultimap argMultimap) throws ParseException {
+        if (!argMultimap.getValue(PREFIX_FILENAME).isPresent()) {
+            throw new ParseException(String.format(MESSAGE_MISSING_ARGUMENTS, "FILENAME", "get"));
+        }
+        if (!argMultimap.getValue(PREFIX_FILEPATH).isPresent()) {
+            throw new ParseException(String.format(MESSAGE_MISSING_ARGUMENTS, "FILEPATH", "get"));
+        }
+        String fileName = argMultimap.getValue(PREFIX_FILENAME).get();
+        String filePath = argMultimap.getValue(PREFIX_FILEPATH).get();
+        AttachmentCommand.AttachmentAction action = new AttachmentCommand.GetAttachmentAction(fileName, filePath);
         return new AttachmentCommand(index, action);
     }
 }

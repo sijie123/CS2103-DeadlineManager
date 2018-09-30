@@ -15,6 +15,13 @@ public class Attachment {
         this.file = file;
     }
 
+    /**
+     * @return Name of the attachment, which is the file name.
+     */
+    public String getName() {
+        return file.getName();
+    }
+
     @Override
     public boolean equals(Object other) {
         return other == this // short circuit if same object
@@ -25,5 +32,10 @@ public class Attachment {
     @Override
     public int hashCode() {
         return file.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return file.getName();
     }
 }
