@@ -20,7 +20,7 @@ Responsibilities: Search, Filter, Tags
 '''
 
 === Lin Si Jie
-image::yl_coder.jpg[width="150", align="left"]
+image::sijie123.jpg[width="150", align="left"]
 {empty}[http://github.com/sijie123[github]] [<<sijie123#, portfolio>>]
 
 Role: Team Lead +
