@@ -56,6 +56,7 @@ public class Name {
             return name -> name.value.equals(testPhrase);
         case "<":
             return name -> StringUtil.containsFragmentIgnoreCase(testPhrase, name.value);
+        case ":": // convenience operator, works the same as ">"
         case ">":
             return name -> StringUtil.containsFragmentIgnoreCase(name.value, testPhrase);
         default:

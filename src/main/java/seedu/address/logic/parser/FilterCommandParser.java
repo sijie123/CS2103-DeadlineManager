@@ -44,7 +44,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
         // due=1/10/2018
         // test<blah
         // name>"hello world"
-        Pattern pattern = Pattern.compile("^([a-zA-Z]+)\\s*([\\=\\<\\>])\\s*(\".+?\"|\'.+?\'|[\\S&&[^\"\']]+)$");
+        Pattern pattern = Pattern.compile("^([a-zA-Z]+)\\s*([\\=\\<\\>\\:])\\s*(\".+?\"|\'.+?\'|[\\S&&[^\"\']]+)$");
         Matcher matcher = pattern.matcher(trimmedArgs);
 
         if (!matcher.matches() || matcher.groupCount() != 3) {
