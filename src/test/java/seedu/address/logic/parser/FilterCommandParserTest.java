@@ -2,7 +2,6 @@ package seedu.address.logic.parser;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
-
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 
@@ -18,7 +17,7 @@ public class FilterCommandParserTest {
     @Test
     public void parse_emptyArg_throwsParseException() {
         assertParseFailure(parser, "     ",
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE));
+            String.format(MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE));
     }
 
     @Test
@@ -70,7 +69,7 @@ public class FilterCommandParserTest {
             parser.parse(str);
             fail("Expected a parse error");
         } catch (ParseException ignore) {
-
+            // TODO
         }
     }
 
