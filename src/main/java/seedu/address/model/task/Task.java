@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import seedu.address.model.attachment.Attachment;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -25,25 +26,28 @@ public class Task {
     private final Deadline deadline;
     private final Address address;
     private final Set<Tag> tags = new HashSet<>();
+    private final Set<Attachment> attachments = new HashSet<>();
 
     /**
      * Every field must be present and not null.
      */
-    public Task(Name name, Phone phone, Email email, Deadline deadline, Address address, Set<Tag> tags) {
-        requireAllNonNull(name, phone, email, deadline, address, tags);
+    public Task(Name name, Phone phone, Email email, Deadline deadline, Address address,
+            Set<Tag> tags, Set<Attachment> attachments) {
+        requireAllNonNull(name, phone, email, deadline, address, tags, attachments);
         this.name = name;
         this.phone = phone;
         this.email = email;
         this.deadline = deadline;
         this.address = address;
         this.tags.addAll(tags);
+        this.attachments.addAll(attachments);
     }
 
     /**
      * Convenience constructor, to be removed eventually
      */
     public Task(Name name, Phone phone, Email email, Address address, Set<Tag> tags) {
-        this(name, phone, email, new Deadline(new Date()), address, tags);
+        this(name, phone, email, new Deadline(new Date(2018, 10, 1)), address, tags, new HashSet<Attachment>());
     }
 
     public Name getName() {
@@ -75,6 +79,15 @@ public class Task {
     }
 
     /**
+     * Returns an immutable attachment set, which throws {@code UnsupportedOperationException} if
+     * modification is attempted.
+     */
+    public Set<Attachment> getAttachments() {
+        return Collections.unmodifiableSet(attachments);
+    }
+
+
+    /**
      * Returns true if both persons have the same identity and data fields. This defines a stronger
      * notion of equality between two persons.
      */
@@ -87,23 +100,25 @@ public class Task {
         if (!(other instanceof Task)) {
             return false;
         }
-
         Task otherTask = (Task) other;
         return otherTask.getName().equals(getName())
             && otherTask.getPhone().equals(getPhone())
             && otherTask.getEmail().equals(getEmail())
             && otherTask.getAddress().equals(getAddress())
-            && otherTask.getTags().equals(getTags());
+            && otherTask.getTags().equals(getTags())
+            && otherTask.getDeadline().equals(getDeadline())
+            && otherTask.getAttachments().equals(getAttachments());
     }
 
     @Override
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own
-        return Objects.hash(name, phone, email, address, tags);
+        return Objects.hash(name, phone, email, address, tags, deadline, attachments);
     }
 
     @Override
     public String toString() {
+        // TODO: add deadline and attachments
         final StringBuilder builder = new StringBuilder();
         builder.append(getName())
             .append(" Phone: ")
