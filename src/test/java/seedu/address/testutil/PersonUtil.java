@@ -30,7 +30,7 @@ public class PersonUtil {
      */
     public static String getPersonDetails(Task task) {
         StringBuilder sb = new StringBuilder();
-        sb.append(PREFIX_NAME + task.getName().fullName + " ");
+        sb.append(PREFIX_NAME + task.getName().value + " ");
         sb.append(PREFIX_PHONE + task.getPhone().value + " ");
         sb.append(PREFIX_EMAIL + task.getEmail().value + " ");
         sb.append(PREFIX_ADDRESS + task.getAddress().value + " ");
@@ -46,7 +46,7 @@ public class PersonUtil {
     public static String getEditPersonDescriptorDetails(EditPersonDescriptor descriptor) {
         StringBuilder sb = new StringBuilder();
         descriptor.getName()
-            .ifPresent(name -> sb.append(PREFIX_NAME).append(name.fullName).append(" "));
+            .ifPresent(name -> sb.append(PREFIX_NAME).append(name.value).append(" "));
         descriptor.getPhone()
             .ifPresent(phone -> sb.append(PREFIX_PHONE).append(phone.value).append(" "));
         descriptor.getEmail()

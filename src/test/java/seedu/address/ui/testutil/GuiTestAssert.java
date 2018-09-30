@@ -32,7 +32,7 @@ public class GuiTestAssert {
      * Asserts that {@code actualCard} displays the details of {@code expectedTask}.
      */
     public static void assertCardDisplaysPerson(Task expectedTask, TaskCardHandle actualCard) {
-        assertEquals(expectedTask.getName().fullName, actualCard.getName());
+        assertEquals(expectedTask.getName().value, actualCard.getName());
         assertEquals(expectedTask.getPhone().value, actualCard.getPhone());
         assertEquals(expectedTask.getEmail().value, actualCard.getEmail());
         assertEquals(expectedTask.getAddress().value, actualCard.getAddress());
