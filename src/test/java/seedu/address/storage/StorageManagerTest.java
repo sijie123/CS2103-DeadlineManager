@@ -14,7 +14,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import seedu.address.commons.events.model.AddressBookChangedEvent;
+import seedu.address.commons.events.model.TaskCollectionChangedEvent;
 import seedu.address.commons.events.storage.DataSavingExceptionEvent;
 import seedu.address.model.ReadOnlyTaskCollection;
 import seedu.address.model.TaskCollection;
@@ -64,14 +64,14 @@ public class StorageManagerTest {
          * More extensive testing of UserPref saving/reading is done in {@link XmlTaskCollectionStorageTest} class.
          */
         TaskCollection original = getTypicalAddressBook();
-        storageManager.saveAddressBook(original);
-        ReadOnlyTaskCollection retrieved = storageManager.readAddressBook().get();
+        storageManager.saveTaskCollection(original);
+        ReadOnlyTaskCollection retrieved = storageManager.readTaskCollection().get();
         assertEquals(original, new TaskCollection(retrieved));
     }
 
     @Test
     public void getAddressBookFilePath() {
-        assertNotNull(storageManager.getAddressBookFilePath());
+        assertNotNull(storageManager.getTaskCollectionFilePath());
     }
 
     @Test
@@ -80,7 +80,7 @@ public class StorageManagerTest {
         Storage storage = new StorageManager(
             new XmlTaskCollectionStorageExceptionThrowingStub(Paths.get("dummy")),
             new JsonUserPrefsStorage(Paths.get("dummy")));
-        storage.handleAddressBookChangedEvent(new AddressBookChangedEvent(new TaskCollection()));
+        storage.handleTaskCollectionChangedEvent(new TaskCollectionChangedEvent(new TaskCollection()));
         assertTrue(eventsCollectorRule.eventsCollector
             .getMostRecent() instanceof DataSavingExceptionEvent);
     }
@@ -96,7 +96,7 @@ public class StorageManagerTest {
         }
 
         @Override
-        public void saveAddressBook(ReadOnlyTaskCollection addressBook, Path filePath)
+        public void saveTaskCollection(ReadOnlyTaskCollection addressBook, Path filePath)
             throws IOException {
             throw new IOException("dummy exception");
         }

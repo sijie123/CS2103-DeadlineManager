@@ -88,7 +88,7 @@ public class MainApp extends Application {
         Optional<ReadOnlyTaskCollection> addressBookOptional;
         ReadOnlyTaskCollection initialData;
         try {
-            addressBookOptional = storage.readAddressBook();
+            addressBookOptional = storage.readTaskCollection();
             if (!addressBookOptional.isPresent()) {
                 logger.info("Data file not found. Will be starting with a sample TaskCollection");
             }

@@ -16,7 +16,7 @@ public interface TaskCollectionStorage {
     /**
      * Returns the file path of the data file.
      */
-    Path getAddressBookFilePath();
+    Path getTaskCollectionFilePath();
 
     /**
      * Returns TaskCollection data as a {@link ReadOnlyTaskCollection}. Returns {@code Optional.empty()}
@@ -25,25 +25,25 @@ public interface TaskCollectionStorage {
      * @throws DataConversionException if the data in storage is not in the expected format.
      * @throws IOException             if there was any problem when reading from the storage.
      */
-    Optional<ReadOnlyTaskCollection> readAddressBook() throws DataConversionException, IOException;
+    Optional<ReadOnlyTaskCollection> readTaskCollection() throws DataConversionException, IOException;
 
     /**
-     * @see #getAddressBookFilePath()
+     * @see #getTaskCollectionFilePath()
      */
-    Optional<ReadOnlyTaskCollection> readAddressBook(Path filePath)
+    Optional<ReadOnlyTaskCollection> readTaskCollection(Path filePath)
         throws DataConversionException, IOException;
 
     /**
      * Saves the given {@link ReadOnlyTaskCollection} to the storage.
      *
-     * @param addressBook cannot be null.
+     * @param taskCollection cannot be null.
      * @throws IOException if there was any problem writing to the file.
      */
-    void saveAddressBook(ReadOnlyTaskCollection addressBook) throws IOException;
+    void saveTaskCollection(ReadOnlyTaskCollection taskCollection) throws IOException;
 
     /**
-     * @see #saveAddressBook(ReadOnlyTaskCollection)
+     * @see #saveTaskCollection(ReadOnlyTaskCollection)
      */
-    void saveAddressBook(ReadOnlyTaskCollection addressBook, Path filePath) throws IOException;
+    void saveTaskCollection(ReadOnlyTaskCollection addressBook, Path filePath) throws IOException;
 
 }
