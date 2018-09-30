@@ -47,7 +47,7 @@ public class Task {
      * Convenience constructor, to be removed eventually
      */
     public Task(Name name, Phone phone, Email email, Address address, Set<Tag> tags) {
-        this(name, phone, email, new Deadline(new Date()), address, tags, new HashSet<Attachment>());
+        this(name, phone, email, new Deadline(new Date(2018, 10, 1)), address, tags, new HashSet<Attachment>());
     }
 
     public Name getName() {
@@ -100,7 +100,6 @@ public class Task {
         if (!(other instanceof Task)) {
             return false;
         }
-
         Task otherTask = (Task) other;
         return otherTask.getName().equals(getName())
             && otherTask.getPhone().equals(getPhone())
