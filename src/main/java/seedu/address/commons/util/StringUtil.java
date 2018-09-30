@@ -41,6 +41,27 @@ public class StringUtil {
     }
 
     /**
+     * Returns true if the {@code phrase} contains the given fragment {@code fragment}. Ignores case.
+     * <br>examples:<pre>
+     *       containsWordIgnoreCase("ABc def", "abc") == true
+     *       containsWordIgnoreCase("ABc def", "DEF") == true
+     *       containsWordIgnoreCase("ABc def", "AB") == true
+     *       </pre>
+     *
+     * @param phrase cannot be null
+     * @param fragment cannot be null or empty
+     */
+    public static boolean containsFragmentIgnoreCase(String phrase, String fragment) {
+        requireNonNull(phrase);
+        requireNonNull(fragment);
+
+        fragment = fragment.trim();
+        checkArgument(!fragment.isEmpty(), "Word parameter cannot be empty");
+
+        return phrase.contains(fragment);
+    }
+
+    /**
      * Returns a detailed message of the t, including the stack trace.
      */
     public static String getDetails(Throwable t) {

@@ -1,5 +1,11 @@
 package seedu.address.model.task;
 
+import seedu.address.commons.util.StringUtil;
+import seedu.address.model.task.exceptions.InvalidPredicateOperatorException;
+import seedu.address.model.task.exceptions.InvalidPredicateTestPhraseException;
+
+import java.util.function.Predicate;
+
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
 
@@ -18,7 +24,7 @@ public class Name {
      */
     public static final String NAME_VALIDATION_REGEX = "[\\p{Alnum}][\\p{Alnum} ]*";
 
-    public final String fullName;
+    public final String value;
 
     /**
      * Constructs a {@code Name}.
@@ -28,7 +34,7 @@ public class Name {
     public Name(String name) {
         requireNonNull(name);
         checkArgument(isValidName(name), MESSAGE_NAME_CONSTRAINTS);
-        fullName = name;
+        value = name;
     }
 
     /**
@@ -38,22 +44,41 @@ public class Name {
         return test.matches(NAME_VALIDATION_REGEX);
     }
 
+    /**
+     * Constructs a predicate from the given operator and test phrase.
+     *
+     * @param operator The operator for this predicate.
+     * @param testPhrase The test phrase for this predicate.
+     */
+    public static Predicate<Name> makeFilter(String operator, String testPhrase) throws InvalidPredicateOperatorException {
+        switch (operator) {
+        case "=":
+            return name -> name.value.equals(testPhrase);
+        case "<":
+            return name -> StringUtil.containsFragmentIgnoreCase(testPhrase, name.value);
+        case ">":
+            return name -> StringUtil.containsFragmentIgnoreCase(name.value, testPhrase);
+        default:
+            throw new InvalidPredicateOperatorException();
+        }
+    }
+
 
     @Override
     public String toString() {
-        return fullName;
+        return value;
     }
 
     @Override
     public boolean equals(Object other) {
         return other == this // short circuit if same object
             || (other instanceof Name // instanceof handles nulls
-            && fullName.equals(((Name) other).fullName)); // state check
+            && value.equals(((Name) other).value)); // state check
     }
 
     @Override
     public int hashCode() {
-        return fullName.hashCode();
+        return value.hashCode();
     }
 
 }

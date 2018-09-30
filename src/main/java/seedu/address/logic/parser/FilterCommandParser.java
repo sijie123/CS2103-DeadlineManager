@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import seedu.address.logic.commands.FilterCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.task.Deadline;
+import seedu.address.model.task.Name;
 import seedu.address.model.task.Task;
 import seedu.address.model.task.exceptions.InvalidPredicateException;
 import seedu.address.model.task.exceptions.InvalidPredicateOperatorException;
@@ -64,6 +65,12 @@ public class FilterCommandParser implements Parser<FilterCommand> {
 
         try {
             switch (key) {
+            case "n": // fallthrough
+            case "name": {
+                Predicate<Name> namePredicate = Name.makeFilter(operator, testPhrase);
+                predicate = task -> namePredicate.test(task.getName());
+                break;
+            }
             case "d": // fallthrough
             case "due": {
                 Predicate<Deadline> deadlinePredicate = Deadline.makeFilter(operator, testPhrase);
