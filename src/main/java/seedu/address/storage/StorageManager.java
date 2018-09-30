@@ -77,6 +77,12 @@ public class StorageManager extends ComponentManager implements Storage {
     }
 
     @Override
+    public void saveTaskCollection(ReadOnlyTaskCollection taskCollection, Path filePath) throws IOException {
+        logger.fine("Attempting to write to data file: " + filePath);
+        privateTaskCollectionStorage.saveTaskCollection(taskCollection, filePath);
+    }
+
+    @Override
     public Optional<ReadOnlyTaskCollection> importTaskCollection(Path filePath)
         throws DataConversionException, IOException {
         logger.fine("Attempting to import from file: " + filePath);
@@ -93,12 +99,6 @@ public class StorageManager extends ComponentManager implements Storage {
         }
         logger.fine("Attempting to export to file: " + filePath);
         importExportTaskCollectionStorage.saveTaskCollection(taskCollection, filePath);
-    }
-
-    @Override
-    public void saveTaskCollection(ReadOnlyTaskCollection taskCollection, Path filePath) throws IOException {
-        logger.fine("Attempting to write to data file: " + filePath);
-        privateTaskCollectionStorage.saveTaskCollection(taskCollection, filePath);
     }
 
     @Override
