@@ -69,7 +69,7 @@ public class FilterCommandParserTest {
             parser.parse(str);
             fail("Expected a parse error");
         } catch (ParseException ignore) {
-            // TODO
+            // Do not do anything, because we just want to make sure that an exception is thrown
         }
     }
 
