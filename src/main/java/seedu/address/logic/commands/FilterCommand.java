@@ -5,7 +5,6 @@ import static java.util.Objects.requireNonNull;
 import seedu.address.commons.core.Messages;
 import seedu.address.logic.CommandHistory;
 import seedu.address.model.Model;
-import seedu.address.model.task.NameContainsKeywordsPredicate;
 import seedu.address.model.task.Task;
 
 import java.util.function.Predicate;
@@ -24,9 +23,9 @@ public class FilterCommand extends Command {
                     + "Parameters: FILTER_PREDICATE [FILTER_PREDICATES]...\n"
                     + "Example: " + COMMAND_WORD + " due<1/10/2018";
 
-    private final Predicate<? super Task> predicate;
+    private final Predicate<Task> predicate;
 
-    public FilterCommand(Predicate<? super Task> predicate) {
+    public FilterCommand(Predicate<Task> predicate) {
         this.predicate = predicate;
     }
 
