@@ -68,7 +68,7 @@ public class EditCommand extends Command {
 
         this.index = index;
         this.editPersonDescriptor = new EditPersonDescriptor(editPersonDescriptor);
-}
+    }
 
     @Override
     public CommandResult execute(Model model, CommandHistory history) throws CommandException {
