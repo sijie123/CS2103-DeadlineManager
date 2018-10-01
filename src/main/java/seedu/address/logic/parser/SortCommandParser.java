@@ -36,7 +36,7 @@ public class SortCommandParser implements Parser<SortCommand> {
         // n<
 
         Comparator<Task> comparator = Comparator.comparing(Task::getClass, (a, b) -> {
-           return 0; // a default comparator which compares every task equal
+            return 0; // a default comparator which compares every task equal
         });
 
         for (String element: splitedArgs) {
@@ -55,27 +55,27 @@ public class SortCommandParser implements Parser<SortCommand> {
             }
 
             switch (taskField) {
-                case "n": // fallthrough
-                case "name": {
-                    if (comparisonCharacter == '<') {
-                        comparator = comparator.thenComparing(Task::getName);
-                    } else {
-                        comparator = comparator.thenComparing(Task::getName, Comparator.reverseOrder());
-                    }
-                    break;
+            case "n": // fallthrough
+            case "name": {
+                if (comparisonCharacter == '<') {
+                    comparator = comparator.thenComparing(Task::getName);
+                } else {
+                    comparator = comparator.thenComparing(Task::getName, Comparator.reverseOrder());
                 }
-                case "d": // fallthrough
-                case "due": {
-                    if (comparisonCharacter == '<') {
-                        comparator = comparator.thenComparing(Task::getDeadline);
-                    } else {
-                        comparator = comparator.thenComparing(Task::getDeadline, Comparator.reverseOrder());
-                    }
-                    break;
+                break;
+            }
+            case "d": // fallthrough
+            case "due": {
+                if (comparisonCharacter == '<') {
+                    comparator = comparator.thenComparing(Task::getDeadline);
+                } else {
+                    comparator = comparator.thenComparing(Task::getDeadline, Comparator.reverseOrder());
                 }
-                default: {
-                    throw new ParseException(String.format(MESSAGE_INVALID_KEY_FORMAT, element));
-                }
+                break;
+            }
+            default: {
+                throw new ParseException(String.format(MESSAGE_INVALID_KEY_FORMAT, element));
+            }
             }
         }
 
