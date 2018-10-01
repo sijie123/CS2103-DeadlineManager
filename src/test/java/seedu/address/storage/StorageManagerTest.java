@@ -16,9 +16,11 @@ import org.junit.rules.TemporaryFolder;
 
 import seedu.address.commons.events.model.TaskCollectionChangedEvent;
 import seedu.address.commons.events.storage.DataSavingExceptionEvent;
+import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.ReadOnlyTaskCollection;
 import seedu.address.model.TaskCollection;
 import seedu.address.model.UserPrefs;
+import seedu.address.testutil.Assert;
 import seedu.address.ui.testutil.EventsCollectorRule;
 
 public class StorageManagerTest {
@@ -83,6 +85,15 @@ public class StorageManagerTest {
         storage.handleTaskCollectionChangedEvent(new TaskCollectionChangedEvent(new TaskCollection()));
         assertTrue(eventsCollectorRule.eventsCollector
             .getMostRecent() instanceof DataSavingExceptionEvent);
+    }
+
+    @Test
+    public void exportOnWorkingFile_exceptionThrown() throws Exception {
+        XmlTaskCollectionStorage workingStorage =
+                new XmlTaskCollectionStorage(storageManager.getTaskCollectionFilePath());
+        TaskCollection original = getTypicalAddressBook();
+        Assert.assertThrows(IllegalValueException.class, StorageManager.MESSAGE_SAME_FILE_ERROR, () ->
+                storageManager.exportTaskCollection(original, workingStorage));
     }
 
 

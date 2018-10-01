@@ -21,9 +21,9 @@ import seedu.address.model.UserPrefs;
  */
 public class StorageManager extends ComponentManager implements Storage {
 
+    public static final String MESSAGE_SAME_FILE_ERROR = "Cannot overwrite save file! "
+            + "Export as a different filename.";
     private static final Logger logger = LogsCenter.getLogger(StorageManager.class);
-    private static final String MESSAGE_SAME_FILE_ERROR = "Cannot overwrite save file! "
-                                                          + "Export as a different filename.";
     private TaskCollectionStorage privateTaskCollectionStorage;
     private UserPrefsStorage userPrefsStorage;
 
