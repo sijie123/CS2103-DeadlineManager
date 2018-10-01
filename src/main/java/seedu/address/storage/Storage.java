@@ -31,10 +31,11 @@ public interface Storage extends TaskCollectionStorage, UserPrefsStorage {
     @Override
     void saveTaskCollection(ReadOnlyTaskCollection taskCollection) throws IOException;
 
-    Optional<ReadOnlyTaskCollection> importTaskCollection(Path filePath) throws DataConversionException, IOException;
+    Optional<ReadOnlyTaskCollection> importTaskCollection(Path filePath)
+            throws DataConversionException, IOException, IllegalValueException;
 
     void exportTaskCollection(ReadOnlyTaskCollection taskCollection,
-                              TaskCollectionStorage importExportTaskCollectionStorage)
+                              Path filePath)
                               throws IOException, IllegalValueException;
 
     /**

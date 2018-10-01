@@ -21,8 +21,10 @@ import seedu.address.model.UserPrefs;
  */
 public class StorageManager extends ComponentManager implements Storage {
 
-    public static final String MESSAGE_SAME_FILE_ERROR = "Cannot overwrite save file! "
+    public static final String MESSAGE_WRITE_SAME_FILE_ERROR = "Cannot overwrite save file! "
             + "Export as a different filename.";
+    public static final String MESSAGE_READ_SAME_FILE_ERROR = "Cannot import from running data file."
+            + "Double check your import file.";
     private static final Logger logger = LogsCenter.getLogger(StorageManager.class);
     private TaskCollectionStorage privateTaskCollectionStorage;
     private UserPrefsStorage userPrefsStorage;
@@ -84,21 +86,25 @@ public class StorageManager extends ComponentManager implements Storage {
 
     @Override
     public Optional<ReadOnlyTaskCollection> importTaskCollection(Path filePath)
-        throws DataConversionException, IOException {
+            throws DataConversionException, IOException, IllegalValueException {
+        if (privateTaskCollectionStorage.getTaskCollectionFilePath().equals(filePath)) {
+            throw new IllegalValueException(MESSAGE_READ_SAME_FILE_ERROR);
+        }
+        TaskCollectionStorage importExportStorage = new XmlTaskCollectionStorage(filePath);
         logger.fine("Attempting to import from file: " + filePath);
-        return privateTaskCollectionStorage.readTaskCollection(filePath);
+        return importExportStorage.readTaskCollection(filePath);
     }
 
     @Override
     public void exportTaskCollection(ReadOnlyTaskCollection taskCollection,
-                                     TaskCollectionStorage importExportTaskCollectionStorage)
+                                     Path filePath)
                                      throws IOException, IllegalValueException {
-        Path filePath = importExportTaskCollectionStorage.getTaskCollectionFilePath();
         if (privateTaskCollectionStorage.getTaskCollectionFilePath().equals(filePath)) {
-            throw new IllegalValueException(MESSAGE_SAME_FILE_ERROR);
+            throw new IllegalValueException(MESSAGE_WRITE_SAME_FILE_ERROR);
         }
+        TaskCollectionStorage importExportStorage = new XmlTaskCollectionStorage(filePath);
         logger.fine("Attempting to export to file: " + filePath);
-        importExportTaskCollectionStorage.saveTaskCollection(taskCollection, filePath);
+        importExportStorage.saveTaskCollection(taskCollection);
     }
 
     @Override
