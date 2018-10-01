@@ -3,7 +3,7 @@ package seedu.address.model.task;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.util.Collections;
-import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -47,7 +47,7 @@ public class Task {
      * Convenience constructor, to be removed eventually
      */
     public Task(Name name, Phone phone, Email email, Address address, Set<Tag> tags) {
-        this(name, phone, email, new Deadline(new Date(2018, 10, 1)), address, tags, new HashSet<Attachment>());
+        this(name, phone, email, new Deadline(new GregorianCalendar(2018, 10, 1).getTime()), address, tags, new HashSet<Attachment>());
     }
 
     public Name getName() {
