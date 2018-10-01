@@ -88,12 +88,25 @@ public class StorageManagerTest {
     }
 
     @Test
-    public void exportOnWorkingFile_exceptionThrown() throws Exception {
-        XmlTaskCollectionStorage workingStorage =
-                new XmlTaskCollectionStorage(storageManager.getTaskCollectionFilePath());
+    public void exportOnWorkingFile_exceptionThrown() {
+        // Exporting with file name equal to the working file should throw IllegalValueException.
         TaskCollection original = getTypicalAddressBook();
-        Assert.assertThrows(IllegalValueException.class, StorageManager.MESSAGE_SAME_FILE_ERROR, () ->
-                storageManager.exportTaskCollection(original, workingStorage));
+        Assert.assertThrows(IllegalValueException.class, StorageManager.MESSAGE_WRITE_SAME_FILE_ERROR, () ->
+                storageManager.exportTaskCollection(original, storageManager.getTaskCollectionFilePath()));
+    }
+
+    @Test
+    public void addressBookExportImport() throws Exception {
+        /*
+         * Note: This is an integration test that verifies the StorageManager is properly wired to the
+         * {@link XmlTaskCollectionStorage} class.
+         * More extensive testing of importing exporting is done in {@link XmlTaskCollectionStorageTest} class.
+         */
+        TaskCollection original = getTypicalAddressBook();
+        storageManager.exportTaskCollection(original, getTempFilePath("dummyExport"));
+        ReadOnlyTaskCollection retrieved = storageManager
+                .importTaskCollection(getTempFilePath("dummyExport")).get();
+        assertEquals(original, new TaskCollection(retrieved));
     }
 
 
