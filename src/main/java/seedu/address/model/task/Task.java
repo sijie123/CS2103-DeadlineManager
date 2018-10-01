@@ -47,7 +47,8 @@ public class Task {
      * Convenience constructor, to be removed eventually
      */
     public Task(Name name, Phone phone, Email email, Address address, Set<Tag> tags) {
-        this(name, phone, email, new Deadline(new GregorianCalendar(2018, 10, 1).getTime()), address, tags, new HashSet<Attachment>());
+        this(name, phone, email, new Deadline(new GregorianCalendar(2018, 10, 1).getTime()),
+                address, tags, new HashSet<Attachment>());
     }
 
     public Name getName() {
