@@ -49,15 +49,15 @@ public class Name {
      * @param operator The operator for this predicate.
      * @param testPhrase The test phrase for this predicate.
      */
-    public static Predicate<Name> makeFilter(String operator, String testPhrase)
+    public static Predicate<Name> makeFilter(FilterOperator operator, String testPhrase)
             throws InvalidPredicateOperatorException {
         switch (operator) {
-        case "=":
+        case EQUAL:
             return name -> name.value.equals(testPhrase);
-        case "<":
+        case LESS:
             return name -> StringUtil.containsFragmentIgnoreCase(testPhrase, name.value);
-        case ":": // convenience operator, works the same as ">"
-        case ">":
+        case CONVENIENCE: // convenience operator, works the same as ">"
+        case GREATER:
             return name -> StringUtil.containsFragmentIgnoreCase(name.value, testPhrase);
         default:
             throw new InvalidPredicateOperatorException();

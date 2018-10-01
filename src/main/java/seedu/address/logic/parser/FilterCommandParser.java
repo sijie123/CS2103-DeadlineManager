@@ -3,12 +3,14 @@ package seedu.address.logic.parser;
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 
 import java.util.function.Predicate;
+import java.util.logging.Filter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import seedu.address.logic.commands.FilterCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.task.Deadline;
+import seedu.address.model.task.FilterOperator;
 import seedu.address.model.task.Name;
 import seedu.address.model.task.Task;
 import seedu.address.model.task.exceptions.InvalidPredicateException;
@@ -53,7 +55,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
         }
 
         final String key = matcher.group(1);
-        final String operator = matcher.group(2);
+        final FilterOperator operator = FilterOperator.parse(matcher.group(2));
         String value = matcher.group(3);
         if (value.startsWith("\"") || value.startsWith("\'")) {
             assert value.length() >= 2 : "Regex error, string length not more than 2!";

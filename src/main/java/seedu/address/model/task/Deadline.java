@@ -56,7 +56,7 @@ public class Deadline implements Comparable<Deadline> {
      * @param operator The operator for this predicate.
      * @param testPhrase The test phrase for this predicate.
      */
-    public static Predicate<Deadline> makeFilter(String operator, String testPhrase) throws InvalidPredicateException {
+    public static Predicate<Deadline> makeFilter(FilterOperator operator, String testPhrase) throws InvalidPredicateException {
         Deadline testDeadline;
         try {
             testDeadline = new Deadline(testPhrase);
@@ -64,12 +64,12 @@ public class Deadline implements Comparable<Deadline> {
             throw new InvalidPredicateTestPhraseException(e);
         }
         switch (operator) {
-        case "=":
+        case EQUAL:
             return deadline -> deadline.equals(testDeadline);
-        case ":": // convenience operator, works the same as "<"
-        case "<":
+        case CONVENIENCE: // convenience operator, works the same as "<"
+        case LESS:
             return deadline -> deadline.compareTo(testDeadline) <= 0;
-        case ">":
+        case GREATER:
             return deadline -> deadline.compareTo(testDeadline) >= 0;
         default:
             throw new InvalidPredicateOperatorException();
