@@ -3,6 +3,7 @@
 <task>
     <name>Hans Muster</name>
     <phone>9482asf424</phone>
+    <priority>1</priority>
     <email>hans@example</email>
     <address>4th street</address>
     <tagged>friends</tagged>
