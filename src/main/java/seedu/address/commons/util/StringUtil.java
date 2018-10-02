@@ -48,7 +48,7 @@ public class StringUtil {
      *       containsWordIgnoreCase("ABc def", "AB") == true
      *       </pre>
      *
-     * @param phrase cannot be null
+     * @param phrase   cannot be null
      * @param fragment cannot be null or empty
      */
     public static boolean containsFragmentIgnoreCase(String phrase, String fragment) {
@@ -64,7 +64,7 @@ public class StringUtil {
     /**
      * Like String.contains, but ignoring case.
      *
-     * @param phrase cannot be null
+     * @param phrase   cannot be null
      * @param fragment cannot be null
      */
     public static boolean containsIgnoreCase(String phrase, String fragment) {

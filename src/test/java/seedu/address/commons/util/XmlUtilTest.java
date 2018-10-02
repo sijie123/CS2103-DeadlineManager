@@ -41,6 +41,7 @@ public class XmlUtilTest {
 
     private static final String VALID_NAME = "Hans Muster";
     private static final String VALID_PHONE = "9482424";
+    private static final String VALID_PRIORITY = "1";
     private static final String VALID_EMAIL = "hans@example";
     private static final String VALID_ADDRESS = "4th street";
     private static final List<XmlAdaptedTag> VALID_TAGS = Collections
@@ -85,7 +86,7 @@ public class XmlUtilTest {
         XmlAdaptedTask actualPerson = XmlUtil.getDataFromFile(
             MISSING_PERSON_FIELD_FILE, XmlAdaptedTaskWithRootElement.class);
         XmlAdaptedTask expectedPerson = new XmlAdaptedTask(
-            null, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS, VALID_TAGS);
+            null, VALID_PHONE, VALID_PRIORITY, VALID_EMAIL, VALID_ADDRESS, VALID_TAGS);
         assertEquals(expectedPerson, actualPerson);
     }
 
@@ -94,7 +95,7 @@ public class XmlUtilTest {
         XmlAdaptedTask actualPerson = XmlUtil.getDataFromFile(
             INVALID_PERSON_FIELD_FILE, XmlAdaptedTaskWithRootElement.class);
         XmlAdaptedTask expectedPerson = new XmlAdaptedTask(
-            VALID_NAME, INVALID_PHONE, VALID_EMAIL, VALID_ADDRESS, VALID_TAGS);
+            VALID_NAME, INVALID_PHONE, VALID_PRIORITY, VALID_EMAIL, VALID_ADDRESS, VALID_TAGS);
         assertEquals(expectedPerson, actualPerson);
     }
 
@@ -103,7 +104,7 @@ public class XmlUtilTest {
         XmlAdaptedTask actualPerson = XmlUtil.getDataFromFile(
             VALID_PERSON_FILE, XmlAdaptedTaskWithRootElement.class);
         XmlAdaptedTask expectedPerson = new XmlAdaptedTask(
-            VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS, VALID_TAGS);
+            VALID_NAME, VALID_PHONE, VALID_PRIORITY, VALID_EMAIL, VALID_ADDRESS, VALID_TAGS);
         assertEquals(expectedPerson, actualPerson);
     }
 
