@@ -26,7 +26,6 @@ public class StorageManager extends ComponentManager implements Storage {
     public static final String MESSAGE_READ_SAME_FILE_ERROR = "Cannot import from running data file."
             + "Double check your import file.";
     private static final Logger logger = LogsCenter.getLogger(StorageManager.class);
-  
     private TaskCollectionStorage privateTaskCollectionStorage;
     private UserPrefsStorage userPrefsStorage;
 
