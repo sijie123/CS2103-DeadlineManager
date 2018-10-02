@@ -69,7 +69,6 @@ A task can have any number of tags (including 0)
 
 ****
 * `DEADLINE` should be a date in the format DD/MM/YYYY. Examples of valid dates are: 29/03/2018, 29/3/2018, 1/1/2018.
-
 * `PRIORITY` should only be 1, 2, 3, or 4. The lower the number, the higher the priority of the task. (1 = Highest Priority, 4 = Lowest Priority)
 ****
 
