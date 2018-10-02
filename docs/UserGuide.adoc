@@ -12,13 +12,15 @@ ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
 endif::[]
-:repoURL: https://github.com/se-edu/addressbook-level4
+:repoURL: https://github.com/CS2103-AY1819S1-W17-4/main
 
-By: `Team SE-EDU`      Since: `Jun 2016`      Licence: `MIT`
+By: <<AboutUs#, CS2103-AY1819S1-W17-4>>      Since: `Sep 2018`      Licence: `MIT`
+
+Morphed from: https://github.com/nus-cs2103-AY1819S1/addressbook-level4
 
 == Introduction
 
-AddressBook Level 4 (AB4) is for those who *prefer to use a desktop app for managing contacts*. More importantly, AB4 is *optimized for those who prefer to work with a Command Line Interface* (CLI) while still having the benefits of a Graphical User Interface (GUI). If you can type fast, AB4 can get your contact management tasks done faster than traditional GUI apps. Interested? Jump to the <<Quick Start>> to get started. Enjoy!
+Deadline Manager (DLM) is for those who *prefer to use a desktop app for keeping track of tasks*. More importantly, DLM is *optimized for those who prefer to work with a Command Line Interface* (CLI) while still having the benefits of a Graphical User Interface (GUI). If you can type fast, DLM can help you sort out your upcoming tasks faster than traditional GUI apps. Interested? Jump to the <<Quick Start>> to get started. Enjoy!
 
 == Quick Start
 
@@ -27,15 +29,16 @@ AddressBook Level 4 (AB4) is for those who *prefer to use a desktop app for mana
 .  Copy the file to the folder you want to use as the home folder for your deadline manager.
 .  Double-click the file to start the app. The GUI should appear in a few seconds.
 +
+//TODO: Update Ui Image
 image::Ui.png[width="790"]
 +
 .  Type the command in the command box and press kbd:[Enter] to execute it. +
 e.g. typing *`help`* and pressing kbd:[Enter] will open the help window.
 .  Some example commands you can try:
 
-* *`list`* : lists all contacts
-* **`add`**`n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01` : adds a contact named `John Doe` to the deadline manager.
-* **`delete`**`3` : deletes the 3rd contact shown in the current list
+* *`list`* : lists all tasks
+* **`add`**`n/v1.1 milestone d/2/10/2018 t/CS2103T p/1` : adds a task named `v1.1 milestone` to the deadline manager.
+* **`delete`**`3` : deletes the 3rd task shown in the current list
 * *`exit`* : exits the app
 
 .  Refer to <<Features>> for details of each command.
@@ -46,38 +49,68 @@ e.g. typing *`help`* and pressing kbd:[Enter] will open the help window.
 ====
 *Command Format*
 
-* Words in `UPPER_CASE` are the parameters to be supplied by the user e.g. in `add n/NAME`, `NAME` is a parameter which can be used as `add n/John Doe`.
-* Items in square brackets are optional e.g `n/NAME [t/TAG]` can be used as `n/John Doe t/friend` or as `n/John Doe`.
-* Items with `…`​ after them can be used multiple times including zero times e.g. `[t/TAG]...` can be used as `{nbsp}` (i.e. 0 times), `t/friend`, `t/friend t/family` etc.
-* Parameters can be in any order e.g. if the command specifies `n/NAME p/PHONE_NUMBER`, `p/PHONE_NUMBER n/NAME` is also acceptable.
+* Words in `UPPER_CASE` are the parameters to be supplied by the user e.g. in `add n/NAME`, `NAME` is a parameter which can be used as `add n/Assignment 2`.
+* Items in square brackets are optional e.g `n/NAME [t/TAG]` can be used as `n/Assignment 2 t/CS3230` or as `n/Assignment 2`.
+* Items with `…`​ after them can be used multiple times including zero times e.g. `[t/TAG]...` can be used as `{nbsp}` (i.e. 0 times), `t/CS2103`, `t/CS2103 t/Project` etc.
+* Parameters can be in any order e.g. if the command specifies `n/NAME d/DEADLINE`, `d/DEADLINE n/NAME` is also acceptable.
 ====
 
 === Viewing help : `help`
+Help will list the available functions for the user to use.
 
 Format: `help`
 
 === Adding a task: `add`
-
 Adds a task to the deadline manager +
-Format: `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]...`
+Format: `add n/NAME d/DEADLINE p/PRIORITY [t/TAG]...`
 
 [TIP]
 A task can have any number of tags (including 0)
 
+****
+* `DEADLINE` should be a date in the format DD/MM/YYYY. Examples of valid dates are: 29/03/2018, 29/3/2018, 1/1/2018.
+
+* `PRIORITY` should only be 1, 2, 3, or 4. The lower the number, the higher the priority of the task. (1 = Highest Priority, 4 = Lowest Priority)
+****
+
+[TIP]
+You can ask two tasks with the same attributes!
+
 Examples:
 
-* `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01`
-* `add n/Betsy Crowe t/friend e/betsycrowe@example.com a/Newgate Prison p/1234567 t/criminal`
+* `add n/Assignment 2 d/1/1/2018 p/1` +
+Adds a task with name `Assignment 2` with a deadline on 1st January 2018 with priority 1 (highest priority).
+* `add n/v1.1 milestone d/9/10/2018 t/CS2103T t/Project p/2` +
+Adds a task with name `v1.1 milestone` with a deadline on 9th October 2018 with priority 2 (second highest priority). It is additionally tagged with 2 tags: `CS2103T1 and `Project`.
+
+//TODO: Kien
+=== Add a recurring task : `addr`
+Adds a recurring task to the deadline manager. +
+Format: `addr n/NAME d/DEADLINE p/PRIORITY f/FREQUENCY [t/TAG]...`
+
+[TIP]
+A task can have any number of tags (including 0)
+
+****
+* `DEADLINE` should be the first time that this task should trigger. It should be a date in the format DD/MM/YYYY. Examples of valid dates are: 29/03/2018, 29/3/2018, 1/1/2018.
+* `FREQUENCY` (in number of days), should be how frequently the task should recur.
+* `PRIORITY` should only be 1, 2, 3, or 4. The lower the number, the higher the priority of the task. (1 = Highest Priority, 4 = Lowest Priority)
+****
+
+Examples:
+
+* `add n/CS2103T Tutorials d/8/9/2018 p/3 f/7 t/CS2103T` +
+Adds a recurring task named `CS2103T Tutorials` with the first occurrence in 8th September 2018 and repeats every 7 days. The task is also labelled with priority 3 (second lowest) and tagged with `CS2103T`.
 
 === Listing all tasks : `list`
 
 Shows a list of all tasks in the deadline manager. +
 Format: `list`
 
+//TODO: Kien
 === Editing a task : `edit`
-
 Edits an existing task in the deadline manager. +
-Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]...`
+Format: `edit INDEX [n/NAME] [d/DEADLINE] [p/PRIORITY] [t/TAG]...`
 
 ****
 * Edits the task at the specified `INDEX`. The index refers to the index number shown in the displayed task list. The index *must be a positive integer* 1, 2, 3, ...
@@ -85,17 +118,20 @@ Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]...`
 * Existing values will be updated to the input values.
 * When editing tags, the existing tags of the task will be removed i.e adding of tags is not cumulative.
 * You can remove all the task's tags by typing `t/` without specifying any tags after it.
+* The range of possible values for each argument of the edit command follows that of the add command.
 ****
 
 Examples:
 
-* `edit 1 p/91234567 e/johndoe@example.com` +
-Edits the phone number and email address of the 1st task to be `91234567` and `johndoe@example.com` respectively.
-* `edit 2 n/Betsy Crower t/` +
-Edits the name of the 2nd task to be `Betsy Crower` and clears all existing tags.
+* `edit 1 d/3/10/2018` +
+Edits the deadline of the 1st task to 3rd October 2018.
+* `edit 2 n/v1.2 Milestone t/` +
+Edits the name of the 2nd task to be `v1.2 Milestone` and clears all existing tags.
+* `edit 1 p/1` +
+Edits the priority of the 1st task to 1 (highest priority).
 
 === Locating tasks by name: `find`
-
+//TODO: Bernard to update?
 Finds tasks whose names contain any of the given keywords. +
 Format: `find KEYWORD [MORE_KEYWORDS]`
 
@@ -109,10 +145,144 @@ Format: `find KEYWORD [MORE_KEYWORDS]`
 
 Examples:
 
-* `find John` +
-Returns `john` and `John Doe`
-* `find Betsy Tim John` +
-Returns any task having names `Betsy`, `Tim`, or `John`
+* `find Assignment` +
+Returns `assignment` and `Assignment 3`
+* `find CS2103T Assignment 3` +
+Returns any task having names `CS2103T`, `assignment`, or `3`
+
+=== Filtering a list of tasks: `filter`
+Filters the current list of tasks with a specified filter predicate. +
+Deadline Manager will then display only those tasks which satisfies the given filter predicate. +
+Format: `filter FILTER_PREDICATE [FILTER_PREDICATES]...`
+
+//TODO: Bernard
+****
+* Keyword matching is case insensistive.
+
+* Filter predicate is of the following form: ... TODO
+****
+
+Examples:
+
+* `due<1/10/2018`
+Returns a subset of the current list of tasks that have deadlines before 1st October 2018.
+
+* `d=1/10/2018`
+Returns a subset of the current list of tasks that have deadlines equal 1st October 2018.
+
+* `p=1`
+Returns a subset of the current list of tasks that have priority = 1 (highest priority).
+
+* `p<3`
+Returns a subset of the current list of tasks that have priority < 3. (Highest priority or second highest priority.)
+
+//TODO: Sidhant
+=== Sorting the tasks in the current view : `sort`
+
+Sorts the lists of all the tasks which the user is currently viewing. Generally meant to be used in combination with `filter`. +
+Format: `sort SORT_COMPARATOR [SORT_COMPARATORS]...` +
+****
+* Format of `SORT_COMPARATOR`: `(n|name|d|due)(<|>)`
+* Sorts the list by the 1st comparator, in case of ties, sorts by 2nd comparator and so on.
+* `n` stands for name of the task and `d` stands for deadline of the task
+* < stands for sorting in ascending order and > stands for sorting in descending order
+* For names, sorting is done in alphabetical ascending and descending order respectively.
+****
+Examples:
+
+* `sort n>` +
+Sorts the current list of tasks in view in descending order by name, where sorting is done in alphabetical manner.
+* `sort due< name>` +
+Sorts the current list of tasks in view in ascending order by due date, where ties are broken by descending order of names.
+
+//TODO: Sidhant
+===  Resolve tasks : `resolve`
+Deletes a specified task from the deadline manager. The index refers to the entries of a previous call to list or search. +
+Format: `resolve INDEX`
+
+****
+* Hides the task at the specified INDEX. The index refers to the index number shown in the displayed task list. The index must be a positive integer 1, 2, 3, …​
+****
+
+Examples:
+* `resolve 1` +
+The 1st task displayed by the deadline manager will be deleted.
+
+
+//TODO: Sidhant
+=== Snooze tasks : `snooze`
+Hides a specified task from the deadline manager until the time specified in the parameter has elapsed. The index refers to the entries of a previous call to list or search. +
+Format: `snooze INDEX d/DEADLINE`
+
+****
+* Modifies the contents of the task at the specified by INDEX to a new date `DEADLINE`. The index referes to the index number shown in the displayed task list. The index must be a positive integer 1, 2, 3, …​
+****
+
+Examples:
+
+* `snooze 1 d/20/09/2018` +
+A task is 'snoozed' as its deadline is now shifted backwards to 20th September 2018.
+
+
+
+//TODO: Ranald
+=== Manage attachments of a task : `attachment`
+Allows the user to add, list, delete and retrieve attachments associated with a specific task. +
+Format: `INDEX COMMAND [p/FILEPATH] [n/FILENAME]`
+
+****
+*  Modify and manages the attachments of the task at the specified INDEX. The index refers to the index number shown in the displayed task list. The index must be a positive integer 1, 2, 3, …​
+* `COMMAND` is either `add`, `list`, `delete` or `get` +
+* For `add` commands, `FILEPATH` argument is required to denote the file you intend to attach to the task. A file must exist at the `FILEPATH` specified.
+* For `list` commands, no additional arguments are required.
+* For `delete` commands, `FILENAME` argument is required to represent the file to delete.
+* For `get` commands, `FILENAME` argument is required to represent the file to retrieve, `FILEPATH` argument is required to denote the destination you want the file to be exported to. If there is an existing file at `FILEPATH`, it would be overwritten without warning.
+****
+
+Examples:
+
+* Add: `attachment 1 add p/C:\Documents\HelloWorld.docx` +
+Adds an attachment located at "C:\Documents\HelloWorld.docx" to the 1st task in the deadline manager.
+* Get: `attachment 2 get p/C:\Documents\TaskAttachments.zip n/Assignment.zip` +
+Saves an attachment named "Assignment.zip" of the 2nd task in the deadline manager to "C:\Documents\TaskAttachments.zip"
+* List: `attachment 1 list` +
+Lists all attachments currently associated with the 1st task in the deadline manager.
+* Delete: `attachment 1 delete n/HelloWorld.docx`
+Removes the association of the attachment named "HelloWorld.docx" with the 1st task in the deadline manager.
+
+
+//TODO: Si Jie
+=== Importing a set of tasks: `import`
+Import tasks that were previous generated by an export command, from the filename given as parameter.  +
+Format: `import FILEPATH`
+
+****
+* `FILEPATH` must be a path to an existing file on the computer. The file must have to be previously exported by another Deadline Manager.
+****
+
+Examples:
+
+* `import cs2103.txt` +
+Imports tasks from the file `cs2103.txt` in the same folder as Deadline Manager.
+* `import C:\Documents\cs2103.txt`
+Import tasks from the file `cs2103.txt` that is defined by the absolute path provided.
+
+//TODO: Si Jie
+=== Export a set of tasks: `export`
+Export the set of tasks that is currently displayed by the Deadline Manager. The exported file will be saved as a file at the provided `FILEPATH`.  +
+Format: `export FILEPATH`
+
+****
+* `FILEPATH` must be a path to an existing location on the computer. If there is an existing file there, it would be overwritten by this command.
+****
+
+Examples:
+
+* `export cs2103.txt` +
+Exports tasks to the file `cs2103.txt` in the same folder as Deadline Manager.
+* `export C:\Documents\cs2103.txt`
+Export tasks to the file `cs2103.txt` that is defined by the absoluted path provided.
+
 
 === Deleting a task : `delete`
 
@@ -134,15 +304,15 @@ Deletes the 2nd task in the deadline manager.
 `delete 1` +
 Deletes the 1st task in the results of the `find` command.
 
+//TODO: Ranald or Sidhant
 === Selecting a task : `select`
 
 Selects the task identified by the index number used in the displayed task list. +
 Format: `select INDEX`
 
 ****
-* Selects the task and loads the Google search page the task at the specified `INDEX`.
-* The index refers to the index number shown in the displayed task list.
-* The index *must be a positive integer* `1, 2, 3, ...`
+* Selects the task and loads details about the task at the specified `INDEX`.
+* The index refers to the index number shown in the displayed task list. The index must be a positive integer 1, 2, 3, …​
 ****
 
 Examples:
@@ -150,7 +320,7 @@ Examples:
 * `list` +
 `select 2` +
 Selects the 2nd task in the deadline manager.
-* `find Betsy` +
+* `find Assignment` +
 `select 1` +
 Selects the 1st task in the results of the `find` command.
 
@@ -214,9 +384,11 @@ The `redo` command fails as there are no `undo` commands executed previously.
 `redo` (reapplies the `clear` command) +
 // end::undoredo[]
 
+
+
 === Clearing all entries : `clear`
 
-Clears all entries from the deadline manager. +
+Clears all task entries from the deadline manager. +
 Format: `clear`
 
 === Exiting the program : `exit`
@@ -226,13 +398,15 @@ Format: `exit`
 
 === Saving the data
 
-deadline manager data are saved in the hard disk automatically after any command that changes the data. +
+Deadline manager data are saved in the hard disk automatically after any command that changes the data. +
 There is no need to save manually.
 
-// tag::dataencryption[]
-=== Encrypting data files `[coming in v2.0]`
+Attachments are merely linked in the deadline manager. A separate copy of the file will not be stored. If the original attachment file has been deleted, deadline manager will fail to retrieve it.
 
-_{explain how the user can enable/disable data encryption}_
+// tag::dataencryption[]
+//=== Encrypting data files `[coming in v2.0]`
+
+//_{explain how the user can enable/disable data encryption}_
 // end::dataencryption[]
 
 == FAQ
@@ -242,19 +416,59 @@ _{explain how the user can enable/disable data encryption}_
 
 == Command Summary
 
-* *Add* `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]...` +
-e.g. `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 t/friend t/colleague`
+* *Add* `add n/NAME d/DEADLINE p/PRIORITY [t/TAG]...` +
+e.g. `add n/CS2103 Assignment d/11/10/2018 p/2 t/java t/hard`
+
+* *Add Recurring*: `addr n/NAME d/DEADLINE f/FREQUENCY p/PRIORITY [t/TAG]...`
+e.g. `add n/CS2103 Tutorial d/1/10/2018 f/7 p/4 t/easy`
+
 * *Clear* : `clear`
+
 * *Delete* : `delete INDEX` +
 e.g. `delete 3`
-* *Edit* : `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]...` +
-e.g. `edit 2 n/James Lee e/jameslee@example.com`
+
+* *Edit* : `edit INDEX [n/NAME] [d/DEADLINE] [t/TAG]...` +
+e.g. `edit 2 n/CS2103 Assignment 2 t/easy`
+
 * *Find* : `find KEYWORD [MORE_KEYWORDS]` +
-e.g. `find James Jake`
+e.g. `find CS2103 CS2102`
+
+* *Filter* : `filter FILTER_PREDICATE [FILTER_PREDICATES]...`
+e.g. `filter 1 due<1/10/2018`
+
+* *Sort* : `sort SORT_COMPARATOR [SORT_COMPARATORS]` +
+e.g. `sort due< name>`
+
 * *List* : `list`
+
+* *Resolve* : `resolve INDEX` +
+e.g. `resolve 1`
+
+* *Snooze* : `snooze INDEX d/DEADLINE` +
+e.g.  `snooze 1 d/31/06/2018`
+
+* *Add Attachment* : `attachment INDEX add p\FILEPATH`
+
+* *List Attachments* : `attachment INDEX list`
+
+* *Delete Attachment* : `attachment INDEX delete n/FILENAME`
+
+* *Retrieve Attachment* : `attachment INDEX get n/FILENAME p/FILEPATH`
+e.g. `attachment 2 get p/C:\Documents\TaskAttachments.zip n/Assignment.zip`
+
+* *Import* : `import FILEPATH`
+
+* *Export* : `export FILEPATH`
+
 * *Help* : `help`
+
 * *Select* : `select INDEX` +
 e.g.`select 2`
+
 * *History* : `history`
+
 * *Undo* : `undo`
+
 * *Redo* : `redo`
+
+* *Exit* : `exit`
