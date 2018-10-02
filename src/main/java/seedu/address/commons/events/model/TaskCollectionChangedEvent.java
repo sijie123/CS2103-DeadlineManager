@@ -6,11 +6,11 @@ import seedu.address.model.ReadOnlyTaskCollection;
 /**
  * Indicates the TaskCollection in the model has changed
  */
-public class AddressBookChangedEvent extends BaseEvent {
+public class TaskCollectionChangedEvent extends BaseEvent {
 
     public final ReadOnlyTaskCollection data;
 
-    public AddressBookChangedEvent(ReadOnlyTaskCollection data) {
+    public TaskCollectionChangedEvent(ReadOnlyTaskCollection data) {
         this.data = data;
     }
 

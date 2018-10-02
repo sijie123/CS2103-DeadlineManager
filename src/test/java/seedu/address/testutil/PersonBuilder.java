@@ -1,6 +1,6 @@
 package seedu.address.testutil;
 
-import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -36,7 +36,7 @@ public class PersonBuilder {
         name = new Name(DEFAULT_NAME);
         phone = new Phone(DEFAULT_PHONE);
         email = new Email(DEFAULT_EMAIL);
-        deadline = new Deadline(new Date(2018, 10, 1));
+        deadline = new Deadline(new GregorianCalendar(2018, 10, 1).getTime());
         address = new Address(DEFAULT_ADDRESS);
         tags = new HashSet<>();
         attachments = new HashSet<>();

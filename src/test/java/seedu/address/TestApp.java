@@ -73,7 +73,7 @@ public class TestApp extends MainApp {
      */
     public TaskCollection readStorageAddressBook() {
         try {
-            return new TaskCollection(storage.readAddressBook().get());
+            return new TaskCollection(storage.readTaskCollection().get());
         } catch (DataConversionException dce) {
             throw new AssertionError("Data is not in the TaskCollection format.", dce);
         } catch (IOException ioe) {
@@ -85,7 +85,7 @@ public class TestApp extends MainApp {
      * Returns the file path of the storage file.
      */
     public Path getStorageSaveLocation() {
-        return storage.getAddressBookFilePath();
+        return storage.getTaskCollectionFilePath();
     }
 
     /**
