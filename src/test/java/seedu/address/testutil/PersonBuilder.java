@@ -22,6 +22,7 @@ public class PersonBuilder {
 
     public static final String DEFAULT_NAME = "Alice Pauline";
     public static final String DEFAULT_PHONE = "85355255";
+    public static final String DEFAULT_DEADLINE = "1/10/2018";
     public static final String DEFAULT_PRIORITY = "2";
     public static final String DEFAULT_EMAIL = "alice@gmail.com";
     public static final String DEFAULT_ADDRESS = "123, Jurong West Ave 6, #08-111";
@@ -40,7 +41,7 @@ public class PersonBuilder {
         phone = new Phone(DEFAULT_PHONE);
         priority = new Priority(DEFAULT_PRIORITY);
         email = new Email(DEFAULT_EMAIL);
-        deadline = new Deadline(new GregorianCalendar(2018, 10, 1).getTime());
+        deadline = new Deadline(DEFAULT_DEADLINE);
         address = new Address(DEFAULT_ADDRESS);
         tags = new HashSet<>();
         attachments = new HashSet<>();
@@ -90,6 +91,14 @@ public class PersonBuilder {
      */
     public PersonBuilder withPhone(String phone) {
         this.phone = new Phone(phone);
+        return this;
+    }
+
+    /**
+     * Sets the {@code Deadline} of the {@code Task} that we are building.
+     */
+    public PersonBuilder withDeadline(String deadline) {
+        this.deadline = new Deadline(deadline);
         return this;
     }
 
