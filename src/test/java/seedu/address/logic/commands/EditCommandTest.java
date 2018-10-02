@@ -118,15 +118,15 @@ public class EditCommandTest {
         EditCommand editCommand = new EditCommand(INDEX_SECOND_PERSON, descriptor);
 
         String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS,
-                model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased()));
+            model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased()));
 
         Model expectedModel = new ModelManager(new TaskCollection(model.getAddressBook()),
-                new UserPrefs());
+            new UserPrefs());
         expectedModel.updatePerson(model.getFilteredPersonList().get(1), firstTask);
         expectedModel.commitAddressBook();
 
         assertCommandSuccess(editCommand, model, commandHistory,
-                expectedMessage, expectedModel);
+            expectedMessage, expectedModel);
     }
 
     @Test

@@ -33,7 +33,7 @@ public class Task {
      * Every field must be present and not null.
      */
     public Task(Name name, Phone phone, Priority priority, Email email, Deadline deadline, Address address,
-            Set<Tag> tags, Set<Attachment> attachments) {
+                Set<Tag> tags, Set<Attachment> attachments) {
         requireAllNonNull(name, phone, priority, email, deadline, address, tags, attachments);
         this.name = name;
         this.phone = phone;
@@ -50,7 +50,7 @@ public class Task {
      */
     public Task(Name name, Phone phone, Priority priority, Email email, Address address, Set<Tag> tags) {
         this(name, phone, priority, email, new Deadline(new GregorianCalendar(2018, 10, 1).getTime()),
-                address, tags, new HashSet<Attachment>());
+            address, tags, new HashSet<Attachment>());
     }
 
     public Name getName() {

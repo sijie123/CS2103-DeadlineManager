@@ -107,8 +107,9 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
         command = EditCommand.COMMAND_WORD + " " + index.getOneBased() + NAME_DESC_BOB
             + PHONE_DESC_AMY + PRIORITY_DESC_AMY + EMAIL_DESC_AMY
             + ADDRESS_DESC_BOB + TAG_DESC_FRIEND + TAG_DESC_HUSBAND;
-        editedTask = new PersonBuilder(BOB).withPriority(VALID_PRIORITY_AMY).withPhone(VALID_PHONE_AMY).withEmail(VALID_EMAIL_AMY)
-            .build();
+        editedTask =
+            new PersonBuilder(BOB).withPriority(VALID_PRIORITY_AMY).withPhone(VALID_PHONE_AMY)
+                .withEmail(VALID_EMAIL_AMY).build();
         assertCommandSuccess(command, index, editedTask);
 
         /* Case: clear tags -> cleared */

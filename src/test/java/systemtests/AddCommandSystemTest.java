@@ -65,8 +65,8 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
         Task toAdd = AMY;
 
         String command =
-            "   " + AddCommand.COMMAND_WORD + "  " + NAME_DESC_AMY + "  " + PHONE_DESC_AMY + " "+ PRIORITY_DESC_AMY + " "
-                + EMAIL_DESC_AMY + "   " + ADDRESS_DESC_AMY + "   " + TAG_DESC_FRIEND + " ";
+            "   " + AddCommand.COMMAND_WORD + "  " + NAME_DESC_AMY + "  " + PHONE_DESC_AMY + " " + PRIORITY_DESC_AMY
+                + " " + EMAIL_DESC_AMY + "   " + ADDRESS_DESC_AMY + "   " + TAG_DESC_FRIEND + " ";
         assertCommandSuccess(command, toAdd);
 
         /* Case: undo adding Amy to the list -> Amy deleted */
@@ -167,7 +167,7 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
         /* Case: missing priority -> rejected */
         command = AddCommand.COMMAND_WORD + NAME_DESC_AMY + PHONE_DESC_AMY + EMAIL_DESC_AMY + ADDRESS_DESC_AMY;
         assertCommandFailure(command,
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE));
+            String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE));
 
         /* Case: missing email -> rejected */
         command = AddCommand.COMMAND_WORD + NAME_DESC_AMY + PHONE_DESC_AMY + PRIORITY_DESC_AMY + ADDRESS_DESC_AMY;
@@ -175,7 +175,7 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE));
 
         /* Case: missing address -> rejected */
-        command = AddCommand.COMMAND_WORD + NAME_DESC_AMY + PHONE_DESC_AMY + PRIORITY_DESC_AMY +EMAIL_DESC_AMY;
+        command = AddCommand.COMMAND_WORD + NAME_DESC_AMY + PHONE_DESC_AMY + PRIORITY_DESC_AMY + EMAIL_DESC_AMY;
         assertCommandFailure(command,
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE));
 
@@ -184,18 +184,18 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
         assertCommandFailure(command, Messages.MESSAGE_UNKNOWN_COMMAND);
 
         /* Case: invalid name -> rejected */
-        command = AddCommand.COMMAND_WORD + INVALID_NAME_DESC + PHONE_DESC_AMY + PRIORITY_DESC_AMY +EMAIL_DESC_AMY
+        command = AddCommand.COMMAND_WORD + INVALID_NAME_DESC + PHONE_DESC_AMY + PRIORITY_DESC_AMY + EMAIL_DESC_AMY
             + ADDRESS_DESC_AMY;
         assertCommandFailure(command, Name.MESSAGE_NAME_CONSTRAINTS);
 
         /* Case: invalid phone -> rejected */
-        command = AddCommand.COMMAND_WORD + NAME_DESC_AMY + INVALID_PHONE_DESC + PRIORITY_DESC_AMY +EMAIL_DESC_AMY
+        command = AddCommand.COMMAND_WORD + NAME_DESC_AMY + INVALID_PHONE_DESC + PRIORITY_DESC_AMY + EMAIL_DESC_AMY
             + ADDRESS_DESC_AMY;
         assertCommandFailure(command, Phone.MESSAGE_PHONE_CONSTRAINTS);
 
         /* Case: invalid priority -> rejected */
-        command = AddCommand.COMMAND_WORD + NAME_DESC_AMY + PHONE_DESC_AMY + INVALID_PRIORITY_DESC +EMAIL_DESC_AMY
-                + ADDRESS_DESC_AMY;
+        command = AddCommand.COMMAND_WORD + NAME_DESC_AMY + PHONE_DESC_AMY + INVALID_PRIORITY_DESC + EMAIL_DESC_AMY
+            + ADDRESS_DESC_AMY;
         assertCommandFailure(command, Priority.MESSAGE_PRIORITY_CONSTRAINTS);
 
         /* Case: invalid email -> rejected */

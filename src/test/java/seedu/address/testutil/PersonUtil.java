@@ -52,7 +52,7 @@ public class PersonUtil {
         descriptor.getPhone()
             .ifPresent(phone -> sb.append(PREFIX_PHONE).append(phone.value).append(" "));
         descriptor.getPriority()
-                .ifPresent(priority -> sb.append(PREFIX_PRIORITY).append(priority.value).append(" "));
+            .ifPresent(priority -> sb.append(PREFIX_PRIORITY).append(priority.value).append(" "));
         descriptor.getEmail()
             .ifPresent(email -> sb.append(PREFIX_EMAIL).append(email.value).append(" "));
         descriptor.getAddress()

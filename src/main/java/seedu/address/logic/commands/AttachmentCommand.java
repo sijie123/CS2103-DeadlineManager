@@ -44,8 +44,8 @@ public class AttachmentCommand extends Command {
     private final AttachmentAction attachmentAction;
 
     /**
-     * @param index                of the task in the filtered task list to edit
-     * @param attachmentAction     details to edit the task with
+     * @param index            of the task in the filtered task list to edit
+     * @param attachmentAction details to edit the task with
      */
     public AttachmentCommand(Index index, AttachmentAction attachmentAction) {
         requireNonNull(index);

@@ -254,6 +254,7 @@ public class EditCommand extends Command {
             return (attachments != null) ? Optional.of(Collections.unmodifiableSet(attachments))
                 : Optional.empty();
         }
+
         @Override
         public boolean equals(Object other) {
             // short circuit if same object

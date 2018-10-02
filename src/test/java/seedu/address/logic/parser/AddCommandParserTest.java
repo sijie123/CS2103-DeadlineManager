@@ -15,10 +15,10 @@ import static seedu.address.logic.commands.CommandTestUtil.NAME_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.NAME_DESC_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.PHONE_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.PHONE_DESC_BOB;
-import static seedu.address.logic.commands.CommandTestUtil.PRIORITY_DESC_AMY;
-import static seedu.address.logic.commands.CommandTestUtil.PRIORITY_DESC_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.PREAMBLE_NON_EMPTY;
 import static seedu.address.logic.commands.CommandTestUtil.PREAMBLE_WHITESPACE;
+import static seedu.address.logic.commands.CommandTestUtil.PRIORITY_DESC_AMY;
+import static seedu.address.logic.commands.CommandTestUtil.PRIORITY_DESC_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.TAG_DESC_FRIEND;
 import static seedu.address.logic.commands.CommandTestUtil.TAG_DESC_HUSBAND;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_ADDRESS_BOB;
@@ -68,7 +68,7 @@ public class AddCommandParserTest {
 
         // multiple priorities - last priority accepted
         assertParseSuccess(parser, NAME_DESC_BOB + PHONE_DESC_BOB + PRIORITY_DESC_AMY + PRIORITY_DESC_BOB
-                + EMAIL_DESC_BOB + ADDRESS_DESC_BOB + TAG_DESC_FRIEND, new AddCommand(expectedTask));
+            + EMAIL_DESC_BOB + ADDRESS_DESC_BOB + TAG_DESC_FRIEND, new AddCommand(expectedTask));
 
         // multiple emails - last email accepted
         assertParseSuccess(parser, NAME_DESC_BOB + PHONE_DESC_BOB + PRIORITY_DESC_BOB + EMAIL_DESC_AMY
@@ -148,7 +148,7 @@ public class AddCommandParserTest {
 
         // invalid priority
         assertParseFailure(parser,
-        NAME_DESC_BOB + PHONE_DESC_BOB + INVALID_PRIORITY_DESC + EMAIL_DESC_BOB + ADDRESS_DESC_BOB
+            NAME_DESC_BOB + PHONE_DESC_BOB + INVALID_PRIORITY_DESC + EMAIL_DESC_BOB + ADDRESS_DESC_BOB
                 + TAG_DESC_HUSBAND + TAG_DESC_FRIEND, Priority.MESSAGE_PRIORITY_CONSTRAINTS);
 
         // invalid email

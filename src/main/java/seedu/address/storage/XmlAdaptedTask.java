@@ -108,7 +108,7 @@ public class XmlAdaptedTask {
 
         if (priority == null) {
             throw new IllegalValueException(
-                    String.format(MISSING_FIELD_MESSAGE_FORMAT, Priority.class.getSimpleName()));
+                String.format(MISSING_FIELD_MESSAGE_FORMAT, Priority.class.getSimpleName()));
         }
         if (!Priority.isValidPriority(priority)) {
             throw new IllegalValueException(Priority.MESSAGE_PRIORITY_CONSTRAINTS);

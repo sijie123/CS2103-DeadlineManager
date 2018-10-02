@@ -11,7 +11,7 @@ public class Priority {
 
 
     public static final String MESSAGE_PRIORITY_CONSTRAINTS =
-            "Priority should only be 1, 2, 3, or 4";
+        "Priority should only be 1, 2, 3, or 4";
     public static final String PRIORITY_VALIDATION_REGEX = "[1234]";
     public final String value;
 
@@ -41,8 +41,8 @@ public class Priority {
     @Override
     public boolean equals(Object other) {
         return other == this // short circuit if same object
-                || (other instanceof Priority // instanceof handles nulls
-                && value.equals(((Priority) other).value)); // state check
+            || (other instanceof Priority // instanceof handles nulls
+            && value.equals(((Priority) other).value)); // state check
     }
 
     @Override
