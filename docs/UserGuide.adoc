@@ -155,7 +155,7 @@ Format: `filter FILTER_EXPRESSION`
 
 ****
 
-`FILTER_EXPRESSION` can one of the following:
+`FILTER_EXPRESSION` can be any of the following:
 * `FILTER_PREDICATE`
 * `FILTER_EXPRESSION and FILTER_EXPRESSION`
 * `FILTER_EXPRESSION or FILTER_EXPRESSION`
