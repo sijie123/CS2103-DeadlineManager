@@ -38,7 +38,7 @@ import seedu.address.model.task.Email;
 import seedu.address.model.task.Name;
 import seedu.address.model.task.Phone;
 import seedu.address.model.task.Task;
-import seedu.address.testutil.PersonBuilder;
+import seedu.address.testutil.TaskBuilder;
 
 public class AddCommandParserTest {
 
@@ -46,7 +46,7 @@ public class AddCommandParserTest {
 
     @Test
     public void parse_allFieldsPresent_success() {
-        Task expectedTask = new PersonBuilder(BOB).withTags(VALID_TAG_FRIEND).build();
+        Task expectedTask = new TaskBuilder(BOB).withTags(VALID_TAG_FRIEND).build();
 
         // whitespace only preamble
         assertParseSuccess(parser,
@@ -71,7 +71,7 @@ public class AddCommandParserTest {
                 + ADDRESS_DESC_BOB + TAG_DESC_FRIEND, new AddCommand(expectedTask));
 
         // multiple tags - all accepted
-        Task expectedTaskMultipleTags = new PersonBuilder(BOB)
+        Task expectedTaskMultipleTags = new TaskBuilder(BOB)
             .withTags(VALID_TAG_FRIEND, VALID_TAG_HUSBAND)
             .build();
         assertParseSuccess(parser,
@@ -83,7 +83,7 @@ public class AddCommandParserTest {
     @Test
     public void parse_optionalFieldsMissing_success() {
         // zero tags
-        Task expectedTask = new PersonBuilder(AMY).withTags().build();
+        Task expectedTask = new TaskBuilder(AMY).withTags().build();
         assertParseSuccess(parser,
             NAME_DESC_AMY + PHONE_DESC_AMY + EMAIL_DESC_AMY + ADDRESS_DESC_AMY,
             new AddCommand(expectedTask));

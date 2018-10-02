@@ -12,7 +12,7 @@ import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.task.Task;
-import seedu.address.testutil.PersonBuilder;
+import seedu.address.testutil.TaskBuilder;
 
 /**
  * Contains integration tests (interaction with the Model) for {@code AddCommand}.
@@ -29,7 +29,7 @@ public class AddCommandIntegrationTest {
 
     @Test
     public void execute_newPerson_success() {
-        Task validTask = new PersonBuilder().build();
+        Task validTask = new TaskBuilder().build();
 
         Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
         expectedModel.addPerson(validTask);

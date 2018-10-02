@@ -43,8 +43,8 @@ import seedu.address.model.task.Email;
 import seedu.address.model.task.Name;
 import seedu.address.model.task.Phone;
 import seedu.address.model.task.Task;
-import seedu.address.testutil.PersonBuilder;
 import seedu.address.testutil.PersonUtil;
+import seedu.address.testutil.TaskBuilder;
 
 public class AddCommandSystemTest extends TaskCollectionSystemTest {
 
@@ -75,7 +75,7 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
         assertCommandSuccess(command, model, expectedResultMessage);
 
         /* Case: add a task with all fields same as another task in the deadline manager except name -> added */
-        toAdd = new PersonBuilder(AMY).withName(VALID_NAME_BOB).build();
+        toAdd = new TaskBuilder(AMY).withName(VALID_NAME_BOB).build();
         command = AddCommand.COMMAND_WORD + NAME_DESC_BOB + PHONE_DESC_AMY + EMAIL_DESC_AMY
             + ADDRESS_DESC_AMY
             + TAG_DESC_FRIEND;
@@ -84,7 +84,7 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
         /* Case: add a task with all fields same as another task in the deadline manager except phone and email
          * -> added
          */
-        toAdd = new PersonBuilder(AMY).withPhone(VALID_PHONE_BOB).withEmail(VALID_EMAIL_BOB)
+        toAdd = new TaskBuilder(AMY).withPhone(VALID_PHONE_BOB).withEmail(VALID_EMAIL_BOB)
             .build();
         command = PersonUtil.getAddCommand(toAdd);
         assertCommandSuccess(command, toAdd);
@@ -118,23 +118,23 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
         /* ---------------------- Perform add operation with duplicate task (should succeed) ----------------------- */
 
         /* Case: add a duplicate task except with different phone -> added normally */
-        toAdd = new PersonBuilder(HOON).withPhone(VALID_PHONE_BOB).build();
+        toAdd = new TaskBuilder(HOON).withPhone(VALID_PHONE_BOB).build();
         command = PersonUtil.getAddCommand(toAdd);
         assertCommandSuccess(command, toAdd);
 
         /* Case: add a duplicate task except with different email -> added normally */
-        toAdd = new PersonBuilder(HOON).withEmail(VALID_EMAIL_BOB).build();
+        toAdd = new TaskBuilder(HOON).withEmail(VALID_EMAIL_BOB).build();
         command = PersonUtil.getAddCommand(toAdd);
         assertCommandSuccess(command, toAdd);
 
         /* Case: add a duplicate task except with different address -> added normally */
-        toAdd = new PersonBuilder(HOON).withAddress(VALID_ADDRESS_BOB).build();
+        toAdd = new TaskBuilder(HOON).withAddress(VALID_ADDRESS_BOB).build();
         command = PersonUtil.getAddCommand(toAdd);
         assertCommandSuccess(command, toAdd);
 
         /* Case: add a duplicate task except with different tags -> added normally */
         command = PersonUtil.getAddCommand(HOON) + " " + PREFIX_TAG.getPrefix() + "friends";
-        toAdd = new PersonBuilder(HOON).withTags("friends").build();
+        toAdd = new TaskBuilder(HOON).withTags("friends").build();
         assertCommandSuccess(command, toAdd);
 
         /* ----------------------------------- Perform invalid add operations --------------------------------------- */
