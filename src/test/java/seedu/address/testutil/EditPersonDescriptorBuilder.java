@@ -10,6 +10,7 @@ import seedu.address.model.task.Address;
 import seedu.address.model.task.Email;
 import seedu.address.model.task.Name;
 import seedu.address.model.task.Phone;
+import seedu.address.model.task.Priority;
 import seedu.address.model.task.Task;
 
 /**
@@ -34,9 +35,12 @@ public class EditPersonDescriptorBuilder {
         descriptor = new EditPersonDescriptor();
         descriptor.setName(task.getName());
         descriptor.setPhone(task.getPhone());
+        descriptor.setPriority(task.getPriority());
         descriptor.setEmail(task.getEmail());
+        descriptor.setDeadline(task.getDeadline());
         descriptor.setAddress(task.getAddress());
         descriptor.setTags(task.getTags());
+        descriptor.setAttachments(task.getAttachments());
     }
 
     /**
@@ -52,6 +56,14 @@ public class EditPersonDescriptorBuilder {
      */
     public EditPersonDescriptorBuilder withPhone(String phone) {
         descriptor.setPhone(new Phone(phone));
+        return this;
+    }
+
+    /**
+     * Sets the {@code Priority} of the {@code EditPersonDescriptor} that we are building.
+     */
+    public EditPersonDescriptorBuilder withPriority(String priority) {
+        descriptor.setPriority(new Priority(priority));
         return this;
     }
 

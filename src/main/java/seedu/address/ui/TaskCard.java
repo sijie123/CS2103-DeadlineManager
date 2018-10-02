@@ -34,6 +34,8 @@ public class TaskCard extends UiPart<Region> {
     @FXML
     private Label phone;
     @FXML
+    private Label priority;
+    @FXML
     private Label address;
     @FXML
     private Label email;
@@ -44,8 +46,9 @@ public class TaskCard extends UiPart<Region> {
         super(FXML);
         this.task = task;
         id.setText(displayedIndex + ". ");
-        name.setText(task.getName().fullName);
+        name.setText(task.getName().value);
         phone.setText(task.getPhone().value);
+        priority.setText(task.getPriority().value);
         address.setText(task.getAddress().value);
         email.setText(task.getEmail().value);
         task.getTags().forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));

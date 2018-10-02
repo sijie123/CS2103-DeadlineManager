@@ -15,6 +15,7 @@ import seedu.address.model.task.Address;
 import seedu.address.model.task.Email;
 import seedu.address.model.task.Name;
 import seedu.address.model.task.Phone;
+import seedu.address.model.task.Priority;
 import seedu.address.model.task.Task;
 
 /**
@@ -28,6 +29,8 @@ public class XmlAdaptedTask {
     private String name;
     @XmlElement(required = true)
     private String phone;
+    @XmlElement(required = true)
+    private String priority;
     @XmlElement(required = true)
     private String email;
     @XmlElement(required = true)
@@ -45,10 +48,11 @@ public class XmlAdaptedTask {
     /**
      * Constructs an {@code XmlAdaptedTask} with the given task details.
      */
-    public XmlAdaptedTask(String name, String phone, String email, String address,
+    public XmlAdaptedTask(String name, String phone, String priority, String email, String address,
                           List<XmlAdaptedTag> tagged) {
         this.name = name;
         this.phone = phone;
+        this.priority = priority;
         this.email = email;
         this.address = address;
         if (tagged != null) {
@@ -62,8 +66,9 @@ public class XmlAdaptedTask {
      * @param source future changes to this will not affect the created XmlAdaptedTask
      */
     public XmlAdaptedTask(Task source) {
-        name = source.getName().fullName;
+        name = source.getName().value;
         phone = source.getPhone().value;
+        priority = source.getPriority().value;
         email = source.getEmail().value;
         address = source.getAddress().value;
         tagged = source.getTags().stream()
@@ -101,6 +106,15 @@ public class XmlAdaptedTask {
         }
         final Phone modelPhone = new Phone(phone);
 
+        if (priority == null) {
+            throw new IllegalValueException(
+                String.format(MISSING_FIELD_MESSAGE_FORMAT, Priority.class.getSimpleName()));
+        }
+        if (!Priority.isValidPriority(priority)) {
+            throw new IllegalValueException(Priority.MESSAGE_PRIORITY_CONSTRAINTS);
+        }
+        final Priority modelPriority = new Priority(priority);
+
         if (email == null) {
             throw new IllegalValueException(
                 String.format(MISSING_FIELD_MESSAGE_FORMAT, Email.class.getSimpleName()));
@@ -120,7 +134,7 @@ public class XmlAdaptedTask {
         final Address modelAddress = new Address(address);
 
         final Set<Tag> modelTags = new HashSet<>(personTags);
-        return new Task(modelName, modelPhone, modelEmail, modelAddress, modelTags);
+        return new Task(modelName, modelPhone, modelPriority, modelEmail, modelAddress, modelTags);
     }
 
     @Override
@@ -136,6 +150,7 @@ public class XmlAdaptedTask {
         XmlAdaptedTask otherPerson = (XmlAdaptedTask) other;
         return Objects.equals(name, otherPerson.name)
             && Objects.equals(phone, otherPerson.phone)
+            && Objects.equals(priority, otherPerson.priority)
             && Objects.equals(email, otherPerson.email)
             && Objects.equals(address, otherPerson.address)
             && tagged.equals(otherPerson.tagged);

@@ -42,7 +42,7 @@ public class BrowserPanel extends UiPart<Region> {
     }
 
     private void loadPersonPage(Task task) {
-        loadPage(SEARCH_PAGE_URL + task.getName().fullName);
+        loadPage(SEARCH_PAGE_URL + task.getName().value);
     }
 
     public void loadPage(String url) {

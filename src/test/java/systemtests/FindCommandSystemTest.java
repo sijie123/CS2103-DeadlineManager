@@ -137,7 +137,7 @@ public class FindCommandSystemTest extends TaskCollectionSystemTest {
         showAllPersons();
         selectPerson(Index.fromOneBased(1));
         assertFalse(getPersonListPanel().getHandleToSelectedCard().getName()
-            .equals(DANIEL.getName().fullName));
+            .equals(DANIEL.getName().value));
         command = FindCommand.COMMAND_WORD + " Daniel";
         ModelHelper.setFilteredList(expectedModel, DANIEL);
         assertCommandSuccess(command, expectedModel);
