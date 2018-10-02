@@ -107,7 +107,6 @@ Adds a recurring task named `CS2103T Tutorials` with the first occurrence in 8th
 Shows a list of all tasks in the deadline manager. +
 Format: `list`
 
-//TODO: Kien
 === Editing a task : `edit`
 Edits an existing task in the deadline manager. +
 Format: `edit INDEX [n/NAME] [d/DEADLINE] [p/PRIORITY] [t/TAG]...`

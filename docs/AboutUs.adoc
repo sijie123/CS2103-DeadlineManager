@@ -29,7 +29,7 @@ Responsibilities: Storage, Import/Export
 '''
 
 === Nguyen Tien Trung Kien
-image::yl_coder.jpg[width="150", align="left"]
+image::kc97ble.png[width="150", align="left"]
 {empty}[http://github.com/kc97ble[github]] [<<kc97ble#, portfolio>>]
 
 Role: Developer +
