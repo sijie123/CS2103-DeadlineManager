@@ -155,28 +155,40 @@ Format: `filter FILTER_EXPRESSION`
 
 ****
 
-`FILTER_EXPRESSION` can be any of the following:
+`FILTER_EXPRESSION` can be any one of the following:
+
 * `FILTER_PREDICATE`
 * `FILTER_EXPRESSION and FILTER_EXPRESSION`
 * `FILTER_EXPRESSION or FILTER_EXPRESSION`
 * `not FILTER_EXPRESSION`
 * `(FILTER_EXPRESSION)`
-As can be seen, we can construct arbitrarily complex filter expressions that are composed from many predicates.
 
 ****
 
-Format of FILTER_PREDICATE: `<key><operator><phrase>`:
-* Where `key` is an alphanumeric string that describes the attribute being compared
-* Where `operator` is one of `:`, `=`, `<`, `>`
-* Where `phrase` is a string that describes what to search (called the search phrase)
-The operator `:` is known as the *convenience* operator - it is an alias for another operator that is commonly used.
+The filter expression is designed so that it is possible to construct arbitrarily complex filter expressions that are composed from any number of predicates.
 
 ****
 
-Elaboration:
-* When `key` is `n` or `name`, we are comparing the task name.  Comparision is case-insensitive.  Quotes may be used to specify a search phrase that contains spaces.  The operator `>` tests if the search phrase is contained within the task name.  The operator `<` test if the task name is contained within the search phrase.  The operator `=` tests if the search phrase is exactly the same as the task name.  The convenience operator is an alias for `>`.
-* When `key` is `d` or `due`, we are comparing the due date, and the search phrase is interpreted as a date.  Dates must be in `d/m/y` format.  The operator `>` tests if the task due date is on or after the specified due date.  The operator `<` test if the task due date is on or before the specified due date.  The operator `=` tests if the task due date is exactly equal to the specified due date.  The convenience operator is an alias for `<`.
+`FILTER_PREDICATE` is a string in the following format-: `<key><operator><phrase>`:
+
+* where `key` is an alphanumeric string that describes the attribute being compared
+* where `operator` is one of `:`, `=`, `<`, `>`
+* where `phrase` is a string that describes what to search (called the search phrase)
+
+The operator `:` is known as the *convenience* operator -- it is an alias for the operator that intuitively does what you expect for the given `key`.  More details are given below.
+
+****
+
+The `<` and `>` operators are non-strict: Every task that will be shown using `=` will also be shown using `<` or `>`.
+
+****
+
+Meaning of the operators for each valid key:
+
+* When `key` is `n` or `name`, the task name is compared.  Comparision is case-insensitive.  Quotes may be used to specify a search phrase that contains spaces.  The operator `>` tests if the search phrase is contained within the task name.  The operator `<` test if the task name is contained within the search phrase.  The operator `=` tests if the search phrase is exactly the same as the task name.  The convenience operator is an alias for `>`.
+* When `key` is `d` or `due`, the due date is being compared, and the search phrase is interpreted as a date.  Dates must be in `d/m/y` format.  The operator `>` tests if the task due date is on or after the specified due date.  The operator `<` test if the task due date is on or before the specified due date.  The operator `=` tests if the task due date is exactly equal to the specified due date.  The convenience operator is an alias for `<`.
 * Any other `key` will cause Deadline Manager to produce an error.
+
 ****
 
 Examples:
@@ -203,9 +215,10 @@ Returns a subset of the current list of tasks that have priority = 1 (highest pr
 Returns a subset of the current list of tasks that have priority < 3. (Highest priority or second highest priority.)
 
 === Filtering a list of tasks: `search`
-Filters the current list of tasks with a specified filter predicate. +
-This is an alias for `filter`.  They perform exactly the same function. +
-The alias is provided because it is sometimes more intuitive to think of certain filter operations as 'search' operations, e.g. searching for a task that has a particular name.
+
+Filters the current list of tasks with a specified filter predicate.
+
+This is an alias for `filter`.  They perform exactly the same function.  The alias is provided because it is sometimes more intuitive to think of certain filter operations as 'search' operations, e.g. searching for a task that has a particular name.
 
 //TODO: Sidhant
 === Sorting the tasks in the current view : `sort`
@@ -464,8 +477,11 @@ e.g. `edit 2 n/CS2103 Assignment 2 t/easy`
 * *Find* : `find KEYWORD [MORE_KEYWORDS]` +
 e.g. `find CS2103 CS2102`
 
-* *Filter* : `filter FILTER_PREDICATE [FILTER_PREDICATES]...`
-e.g. `filter 1 due<1/10/2018`
+* *Filter* : `filter FILTER_EXPRESSION`
+e.g. `filter due<1/10/2018`
+
+* *Search* : `search FILTER_EXPRESSION`
+e.g. `search due<1/10/2018`
 
 * *Sort* : `sort SORT_COMPARATOR [SORT_COMPARATORS]` +
 e.g. `sort due< name>`
