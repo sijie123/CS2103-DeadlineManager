@@ -31,11 +31,12 @@ public interface Storage extends TaskCollectionStorage, UserPrefsStorage {
     @Override
     void saveTaskCollection(ReadOnlyTaskCollection taskCollection) throws IOException;
 
-    Optional<ReadOnlyTaskCollection> importTaskCollection(Path filePath) throws DataConversionException, IOException;
+    Optional<ReadOnlyTaskCollection> importTaskCollection(Path filePath)
+            throws DataConversionException, IOException, IllegalValueException;
 
     void exportTaskCollection(ReadOnlyTaskCollection taskCollection,
-                              TaskCollectionStorage importExportTaskCollectionStorage)
-        throws IOException, IllegalValueException;
+                              Path filePath)
+                              throws IOException, IllegalValueException;
 
     /**
      * Saves the current version of the deadline manager to the hard disk. Creates the data file if it

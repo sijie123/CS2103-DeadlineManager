@@ -16,9 +16,11 @@ import org.junit.rules.TemporaryFolder;
 
 import seedu.address.commons.events.model.TaskCollectionChangedEvent;
 import seedu.address.commons.events.storage.DataSavingExceptionEvent;
+import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.ReadOnlyTaskCollection;
 import seedu.address.model.TaskCollection;
 import seedu.address.model.UserPrefs;
+import seedu.address.testutil.Assert;
 import seedu.address.ui.testutil.EventsCollectorRule;
 
 public class StorageManagerTest {
@@ -83,6 +85,28 @@ public class StorageManagerTest {
         storage.handleTaskCollectionChangedEvent(new TaskCollectionChangedEvent(new TaskCollection()));
         assertTrue(eventsCollectorRule.eventsCollector
             .getMostRecent() instanceof DataSavingExceptionEvent);
+    }
+
+    @Test
+    public void exportOnWorkingFile_exceptionThrown() {
+        // Exporting with file name equal to the working file should throw IllegalValueException.
+        TaskCollection original = getTypicalAddressBook();
+        Assert.assertThrows(IllegalValueException.class, StorageManager.MESSAGE_WRITE_SAME_FILE_ERROR, () ->
+                storageManager.exportTaskCollection(original, storageManager.getTaskCollectionFilePath()));
+    }
+
+    @Test
+    public void addressBookExportImport() throws Exception {
+        /*
+         * Note: This is an integration test that verifies the StorageManager is properly wired to the
+         * {@link XmlTaskCollectionStorage} class.
+         * More extensive testing of importing exporting is done in {@link XmlTaskCollectionStorageTest} class.
+         */
+        TaskCollection original = getTypicalAddressBook();
+        storageManager.exportTaskCollection(original, getTempFilePath("dummyExport"));
+        ReadOnlyTaskCollection retrieved = storageManager
+                .importTaskCollection(getTempFilePath("dummyExport")).get();
+        assertEquals(original, new TaskCollection(retrieved));
     }
 
 
