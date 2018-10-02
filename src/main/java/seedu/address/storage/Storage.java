@@ -35,7 +35,7 @@ public interface Storage extends TaskCollectionStorage, UserPrefsStorage {
 
     void exportTaskCollection(ReadOnlyTaskCollection taskCollection,
                               TaskCollectionStorage importExportTaskCollectionStorage)
-                              throws IOException, IllegalValueException;
+        throws IOException, IllegalValueException;
 
     /**
      * Saves the current version of the deadline manager to the hard disk. Creates the data file if it

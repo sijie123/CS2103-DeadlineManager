@@ -46,7 +46,7 @@ public class Name {
     /**
      * Constructs a predicate from the given operator and test phrase.
      *
-     * @param operator The operator for this predicate.
+     * @param operator   The operator for this predicate.
      * @param testPhrase The test phrase for this predicate.
      */
     public static Predicate<Name> makeFilter(FilterOperator operator, String testPhrase)

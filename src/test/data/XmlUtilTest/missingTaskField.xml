@@ -2,6 +2,7 @@
 <!-- Task with missing name field -->
 <task>
     <phone>9482424</phone>
+    <priority>1</priority>
     <email>hans@example</email>
     <address>4th street</address>
     <tagged>friends</tagged>

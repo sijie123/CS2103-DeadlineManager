@@ -23,7 +23,7 @@ public class StorageManager extends ComponentManager implements Storage {
 
     private static final Logger logger = LogsCenter.getLogger(StorageManager.class);
     private static final String MESSAGE_SAME_FILE_ERROR = "Cannot overwrite save file! "
-                                                          + "Export as a different filename.";
+        + "Export as a different filename.";
     private TaskCollectionStorage privateTaskCollectionStorage;
     private UserPrefsStorage userPrefsStorage;
 
@@ -92,7 +92,7 @@ public class StorageManager extends ComponentManager implements Storage {
     @Override
     public void exportTaskCollection(ReadOnlyTaskCollection taskCollection,
                                      TaskCollectionStorage importExportTaskCollectionStorage)
-                                     throws IOException, IllegalValueException {
+        throws IOException, IllegalValueException {
         Path filePath = importExportTaskCollectionStorage.getTaskCollectionFilePath();
         if (privateTaskCollectionStorage.getTaskCollectionFilePath().equals(filePath)) {
             throw new IllegalValueException(MESSAGE_SAME_FILE_ERROR);

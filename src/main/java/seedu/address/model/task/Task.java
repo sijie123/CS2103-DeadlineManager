@@ -20,6 +20,7 @@ public class Task {
     // Identity fields
     private final Name name;
     private final Phone phone;
+    private final Priority priority;
     private final Email email;
 
     // Data fields
@@ -31,11 +32,12 @@ public class Task {
     /**
      * Every field must be present and not null.
      */
-    public Task(Name name, Phone phone, Email email, Deadline deadline, Address address,
-            Set<Tag> tags, Set<Attachment> attachments) {
-        requireAllNonNull(name, phone, email, deadline, address, tags, attachments);
+    public Task(Name name, Phone phone, Priority priority, Email email, Deadline deadline, Address address,
+                Set<Tag> tags, Set<Attachment> attachments) {
+        requireAllNonNull(name, phone, priority, email, deadline, address, tags, attachments);
         this.name = name;
         this.phone = phone;
+        this.priority = priority;
         this.email = email;
         this.deadline = deadline;
         this.address = address;
@@ -46,9 +48,9 @@ public class Task {
     /**
      * Convenience constructor, to be removed eventually
      */
-    public Task(Name name, Phone phone, Email email, Address address, Set<Tag> tags) {
-        this(name, phone, email, new Deadline(new GregorianCalendar(2018, 10, 1).getTime()),
-                address, tags, new HashSet<Attachment>());
+    public Task(Name name, Phone phone, Priority priority, Email email, Address address, Set<Tag> tags) {
+        this(name, phone, priority, email, new Deadline(new GregorianCalendar(2018, 10, 1).getTime()),
+            address, tags, new HashSet<Attachment>());
     }
 
     public Name getName() {
@@ -57,6 +59,10 @@ public class Task {
 
     public Phone getPhone() {
         return phone;
+    }
+
+    public Priority getPriority() {
+        return priority;
     }
 
     public Email getEmail() {
@@ -104,6 +110,7 @@ public class Task {
         Task otherTask = (Task) other;
         return otherTask.getName().equals(getName())
             && otherTask.getPhone().equals(getPhone())
+            && otherTask.getPriority().equals(getPriority())
             && otherTask.getEmail().equals(getEmail())
             && otherTask.getAddress().equals(getAddress())
             && otherTask.getTags().equals(getTags())
@@ -114,7 +121,7 @@ public class Task {
     @Override
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own
-        return Objects.hash(name, phone, email, address, tags, deadline, attachments);
+        return Objects.hash(name, phone, priority, email, address, tags, deadline, attachments);
     }
 
     @Override
@@ -124,6 +131,8 @@ public class Task {
         builder.append(getName())
             .append(" Phone: ")
             .append(getPhone())
+            .append(" Priority: ")
+            .append(getPriority())
             .append(" Email: ")
             .append(getEmail())
             .append(" Address: ")
