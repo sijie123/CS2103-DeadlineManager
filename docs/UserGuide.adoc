@@ -152,27 +152,53 @@ Returns any task having names `CS2103T`, `assignment`, or `3`
 === Filtering a list of tasks: `filter`
 Filters the current list of tasks with a specified filter predicate. +
 Deadline Manager will then display only those tasks which satisfies the given filter predicate. +
-Format: `filter FILTER_PREDICATE [FILTER_PREDICATES]...`
+Format: `filter FILTER_EXPRESSION`
 
-//TODO: Bernard
 ****
-* Keyword matching is case insensistive.
 
-* Filter predicate is of the following form: ... TODO
+`FILTER_EXPRESSION` is one of the following:
+* `FILTER_PREDICATE`
+* `FILTER_EXPRESSION and FILTER_EXPRESSION`
+* `FILTER_EXPRESSION or FILTER_EXPRESSION`
+* `not FILTER_EXPRESSION`
+* `(FILTER_EXPRESSION)`
+
+****
+
+Format of FILTER_PREDICATE: `<key><operator><phrase>`:
+* Where `key` is one of `n`, `name`, `d`, `due`
+* Where `operator` is one of `:`, `=`, `<`, `>`
+* Where `phrase` is a string that describes what to search (called the search phrase)
+* The operator `:` is known as the *convenience* operator - it is an alias for another operator that is commonly used.
+
+****
+
+Elaboration:
+* When `key` is `n` or `name`, we are comparing the task name.  Comparision is case-insensitive.  Quotes may be used to specify a search phrase that contains spaces.  The operator `>` tests if the search phrase is contained within the task name.  The operator `<` test if the task name is contained within the search phrase.  The operator `=` tests if the search phrase is exactly the same as the task name.  The convenience operator is an alias for `>`.
+* When `key` is `d` or `due`, we are comparing the due date, and the search phrase is interpreted as a date.  Dates are in `d/m/y` format.  The operator `>` tests if the task due date is on or after the specified due date.  The operator `<` test if the task due date is on or before the specified due date.  The operator `=` tests if the task due date is exactly equal to the specified due date.  The convenience operator is an alias for `<`.
 ****
 
 Examples:
 
-* `due<1/10/2018`
-Returns a subset of the current list of tasks that have deadlines before 1st October 2018.
+* `filter due<1/10/2018`
+Returns a subset of the current list of tasks that have deadlines on or before 1st October 2018.
 
-* `d=1/10/2018`
-Returns a subset of the current list of tasks that have deadlines equal 1st October 2018.
+* `filter d=1/10/2018`
+Returns a subset of the current list of tasks that have deadlines equal to 1st October 2018.
 
-* `p=1`
+* `filter d:1/10/2018`
+Returns a subset of the current list of tasks that have deadlines on or before 1st October 2018.
+
+* `filter name:Alex`
+Returns a subset of the current list of tasks that have a name that contains "Alex".
+
+* `filter name:"Alex Tan"`
+Returns a subset of the current list of tasks that have a name that contains "Alex Tan".
+
+* `filter p=1`
 Returns a subset of the current list of tasks that have priority = 1 (highest priority).
 
-* `p<3`
+* `filter p<3`
 Returns a subset of the current list of tasks that have priority < 3. (Highest priority or second highest priority.)
 
 //TODO: Sidhant
