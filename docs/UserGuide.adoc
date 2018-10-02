@@ -59,20 +59,40 @@ Format: `help`
 === Adding a task: `add`
 
 Adds a task to the deadline manager +
-Format: `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]...`
+Format: `add n/NAME p/PHONE_NUMBER P/PRIORITY e/EMAIL a/ADDRESS [t/TAG]...`
 
 [TIP]
 A task can have any number of tags (including 0)
 
 Examples:
 
-* `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01`
-* `add n/Betsy Crowe t/friend e/betsycrowe@example.com a/Newgate Prison p/1234567 t/criminal`
+* `add n/John Doe p/98765432 P/1 e/johnd@example.com a/John street, block 123, #01-01`
+* `add n/Betsy Crowe t/friend e/betsycrowe@example.com a/Newgate Prison p/1234567 P/2 t/criminal`
 
 === Listing all tasks : `list`
 
 Shows a list of all tasks in the deadline manager. +
 Format: `list`
+
+=== Sorting the tasks in the current view : `sort`
+
+Sorts the lists of all the tasks which the user is currently viewing. Generally meant to be used in combination with `filter`. +
+Format: `sort SORT_COMPARATOR [SORT_COMPARATORS]...` +
+Format of SORT_COMPARATOR: `(n|name|d|due)(<|>)`
+
+****
+* Sorts the list by the 1st comparator, in case of ties, sorts by 2nd comparator and so on.
+* n stands for name and d stands for due date
+* < stands for sorting in ascending order and > stands for sorting in descending order
+* For names, sorting is done in alphabetical ascending and descending order respectively.
+****
+
+Examples:
+
+* `sort n>` +
+Sorts the current list of tasks in view in descending order by name, where sorting is done in alphabetical manner.
+* `sort due< name>` +
+Sorts the current list of tasks in view in ascending order by due date, where ties are broken by descending order of names.
 
 === Editing a task : `edit`
 

@@ -18,7 +18,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import guitests.guihandles.StatusBarFooterHandle;
-import seedu.address.commons.events.model.AddressBookChangedEvent;
+import seedu.address.commons.events.model.TaskCollectionChangedEvent;
 import seedu.address.model.TaskCollection;
 
 public class StatusBarFooterTest extends GuiUnitTest {
@@ -26,7 +26,7 @@ public class StatusBarFooterTest extends GuiUnitTest {
     private static final Path STUB_SAVE_LOCATION = Paths.get("Stub");
     private static final Path RELATIVE_PATH = Paths.get(".");
 
-    private static final AddressBookChangedEvent EVENT_STUB = new AddressBookChangedEvent(
+    private static final TaskCollectionChangedEvent EVENT_STUB = new TaskCollectionChangedEvent(
         new TaskCollection());
 
     private static final Clock originalClock = StatusBarFooter.getClock();

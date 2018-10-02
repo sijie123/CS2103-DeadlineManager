@@ -18,10 +18,10 @@ public class FilterCommand extends Command {
     public static final String COMMAND_WORD = "filter";
 
     public static final String MESSAGE_USAGE =
-            COMMAND_WORD + ": Display only those tasks which satisfies the given filter predicate "
-                    + "and displays them as a list with index numbers.\n"
-                    + "Parameters: FILTER_PREDICATE [FILTER_PREDICATES]...\n"
-                    + "Example: " + COMMAND_WORD + " due<1/10/2018";
+        COMMAND_WORD + ": Display only those tasks which satisfies the given filter predicate "
+            + "and displays them as a list with index numbers.\n"
+            + "Parameters: FILTER_PREDICATE [FILTER_PREDICATES]...\n"
+            + "Example: " + COMMAND_WORD + " due<1/10/2018";
 
     private final Predicate<Task> predicate;
 
@@ -34,8 +34,8 @@ public class FilterCommand extends Command {
         requireNonNull(model);
         model.updateFilteredPersonList(predicate);
         return new CommandResult(
-                String.format(Messages.MESSAGE_PERSONS_LISTED_OVERVIEW,
-                        model.getFilteredPersonList().size()));
+            String.format(Messages.MESSAGE_PERSONS_LISTED_OVERVIEW,
+                model.getFilteredPersonList().size()));
     }
 
     // FilterCommand should only compare equal by identity -

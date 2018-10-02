@@ -28,23 +28,23 @@ public class XmlTaskCollectionStorage implements TaskCollectionStorage {
         this.filePath = filePath;
     }
 
-    public Path getAddressBookFilePath() {
+    public Path getTaskCollectionFilePath() {
         return filePath;
     }
 
     @Override
-    public Optional<ReadOnlyTaskCollection> readAddressBook()
+    public Optional<ReadOnlyTaskCollection> readTaskCollection()
         throws DataConversionException, IOException {
-        return readAddressBook(filePath);
+        return readTaskCollection(filePath);
     }
 
     /**
-     * Similar to {@link #readAddressBook()}
+     * Similar to {@link #readTaskCollection()}
      *
      * @param filePath location of the data. Cannot be null
      * @throws DataConversionException if the file is not in the correct format.
      */
-    public Optional<ReadOnlyTaskCollection> readAddressBook(Path filePath)
+    public Optional<ReadOnlyTaskCollection> readTaskCollection(Path filePath)
         throws DataConversionException,
         FileNotFoundException {
         requireNonNull(filePath);
@@ -64,16 +64,16 @@ public class XmlTaskCollectionStorage implements TaskCollectionStorage {
     }
 
     @Override
-    public void saveAddressBook(ReadOnlyTaskCollection addressBook) throws IOException {
-        saveAddressBook(addressBook, filePath);
+    public void saveTaskCollection(ReadOnlyTaskCollection taskCollection) throws IOException {
+        saveTaskCollection(taskCollection, filePath);
     }
 
     /**
-     * Similar to {@link #saveAddressBook(ReadOnlyTaskCollection)}
+     * Similar to {@link #saveTaskCollection(ReadOnlyTaskCollection)}
      *
      * @param filePath location of the data. Cannot be null
      */
-    public void saveAddressBook(ReadOnlyTaskCollection addressBook, Path filePath) throws IOException {
+    public void saveTaskCollection(ReadOnlyTaskCollection addressBook, Path filePath) throws IOException {
         requireNonNull(addressBook);
         requireNonNull(filePath);
 

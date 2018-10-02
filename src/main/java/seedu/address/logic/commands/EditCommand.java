@@ -5,11 +5,12 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_PRIORITY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 
 import java.util.Collections;
-import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +29,7 @@ import seedu.address.model.task.Deadline;
 import seedu.address.model.task.Email;
 import seedu.address.model.task.Name;
 import seedu.address.model.task.Phone;
+import seedu.address.model.task.Priority;
 import seedu.address.model.task.Task;
 
 /**
@@ -44,11 +46,13 @@ public class EditCommand extends Command {
             + "Parameters: INDEX (must be a positive integer) "
             + "[" + PREFIX_NAME + "NAME] "
             + "[" + PREFIX_PHONE + "PHONE] "
+            + "[" + PREFIX_PRIORITY + "PRIORITY] "
             + "[" + PREFIX_EMAIL + "EMAIL] "
             + "[" + PREFIX_ADDRESS + "ADDRESS] "
             + "[" + PREFIX_TAG + "TAG]...\n"
             + "Example: " + COMMAND_WORD + " 1 "
             + PREFIX_PHONE + "91234567 "
+            + PREFIX_PRIORITY + "1 "
             + PREFIX_EMAIL + "johndoe@example.com";
 
     public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited Task: %1$s";
@@ -98,13 +102,14 @@ public class EditCommand extends Command {
 
         Name updatedName = editPersonDescriptor.getName().orElse(taskToEdit.getName());
         Phone updatedPhone = editPersonDescriptor.getPhone().orElse(taskToEdit.getPhone());
+        Priority updatedPriority = editPersonDescriptor.getPriority().orElse(taskToEdit.getPriority());
         Email updatedEmail = editPersonDescriptor.getEmail().orElse(taskToEdit.getEmail());
         Address updatedAddress = editPersonDescriptor.getAddress().orElse(taskToEdit.getAddress());
         Deadline updatedDeadline = editPersonDescriptor.getDeadline().orElse(taskToEdit.getDeadline());
         Set<Tag> updatedTags = editPersonDescriptor.getTags().orElse(taskToEdit.getTags());
         Set<Attachment> updatedAttachments = editPersonDescriptor.getAttachments().orElse(taskToEdit.getAttachments());
 
-        return new Task(updatedName, updatedPhone, updatedEmail, updatedDeadline,
+        return new Task(updatedName, updatedPhone, updatedPriority, updatedEmail, updatedDeadline,
             updatedAddress, updatedTags, updatedAttachments);
     }
 
@@ -134,6 +139,7 @@ public class EditCommand extends Command {
 
         private Name name;
         private Phone phone;
+        private Priority priority;
         private Email email;
         private Address address;
         private Deadline deadline;
@@ -142,7 +148,7 @@ public class EditCommand extends Command {
 
         public EditPersonDescriptor() {
             // TODO: Fix EditCommandParser.java, these lines are just to pass tests
-            deadline = new Deadline(new Date(2018, 10, 1));
+            deadline = new Deadline(new GregorianCalendar(2018, 10, 1).getTime());
             attachments = new HashSet<>();
         }
 
@@ -152,6 +158,7 @@ public class EditCommand extends Command {
         public EditPersonDescriptor(EditPersonDescriptor toCopy) {
             setName(toCopy.name);
             setPhone(toCopy.phone);
+            setPriority(toCopy.priority);
             setEmail(toCopy.email);
             setDeadline(toCopy.deadline);
             setAddress(toCopy.address);
@@ -163,7 +170,7 @@ public class EditCommand extends Command {
          * Returns true if at least one field is edited.
          */
         public boolean isAnyFieldEdited() {
-            return CollectionUtil.isAnyNonNull(name, phone, email, address, tags);
+            return CollectionUtil.isAnyNonNull(name, phone, priority, email, address, tags);
         }
 
         public void setName(Name name) {
@@ -180,6 +187,14 @@ public class EditCommand extends Command {
 
         public Optional<Phone> getPhone() {
             return Optional.ofNullable(phone);
+        }
+
+        public void setPriority(Priority priority) {
+            this.priority = priority;
+        }
+
+        public Optional<Priority> getPriority() {
+            return Optional.ofNullable(priority);
         }
 
         public void setEmail(Email email) {
@@ -239,6 +254,7 @@ public class EditCommand extends Command {
             return (attachments != null) ? Optional.of(Collections.unmodifiableSet(attachments))
                 : Optional.empty();
         }
+
         @Override
         public boolean equals(Object other) {
             // short circuit if same object
@@ -256,6 +272,7 @@ public class EditCommand extends Command {
 
             return getName().equals(e.getName())
                 && getPhone().equals(e.getPhone())
+                && getPriority().equals(e.getPriority())
                 && getEmail().equals(e.getEmail())
                 && getDeadline().equals(e.getDeadline())
                 && getAddress().equals(e.getAddress())

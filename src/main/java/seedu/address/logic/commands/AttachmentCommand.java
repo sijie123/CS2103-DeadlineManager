@@ -97,8 +97,8 @@ public class AttachmentCommand extends Command {
         assert taskToEdit != null;
 
 
-        return new Task(taskToEdit.getName(), taskToEdit.getPhone(), taskToEdit.getEmail(), taskToEdit.getDeadline(),
-            taskToEdit.getAddress(), taskToEdit.getTags(), taskToEdit.getAttachments());
+        return new Task(taskToEdit.getName(), taskToEdit.getPhone(), taskToEdit.getPriority(), taskToEdit.getEmail(),
+            taskToEdit.getDeadline(), taskToEdit.getAddress(), taskToEdit.getTags(), taskToEdit.getAttachments());
     }
 
     @Override
@@ -154,8 +154,8 @@ public class AttachmentCommand extends Command {
             assert taskToEdit != null;
             HashSet<Attachment> updatedAttachments = new HashSet<>(taskToEdit.getAttachments());
             updatedAttachments.add(buildAttachment());
-            return new Task(taskToEdit.getName(), taskToEdit.getPhone(), taskToEdit.getEmail(),
-                taskToEdit.getDeadline(),
+            return new Task(taskToEdit.getName(), taskToEdit.getPhone(), taskToEdit.getPriority(),
+                taskToEdit.getEmail(), taskToEdit.getDeadline(),
                 taskToEdit.getAddress(), taskToEdit.getTags(), updatedAttachments);
 
         }
@@ -245,8 +245,8 @@ public class AttachmentCommand extends Command {
             updatedAttachments.remove(attachmentToDelete);
             deleteFileFromStorage(attachmentToDelete.file);
             resultMessage = String.format(MESSAGE_SUCCESS, nameToDelete);
-            return new Task(taskToEdit.getName(), taskToEdit.getPhone(), taskToEdit.getEmail(),
-                taskToEdit.getDeadline(),
+            return new Task(taskToEdit.getName(), taskToEdit.getPhone(), taskToEdit.getPriority(),
+                taskToEdit.getEmail(), taskToEdit.getDeadline(),
                 taskToEdit.getAddress(), taskToEdit.getTags(), updatedAttachments);
         }
 
