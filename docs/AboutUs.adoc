@@ -47,7 +47,7 @@ Responsibilities: UI, Attach Files
 '''
 
 === Sidhant Bansal
-image::sidhant007.jpg[width="150", align="left"]
+image::sidhant007.png[width="150", align="left"]
 {empty}[http://github.com/sidhant007[github]] [<<sidhant007#, portfolio>>]
 
 Role: Developer +
