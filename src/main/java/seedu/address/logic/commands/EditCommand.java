@@ -148,7 +148,6 @@ public class EditCommand extends Command {
 
         public EditPersonDescriptor() {
             // TODO: Fix EditCommandParser.java, these lines are just to pass tests
-            deadline = new Deadline(new GregorianCalendar(2018, 10, 1).getTime());
             attachments = new HashSet<>();
         }
 
