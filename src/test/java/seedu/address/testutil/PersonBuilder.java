@@ -1,6 +1,5 @@
 package seedu.address.testutil;
 
-import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Set;
 

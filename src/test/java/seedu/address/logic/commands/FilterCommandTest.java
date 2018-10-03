@@ -10,6 +10,8 @@ import static seedu.address.testutil.TypicalPersons.FIONA;
 import static seedu.address.testutil.TypicalPersons.GEORGE;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
+import java.util.Arrays;
+
 import org.junit.Test;
 
 import seedu.address.logic.CommandHistory;
@@ -18,8 +20,6 @@ import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
-
-import java.util.Arrays;
 
 /**
  * Contains integration tests (interaction with the Model) for {@code FindCommand}.
@@ -156,7 +156,12 @@ public class FilterCommandTest {
         assertEquals(Arrays.asList(ALICE, ELLE, FIONA, GEORGE), model.getFilteredPersonList());
     }
 
-
+    /**
+     * Throws an assertion error if parsing fails, or else returns the successfully parsed FilterCommand.
+     *
+     * @param predicate The string to parse as a predicate.
+     * @return The filter command, on success.
+     */
     private FilterCommand ensureParseSuccess(String predicate) {
         try {
             return new FilterCommandParser().parse(predicate);
