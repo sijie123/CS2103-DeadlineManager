@@ -48,9 +48,17 @@ public class Task {
     /**
      * Convenience constructor, to be removed eventually
      */
-    public Task(Name name, Phone phone, Priority priority, Email email, Address address, Set<Tag> tags) {
-        this(name, phone, priority, email, new Deadline(new GregorianCalendar(2018, 10, 1).getTime()),
+    public Task(Name name, Phone phone, Priority priority, Email email, Deadline deadline, Address address, Set<Tag> tags) {
+        this(name, phone, priority, email, deadline,
             address, tags, new HashSet<Attachment>());
+    }
+
+    /**
+     * Convenience constructor, to be removed eventually
+     */
+    public Task(Name name, Phone phone, Priority priority, Email email, Address address, Set<Tag> tags) {
+        this(name, phone, priority, email, new Deadline("1/10/2018"),
+            address, tags);
     }
 
     public Name getName() {
@@ -133,6 +141,8 @@ public class Task {
             .append(getPhone())
             .append(" Priority: ")
             .append(getPriority())
+            .append(" Deadline: ")
+            .append(getDeadline())
             .append(" Email: ")
             .append(getEmail())
             .append(" Address: ")

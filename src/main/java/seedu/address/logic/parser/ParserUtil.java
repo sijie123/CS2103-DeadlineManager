@@ -11,6 +11,7 @@ import seedu.address.commons.util.StringUtil;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.task.Address;
+import seedu.address.model.task.Deadline;
 import seedu.address.model.task.Email;
 import seedu.address.model.task.Name;
 import seedu.address.model.task.Phone;
@@ -80,6 +81,22 @@ public class ParserUtil {
             throw new ParseException(Priority.MESSAGE_PRIORITY_CONSTRAINTS);
         }
         return new Priority(trimmedPriority);
+    }
+
+    /**
+     * Parses a {@code String deadline} into a {@code Deadline}. Leading and trailing whitespaces will be
+     * trimmed.
+     *
+     * @throws ParseException if the given {@code deadline} is invalid.
+     */
+    public static Deadline parseDeadline(String deadline) throws ParseException {
+        requireNonNull(deadline);
+        String trimmedDeadline = deadline.trim();
+        try {
+            return new Deadline(trimmedDeadline);
+        } catch (IllegalArgumentException e){
+            throw new ParseException(Deadline.MESSAGE_DEADLINE_CONSTRAINTS, e);
+        }
     }
 
     /**

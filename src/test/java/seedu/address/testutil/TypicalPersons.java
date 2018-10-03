@@ -2,6 +2,8 @@ package seedu.address.testutil;
 
 import static seedu.address.logic.commands.CommandTestUtil.VALID_ADDRESS_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_ADDRESS_BOB;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_DEADLINE_AMY;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_DEADLINE_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_EMAIL_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_EMAIL_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_AMY;
@@ -81,11 +83,14 @@ public class TypicalPersons {
     // Manually added - Task's details found in {@code CommandTestUtil}
     public static final Task AMY = new PersonBuilder().withName(VALID_NAME_AMY)
         .withPhone(VALID_PHONE_AMY).withPriority(VALID_PRIORITY_AMY)
-        .withEmail(VALID_EMAIL_AMY).withAddress(VALID_ADDRESS_AMY).withTags(VALID_TAG_FRIEND)
+        .withEmail(VALID_EMAIL_AMY).withAddress(VALID_ADDRESS_AMY)
+        .withDeadline(VALID_DEADLINE_AMY)
+        .withTags(VALID_TAG_FRIEND)
         .build();
     public static final Task BOB = new PersonBuilder().withName(VALID_NAME_BOB)
         .withPhone(VALID_PHONE_BOB).withPriority(VALID_PRIORITY_BOB)
         .withEmail(VALID_EMAIL_BOB).withAddress(VALID_ADDRESS_BOB)
+        .withDeadline(VALID_DEADLINE_BOB)
         .withTags(VALID_TAG_HUSBAND, VALID_TAG_FRIEND)
         .build();
 
