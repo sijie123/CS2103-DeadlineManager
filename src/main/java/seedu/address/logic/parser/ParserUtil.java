@@ -94,7 +94,7 @@ public class ParserUtil {
         String trimmedDeadline = deadline.trim();
         try {
             return new Deadline(trimmedDeadline);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             throw new ParseException(Deadline.MESSAGE_DEADLINE_CONSTRAINTS, e);
         }
     }
