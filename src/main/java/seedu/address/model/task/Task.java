@@ -138,7 +138,6 @@ public class Task {
 
     @Override
     public String toString() {
-        // TODO: add deadline and attachments
         final StringBuilder builder = new StringBuilder();
         builder.append(getName())
             .append(" Phone: ")
@@ -153,6 +152,8 @@ public class Task {
             .append(getAddress())
             .append(" Tags: ");
         getTags().forEach(builder::append);
+        builder.append(" Attachments: ");
+        getAttachments().forEach(builder::append);
         return builder.toString();
     }
 
