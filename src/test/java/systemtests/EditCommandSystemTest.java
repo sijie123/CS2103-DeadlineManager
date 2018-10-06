@@ -4,9 +4,12 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.ADDRESS_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.ADDRESS_DESC_BOB;
+import static seedu.address.logic.commands.CommandTestUtil.DEADLINE_DESC_AMY;
+import static seedu.address.logic.commands.CommandTestUtil.DEADLINE_DESC_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.EMAIL_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.EMAIL_DESC_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_ADDRESS_DESC;
+import static seedu.address.logic.commands.CommandTestUtil.INVALID_DEADLINE_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_EMAIL_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_NAME_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_PHONE_DESC;
@@ -44,6 +47,7 @@ import seedu.address.logic.commands.UndoCommand;
 import seedu.address.model.Model;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.task.Address;
+import seedu.address.model.task.Deadline;
 import seedu.address.model.task.Email;
 import seedu.address.model.task.Name;
 import seedu.address.model.task.Phone;
@@ -66,8 +70,8 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
         String command =
             " " + EditCommand.COMMAND_WORD + "  " + index.getOneBased() + "  " + NAME_DESC_BOB
                 + "  "
-                + PHONE_DESC_BOB + " " + PRIORITY_DESC_BOB + " " + EMAIL_DESC_BOB + "  " + ADDRESS_DESC_BOB + " "
-                + TAG_DESC_HUSBAND + " ";
+                + PHONE_DESC_BOB + " " + PRIORITY_DESC_BOB + " " + DEADLINE_DESC_BOB + " " + EMAIL_DESC_BOB
+                + "  " + ADDRESS_DESC_BOB + " " + TAG_DESC_HUSBAND + " ";
         Task uneditedTask = getModel().getFilteredPersonList().get(index.getZeroBased());
         Task bobWithOriginalAttachments = new PersonBuilder(BOB)
             .withAttachments(uneditedTask.getAttachments())
@@ -92,7 +96,7 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
 
         /* Case: edit a task with new values same as existing values -> edited */
         command = EditCommand.COMMAND_WORD + " " + index.getOneBased() + NAME_DESC_BOB
-            + PHONE_DESC_BOB + PRIORITY_DESC_BOB + EMAIL_DESC_BOB
+            + PHONE_DESC_BOB + PRIORITY_DESC_BOB + DEADLINE_DESC_BOB + EMAIL_DESC_BOB
             + ADDRESS_DESC_BOB + TAG_DESC_FRIEND + TAG_DESC_HUSBAND;
         assertCommandSuccess(command, index, bobWithOriginalAttachments);
 
@@ -101,7 +105,7 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
         index = INDEX_SECOND_PERSON;
         assertNotEquals(getModel().getFilteredPersonList().get(index.getZeroBased()), editedTask);
         command = EditCommand.COMMAND_WORD + " " + index.getOneBased() + NAME_DESC_AMY
-            + PHONE_DESC_BOB + PRIORITY_DESC_BOB + EMAIL_DESC_BOB
+            + PHONE_DESC_BOB + PRIORITY_DESC_BOB + DEADLINE_DESC_BOB + EMAIL_DESC_BOB
             + ADDRESS_DESC_BOB + TAG_DESC_FRIEND + TAG_DESC_HUSBAND;
         editedTask = new PersonBuilder(bobWithOriginalAttachments).withName(VALID_NAME_AMY).build();
         assertCommandSuccess(command, index, editedTask);
@@ -154,7 +158,7 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
         index = INDEX_FIRST_PERSON;
         selectPerson(index);
         command = EditCommand.COMMAND_WORD + " " + index.getOneBased() + NAME_DESC_AMY
-            + PHONE_DESC_AMY + PRIORITY_DESC_AMY + EMAIL_DESC_AMY
+            + PHONE_DESC_AMY + PRIORITY_DESC_AMY + DEADLINE_DESC_AMY + EMAIL_DESC_AMY
             + ADDRESS_DESC_AMY + TAG_DESC_FRIEND;
         // this can be misleading: card selection actually remains unchanged but the
         // browser's url is updated to reflect the new task's name
@@ -200,6 +204,11 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
         assertCommandFailure(EditCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased()
                 + INVALID_PRIORITY_DESC,
             Priority.MESSAGE_PRIORITY_CONSTRAINTS);
+
+        /* Case: invalid priority -> rejected */
+        assertCommandFailure(EditCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased()
+                + INVALID_DEADLINE_DESC,
+            Deadline.MESSAGE_DEADLINE_CONSTRAINTS);
 
         /* Case: invalid email -> rejected */
         assertCommandFailure(EditCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased()

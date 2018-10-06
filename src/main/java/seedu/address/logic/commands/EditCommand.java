@@ -10,7 +10,6 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 
 import java.util.Collections;
-import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -148,8 +147,7 @@ public class EditCommand extends Command {
         private Set<Tag> tags;
 
         public EditPersonDescriptor() {
-            // TODO: Fix EditCommandParser.java, these lines are just to pass tests
-            deadline = new Deadline(new GregorianCalendar(2018, 10, 1).getTime());
+
         }
 
         /**

@@ -2,6 +2,8 @@ package seedu.address.testutil;
 
 import static seedu.address.logic.commands.CommandTestUtil.VALID_ADDRESS_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_ADDRESS_BOB;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_DEADLINE_AMY;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_DEADLINE_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_EMAIL_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_EMAIL_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_AMY;
@@ -30,6 +32,7 @@ public class TypicalPersons {
         .withAddress("123, Jurong West Ave 6, #08-111")
         .withEmail("alice@example.com")
         .withPhone("94351253")
+        .withDeadline("1/10/2018")
         .withPriority("1")
         .withTags("friends")
         .withAttachments("hello.txt", "world.txt")
@@ -39,6 +42,7 @@ public class TypicalPersons {
         .withAddress("311, Clementi Ave 2, #02-25")
         .withEmail("johnd@example.com")
         .withPhone("98765432")
+        .withDeadline("1/11/2018")
         .withPriority("2")
         .withTags("owesMoney", "friends")
         .withAttachments("hello.txt", "world.txt")
@@ -46,14 +50,17 @@ public class TypicalPersons {
     public static final Task CARL = new PersonBuilder()
         .withName("Carl Kurz")
         .withPhone("95352563")
+        .withDeadline("31/10/2018")
         .withPriority("3")
         .withEmail("heinz@example.com")
         .withAddress("wall street")
         .withAttachments("world.txt")
         .build();
-    public static final Task DANIEL = new PersonBuilder().withName("Daniel Meier")
+    public static final Task DANIEL = new PersonBuilder()
+        .withName("Daniel Meier")
         .withPhone("87652533")
         .withPriority("4")
+        .withDeadline("2/1/2019")
         .withEmail("cornelia@example.com")
         .withAddress("10th street")
         .withTags("friends")
@@ -62,6 +69,7 @@ public class TypicalPersons {
         .withName("Elle Meyer")
         .withPhone("9482224")
         .withPriority("1")
+        .withDeadline("2/10/2018")
         .withEmail("werner@example.com")
         .withAddress("michegan ave")
         .build();
@@ -69,6 +77,7 @@ public class TypicalPersons {
         .withName("Fiona Kunz")
         .withPhone("9482427")
         .withPriority("2")
+        .withDeadline("2/10/2018")
         .withEmail("lydia@example.com")
         .withAddress("little tokyo")
         .withAttachments("hello.txt", "world.txt")
@@ -77,6 +86,7 @@ public class TypicalPersons {
         .withName("George Best")
         .withPhone("9482442")
         .withPriority("3")
+        .withDeadline("2/10/2018")
         .withEmail("anna@example.com")
         .withAddress("4th street")
         .withAttachments("hello.txt")
@@ -87,6 +97,7 @@ public class TypicalPersons {
         .withName("Hoon Meier")
         .withPhone("8482424")
         .withPriority("4")
+        .withDeadline("2/10/2018")
         .withEmail("stefan@example.com")
         .withAddress("little india")
         .withAttachments("world.txt")
@@ -94,7 +105,7 @@ public class TypicalPersons {
     public static final Task IDA = new PersonBuilder()
         .withName("Ida Mueller")
         .withPhone("8482131")
-        .withPriority("1")
+        .withPriority("1").withDeadline("2/10/2018")
         .withEmail("hans@example.com")
         .withAddress("chicago ave")
         .build();
@@ -106,6 +117,7 @@ public class TypicalPersons {
         .withPriority(VALID_PRIORITY_AMY)
         .withEmail(VALID_EMAIL_AMY)
         .withAddress(VALID_ADDRESS_AMY)
+        .withDeadline(VALID_DEADLINE_AMY)
         .withTags(VALID_TAG_FRIEND)
         .build();
     public static final Task BOB = new PersonBuilder()
@@ -114,6 +126,7 @@ public class TypicalPersons {
         .withPriority(VALID_PRIORITY_BOB)
         .withEmail(VALID_EMAIL_BOB)
         .withAddress(VALID_ADDRESS_BOB)
+        .withDeadline(VALID_DEADLINE_BOB)
         .withTags(VALID_TAG_HUSBAND, VALID_TAG_FRIEND)
         .build();
 

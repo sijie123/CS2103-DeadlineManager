@@ -3,7 +3,6 @@ package seedu.address.model.task;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.util.Collections;
-import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -46,26 +45,19 @@ public class Task {
     }
 
     /**
-     * Constructor without requiring attachments. Will set attachments to an empty set.
+     * Convenience constructor. Tasks are initialized without any attachments.
      */
-    public Task(Name name, Phone phone, Priority priority, Email email, Deadline deadline, Address address,
-                Set<Tag> tags) {
-        requireAllNonNull(name, phone, priority, email, deadline, address, tags);
-        this.name = name;
-        this.phone = phone;
-        this.priority = priority;
-        this.email = email;
-        this.deadline = deadline;
-        this.address = address;
-        this.tags.addAll(tags);
+    public Task(Name name, Phone phone, Priority priority, Email email,
+                Deadline deadline, Address address, Set<Tag> tags) {
+        this(name, phone, priority, email, deadline,
+            address, tags, new HashSet<>());
     }
-
 
     /**
      * Convenience constructor, to be removed eventually
      */
     public Task(Name name, Phone phone, Priority priority, Email email, Address address, Set<Tag> tags) {
-        this(name, phone, priority, email, new Deadline(new GregorianCalendar(2018, 10, 1).getTime()),
+        this(name, phone, priority, email, new Deadline("1/10/2018"),
             address, tags);
     }
 
@@ -130,8 +122,12 @@ public class Task {
             && otherTask.getEmail().equals(getEmail())
             && otherTask.getAddress().equals(getAddress())
             && otherTask.getTags().equals(getTags())
-            && otherTask.getDeadline().equals(getDeadline())
+            /*&& otherTask.getDeadline().equals(getDeadline())*/
             && otherTask.getAttachments().equals(getAttachments());
+        /*
+         TODO: enable comparison by deadline (uncomment the above line.
+         Currently uncommenting it breaks the storage module.
+          */
     }
 
     @Override
@@ -149,6 +145,8 @@ public class Task {
             .append(getPhone())
             .append(" Priority: ")
             .append(getPriority())
+            .append(" Deadline: ")
+            .append(getDeadline())
             .append(" Email: ")
             .append(getEmail())
             .append(" Address: ")
