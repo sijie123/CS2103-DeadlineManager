@@ -26,12 +26,12 @@ public class Attachment {
     public boolean equals(Object other) {
         return other == this // short circuit if same object
             || (other instanceof Attachment // instanceof handles nulls
-            && file.equals(((Attachment) other).file)); // state check
+            && file.getAbsolutePath().equals(((Attachment) other).file.getAbsolutePath())); // state check
     }
 
     @Override
     public int hashCode() {
-        return file.hashCode();
+        return file.getAbsolutePath().hashCode();
     }
 
     @Override

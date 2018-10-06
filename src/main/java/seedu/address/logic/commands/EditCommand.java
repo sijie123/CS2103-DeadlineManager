@@ -107,7 +107,9 @@ public class EditCommand extends Command {
         Address updatedAddress = editPersonDescriptor.getAddress().orElse(taskToEdit.getAddress());
         Deadline updatedDeadline = editPersonDescriptor.getDeadline().orElse(taskToEdit.getDeadline());
         Set<Tag> updatedTags = editPersonDescriptor.getTags().orElse(taskToEdit.getTags());
-        Set<Attachment> updatedAttachments = editPersonDescriptor.getAttachments().orElse(taskToEdit.getAttachments());
+
+        // Attachments are not modifiable via 'EditCommand'
+        Set<Attachment> updatedAttachments = taskToEdit.getAttachments();
 
         return new Task(updatedName, updatedPhone, updatedPriority, updatedEmail, updatedDeadline,
             updatedAddress, updatedTags, updatedAttachments);
@@ -144,12 +146,10 @@ public class EditCommand extends Command {
         private Address address;
         private Deadline deadline;
         private Set<Tag> tags;
-        private Set<Attachment> attachments;
 
         public EditPersonDescriptor() {
             // TODO: Fix EditCommandParser.java, these lines are just to pass tests
             deadline = new Deadline(new GregorianCalendar(2018, 10, 1).getTime());
-            attachments = new HashSet<>();
         }
 
         /**
@@ -163,7 +163,6 @@ public class EditCommand extends Command {
             setDeadline(toCopy.deadline);
             setAddress(toCopy.address);
             setTags(toCopy.tags);
-            setAttachments(toCopy.attachments);
         }
 
         /**
@@ -238,23 +237,6 @@ public class EditCommand extends Command {
                 : Optional.empty();
         }
 
-        /**
-         * Sets {@code attachments} to this object's {@code attachments}. A defensive copy of {@code attachments}
-         * is used internally.
-         */
-        public void setAttachments(Set<Attachment> attachments) {
-            this.attachments = (attachments != null) ? new HashSet<>(attachments) : null;
-        }
-
-        /**
-         * Returns an unmodifiable attachments set, which throws {@code UnsupportedOperationException} if
-         * modification is attempted. Returns {@code Optional#empty()} if {@code attachments} is null.
-         */
-        public Optional<Set<Attachment>> getAttachments() {
-            return (attachments != null) ? Optional.of(Collections.unmodifiableSet(attachments))
-                : Optional.empty();
-        }
-
         @Override
         public boolean equals(Object other) {
             // short circuit if same object
@@ -276,8 +258,7 @@ public class EditCommand extends Command {
                 && getEmail().equals(e.getEmail())
                 && getDeadline().equals(e.getDeadline())
                 && getAddress().equals(e.getAddress())
-                && getTags().equals(e.getTags())
-                && getAttachments().equals(e.getAttachments());
+                && getTags().equals(e.getTags());
         }
     }
 }

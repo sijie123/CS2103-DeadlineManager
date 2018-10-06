@@ -68,7 +68,13 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
                 + "  "
                 + PHONE_DESC_BOB + " " + PRIORITY_DESC_BOB + " " + EMAIL_DESC_BOB + "  " + ADDRESS_DESC_BOB + " "
                 + TAG_DESC_HUSBAND + " ";
-        Task editedTask = new PersonBuilder(BOB).withTags(VALID_TAG_HUSBAND).build();
+        Task uneditedTask = getModel().getFilteredPersonList().get(index.getZeroBased());
+        Task bobWithOriginalAttachments = new PersonBuilder(BOB)
+            .withAttachments(uneditedTask.getAttachments())
+            .build();
+        Task editedTask = new PersonBuilder(bobWithOriginalAttachments)
+            .withTags(VALID_TAG_HUSBAND)
+            .build();
         assertCommandSuccess(command, index, editedTask);
 
         /* Case: undo editing the last task in the list -> last task restored */
@@ -88,16 +94,16 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
         command = EditCommand.COMMAND_WORD + " " + index.getOneBased() + NAME_DESC_BOB
             + PHONE_DESC_BOB + PRIORITY_DESC_BOB + EMAIL_DESC_BOB
             + ADDRESS_DESC_BOB + TAG_DESC_FRIEND + TAG_DESC_HUSBAND;
-        assertCommandSuccess(command, index, BOB);
+        assertCommandSuccess(command, index, bobWithOriginalAttachments);
 
         /* Case: edit a task with new values same as another task's values but with different name -> edited */
-        assertTrue(getModel().getAddressBook().getTaskList().contains(BOB));
+        assertTrue(getModel().getAddressBook().getTaskList().contains(bobWithOriginalAttachments));
         index = INDEX_SECOND_PERSON;
-        assertNotEquals(getModel().getFilteredPersonList().get(index.getZeroBased()), BOB);
+        assertNotEquals(getModel().getFilteredPersonList().get(index.getZeroBased()), editedTask);
         command = EditCommand.COMMAND_WORD + " " + index.getOneBased() + NAME_DESC_AMY
             + PHONE_DESC_BOB + PRIORITY_DESC_BOB + EMAIL_DESC_BOB
             + ADDRESS_DESC_BOB + TAG_DESC_FRIEND + TAG_DESC_HUSBAND;
-        editedTask = new PersonBuilder(BOB).withName(VALID_NAME_AMY).build();
+        editedTask = new PersonBuilder(bobWithOriginalAttachments).withName(VALID_NAME_AMY).build();
         assertCommandSuccess(command, index, editedTask);
 
         /* Case: edit a task with new values same as another task's values but with different phone and email
@@ -108,7 +114,7 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
             + PHONE_DESC_AMY + PRIORITY_DESC_AMY + EMAIL_DESC_AMY
             + ADDRESS_DESC_BOB + TAG_DESC_FRIEND + TAG_DESC_HUSBAND;
         editedTask =
-            new PersonBuilder(BOB).withPriority(VALID_PRIORITY_AMY).withPhone(VALID_PHONE_AMY)
+            new PersonBuilder(bobWithOriginalAttachments).withPriority(VALID_PRIORITY_AMY).withPhone(VALID_PHONE_AMY)
                 .withEmail(VALID_EMAIL_AMY).build();
         assertCommandSuccess(command, index, editedTask);
 
@@ -152,7 +158,10 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
             + ADDRESS_DESC_AMY + TAG_DESC_FRIEND;
         // this can be misleading: card selection actually remains unchanged but the
         // browser's url is updated to reflect the new task's name
-        assertCommandSuccess(command, index, AMY, index);
+        Task amyWithAttachments = new PersonBuilder(AMY)
+            .withAttachments(getModel().getFilteredPersonList().get(index.getZeroBased()).getAttachments())
+            .build();
+        assertCommandSuccess(command, index, amyWithAttachments, index);
 
         /* --------------------------------- Performing invalid edit operation -------------------------------------- */
 

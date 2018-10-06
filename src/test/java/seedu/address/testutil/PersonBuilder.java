@@ -109,6 +109,24 @@ public class PersonBuilder {
         return this;
     }
 
+    /**
+     * Parses the {@code attachments} into a {@code Set<Attachment>} and set it to the {@code Task} that we are
+     * building.
+     */
+    public PersonBuilder withAttachments(Set<Attachment> attachments) {
+        this.attachments = attachments;
+        return this;
+    }
+
+    /**
+     * Parses the {@code attachments} into a {@code Set<Attachment>} and set it to the {@code Task} that we are
+     * building.
+     */
+    public PersonBuilder withAttachments(String... attachments) {
+        this.attachments = SampleDataUtil.getAttachmentSet(attachments);
+        return this;
+    }
+
     public Task build() {
         return new Task(name, phone, priority, email, deadline, address, tags, attachments);
     }

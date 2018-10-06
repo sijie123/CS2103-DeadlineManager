@@ -1,6 +1,7 @@
 package seedu.address.storage;
 
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -10,8 +11,10 @@ import java.util.stream.Collectors;
 import javax.xml.bind.annotation.XmlElement;
 
 import seedu.address.commons.exceptions.IllegalValueException;
+import seedu.address.model.attachment.Attachment;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.task.Address;
+import seedu.address.model.task.Deadline;
 import seedu.address.model.task.Email;
 import seedu.address.model.task.Name;
 import seedu.address.model.task.Phone;
@@ -38,6 +41,8 @@ public class XmlAdaptedTask {
 
     @XmlElement
     private List<XmlAdaptedTag> tagged = new ArrayList<>();
+    @XmlElement
+    private List<XmlAdaptedAttachment> attachments = new ArrayList<>();
 
     /**
      * Constructs an XmlAdaptedTask. This is the no-arg constructor that is required by JAXB.
@@ -49,7 +54,7 @@ public class XmlAdaptedTask {
      * Constructs an {@code XmlAdaptedTask} with the given task details.
      */
     public XmlAdaptedTask(String name, String phone, String priority, String email, String address,
-                          List<XmlAdaptedTag> tagged) {
+                          List<XmlAdaptedTag> tagged, List<XmlAdaptedAttachment> attachments) {
         this.name = name;
         this.phone = phone;
         this.priority = priority;
@@ -57,6 +62,9 @@ public class XmlAdaptedTask {
         this.address = address;
         if (tagged != null) {
             this.tagged = new ArrayList<>(tagged);
+        }
+        if (attachments != null) {
+            this.attachments = new ArrayList<>(attachments);
         }
     }
 
@@ -74,6 +82,9 @@ public class XmlAdaptedTask {
         tagged = source.getTags().stream()
             .map(XmlAdaptedTag::new)
             .collect(Collectors.toList());
+        attachments = source.getAttachments().stream()
+            .map(XmlAdaptedAttachment::new)
+            .collect(Collectors.toList());
     }
 
     /**
@@ -83,10 +94,7 @@ public class XmlAdaptedTask {
      *                               task
      */
     public Task toModelType() throws IllegalValueException {
-        final List<Tag> personTags = new ArrayList<>();
-        for (XmlAdaptedTag tag : tagged) {
-            personTags.add(tag.toModelType());
-        }
+
 
         if (name == null) {
             throw new IllegalValueException(
@@ -133,8 +141,22 @@ public class XmlAdaptedTask {
         }
         final Address modelAddress = new Address(address);
 
-        final Set<Tag> modelTags = new HashSet<>(personTags);
-        return new Task(modelName, modelPhone, modelPriority, modelEmail, modelAddress, modelTags);
+        final List<Tag> taskTags = new ArrayList<>();
+        for (XmlAdaptedTag tag : tagged) {
+            taskTags.add(tag.toModelType());
+        }
+        final Set<Tag> modelTags = new HashSet<>(taskTags);
+
+        final List<Attachment> taskAttachments = new ArrayList<>();
+        for (XmlAdaptedAttachment attachment : attachments) {
+            taskAttachments.add(attachment.toModelType());
+        }
+        final Set<Attachment> modelAttachments = new HashSet<>(taskAttachments);
+
+        final Deadline tempDeadline = new Deadline(new GregorianCalendar(2018, 10, 1).getTime());
+
+        return new Task(modelName, modelPhone, modelPriority, modelEmail,
+            tempDeadline, modelAddress, modelTags, modelAttachments);
     }
 
     @Override
@@ -153,6 +175,7 @@ public class XmlAdaptedTask {
             && Objects.equals(priority, otherPerson.priority)
             && Objects.equals(email, otherPerson.email)
             && Objects.equals(address, otherPerson.address)
-            && tagged.equals(otherPerson.tagged);
+            && tagged.equals(otherPerson.tagged)
+            && attachments.equals(otherPerson.attachments);
     }
 }

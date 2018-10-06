@@ -46,11 +46,27 @@ public class Task {
     }
 
     /**
+     * Constructor without requiring attachments. Will set attachments to an empty set.
+     */
+    public Task(Name name, Phone phone, Priority priority, Email email, Deadline deadline, Address address,
+                Set<Tag> tags) {
+        requireAllNonNull(name, phone, priority, email, deadline, address, tags);
+        this.name = name;
+        this.phone = phone;
+        this.priority = priority;
+        this.email = email;
+        this.deadline = deadline;
+        this.address = address;
+        this.tags.addAll(tags);
+    }
+
+
+    /**
      * Convenience constructor, to be removed eventually
      */
     public Task(Name name, Phone phone, Priority priority, Email email, Address address, Set<Tag> tags) {
         this(name, phone, priority, email, new Deadline(new GregorianCalendar(2018, 10, 1).getTime()),
-            address, tags, new HashSet<Attachment>());
+            address, tags);
     }
 
     public Name getName() {

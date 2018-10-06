@@ -40,7 +40,6 @@ public class EditPersonDescriptorBuilder {
         descriptor.setDeadline(task.getDeadline());
         descriptor.setAddress(task.getAddress());
         descriptor.setTags(task.getTags());
-        descriptor.setAttachments(task.getAttachments());
     }
 
     /**

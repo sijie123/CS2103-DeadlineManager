@@ -8,6 +8,8 @@
         <email>alice@example.com</email>
         <address>123, Jurong West Ave 6, #08-111</address>
         <tagged>friends</tagged>
+        <attachments>hello.txt</attachments>
+        <attachments>world.txt</attachments>
     </tasks>
     <tasks>
         <name>Benson Meier</name>
@@ -17,6 +19,8 @@
         <address>311, Clementi Ave 2, #02-25</address>
         <tagged>owesMoney</tagged>
         <tagged>friends</tagged>
+        <attachments>hello.txt</attachments>
+        <attachments>world.txt</attachments>
     </tasks>
     <tasks>
         <name>Carl Kurz</name>
@@ -24,6 +28,7 @@
         <priority>3</priority>
         <email>heinz@example.com</email>
         <address>wall street</address>
+        <attachments>world.txt</attachments>
     </tasks>
     <tasks>
         <name>Daniel Meier</name>
@@ -46,6 +51,8 @@
         <priority>2</priority>
         <email>lydia@example.com</email>
         <address>little tokyo</address>
+        <attachments>hello.txt</attachments>
+        <attachments>world.txt</attachments>
     </tasks>
     <tasks>
         <name>George Best</name>
@@ -53,5 +60,6 @@
         <priority>3</priority>
         <email>anna@example.com</email>
         <address>4th street</address>
+        <attachments>hello.txt</attachments>
     </tasks>
 </taskcollection>
