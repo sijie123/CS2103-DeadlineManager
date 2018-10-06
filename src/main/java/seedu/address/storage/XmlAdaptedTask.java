@@ -1,7 +1,6 @@
 package seedu.address.storage;
 
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -153,7 +152,7 @@ public class XmlAdaptedTask {
         }
         final Set<Attachment> modelAttachments = new HashSet<>(taskAttachments);
 
-        final Deadline tempDeadline = new Deadline(new GregorianCalendar(2018, 10, 1).getTime());
+        final Deadline tempDeadline = new Deadline("1/10/2018");
 
         return new Task(modelName, modelPhone, modelPriority, modelEmail,
             tempDeadline, modelAddress, modelTags, modelAttachments);
