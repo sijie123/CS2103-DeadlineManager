@@ -2,12 +2,14 @@ package seedu.address.logic.parser;
 
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import seedu.address.logic.commands.FilterCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.tag.Tag;
 import seedu.address.model.task.Deadline;
 import seedu.address.model.task.FilterOperator;
 import seedu.address.model.task.Name;
@@ -15,6 +17,7 @@ import seedu.address.model.task.Task;
 import seedu.address.model.task.exceptions.InvalidPredicateException;
 import seedu.address.model.task.exceptions.InvalidPredicateOperatorException;
 import seedu.address.model.task.exceptions.InvalidPredicateTestPhraseException;
+import seedu.address.model.util.SetUtil;
 
 /**
  * Parses input arguments and creates a new FindCommand object
@@ -76,6 +79,12 @@ public class FilterCommandParser implements Parser<FilterCommand> {
             case "due": {
                 Predicate<Deadline> deadlinePredicate = Deadline.makeFilter(operator, testPhrase);
                 predicate = task -> deadlinePredicate.test(task.getDeadline());
+                break;
+            }
+            case "t": // fallthrough
+            case "tag": {
+                Predicate<Set<Tag>> tagsPredicate = SetUtil.makeFilter(Tag.class, operator, testPhrase);
+                predicate = task -> tagsPredicate.test(task.getTags());
                 break;
             }
             default:
