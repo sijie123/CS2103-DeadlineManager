@@ -150,7 +150,14 @@ public class XmlAdaptedTask {
         for (XmlAdaptedAttachment attachment : attachments) {
             taskAttachments.add(attachment.toModelType());
         }
-        final Set<Attachment> modelAttachments = new HashSet<>(taskAttachments);
+        final Set<Attachment> modelAttachments = new HashSet<>();
+        for (Attachment attachment : taskAttachments) {
+            if (modelAttachments.contains(attachment)) {
+                throw new IllegalValueException(Attachment.MESSAGE_DUPLICATE_ATTACHMENT_NAME);
+            } else {
+                modelAttachments.add(attachment);
+            }
+        }
 
         final Deadline tempDeadline = new Deadline("1/10/2018");
 
