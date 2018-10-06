@@ -64,7 +64,8 @@ public class StringTokenizer {
             }
             if (hasEndedWithQuote) {
                 // successful read of quoted string
-                assert quotePred.test(str.charAt(startLocation)) && quotePred.test(str.charAt(nextIndex - 1)) : "String did not start or end with quotes!";
+                assert quotePred.test(str.charAt(startLocation)) && quotePred.test(str.charAt(nextIndex - 1))
+                    : "String did not start or end with quotes!";
                 // remove leading/trailing quote before returning
                 String ret = str.substring(startLocation + 1, nextIndex - 1);
                 return ret;

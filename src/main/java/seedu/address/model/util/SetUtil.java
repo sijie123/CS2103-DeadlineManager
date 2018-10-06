@@ -5,7 +5,6 @@ import java.util.InputMismatchException;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import seedu.address.logic.parser.StringTokenizer;
 import seedu.address.model.task.FilterOperator;
@@ -30,11 +29,13 @@ public class SetUtil {
         throws InvalidPredicateException {
         try {
             // comma-separated quotable tokenizer
-            StringTokenizer tokenizer = new StringTokenizer(testPhrase, ch -> ch == ',', ch -> ch == '\'' || ch == '\"');
+            StringTokenizer tokenizer = new StringTokenizer(testPhrase,
+                ch -> ch == ',', ch -> ch == '\'' || ch == '\"');
             Set<T> items = tokenizer.toList().stream().map(token -> {
                 try {
                     return klass.getDeclaredConstructor(String.class).newInstance(token);
-                } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
+                    InvocationTargetException e) {
                     throw new IllegalArgumentException("Class does not support construction from a single string", e);
                 }
             }).collect(Collectors.toSet());
