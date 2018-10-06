@@ -21,6 +21,8 @@ public class Deadline implements Comparable<Deadline> {
     public static final String MESSAGE_DEADLINE_CONSTRAINTS =
         "Deadline has to be a valid date";
 
+    private static DateFormat dateFormatter = new SimpleDateFormat("d/M/y", new Locale("en", "SG"));
+
     public final Date value;
 
     /**
@@ -41,10 +43,8 @@ public class Deadline implements Comparable<Deadline> {
     public Deadline(String deadline) {
         requireNonNull(deadline);
 
-        DateFormat formatter = new SimpleDateFormat("d/M/y", new Locale("en", "SG"));
-
         try {
-            this.value = formatter.parse(deadline);
+            this.value = dateFormatter.parse(deadline);
         } catch (ParseException e) {
             throw new IllegalArgumentException(MESSAGE_DEADLINE_CONSTRAINTS, e);
         }
@@ -79,8 +79,7 @@ public class Deadline implements Comparable<Deadline> {
 
     @Override
     public String toString() {
-        DateFormat formatter = DateFormat.getInstance();
-        return formatter.format(value);
+        return dateFormatter.format(value);
     }
 
     @Override
