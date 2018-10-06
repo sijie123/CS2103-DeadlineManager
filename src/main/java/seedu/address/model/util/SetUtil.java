@@ -34,8 +34,8 @@ public class SetUtil {
             Set<T> items = tokenizer.toList().stream().map(token -> {
                 try {
                     return klass.getDeclaredConstructor(String.class).newInstance(token);
-                } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
-                    InvocationTargetException e) {
+                } catch (NoSuchMethodException | InstantiationException | IllegalAccessException
+                    | InvocationTargetException e) {
                     throw new IllegalArgumentException("Class does not support construction from a single string", e);
                 }
             }).collect(Collectors.toSet());
