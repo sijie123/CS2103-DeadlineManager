@@ -15,8 +15,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.core.Messages;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.CommandHistory;
@@ -29,7 +31,6 @@ import seedu.address.model.task.Task;
  * Edits the details of an existing task in the deadline manager.
  */
 public class AttachmentCommand extends Command {
-
     public static final String COMMAND_WORD = "attachment";
     public static final String COMMAND_ADD_ACTION = "add";
     public static final String COMMAND_GET_ACTION = "get";
@@ -53,6 +54,7 @@ public class AttachmentCommand extends Command {
 
     public static final String MESSAGE_MISSING_ARGUMENTS = "Missing argument %1$s for %2$s action";
 
+    private static final Logger logger = LogsCenter.getLogger(Attachment.class);
     private final Index index;
     private final AttachmentAction attachmentAction;
 
@@ -158,6 +160,8 @@ public class AttachmentCommand extends Command {
                 .map(x -> x.getName())
                 .collect(Collectors.toSet());
             if (attachmentNames.contains(newAttachment.getName())) {
+                logger.info(String.format("Task already contains an attachment with filename %s.",
+                    newAttachment.getName()));
                 throw new CommandException(Attachment.MESSAGE_DUPLICATE_ATTACHMENT_NAME);
             } else {
                 updatedAttachments.add(newAttachment);
@@ -178,7 +182,14 @@ public class AttachmentCommand extends Command {
          */
         private Attachment buildAttachment() throws CommandException {
             File file = new File(filePath);
-            if (!file.exists() || !file.isFile()) {
+            if (!file.exists()) {
+                logger.info(
+                    String.format("Attachment %s does not exist. Checked %s.", filePath, file.getAbsolutePath()));
+                throw new CommandException(String.format(MESSAGE_ADD_NOT_A_FILE, filePath));
+            }
+            if (!file.isFile()) {
+                logger.info(
+                    String.format("Attachment %s is not a file. Checked %s.", filePath, file.getAbsolutePath()));
                 throw new CommandException(String.format(MESSAGE_ADD_NOT_A_FILE, filePath));
             }
             resultMessage = String.format(MESSAGE_SUCCESS, file.getName());
@@ -259,7 +270,8 @@ public class AttachmentCommand extends Command {
         public static final String MESSAGE_NAME_NOT_FOUND = "%1$s is not an attachment.";
         public static final String MESSAGE_GET_FAILED = "Failed to save to %1$s.";
         public static final String MESSAGE_SUCCESS = "%1$s is now saved to %2$s.";
-        public static final String MESSAGE_GET_NOT_A_FILE = "%1$s is not a valid file.";
+        public static final String MESSAGE_GET_NOT_A_FILE = "%1$s is not a valid file."
+            + "It might have been deleted or moved";
 
         private String resultMessage = "Action Not Performed";
         private final String nameToGet;
@@ -279,14 +291,27 @@ public class AttachmentCommand extends Command {
          */
         private File copyFileToDestination(File sourceFile, File destFile) throws CommandException {
             Path sourcePath = sourceFile.toPath();
-            if (!sourceFile.exists() || !sourceFile.isFile()) {
+            if (!sourceFile.exists()) {
+                logger.info(String.format("Attachment %s does not exist. Checked %s.",
+                    sourcePath, sourceFile.getAbsolutePath()));
+                throw new CommandException(String.format(MESSAGE_GET_NOT_A_FILE, sourceFile));
+            }
+            if (!sourceFile.isFile()) {
+                logger.info(String.format("Attachment %s is not a file. Checked %s.",
+                    sourcePath, sourceFile.getAbsolutePath()));
                 throw new CommandException(String.format(MESSAGE_GET_NOT_A_FILE, sourceFile));
             }
             Path savePath = destFile.toPath();
             try {
+                if (destFile.exists()) {
+                    logger.warning(
+                        String.format("Attachment destination %s will be overwritten.", destFile.getAbsolutePath()));
+                }
                 File copiedFile = Files.copy(sourcePath, savePath, StandardCopyOption.REPLACE_EXISTING).toFile();
                 return copiedFile;
             } catch (IOException ioe) {
+                logger.severe(String.format("Attachment copy from %s to %s failed due to: %s",
+                    sourceFile.getAbsolutePath(), destFile.getAbsolutePath(), ioe));
                 throw new CommandException(String.format(MESSAGE_GET_FAILED, destFile.getPath()));
             }
         }
