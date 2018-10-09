@@ -283,6 +283,36 @@ public class AttachmentCommand extends Command {
             this.savePath = savePath;
         }
 
+        private void checkAttachmentStatus(File sourceFile) throws CommandException {
+            checkAttachmentExists(sourceFile);
+            checkAttachmentIsFile(sourceFile);
+        }
+
+        /**
+         * Ensures that a provided file object actually exists in the filesystem
+         * @param sourceFile file to check
+         * @throws CommandException
+         */
+        private void checkAttachmentExists(File sourceFile) throws CommandException {
+            if (!sourceFile.exists()) {
+                logger.info(String.format("Attachment %s does not exist. Checked %s.",
+                    sourceFile.getName(), sourceFile.getAbsolutePath()));
+                throw new CommandException(String.format(MESSAGE_GET_NOT_A_FILE, sourceFile));
+            }
+        }
+
+        /**
+         * Ensures that a provided file object actually is a file in the filesystem
+         * @param sourceFile file to check
+         * @throws CommandException
+         */
+        private void checkAttachmentIsFile(File sourceFile) throws CommandException {
+            if (!sourceFile.isFile()) {
+                logger.info(String.format("Attachment %s is not a file. Checked %s.",
+                    sourceFile.getName(), sourceFile.getAbsolutePath()));
+                throw new CommandException(String.format(MESSAGE_GET_NOT_A_FILE, sourceFile));
+            }
+        }
         /**
          * Copies the file from file to saveFile, overwriting the destination if a file exists.
          *
@@ -290,17 +320,8 @@ public class AttachmentCommand extends Command {
          * @param destFile   destination file
          */
         private File copyFileToDestination(File sourceFile, File destFile) throws CommandException {
+            checkAttachmentStatus(sourceFile);
             Path sourcePath = sourceFile.toPath();
-            if (!sourceFile.exists()) {
-                logger.info(String.format("Attachment %s does not exist. Checked %s.",
-                    sourcePath, sourceFile.getAbsolutePath()));
-                throw new CommandException(String.format(MESSAGE_GET_NOT_A_FILE, sourceFile));
-            }
-            if (!sourceFile.isFile()) {
-                logger.info(String.format("Attachment %s is not a file. Checked %s.",
-                    sourcePath, sourceFile.getAbsolutePath()));
-                throw new CommandException(String.format(MESSAGE_GET_NOT_A_FILE, sourceFile));
-            }
             Path savePath = destFile.toPath();
             try {
                 if (destFile.exists()) {
