@@ -121,6 +121,74 @@ public class AttachmentCommand extends Command {
     }
 
     /**
+     * Checks and throws (@code CommandException) if there is nothing at the specified path or the item is not
+     * a file.
+     *
+     * @param file The file to check
+     * @throws CommandException
+     */
+    private static void checkAttachmentStatus(String format, File file) throws CommandException {
+        checkAttachmentExists(format, file);
+        checkAttachmentIsFile(format, file);
+    }
+
+    /**
+     * Ensures that a provided file object actually exists in the filesystem. Throws (@code CommandException)
+     * if otherwise.
+     *
+     * @param sourceFile file to check
+     * @throws CommandException
+     */
+    private static void checkAttachmentExists(String format, File sourceFile) throws CommandException {
+        if (!sourceFile.exists()) {
+            logger.info(String.format("Attachment %s does not exist. Checked %s.",
+                sourceFile.getName(), sourceFile.getAbsolutePath()));
+            throw new CommandException(String.format(format, sourceFile));
+        }
+    }
+
+    /**
+     * Ensures that a provided file object actually is a file in the filesystem. Throws (@code CommandException)
+     * if otherwise.
+     *
+     * @param sourceFile file to check
+     * @throws CommandException
+     */
+    private static void checkAttachmentIsFile(String format, File sourceFile) throws CommandException {
+        if (!sourceFile.isFile()) {
+            logger.info(String.format("Attachment %s is not a file. Checked %s.",
+                sourceFile.getName(), sourceFile.getAbsolutePath()));
+            throw new CommandException(String.format(format, sourceFile));
+        }
+    }
+
+    /**
+     * Utility function to determine if an attachment with name (@code name) exists in the set of attachments.
+     * @param attachments Set of attachments
+     * @param name Name to search
+     * @return True if there is an attachment with name (@code name)
+     */
+    private static boolean isAttachmentName(Set<Attachment> attachments, String name) {
+        Set<String> attachmentNames = attachments
+            .stream()
+            .map(x -> x.getName())
+            .collect(Collectors.toSet());
+        return attachmentNames.contains(name);
+    }
+
+    /**
+     * Utility function to obtain an attachment object from a set of attachments, based on name.
+     * @param attachments Set of attachments
+     * @param name Name to search
+     * @return Null if there is no attachment with the provided name in the set.
+     */
+    private static Attachment getAttachment(Set<Attachment> attachments, String name) {
+        Map<String, Attachment> attachmentNameMap = attachments.stream()
+            .collect(Collectors.toMap(x -> x.getName(), x -> x));
+        return attachmentNameMap.get(name);
+    }
+
+    /**
      * Stores the actions to perform on a task's attachment with.
      */
     public abstract static class AttachmentAction {
@@ -153,24 +221,17 @@ public class AttachmentCommand extends Command {
         @Override
         public Task perform(Task taskToEdit) throws CommandException {
             assert taskToEdit != null;
-            HashSet<Attachment> updatedAttachments = new HashSet<>(taskToEdit.getAttachments());
             Attachment newAttachment = buildAttachment();
-            Set<String> attachmentNames = updatedAttachments
-                .stream()
-                .map(x -> x.getName())
-                .collect(Collectors.toSet());
-            if (attachmentNames.contains(newAttachment.getName())) {
+            if (isAttachmentName(taskToEdit.getAttachments(), newAttachment.getName())) {
                 logger.info(String.format("Task already contains an attachment with filename %s.",
                     newAttachment.getName()));
                 throw new CommandException(Attachment.MESSAGE_DUPLICATE_ATTACHMENT_NAME);
-            } else {
-                updatedAttachments.add(newAttachment);
             }
-
+            HashSet<Attachment> updatedAttachments = new HashSet<>(taskToEdit.getAttachments());
+            updatedAttachments.add(newAttachment);
             return new Task(taskToEdit.getName(), taskToEdit.getPhone(), taskToEdit.getPriority(),
                 taskToEdit.getEmail(), taskToEdit.getDeadline(),
                 taskToEdit.getAddress(), taskToEdit.getTags(), updatedAttachments);
-
         }
 
         /**
@@ -182,16 +243,7 @@ public class AttachmentCommand extends Command {
          */
         private Attachment buildAttachment() throws CommandException {
             File file = new File(filePath);
-            if (!file.exists()) {
-                logger.info(
-                    String.format("Attachment %s does not exist. Checked %s.", filePath, file.getAbsolutePath()));
-                throw new CommandException(String.format(MESSAGE_ADD_NOT_A_FILE, filePath));
-            }
-            if (!file.isFile()) {
-                logger.info(
-                    String.format("Attachment %s is not a file. Checked %s.", filePath, file.getAbsolutePath()));
-                throw new CommandException(String.format(MESSAGE_ADD_NOT_A_FILE, filePath));
-            }
+            checkAttachmentStatus(MESSAGE_ADD_NOT_A_FILE, file);
             resultMessage = String.format(MESSAGE_SUCCESS, file.getName());
             return new Attachment(new File(filePath));
         }
@@ -243,14 +295,11 @@ public class AttachmentCommand extends Command {
         @Override
         public Task perform(Task taskToEdit) throws CommandException {
             assert taskToEdit != null;
-            HashSet<Attachment> updatedAttachments = new HashSet<>(taskToEdit.getAttachments());
-
-            Map<String, Attachment> attachmentNameMap = updatedAttachments.stream()
-                .collect(Collectors.toMap(x -> x.getName(), x -> x));
-            if (!attachmentNameMap.containsKey(nameToDelete)) {
+            Attachment attachmentToDelete = getAttachment(taskToEdit.getAttachments(), nameToDelete);
+            if (attachmentToDelete == null) {
                 throw new CommandException(String.format(MESSAGE_NAME_NOT_FOUND, nameToDelete));
             }
-            Attachment attachmentToDelete = attachmentNameMap.get(nameToDelete);
+            HashSet<Attachment> updatedAttachments = new HashSet<>(taskToEdit.getAttachments());
             updatedAttachments.remove(attachmentToDelete);
             resultMessage = String.format(MESSAGE_SUCCESS, nameToDelete);
             return new Task(taskToEdit.getName(), taskToEdit.getPhone(), taskToEdit.getPriority(),
@@ -283,36 +332,7 @@ public class AttachmentCommand extends Command {
             this.savePath = savePath;
         }
 
-        private void checkAttachmentStatus(File sourceFile) throws CommandException {
-            checkAttachmentExists(sourceFile);
-            checkAttachmentIsFile(sourceFile);
-        }
 
-        /**
-         * Ensures that a provided file object actually exists in the filesystem
-         * @param sourceFile file to check
-         * @throws CommandException
-         */
-        private void checkAttachmentExists(File sourceFile) throws CommandException {
-            if (!sourceFile.exists()) {
-                logger.info(String.format("Attachment %s does not exist. Checked %s.",
-                    sourceFile.getName(), sourceFile.getAbsolutePath()));
-                throw new CommandException(String.format(MESSAGE_GET_NOT_A_FILE, sourceFile));
-            }
-        }
-
-        /**
-         * Ensures that a provided file object actually is a file in the filesystem
-         * @param sourceFile file to check
-         * @throws CommandException
-         */
-        private void checkAttachmentIsFile(File sourceFile) throws CommandException {
-            if (!sourceFile.isFile()) {
-                logger.info(String.format("Attachment %s is not a file. Checked %s.",
-                    sourceFile.getName(), sourceFile.getAbsolutePath()));
-                throw new CommandException(String.format(MESSAGE_GET_NOT_A_FILE, sourceFile));
-            }
-        }
         /**
          * Copies the file from file to saveFile, overwriting the destination if a file exists.
          *
@@ -320,7 +340,7 @@ public class AttachmentCommand extends Command {
          * @param destFile   destination file
          */
         private File copyFileToDestination(File sourceFile, File destFile) throws CommandException {
-            checkAttachmentStatus(sourceFile);
+            checkAttachmentStatus(MESSAGE_GET_NOT_A_FILE, sourceFile);
             Path sourcePath = sourceFile.toPath();
             Path savePath = destFile.toPath();
             try {
@@ -340,17 +360,13 @@ public class AttachmentCommand extends Command {
         @Override
         public Task perform(Task taskToEdit) throws CommandException {
             assert taskToEdit != null;
-            Map<String, Attachment> attachmentNameMap = taskToEdit.getAttachments().stream()
-                .collect(Collectors.toMap(x -> x.getName(), x -> x));
-            if (!attachmentNameMap.containsKey(nameToGet)) {
+            Attachment attachmentToGet = getAttachment(taskToEdit.getAttachments(), nameToGet);
+            if (attachmentToGet == null) {
                 throw new CommandException(String.format(MESSAGE_NAME_NOT_FOUND, nameToGet));
             }
-            Attachment attachmentToGet = attachmentNameMap.get(nameToGet);
             File saveFile = new File(savePath);
             copyFileToDestination(attachmentToGet.file, saveFile);
-
             resultMessage = String.format(MESSAGE_SUCCESS, attachmentToGet.getName(), saveFile.getPath());
-
             return taskToEdit;
         }
 
