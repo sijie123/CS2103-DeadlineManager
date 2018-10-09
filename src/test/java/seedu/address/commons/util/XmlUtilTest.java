@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import seedu.address.model.TaskCollection;
+import seedu.address.storage.XmlAdaptedAttachment;
 import seedu.address.storage.XmlAdaptedTag;
 import seedu.address.storage.XmlAdaptedTask;
 import seedu.address.storage.XmlSerializableTaskCollection;
@@ -46,6 +47,8 @@ public class XmlUtilTest {
     private static final String VALID_ADDRESS = "4th street";
     private static final List<XmlAdaptedTag> VALID_TAGS = Collections
         .singletonList(new XmlAdaptedTag("friends"));
+    private static final List<XmlAdaptedAttachment> VALID_ATTACHMENTS = Collections
+        .singletonList(new XmlAdaptedAttachment("hello.txt"));
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -86,7 +89,7 @@ public class XmlUtilTest {
         XmlAdaptedTask actualPerson = XmlUtil.getDataFromFile(
             MISSING_PERSON_FIELD_FILE, XmlAdaptedTaskWithRootElement.class);
         XmlAdaptedTask expectedPerson = new XmlAdaptedTask(
-            null, VALID_PHONE, VALID_PRIORITY, VALID_EMAIL, VALID_ADDRESS, VALID_TAGS);
+            null, VALID_PHONE, VALID_PRIORITY, VALID_EMAIL, VALID_ADDRESS, VALID_TAGS, VALID_ATTACHMENTS);
         assertEquals(expectedPerson, actualPerson);
     }
 
@@ -95,7 +98,7 @@ public class XmlUtilTest {
         XmlAdaptedTask actualPerson = XmlUtil.getDataFromFile(
             INVALID_PERSON_FIELD_FILE, XmlAdaptedTaskWithRootElement.class);
         XmlAdaptedTask expectedPerson = new XmlAdaptedTask(
-            VALID_NAME, INVALID_PHONE, VALID_PRIORITY, VALID_EMAIL, VALID_ADDRESS, VALID_TAGS);
+            VALID_NAME, INVALID_PHONE, VALID_PRIORITY, VALID_EMAIL, VALID_ADDRESS, VALID_TAGS, VALID_ATTACHMENTS);
         assertEquals(expectedPerson, actualPerson);
     }
 
@@ -104,7 +107,7 @@ public class XmlUtilTest {
         XmlAdaptedTask actualPerson = XmlUtil.getDataFromFile(
             VALID_PERSON_FILE, XmlAdaptedTaskWithRootElement.class);
         XmlAdaptedTask expectedPerson = new XmlAdaptedTask(
-            VALID_NAME, VALID_PHONE, VALID_PRIORITY, VALID_EMAIL, VALID_ADDRESS, VALID_TAGS);
+            VALID_NAME, VALID_PHONE, VALID_PRIORITY, VALID_EMAIL, VALID_ADDRESS, VALID_TAGS, VALID_ATTACHMENTS);
         assertEquals(expectedPerson, actualPerson);
     }
 

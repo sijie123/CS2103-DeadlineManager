@@ -247,7 +247,10 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
      * @see TaskCollectionSystemTest#assertApplicationDisplaysExpected(String, String, Model)
      */
     private void assertCommandSuccess(Task toAdd) {
-        assertCommandSuccess(PersonUtil.getAddCommand(toAdd), toAdd);
+        Task toAddWithoutAttachment = new PersonBuilder(toAdd)
+            .withAttachments()
+            .build();
+        assertCommandSuccess(PersonUtil.getAddCommand(toAddWithoutAttachment), toAddWithoutAttachment);
     }
 
     /**
@@ -258,8 +261,11 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
      */
     private void assertCommandSuccess(String command, Task toAdd) {
         Model expectedModel = getModel();
-        expectedModel.addPerson(toAdd);
-        String expectedResultMessage = String.format(AddCommand.MESSAGE_SUCCESS, toAdd);
+        Task toAddWithoutAttachments = new PersonBuilder(toAdd)
+            .withAttachments()
+            .build();
+        expectedModel.addPerson(toAddWithoutAttachments);
+        String expectedResultMessage = String.format(AddCommand.MESSAGE_SUCCESS, toAddWithoutAttachments);
 
         assertCommandSuccess(command, expectedModel, expectedResultMessage);
     }

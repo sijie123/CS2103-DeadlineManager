@@ -40,7 +40,11 @@ public class EditCommandTest {
 
     @Test
     public void execute_allFieldsSpecifiedUnfilteredList_success() {
-        Task editedTask = new PersonBuilder().build();
+        // Preserve attachments as editedTask should have the same attachment
+        Task editedTask = new PersonBuilder()
+            .withAttachments(model.getFilteredPersonList().get(0).getAttachments())
+            .build();
+
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(editedTask).build();
         EditCommand editCommand = new EditCommand(INDEX_FIRST_PERSON, descriptor);
 
@@ -160,8 +164,10 @@ public class EditCommandTest {
 
     @Test
     public void executeUndoRedo_validIndexUnfilteredList_success() throws Exception {
-        Task editedTask = new PersonBuilder().build();
         Task taskToEdit = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Task editedTask = new PersonBuilder()
+            .withAttachments(taskToEdit.getAttachments())
+            .build();
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(editedTask).build();
         EditCommand editCommand = new EditCommand(INDEX_FIRST_PERSON, descriptor);
         Model expectedModel = new ModelManager(new TaskCollection(model.getAddressBook()),
@@ -207,14 +213,16 @@ public class EditCommandTest {
      */
     @Test
     public void executeUndoRedo_validIndexFilteredList_samePersonEdited() throws Exception {
-        Task editedTask = new PersonBuilder().build();
+        showPersonAtIndex(model, INDEX_SECOND_PERSON);
+        Task taskToEdit = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Task editedTask = new PersonBuilder()
+            .withAttachments(taskToEdit.getAttachments())
+            .build();
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(editedTask).build();
         EditCommand editCommand = new EditCommand(INDEX_FIRST_PERSON, descriptor);
         Model expectedModel = new ModelManager(new TaskCollection(model.getAddressBook()),
             new UserPrefs());
 
-        showPersonAtIndex(model, INDEX_SECOND_PERSON);
-        Task taskToEdit = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         expectedModel.updatePerson(taskToEdit, editedTask);
         expectedModel.commitAddressBook();
 

@@ -1,11 +1,13 @@
 package seedu.address.model.util;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import seedu.address.model.ReadOnlyTaskCollection;
 import seedu.address.model.TaskCollection;
+import seedu.address.model.attachment.Attachment;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.task.Address;
 import seedu.address.model.task.Email;
@@ -65,4 +67,14 @@ public class SampleDataUtil {
             .collect(Collectors.toSet());
     }
 
+
+    /**
+     * Returns a attachment set containing the list of attachments given.
+     */
+    public static Set<Attachment> getAttachmentSet(String... strings) {
+        return Arrays.stream(strings)
+            .map(File::new)
+            .map(Attachment::new)
+            .collect(Collectors.toSet());
+    }
 }

@@ -6,6 +6,7 @@
         <priority isPrivate="false">1</priority>
         <email isPrivate="false">hans@example.com</email>
         <address isPrivate="false">4th street</address>
+        <attachments>hello.txt</attachments>
     </tasks>
     <tasks>
         <name>Ruth Mueller</name>
