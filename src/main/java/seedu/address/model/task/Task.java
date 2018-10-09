@@ -122,7 +122,7 @@ public class Task {
             && otherTask.getEmail().equals(getEmail())
             && otherTask.getAddress().equals(getAddress())
             && otherTask.getTags().equals(getTags())
-            /*&& otherTask.getDeadline().equals(getDeadline())*/
+            && otherTask.getDeadline().equals(getDeadline())
             && otherTask.getAttachments().equals(getAttachments());
         /*
          TODO: enable comparison by deadline (uncomment the above line.
