@@ -4,6 +4,7 @@
         <name>Hans Muster</name>
         <phone isPrivate="false">9482424</phone>
         <priority isPrivate="false">1</priority>
+        <deadline isPrivate="false">1/10/2018</deadline>
         <email isPrivate="false">hans@example.com</email>
         <address isPrivate="false">4th street</address>
         <attachments>hello.txt</attachments>
@@ -12,6 +13,7 @@
         <name>Ruth Mueller</name>
         <phone isPrivate="false">87249245</phone>
         <priority isPrivate="false">2</priority>
+        <deadline isPrivate="false">1/11/2018</deadline>
         <email isPrivate="false">ruth@example.com</email>
         <address isPrivate="false">81th street</address>
     </tasks>
@@ -19,6 +21,7 @@
         <name>Heinz Kurz</name>
         <phone isPrivate="false">95352563</phone>
         <priority isPrivate="false">3</priority>
+        <deadline isPrivate="false">10/10/2018</deadline>
         <email isPrivate="false">heinz@example.com</email>
         <address isPrivate="false">wall street</address>
     </tasks>
@@ -26,6 +29,7 @@
         <name>Cornelia Meier</name>
         <phone isPrivate="false">87652533</phone>
         <priority isPrivate="false">4</priority>
+        <deadline isPrivate="false">1/5/2019</deadline>
         <email isPrivate="false">cornelia@example.com</email>
         <address isPrivate="false">10th street</address>
     </tasks>
@@ -33,6 +37,7 @@
         <name>Werner Meyer</name>
         <phone isPrivate="false">9482224</phone>
         <priority isPrivate="false">1</priority>
+        <deadline isPrivate="false">31/1/2019</deadline>
         <email isPrivate="false">werner@example.com</email>
         <address isPrivate="false">michegan ave</address>
     </tasks>
@@ -40,6 +45,7 @@
         <name>Lydia Kunz</name>
         <phone isPrivate="false">9482427</phone>
         <priority isPrivate="false">2</priority>
+        <deadline isPrivate="false">1/2/2019</deadline>
         <email isPrivate="false">lydia@example.com</email>
         <address isPrivate="false">little tokyo</address>
     </tasks>
@@ -47,6 +53,7 @@
         <name>Anna Best</name>
         <phone isPrivate="false">9482442</phone>
         <priority isPrivate="false">3</priority>
+        <deadline isPrivate="false">30/11/2018</deadline>
         <email isPrivate="false">anna@example.com</email>
         <address isPrivate="false">4th street</address>
     </tasks>
@@ -54,6 +61,7 @@
         <name>Stefan Meier</name>
         <phone isPrivate="false">8482424</phone>
         <priority isPrivate="false">4</priority>
+        <deadline isPrivate="false">5/10/2018</deadline>
         <email isPrivate="false">stefan@example.com</email>
         <address isPrivate="false">little india</address>
     </tasks>
@@ -61,6 +69,7 @@
         <name>Martin Mueller</name>
         <phone isPrivate="false">8482131</phone>
         <priority isPrivate="false">1</priority>
+        <deadline isPrivate="false">15/5/2020</deadline>
         <email isPrivate="false">hans@example.com</email>
         <address isPrivate="false">chicago ave</address>
     </tasks>
