@@ -34,6 +34,8 @@ public class XmlAdaptedTask {
     @XmlElement(required = true)
     private String priority;
     @XmlElement(required = true)
+    private String deadline;
+    @XmlElement(required = true)
     private String email;
     @XmlElement(required = true)
     private String address;
@@ -52,11 +54,12 @@ public class XmlAdaptedTask {
     /**
      * Constructs an {@code XmlAdaptedTask} with the given task details.
      */
-    public XmlAdaptedTask(String name, String phone, String priority, String email, String address,
+    public XmlAdaptedTask(String name, String phone, String priority, String deadline, String email, String address,
                           List<XmlAdaptedTag> tagged, List<XmlAdaptedAttachment> attachments) {
         this.name = name;
         this.phone = phone;
         this.priority = priority;
+        this.deadline = deadline;
         this.email = email;
         this.address = address;
         if (tagged != null) {
@@ -76,6 +79,7 @@ public class XmlAdaptedTask {
         name = source.getName().value;
         phone = source.getPhone().value;
         priority = source.getPriority().value;
+        deadline = source.getDeadline().toString();
         email = source.getEmail().value;
         address = source.getAddress().value;
         tagged = source.getTags().stream()
@@ -122,6 +126,17 @@ public class XmlAdaptedTask {
         }
         final Priority modelPriority = new Priority(priority);
 
+        if (deadline == null) {
+            throw new IllegalValueException(
+                String.format(MISSING_FIELD_MESSAGE_FORMAT, Deadline.class.getSimpleName()));
+        }
+        Deadline modelDeadline;
+        try{
+            modelDeadline = new Deadline(deadline);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalValueException(Deadline.MESSAGE_DEADLINE_CONSTRAINTS, e);
+        }
+
         if (email == null) {
             throw new IllegalValueException(
                 String.format(MISSING_FIELD_MESSAGE_FORMAT, Email.class.getSimpleName()));
@@ -152,10 +167,8 @@ public class XmlAdaptedTask {
         }
         final Set<Attachment> modelAttachments = new HashSet<>(taskAttachments);
 
-        final Deadline tempDeadline = new Deadline("1/10/2018");
-
         return new Task(modelName, modelPhone, modelPriority, modelEmail,
-            tempDeadline, modelAddress, modelTags, modelAttachments);
+            modelDeadline, modelAddress, modelTags, modelAttachments);
     }
 
     @Override
