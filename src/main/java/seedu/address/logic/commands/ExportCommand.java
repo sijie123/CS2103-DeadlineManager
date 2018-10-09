@@ -37,7 +37,7 @@ public class ExportCommand extends Command {
         try {
             Storage.exportTaskCollection(exportCollection, pathName);
         } catch (IOException e) {
-            throw new CommandException(String.format(MESSAGE_EXPORT_ERROR, e));
+            throw new CommandException(String.format(MESSAGE_EXPORT_ERROR, e.getMessage()));
         }
         return new CommandResult(MESSAGE_SUCCESS);
     }
