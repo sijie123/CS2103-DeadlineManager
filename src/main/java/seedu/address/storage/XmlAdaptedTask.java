@@ -165,7 +165,16 @@ public class XmlAdaptedTask {
         for (XmlAdaptedAttachment attachment : attachments) {
             taskAttachments.add(attachment.toModelType());
         }
-        final Set<Attachment> modelAttachments = new HashSet<>(taskAttachments);
+        final Set<Attachment> modelAttachments = new HashSet<>();
+        Set<String> attachmentNames = new HashSet<>();
+        for (Attachment attachment : taskAttachments) {
+            if (attachmentNames.contains(attachment.getName())) {
+                throw new IllegalValueException(Attachment.MESSAGE_DUPLICATE_ATTACHMENT_NAME);
+            } else {
+                modelAttachments.add(attachment);
+                attachmentNames.add(attachment.getName());
+            }
+        }
 
         return new Task(modelName, modelPhone, modelPriority, modelEmail,
             modelDeadline, modelAddress, modelTags, modelAttachments);

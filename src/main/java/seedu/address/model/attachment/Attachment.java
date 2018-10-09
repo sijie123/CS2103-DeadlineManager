@@ -8,6 +8,8 @@ import java.io.File;
  * Represents a Attachment in the deadline manager. Guarantees: immutable;
  */
 public class Attachment {
+    public static final String MESSAGE_DUPLICATE_ATTACHMENT_NAME = "There cannot be more than one attachment"
+        + "with the same file name. Please rename one of them.";
     public final File file;
 
     public Attachment(File file) {

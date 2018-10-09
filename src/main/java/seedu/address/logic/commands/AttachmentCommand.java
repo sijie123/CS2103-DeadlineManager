@@ -84,7 +84,6 @@ public class AttachmentCommand extends Command {
         model.updatePerson(taskToEdit, editedTask);
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
         model.commitAddressBook();
-        //return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS, editedTask));
         return new CommandResult(attachmentAction.resultMessage());
     }
 
@@ -153,16 +152,21 @@ public class AttachmentCommand extends Command {
         public Task perform(Task taskToEdit) throws CommandException {
             assert taskToEdit != null;
             HashSet<Attachment> updatedAttachments = new HashSet<>(taskToEdit.getAttachments());
-            updatedAttachments.add(buildAttachment());
+            Attachment newAttachment = buildAttachment();
+            Set<String> attachmentNames = updatedAttachments
+                .stream()
+                .map(x -> x.getName())
+                .collect(Collectors.toSet());
+            if (attachmentNames.contains(newAttachment.getName())) {
+                throw new CommandException(Attachment.MESSAGE_DUPLICATE_ATTACHMENT_NAME);
+            } else {
+                updatedAttachments.add(newAttachment);
+            }
+
             return new Task(taskToEdit.getName(), taskToEdit.getPhone(), taskToEdit.getPriority(),
                 taskToEdit.getEmail(), taskToEdit.getDeadline(),
                 taskToEdit.getAddress(), taskToEdit.getTags(), updatedAttachments);
 
-        }
-
-        // TODO: move file to appropriate place in storage
-        private File moveFileToStorage(File file) {
-            return file;
         }
 
         /**
@@ -177,7 +181,6 @@ public class AttachmentCommand extends Command {
             if (!file.exists() || !file.isFile()) {
                 throw new CommandException(String.format(MESSAGE_ADD_NOT_A_FILE, filePath));
             }
-            file = moveFileToStorage(file);
             resultMessage = String.format(MESSAGE_SUCCESS, file.getName());
             return new Attachment(new File(filePath));
         }
@@ -226,11 +229,6 @@ public class AttachmentCommand extends Command {
             this.nameToDelete = nameToDelete;
         }
 
-        //TODO: Remove from storage
-        private void deleteFileFromStorage(File file) {
-            return;
-        }
-
         @Override
         public Task perform(Task taskToEdit) throws CommandException {
             assert taskToEdit != null;
@@ -243,7 +241,6 @@ public class AttachmentCommand extends Command {
             }
             Attachment attachmentToDelete = attachmentNameMap.get(nameToDelete);
             updatedAttachments.remove(attachmentToDelete);
-            deleteFileFromStorage(attachmentToDelete.file);
             resultMessage = String.format(MESSAGE_SUCCESS, nameToDelete);
             return new Task(taskToEdit.getName(), taskToEdit.getPhone(), taskToEdit.getPriority(),
                 taskToEdit.getEmail(), taskToEdit.getDeadline(),
@@ -277,8 +274,8 @@ public class AttachmentCommand extends Command {
         /**
          * Copies the file from file to saveFile, overwriting the destination if a file exists.
          *
-         * @param sourceFile     source file
-         * @param destFile destination file
+         * @param sourceFile source file
+         * @param destFile   destination file
          */
         private File copyFileToDestination(File sourceFile, File destFile) throws CommandException {
             Path sourcePath = sourceFile.toPath();
