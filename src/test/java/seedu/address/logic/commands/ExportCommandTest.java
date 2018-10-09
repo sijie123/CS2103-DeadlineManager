@@ -15,7 +15,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import seedu.address.logic.CommandHistory;
-import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
@@ -30,14 +29,13 @@ public class ExportCommandTest {
     private Model model;
     private Model expectedModel;
     private CommandHistory commandHistory = new CommandHistory();
-    private Path defaultPath;
+    private Path defaultPath = Paths.get("fakeDefaultPath");
     private boolean shouldDeleteDefaultPath = false;
 
     @Before
     public void setUp() throws IOException {
         model = new ModelManager(getTypicalAddressBook(), new UserPrefs());
         expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
-        defaultPath = new UserPrefs().getAddressBookFilePath();
         if (Files.notExists(defaultPath)) {
             Files.createFile(defaultPath);
             shouldDeleteDefaultPath = true;
@@ -51,7 +49,7 @@ public class ExportCommandTest {
     }
 
     @Test
-    public void execute_exportNewFile_exportSuccessful() throws CommandException {
+    public void execute_exportNewFile_exportSuccessful() {
         assertCommandSuccess(new ExportCommand(temporaryFilePath), model,
                 commandHistory, ExportCommand.MESSAGE_SUCCESS, model);
         Path exportPath = Paths.get(temporaryFilePath);
