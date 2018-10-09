@@ -131,7 +131,7 @@ public class XmlAdaptedTask {
                 String.format(MISSING_FIELD_MESSAGE_FORMAT, Deadline.class.getSimpleName()));
         }
         Deadline modelDeadline;
-        try{
+        try {
             modelDeadline = new Deadline(deadline);
         } catch (IllegalArgumentException e) {
             throw new IllegalValueException(Deadline.MESSAGE_DEADLINE_CONSTRAINTS, e);
