@@ -60,7 +60,8 @@ public class XmlAdaptedTaskTest {
 
     @Test
     public void toModelType_nullName_throwsIllegalValueException() {
-        XmlAdaptedTask person = new XmlAdaptedTask(null, VALID_PHONE, VALID_PRIORITY, VALID_DEADLINE, VALID_EMAIL, VALID_ADDRESS,
+        XmlAdaptedTask person = new XmlAdaptedTask(null, VALID_PHONE, VALID_PRIORITY, VALID_DEADLINE, VALID_EMAIL,
+            VALID_ADDRESS,
             VALID_TAGS, VALID_ATTACHMENTS);
         String expectedMessage = String
             .format(MISSING_FIELD_MESSAGE_FORMAT, Name.class.getSimpleName());
@@ -78,7 +79,8 @@ public class XmlAdaptedTaskTest {
 
     @Test
     public void toModelType_nullPhone_throwsIllegalValueException() {
-        XmlAdaptedTask person = new XmlAdaptedTask(VALID_NAME, null, VALID_PRIORITY, VALID_DEADLINE, VALID_EMAIL, VALID_ADDRESS,
+        XmlAdaptedTask person = new XmlAdaptedTask(VALID_NAME, null, VALID_PRIORITY, VALID_DEADLINE, VALID_EMAIL,
+            VALID_ADDRESS,
             VALID_TAGS, VALID_ATTACHMENTS);
         String expectedMessage = String
             .format(MISSING_FIELD_MESSAGE_FORMAT, Phone.class.getSimpleName());
@@ -96,7 +98,8 @@ public class XmlAdaptedTaskTest {
 
     @Test
     public void toModelType_nullPriority_throwsIllegalValueException() {
-        XmlAdaptedTask person = new XmlAdaptedTask(VALID_NAME, VALID_PHONE, null, VALID_DEADLINE, VALID_EMAIL, VALID_ADDRESS,
+        XmlAdaptedTask person = new XmlAdaptedTask(VALID_NAME, VALID_PHONE, null, VALID_DEADLINE, VALID_EMAIL,
+            VALID_ADDRESS,
             VALID_TAGS, VALID_ATTACHMENTS);
         String expectedMessage = String
             .format(MISSING_FIELD_MESSAGE_FORMAT, Priority.class.getSimpleName());
@@ -114,7 +117,8 @@ public class XmlAdaptedTaskTest {
 
     @Test
     public void toModelType_nullDeadline_throwsIllegalValueException() {
-        XmlAdaptedTask person = new XmlAdaptedTask(VALID_NAME, VALID_PHONE, VALID_PRIORITY, null, VALID_EMAIL, VALID_ADDRESS,
+        XmlAdaptedTask person = new XmlAdaptedTask(VALID_NAME, VALID_PHONE, VALID_PRIORITY, null, VALID_EMAIL,
+            VALID_ADDRESS,
             VALID_TAGS, VALID_ATTACHMENTS);
         String expectedMessage = String
             .format(MISSING_FIELD_MESSAGE_FORMAT, Deadline.class.getSimpleName());
@@ -132,7 +136,8 @@ public class XmlAdaptedTaskTest {
 
     @Test
     public void toModelType_nullEmail_throwsIllegalValueException() {
-        XmlAdaptedTask person = new XmlAdaptedTask(VALID_NAME, VALID_PHONE, VALID_PRIORITY, VALID_DEADLINE, null, VALID_ADDRESS,
+        XmlAdaptedTask person = new XmlAdaptedTask(VALID_NAME, VALID_PHONE, VALID_PRIORITY, VALID_DEADLINE, null,
+            VALID_ADDRESS,
             VALID_TAGS, VALID_ATTACHMENTS);
         String expectedMessage = String
             .format(MISSING_FIELD_MESSAGE_FORMAT, Email.class.getSimpleName());
@@ -150,7 +155,8 @@ public class XmlAdaptedTaskTest {
 
     @Test
     public void toModelType_nullAddress_throwsIllegalValueException() {
-        XmlAdaptedTask person = new XmlAdaptedTask(VALID_NAME, VALID_PHONE, VALID_PRIORITY, VALID_DEADLINE, VALID_EMAIL, null,
+        XmlAdaptedTask person = new XmlAdaptedTask(VALID_NAME, VALID_PHONE, VALID_PRIORITY, VALID_DEADLINE, VALID_EMAIL,
+            null,
             VALID_TAGS, VALID_ATTACHMENTS);
         String expectedMessage = String
             .format(MISSING_FIELD_MESSAGE_FORMAT, Address.class.getSimpleName());

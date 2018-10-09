@@ -90,7 +90,8 @@ public class XmlUtilTest {
         XmlAdaptedTask actualPerson = XmlUtil.getDataFromFile(
             MISSING_PERSON_FIELD_FILE, XmlAdaptedTaskWithRootElement.class);
         XmlAdaptedTask expectedPerson = new XmlAdaptedTask(
-            null, VALID_PHONE, VALID_PRIORITY, VALID_DEADLINE, VALID_EMAIL, VALID_ADDRESS, VALID_TAGS, VALID_ATTACHMENTS);
+            null, VALID_PHONE, VALID_PRIORITY, VALID_DEADLINE, VALID_EMAIL, VALID_ADDRESS, VALID_TAGS,
+            VALID_ATTACHMENTS);
         assertEquals(expectedPerson, actualPerson);
     }
 
@@ -99,7 +100,8 @@ public class XmlUtilTest {
         XmlAdaptedTask actualPerson = XmlUtil.getDataFromFile(
             INVALID_PERSON_FIELD_FILE, XmlAdaptedTaskWithRootElement.class);
         XmlAdaptedTask expectedPerson = new XmlAdaptedTask(
-            VALID_NAME, INVALID_PHONE, VALID_PRIORITY, VALID_DEADLINE, VALID_EMAIL, VALID_ADDRESS, VALID_TAGS, VALID_ATTACHMENTS);
+            VALID_NAME, INVALID_PHONE, VALID_PRIORITY, VALID_DEADLINE, VALID_EMAIL, VALID_ADDRESS, VALID_TAGS,
+            VALID_ATTACHMENTS);
         assertEquals(expectedPerson, actualPerson);
     }
 
@@ -108,7 +110,8 @@ public class XmlUtilTest {
         XmlAdaptedTask actualPerson = XmlUtil.getDataFromFile(
             VALID_PERSON_FILE, XmlAdaptedTaskWithRootElement.class);
         XmlAdaptedTask expectedPerson = new XmlAdaptedTask(
-            VALID_NAME, VALID_PHONE, VALID_PRIORITY, VALID_DEADLINE, VALID_EMAIL, VALID_ADDRESS, VALID_TAGS, VALID_ATTACHMENTS);
+            VALID_NAME, VALID_PHONE, VALID_PRIORITY, VALID_DEADLINE, VALID_EMAIL, VALID_ADDRESS, VALID_TAGS,
+            VALID_ATTACHMENTS);
         assertEquals(expectedPerson, actualPerson);
     }
 
