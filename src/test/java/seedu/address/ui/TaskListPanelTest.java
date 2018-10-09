@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static seedu.address.testutil.EventsUtil.postNow;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 import static seedu.address.testutil.TypicalPersons.getTypicalPersons;
-import static seedu.address.ui.testutil.GuiTestAssert.assertCardDisplaysPerson;
+import static seedu.address.ui.testutil.GuiTestAssert.assertCardDisplaysTask;
 import static seedu.address.ui.testutil.GuiTestAssert.assertCardEquals;
 
 import java.nio.file.Path;
@@ -47,7 +47,7 @@ public class TaskListPanelTest extends GuiUnitTest {
             Task expectedTask = TYPICAL_TASKS.get(i);
             TaskCardHandle actualCard = taskListPanelHandle.getPersonCardHandle(i);
 
-            assertCardDisplaysPerson(expectedTask, actualCard);
+            assertCardDisplaysTask(expectedTask, actualCard);
             assertEquals(Integer.toString(i + 1) + ". ", actualCard.getId());
         }
     }

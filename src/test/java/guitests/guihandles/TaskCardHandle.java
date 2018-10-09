@@ -17,32 +17,35 @@ public class TaskCardHandle extends NodeHandle<Node> {
 
     private static final String ID_FIELD_ID = "#id";
     private static final String NAME_FIELD_ID = "#name";
-    private static final String ADDRESS_FIELD_ID = "#address";
-    private static final String PHONE_FIELD_ID = "#phone";
     private static final String PRIORITY_FIELD_ID = "#priority";
-    private static final String EMAIL_FIELD_ID = "#email";
+    private static final String DEADLINE_FIELD_ID = "#deadline";
     private static final String TAGS_FIELD_ID = "#tags";
+    private static final String ATTACHMENTS_FIELD_ID = "#attachments";
 
     private final Label idLabel;
     private final Label nameLabel;
-    private final Label addressLabel;
-    private final Label phoneLabel;
     private final Label priorityLabel;
-    private final Label emailLabel;
+    private final Label deadlineLabel;
     private final List<Label> tagLabels;
+    private final List<Label> attachmentLabels;
 
     public TaskCardHandle(Node cardNode) {
         super(cardNode);
 
         idLabel = getChildNode(ID_FIELD_ID);
         nameLabel = getChildNode(NAME_FIELD_ID);
-        addressLabel = getChildNode(ADDRESS_FIELD_ID);
-        phoneLabel = getChildNode(PHONE_FIELD_ID);
+        deadlineLabel = getChildNode(DEADLINE_FIELD_ID);
         priorityLabel = getChildNode(PRIORITY_FIELD_ID);
-        emailLabel = getChildNode(EMAIL_FIELD_ID);
 
         Region tagsContainer = getChildNode(TAGS_FIELD_ID);
         tagLabels = tagsContainer
+            .getChildrenUnmodifiable()
+            .stream()
+            .map(Label.class::cast)
+            .collect(Collectors.toList());
+
+        Region attachmentsContainer = getChildNode(ATTACHMENTS_FIELD_ID);
+        attachmentLabels = tagsContainer
             .getChildrenUnmodifiable()
             .stream()
             .map(Label.class::cast)
@@ -57,24 +60,21 @@ public class TaskCardHandle extends NodeHandle<Node> {
         return nameLabel.getText();
     }
 
-    public String getAddress() {
-        return addressLabel.getText();
-    }
-
-    public String getPhone() {
-        return phoneLabel.getText();
-    }
-
     public String getPriority() {
         return priorityLabel.getText();
     }
 
-    public String getEmail() {
-        return emailLabel.getText();
-    }
+    public String getDeadline() { return deadlineLabel.getText(); }
 
     public List<String> getTags() {
         return tagLabels
+            .stream()
+            .map(Label::getText)
+            .collect(Collectors.toList());
+    }
+
+    public List<String> getAttachments() {
+        return attachmentLabels
             .stream()
             .map(Label::getText)
             .collect(Collectors.toList());
@@ -85,13 +85,15 @@ public class TaskCardHandle extends NodeHandle<Node> {
      */
     public boolean equals(Task task) {
         return getName().equals(task.getName().value)
-            && getAddress().equals(task.getAddress().value)
-            && getPhone().equals(task.getPhone().value)
             && getPriority().equals(task.getPriority().value)
-            && getEmail().equals(task.getEmail().value)
+            && getDeadline().equals(task.getDeadline().toString())
             && ImmutableMultiset.copyOf(getTags())
             .equals(ImmutableMultiset.copyOf(task.getTags().stream()
                 .map(tag -> tag.tagName)
+                .collect(Collectors.toList())))
+            && ImmutableMultiset.copyOf(getAttachments())
+            .equals(ImmutableMultiset.copyOf(task.getAttachments().stream()
+                .map(attachment -> attachment.getName())
                 .collect(Collectors.toList())));
     }
 }
