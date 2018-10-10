@@ -141,7 +141,7 @@ public class TypicalPersons {
     public static TaskCollection getTypicalAddressBook() {
         TaskCollection ab = new TaskCollection();
         for (Task task : getTypicalPersons()) {
-            ab.addPerson(task);
+            ab.addTask(task);
         }
         return ab;
     }

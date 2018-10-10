@@ -53,7 +53,7 @@ public class XmlSerializableTaskCollection {
             if (taskCollection.hasTask(task)) {
                 throw new IllegalValueException(MESSAGE_DUPLICATE_TASK);
             }
-            taskCollection.addPerson(task);
+            taskCollection.addTask(task);
         }
         return taskCollection;
     }

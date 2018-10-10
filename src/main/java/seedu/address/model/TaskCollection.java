@@ -61,7 +61,7 @@ public class TaskCollection implements ReadOnlyTaskCollection {
     /**
      * Adds a task to the deadline manager. The task must not already exist in the deadline manager.
      */
-    public void addPerson(Task task) {
+    public void addTask(Task task) {
         tasks.add(task);
     }
 

@@ -10,6 +10,7 @@ import seedu.address.model.TaskCollection;
 import seedu.address.model.attachment.Attachment;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.task.Address;
+import seedu.address.model.task.Deadline;
 import seedu.address.model.task.Email;
 import seedu.address.model.task.Name;
 import seedu.address.model.task.Phone;
@@ -21,39 +22,45 @@ import seedu.address.model.task.Task;
  */
 public class SampleDataUtil {
 
-    public static Task[] getSamplePersons() {
+    public static Task[] getSampleTasks() {
         return new Task[] {
-            new Task(new Name("Alex Yeoh"), new Phone("87438807"), new Priority("1"),
+            new Task(new Name("CS2101 Oral Presentation"), new Phone("87438807"), new Priority("1"),
                 new Email("alexyeoh@example.com"),
+                new Deadline("12/10/2018"),
                 new Address("Blk 30 Geylang Street 29, #06-40"),
-                getTagSet("friends")),
-            new Task(new Name("Bernice Yu"), new Phone("99272758"), new Priority("2"),
+                getTagSet("project", "cs2101")),
+            new Task(new Name("CS2106 Lab 4"), new Phone("99272758"), new Priority("2"),
                 new Email("berniceyu@example.com"),
+                new Deadline("25/10/2018"),
                 new Address("Blk 30 Lorong 3 Serangoon Gardens, #07-18"),
-                getTagSet("colleagues", "friends")),
-            new Task(new Name("Charlotte Oliveiro"), new Phone("93210283"), new Priority("3"),
+                getTagSet("programming", "easy", "cs2106")),
+            new Task(new Name("CS2103T Tutorial"), new Phone("93210283"), new Priority("3"),
                 new Email("charlotte@example.com"),
+                new Deadline("10/10/2018"),
                 new Address("Blk 11 Ang Mo Kio Street 74, #11-04"),
-                getTagSet("neighbours")),
-            new Task(new Name("David Li"), new Phone("91031282"), new Priority("3"),
+                getTagSet("cs2103t")),
+            new Task(new Name("Dinner at MBS"), new Phone("91031282"), new Priority("3"),
                 new Email("lidavid@example.com"),
+                new Deadline("27/10/2018"),
                 new Address("Blk 436 Serangoon Gardens Street 26, #16-43"),
                 getTagSet("family")),
-            new Task(new Name("Irfan Ibrahim"), new Phone("92492021"), new Priority("2"),
+            new Task(new Name("PS4"), new Phone("92492021"), new Priority("2"),
                 new Email("irfan@example.com"),
+                new Deadline("12/10/2018"),
                 new Address("Blk 47 Tampines Street 20, #17-35"),
-                getTagSet("classmates")),
-            new Task(new Name("Roy Balakrishnan"), new Phone("92624417"), new Priority("3"),
+                getTagSet("cs2040c")),
+            new Task(new Name("Badminton"), new Phone("92624417"), new Priority("3"),
                 new Email("royb@example.com"),
+                new Deadline("12/10/2018"),
                 new Address("Blk 45 Aljunied Street 85, #11-31"),
-                getTagSet("colleagues"))
+                getTagSet("friends"))
         };
     }
 
     public static ReadOnlyTaskCollection getSampleAddressBook() {
         TaskCollection sampleAb = new TaskCollection();
-        for (Task sampleTask : getSamplePersons()) {
-            sampleAb.addPerson(sampleTask);
+        for (Task sampleTask : getSampleTasks()) {
+            sampleAb.addTask(sampleTask);
         }
         return sampleAb;
     }

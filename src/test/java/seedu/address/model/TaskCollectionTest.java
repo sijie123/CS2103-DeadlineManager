@@ -73,7 +73,7 @@ public class TaskCollectionTest {
 
     @Test
     public void hasPerson_personInAddressBook_returnsTrue() {
-        taskCollection.addPerson(ALICE);
+        taskCollection.addTask(ALICE);
         assertTrue(taskCollection.hasTask(ALICE));
     }
 
