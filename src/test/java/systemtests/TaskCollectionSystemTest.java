@@ -200,7 +200,7 @@ public abstract class TaskCollectionSystemTest {
         getBrowserPanel().rememberUrl();
         statusBarFooterHandle.rememberSaveLocation();
         statusBarFooterHandle.rememberSyncStatus();
-        getPersonListPanel().rememberSelectedPersonCard();
+        getPersonListPanel().rememberSelectedTaskCard();
     }
 
     /**
@@ -220,7 +220,7 @@ public abstract class TaskCollectionSystemTest {
      * expectedSelectedCardIndex} is selected.
      *
      * @see BrowserPanelHandle#isUrlChanged()
-     * @see TaskListPanelHandle#isSelectedPersonCardChanged()
+     * @see TaskListPanelHandle#isSelectedTaskCardChanged()
      */
     protected void assertSelectedCardChanged(Index expectedSelectedCardIndex) {
         getPersonListPanel().navigateToCard(getPersonListPanel().getSelectedCardIndex());
@@ -243,11 +243,11 @@ public abstract class TaskCollectionSystemTest {
      * unchanged.
      *
      * @see BrowserPanelHandle#isUrlChanged()
-     * @see TaskListPanelHandle#isSelectedPersonCardChanged()
+     * @see TaskListPanelHandle#isSelectedTaskCardChanged()
      */
     protected void assertSelectedCardUnchanged() {
         assertFalse(getBrowserPanel().isUrlChanged());
-        assertFalse(getPersonListPanel().isSelectedPersonCardChanged());
+        assertFalse(getPersonListPanel().isSelectedTaskCardChanged());
     }
 
     /**

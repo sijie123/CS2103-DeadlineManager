@@ -17,10 +17,10 @@ public class TaskListPanelHandle extends NodeHandle<ListView<Task>> {
 
     private static final String CARD_PANE_ID = "#cardPane";
 
-    private Optional<Task> lastRememberedSelectedPersonCard;
+    private Optional<Task> lastRememberedSelectedTaskCard;
 
-    public TaskListPanelHandle(ListView<Task> personListPanelNode) {
-        super(personListPanelNode);
+    public TaskListPanelHandle(ListView<Task> taskListPanelNode) {
+        super(taskListPanelNode);
     }
 
     /**
@@ -128,28 +128,28 @@ public class TaskListPanelHandle extends NodeHandle<ListView<Task>> {
     /**
      * Remembers the selected {@code TaskCard} in the list.
      */
-    public void rememberSelectedPersonCard() {
+    public void rememberSelectedTaskCard() {
         List<Task> selectedItems = getRootNode().getSelectionModel().getSelectedItems();
 
         if (selectedItems.size() == 0) {
-            lastRememberedSelectedPersonCard = Optional.empty();
+            lastRememberedSelectedTaskCard = Optional.empty();
         } else {
-            lastRememberedSelectedPersonCard = Optional.of(selectedItems.get(0));
+            lastRememberedSelectedTaskCard = Optional.of(selectedItems.get(0));
         }
     }
 
     /**
      * Returns true if the selected {@code TaskCard} is different from the value remembered by the
-     * most recent {@code rememberSelectedPersonCard()} call.
+     * most recent {@code rememberSelectedTaskCard()} call.
      */
-    public boolean isSelectedPersonCardChanged() {
+    public boolean isSelectedTaskCardChanged() {
         List<Task> selectedItems = getRootNode().getSelectionModel().getSelectedItems();
 
         if (selectedItems.size() == 0) {
-            return lastRememberedSelectedPersonCard.isPresent();
+            return lastRememberedSelectedTaskCard.isPresent();
         } else {
-            return !lastRememberedSelectedPersonCard.isPresent()
-                || !lastRememberedSelectedPersonCard.get().equals(selectedItems.get(0));
+            return !lastRememberedSelectedTaskCard.isPresent()
+                || !lastRememberedSelectedTaskCard.get().equals(selectedItems.get(0));
         }
     }
 
