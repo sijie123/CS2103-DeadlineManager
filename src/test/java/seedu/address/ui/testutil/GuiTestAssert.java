@@ -1,6 +1,8 @@
 package seedu.address.ui.testutil;
 
 import static org.junit.Assert.assertEquals;
+import static seedu.address.ui.TaskCard.DEADLINE_FORMAT;
+import static seedu.address.ui.TaskCard.PRIORITY_FORMAT;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,8 +32,10 @@ public class GuiTestAssert {
      */
     public static void assertCardDisplaysTask(Task expectedTask, TaskCardHandle actualCard) {
         assertEquals(expectedTask.getName().value, actualCard.getName());
-        assertEquals(expectedTask.getPriority().value, actualCard.getPriority());
-        assertEquals(expectedTask.getDeadline(), actualCard.getDeadline());
+        String expectedPriority = String.format(PRIORITY_FORMAT, expectedTask.getPriority().value);
+        assertEquals(expectedPriority, actualCard.getPriority());
+        String expectedDeadline = String.format(DEADLINE_FORMAT, expectedTask.getDeadline().toString());
+        assertEquals(expectedDeadline, actualCard.getDeadline());
         assertEquals(expectedTask.getTags().stream().map(tag -> tag.tagName)
                 .collect(Collectors.toList()),
             actualCard.getTags());

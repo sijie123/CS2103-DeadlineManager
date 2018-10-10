@@ -13,6 +13,8 @@ import seedu.address.model.task.Task;
 public class TaskCard extends UiPart<Region> {
 
     private static final String FXML = "TaskListCard.fxml";
+    public static final String PRIORITY_FORMAT = "Priority %s";
+    public static final String DEADLINE_FORMAT = "Due on %s";
 
     /**
      * Note: Certain keywords such as "location" and "resources" are reserved keywords in JavaFX. As
@@ -45,8 +47,8 @@ public class TaskCard extends UiPart<Region> {
         this.task = task;
         id.setText(displayedIndex + ". ");
         name.setText(task.getName().value);
-        priority.setText(String.format("Priority %s", task.getPriority().value));
-        deadline.setText(String.format("Due on %s", task.getDeadline().toString()));
+        priority.setText(String.format(PRIORITY_FORMAT, task.getPriority().value));
+        deadline.setText(String.format(DEADLINE_FORMAT, task.getDeadline().toString()));
         task.getTags().forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
         task.getAttachments().forEach(attachment -> attachments.getChildren().add(new Label(attachment.getName())));
     }
