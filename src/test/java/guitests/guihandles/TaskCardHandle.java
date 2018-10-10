@@ -1,5 +1,8 @@
 package guitests.guihandles;
 
+import static seedu.address.ui.TaskCard.DEADLINE_FORMAT;
+import static seedu.address.ui.TaskCard.PRIORITY_FORMAT;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,7 +48,7 @@ public class TaskCardHandle extends NodeHandle<Node> {
             .collect(Collectors.toList());
 
         Region attachmentsContainer = getChildNode(ATTACHMENTS_FIELD_ID);
-        attachmentLabels = tagsContainer
+        attachmentLabels = attachmentsContainer
             .getChildrenUnmodifiable()
             .stream()
             .map(Label.class::cast)
@@ -85,8 +88,8 @@ public class TaskCardHandle extends NodeHandle<Node> {
      */
     public boolean equals(Task task) {
         return getName().equals(task.getName().value)
-            && getPriority().equals(task.getPriority().value)
-            && getDeadline().equals(task.getDeadline().toString())
+            && getPriority().equals(String.format(PRIORITY_FORMAT, task.getPriority().value))
+            && getDeadline().equals(String.format(DEADLINE_FORMAT, task.getDeadline().toString()))
             && ImmutableMultiset.copyOf(getTags())
             .equals(ImmutableMultiset.copyOf(task.getTags().stream()
                 .map(tag -> tag.tagName)

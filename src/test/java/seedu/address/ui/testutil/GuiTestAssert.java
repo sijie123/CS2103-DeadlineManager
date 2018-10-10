@@ -52,7 +52,7 @@ public class GuiTestAssert {
                                           Task... tasks) {
         for (int i = 0; i < tasks.length; i++) {
             taskListPanelHandle.navigateToCard(i);
-            assertCardDisplaysTask(tasks[i], taskListPanelHandle.getPersonCardHandle(i));
+            assertCardDisplaysTask(tasks[i], taskListPanelHandle.getTaskCardHandle(i));
         }
     }
 

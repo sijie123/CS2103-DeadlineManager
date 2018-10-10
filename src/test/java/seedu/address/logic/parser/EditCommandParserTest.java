@@ -33,7 +33,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
-import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
+import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_TASK;
 import static seedu.address.testutil.TypicalIndexes.INDEX_THIRD_PERSON;
 
 import org.junit.Test;
@@ -135,7 +135,7 @@ public class EditCommandParserTest {
 
     @Test
     public void parse_allFieldsSpecified_success() {
-        Index targetIndex = INDEX_SECOND_PERSON;
+        Index targetIndex = INDEX_SECOND_TASK;
         String userInput = targetIndex.getOneBased() + PHONE_DESC_BOB + PRIORITY_DESC_BOB + TAG_DESC_HUSBAND
             + EMAIL_DESC_AMY + ADDRESS_DESC_AMY + NAME_DESC_AMY + TAG_DESC_FRIEND;
 

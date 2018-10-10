@@ -7,7 +7,7 @@ import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.logic.commands.CommandTestUtil.showPersonAtIndex;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
-import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
+import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_TASK;
 import static seedu.address.testutil.TypicalIndexes.INDEX_THIRD_PERSON;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
@@ -64,7 +64,7 @@ public class SelectCommandTest {
         showPersonAtIndex(model, INDEX_FIRST_PERSON);
         showPersonAtIndex(expectedModel, INDEX_FIRST_PERSON);
 
-        Index outOfBoundsIndex = INDEX_SECOND_PERSON;
+        Index outOfBoundsIndex = INDEX_SECOND_TASK;
         // ensures that outOfBoundIndex is still in bounds of deadline manager list
         assertTrue(outOfBoundsIndex.getZeroBased() < model.getAddressBook().getTaskList().size());
 
@@ -74,7 +74,7 @@ public class SelectCommandTest {
     @Test
     public void equals() {
         SelectCommand selectFirstCommand = new SelectCommand(INDEX_FIRST_PERSON);
-        SelectCommand selectSecondCommand = new SelectCommand(INDEX_SECOND_PERSON);
+        SelectCommand selectSecondCommand = new SelectCommand(INDEX_SECOND_TASK);
 
         // same object -> returns true
         assertTrue(selectFirstCommand.equals(selectFirstCommand));

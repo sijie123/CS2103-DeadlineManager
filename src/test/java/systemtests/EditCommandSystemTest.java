@@ -32,7 +32,7 @@ import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_HUSBAND;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
-import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
+import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_TASK;
 import static seedu.address.testutil.TypicalPersons.AMY;
 import static seedu.address.testutil.TypicalPersons.BOB;
 import static seedu.address.testutil.TypicalPersons.KEYWORD_MATCHING_MEIER;
@@ -102,7 +102,7 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
 
         /* Case: edit a task with new values same as another task's values but with different name -> edited */
         assertTrue(getModel().getAddressBook().getTaskList().contains(bobWithOriginalAttachments));
-        index = INDEX_SECOND_PERSON;
+        index = INDEX_SECOND_TASK;
         assertNotEquals(getModel().getFilteredPersonList().get(index.getZeroBased()), editedTask);
         command = EditCommand.COMMAND_WORD + " " + index.getOneBased() + NAME_DESC_AMY
             + PHONE_DESC_BOB + PRIORITY_DESC_BOB + DEADLINE_DESC_BOB + EMAIL_DESC_BOB
@@ -113,7 +113,7 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
         /* Case: edit a task with new values same as another task's values but with different phone and email
          * -> edited
          */
-        index = INDEX_SECOND_PERSON;
+        index = INDEX_SECOND_TASK;
         command = EditCommand.COMMAND_WORD + " " + index.getOneBased() + NAME_DESC_BOB
             + PHONE_DESC_AMY + PRIORITY_DESC_AMY + EMAIL_DESC_AMY
             + ADDRESS_DESC_BOB + TAG_DESC_FRIEND + TAG_DESC_HUSBAND;

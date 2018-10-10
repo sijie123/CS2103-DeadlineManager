@@ -13,7 +13,7 @@ import seedu.address.model.task.Task;
  */
 public class TaskListPanelHandle extends NodeHandle<ListView<Task>> {
 
-    public static final String PERSON_LIST_VIEW_ID = "#taskListView";
+    public static final String TASK_LIST_VIEW_ID = "#taskListView";
 
     private static final String CARD_PANE_ID = "#cardPane";
 
@@ -104,7 +104,7 @@ public class TaskListPanelHandle extends NodeHandle<ListView<Task>> {
      *
      * @throws IllegalStateException if the selected card is currently not in the scene graph.
      */
-    public TaskCardHandle getPersonCardHandle(int index) {
+    public TaskCardHandle getTaskCardHandle(int index) {
         return getAllCardNodes().stream()
             .map(TaskCardHandle::new)
             .filter(handle -> handle.equals(getPerson(index)))
