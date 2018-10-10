@@ -11,7 +11,7 @@ import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_HUSBAND;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.logic.commands.CommandTestUtil.showPersonAtIndex;
-import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
+import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_TASK;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_TASK;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
@@ -46,7 +46,7 @@ public class EditCommandTest {
             .build();
 
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(editedTask).build();
-        EditCommand editCommand = new EditCommand(INDEX_FIRST_PERSON, descriptor);
+        EditCommand editCommand = new EditCommand(INDEX_FIRST_TASK, descriptor);
 
         String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, editedTask);
 
@@ -83,8 +83,8 @@ public class EditCommandTest {
 
     @Test
     public void execute_noFieldSpecifiedUnfilteredList_success() {
-        EditCommand editCommand = new EditCommand(INDEX_FIRST_PERSON, new EditPersonDescriptor());
-        Task editedTask = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        EditCommand editCommand = new EditCommand(INDEX_FIRST_TASK, new EditPersonDescriptor());
+        Task editedTask = model.getFilteredPersonList().get(INDEX_FIRST_TASK.getZeroBased());
 
         String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, editedTask);
 
@@ -97,12 +97,12 @@ public class EditCommandTest {
 
     @Test
     public void execute_filteredList_success() {
-        showPersonAtIndex(model, INDEX_FIRST_PERSON);
+        showPersonAtIndex(model, INDEX_FIRST_TASK);
 
         Task taskInFilteredList = model.getFilteredPersonList()
-            .get(INDEX_FIRST_PERSON.getZeroBased());
+            .get(INDEX_FIRST_TASK.getZeroBased());
         Task editedTask = new PersonBuilder(taskInFilteredList).withName(VALID_NAME_BOB).build();
-        EditCommand editCommand = new EditCommand(INDEX_FIRST_PERSON,
+        EditCommand editCommand = new EditCommand(INDEX_FIRST_TASK,
             new EditPersonDescriptorBuilder().withName(VALID_NAME_BOB).build());
 
         String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, editedTask);
@@ -117,12 +117,12 @@ public class EditCommandTest {
 
     @Test
     public void execute_duplicatePersonUnfilteredList_success() {
-        Task firstTask = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Task firstTask = model.getFilteredPersonList().get(INDEX_FIRST_TASK.getZeroBased());
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(firstTask).build();
         EditCommand editCommand = new EditCommand(INDEX_SECOND_TASK, descriptor);
 
         String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS,
-            model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased()));
+            model.getFilteredPersonList().get(INDEX_FIRST_TASK.getZeroBased()));
 
         Model expectedModel = new ModelManager(new TaskCollection(model.getAddressBook()),
             new UserPrefs());
@@ -150,7 +150,7 @@ public class EditCommandTest {
      */
     @Test
     public void execute_invalidPersonIndexFilteredList_failure() {
-        showPersonAtIndex(model, INDEX_FIRST_PERSON);
+        showPersonAtIndex(model, INDEX_FIRST_TASK);
         Index outOfBoundIndex = INDEX_SECOND_TASK;
         // ensures that outOfBoundIndex is still in bounds of deadline manager list
         assertTrue(outOfBoundIndex.getZeroBased() < model.getAddressBook().getTaskList().size());
@@ -164,12 +164,12 @@ public class EditCommandTest {
 
     @Test
     public void executeUndoRedo_validIndexUnfilteredList_success() throws Exception {
-        Task taskToEdit = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Task taskToEdit = model.getFilteredPersonList().get(INDEX_FIRST_TASK.getZeroBased());
         Task editedTask = new PersonBuilder()
             .withAttachments(taskToEdit.getAttachments())
             .build();
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(editedTask).build();
-        EditCommand editCommand = new EditCommand(INDEX_FIRST_PERSON, descriptor);
+        EditCommand editCommand = new EditCommand(INDEX_FIRST_TASK, descriptor);
         Model expectedModel = new ModelManager(new TaskCollection(model.getAddressBook()),
             new UserPrefs());
         expectedModel.updatePerson(taskToEdit, editedTask);
@@ -214,12 +214,12 @@ public class EditCommandTest {
     @Test
     public void executeUndoRedo_validIndexFilteredList_samePersonEdited() throws Exception {
         showPersonAtIndex(model, INDEX_SECOND_TASK);
-        Task taskToEdit = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Task taskToEdit = model.getFilteredPersonList().get(INDEX_FIRST_TASK.getZeroBased());
         Task editedTask = new PersonBuilder()
             .withAttachments(taskToEdit.getAttachments())
             .build();
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(editedTask).build();
-        EditCommand editCommand = new EditCommand(INDEX_FIRST_PERSON, descriptor);
+        EditCommand editCommand = new EditCommand(INDEX_FIRST_TASK, descriptor);
         Model expectedModel = new ModelManager(new TaskCollection(model.getAddressBook()),
             new UserPrefs());
 
@@ -234,7 +234,7 @@ public class EditCommandTest {
         assertCommandSuccess(new UndoCommand(), model, commandHistory, UndoCommand.MESSAGE_SUCCESS,
             expectedModel);
 
-        assertNotEquals(model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased()),
+        assertNotEquals(model.getFilteredPersonList().get(INDEX_FIRST_TASK.getZeroBased()),
             taskToEdit);
         // redo -> edits same second task in unfiltered task list
         expectedModel.redoAddressBook();
@@ -244,11 +244,11 @@ public class EditCommandTest {
 
     @Test
     public void equals() {
-        final EditCommand standardCommand = new EditCommand(INDEX_FIRST_PERSON, DESC_AMY);
+        final EditCommand standardCommand = new EditCommand(INDEX_FIRST_TASK, DESC_AMY);
 
         // same values -> returns true
         EditPersonDescriptor copyDescriptor = new EditPersonDescriptor(DESC_AMY);
-        EditCommand commandWithSameValues = new EditCommand(INDEX_FIRST_PERSON, copyDescriptor);
+        EditCommand commandWithSameValues = new EditCommand(INDEX_FIRST_TASK, copyDescriptor);
         assertTrue(standardCommand.equals(commandWithSameValues));
 
         // same object -> returns true
@@ -264,7 +264,7 @@ public class EditCommandTest {
         assertFalse(standardCommand.equals(new EditCommand(INDEX_SECOND_TASK, DESC_AMY)));
 
         // different descriptor -> returns false
-        assertFalse(standardCommand.equals(new EditCommand(INDEX_FIRST_PERSON, DESC_BOB)));
+        assertFalse(standardCommand.equals(new EditCommand(INDEX_FIRST_TASK, DESC_BOB)));
     }
 
 }

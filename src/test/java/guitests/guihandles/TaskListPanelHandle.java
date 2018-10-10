@@ -107,12 +107,12 @@ public class TaskListPanelHandle extends NodeHandle<ListView<Task>> {
     public TaskCardHandle getTaskCardHandle(int index) {
         return getAllCardNodes().stream()
             .map(TaskCardHandle::new)
-            .filter(handle -> handle.equals(getPerson(index)))
+            .filter(handle -> handle.equals(getTask(index)))
             .findFirst()
             .orElseThrow(IllegalStateException::new);
     }
 
-    private Task getPerson(int index) {
+    private Task getTask(int index) {
         return getRootNode().getItems().get(index);
     }
 

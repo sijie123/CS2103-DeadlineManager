@@ -12,9 +12,10 @@ import seedu.address.model.task.Task;
  */
 public class TaskCard extends UiPart<Region> {
 
-    private static final String FXML = "TaskListCard.fxml";
-    public static final String PRIORITY_FORMAT = "Priority %s";
     public static final String DEADLINE_FORMAT = "Due on %s";
+    public static final String PRIORITY_FORMAT = "Priority %s";
+
+    private static final String FXML = "TaskListCard.fxml";
 
     /**
      * Note: Certain keywords such as "location" and "resources" are reserved keywords in JavaFX. As

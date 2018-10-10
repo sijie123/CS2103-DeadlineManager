@@ -67,7 +67,9 @@ public class TaskCardHandle extends NodeHandle<Node> {
         return priorityLabel.getText();
     }
 
-    public String getDeadline() { return deadlineLabel.getText(); }
+    public String getDeadline() {
+        return deadlineLabel.getText();
+    }
 
     public List<String> getTags() {
         return tagLabels

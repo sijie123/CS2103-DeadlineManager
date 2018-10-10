@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.logic.commands.CommandTestUtil.showPersonAtIndex;
-import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
+import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_TASK;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_TASK;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
@@ -31,8 +31,8 @@ public class DeleteCommandTest {
 
     @Test
     public void execute_validIndexUnfilteredList_success() {
-        Task taskToDelete = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_PERSON);
+        Task taskToDelete = model.getFilteredPersonList().get(INDEX_FIRST_TASK.getZeroBased());
+        DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_TASK);
 
         String expectedMessage = String
             .format(DeleteCommand.MESSAGE_DELETE_PERSON_SUCCESS, taskToDelete);
@@ -55,10 +55,10 @@ public class DeleteCommandTest {
 
     @Test
     public void execute_validIndexFilteredList_success() {
-        showPersonAtIndex(model, INDEX_FIRST_PERSON);
+        showPersonAtIndex(model, INDEX_FIRST_TASK);
 
-        Task taskToDelete = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_PERSON);
+        Task taskToDelete = model.getFilteredPersonList().get(INDEX_FIRST_TASK.getZeroBased());
+        DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_TASK);
 
         String expectedMessage = String
             .format(DeleteCommand.MESSAGE_DELETE_PERSON_SUCCESS, taskToDelete);
@@ -73,7 +73,7 @@ public class DeleteCommandTest {
 
     @Test
     public void execute_invalidIndexFilteredList_throwsCommandException() {
-        showPersonAtIndex(model, INDEX_FIRST_PERSON);
+        showPersonAtIndex(model, INDEX_FIRST_TASK);
 
         Index outOfBoundIndex = INDEX_SECOND_TASK;
         // ensures that outOfBoundIndex is still in bounds of deadline manager list
@@ -87,8 +87,8 @@ public class DeleteCommandTest {
 
     @Test
     public void executeUndoRedo_validIndexUnfilteredList_success() throws Exception {
-        Task taskToDelete = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_PERSON);
+        Task taskToDelete = model.getFilteredPersonList().get(INDEX_FIRST_TASK.getZeroBased());
+        DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_TASK);
         Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
         expectedModel.deletePerson(taskToDelete);
         expectedModel.commitAddressBook();
@@ -129,11 +129,11 @@ public class DeleteCommandTest {
      */
     @Test
     public void executeUndoRedo_validIndexFilteredList_samePersonDeleted() throws Exception {
-        DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_PERSON);
+        DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_TASK);
         Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
 
         showPersonAtIndex(model, INDEX_SECOND_TASK);
-        Task taskToDelete = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Task taskToDelete = model.getFilteredPersonList().get(INDEX_FIRST_TASK.getZeroBased());
         expectedModel.deletePerson(taskToDelete);
         expectedModel.commitAddressBook();
 
@@ -146,7 +146,7 @@ public class DeleteCommandTest {
             expectedModel);
 
         assertNotEquals(taskToDelete,
-            model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased()));
+            model.getFilteredPersonList().get(INDEX_FIRST_TASK.getZeroBased()));
         // redo -> deletes same second task in unfiltered task list
         expectedModel.redoAddressBook();
         assertCommandSuccess(new RedoCommand(), model, commandHistory, RedoCommand.MESSAGE_SUCCESS,
@@ -155,14 +155,14 @@ public class DeleteCommandTest {
 
     @Test
     public void equals() {
-        DeleteCommand deleteFirstCommand = new DeleteCommand(INDEX_FIRST_PERSON);
+        DeleteCommand deleteFirstCommand = new DeleteCommand(INDEX_FIRST_TASK);
         DeleteCommand deleteSecondCommand = new DeleteCommand(INDEX_SECOND_TASK);
 
         // same object -> returns true
         assertTrue(deleteFirstCommand.equals(deleteFirstCommand));
 
         // same values -> returns true
-        DeleteCommand deleteFirstCommandCopy = new DeleteCommand(INDEX_FIRST_PERSON);
+        DeleteCommand deleteFirstCommandCopy = new DeleteCommand(INDEX_FIRST_TASK);
         assertTrue(deleteFirstCommand.equals(deleteFirstCommandCopy));
 
         // different types -> returns false
