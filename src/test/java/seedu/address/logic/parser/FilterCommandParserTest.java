@@ -42,6 +42,18 @@ public class FilterCommandParserTest {
         assertParseSuccess(parser, "n:\"Hello World\"");
         assertParseSuccess(parser, "n<\"Hello World\"");
         assertParseSuccess(parser, "n:Test");
+
+        assertParseSuccess(parser, "t:CS2101,CS2103");
+        assertParseSuccess(parser, "t:CS2101");
+        assertParseSuccess(parser, "t:\"CS2101,CS2103\"");
+        assertParseSuccess(parser, "t:\'CS2101,CS2103\'");
+        assertParseSuccess(parser, "t:\'CS2101, CS2103\'");
+        assertParseSuccess(parser, "t :  \'CS2101, CS2103\'");
+        assertParseSuccess(parser, "t=\"CS2101,CS2103\"");
+        assertParseSuccess(parser, "t<\"CS2101,CS2103\"");
+        assertParseSuccess(parser, "t>\"CS2101,CS2103\"");
+        assertParseSuccess(parser, "t>\"CS2101,\'CS2103\'\"");
+        assertParseSuccess(parser, "t:\"CS2101,,CS2103\"");
     }
 
     @Test
@@ -66,6 +78,7 @@ public class FilterCommandParserTest {
         assertParseThrowsException(parser, "name<");
         assertParseThrowsException(parser, "name~");
         assertParseThrowsException(parser, "name:");
+        assertParseThrowsException(parser, "t:\"CS2101,CS2103");
     }
 
     /**

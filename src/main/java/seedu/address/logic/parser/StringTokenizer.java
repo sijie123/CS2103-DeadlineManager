@@ -21,6 +21,12 @@ public class StringTokenizer {
     private final Predicate<Character> quotePred;
     private int nextIndex;
 
+    /**
+     * Constructs an instance of Stringtokenizer.
+     *
+     * @param delimPred A predicate that returns true if the given character is a delimiter.
+     * @param quotePred A predicate that returns true if the given character is a quote.
+     */
     public StringTokenizer(String str, Predicate<Character> delimPred, Predicate<Character> quotePred) {
         this.str = str;
         this.delimPred = delimPred;
@@ -41,9 +47,20 @@ public class StringTokenizer {
     }
 
     /**
-     * Consume the next tokens.
+     * Consume the next string token.
      */
     public String nextString() {
+        return nextString(ch -> true);
+    }
+
+    /**
+     * Consume the next string token.
+     *
+     * @param validPred A predicate that returns false if the given character is not allowed in this token.
+     *                  If such a character is encountered, the token would be considered to have ended
+     *                  just before that character.  It is only used for unquoted strings.
+     */
+    public String nextString(Predicate<Character> validPred) {
         if (!hasNextToken()) {
             throw new NoSuchElementException("Reached end of string while reading delimiter!");
         }
@@ -67,8 +84,7 @@ public class StringTokenizer {
                 assert quotePred.test(str.charAt(startLocation)) && quotePred.test(str.charAt(nextIndex - 1))
                     : "String did not start or end with quotes!";
                 // remove leading/trailing quote before returning
-                String ret = str.substring(startLocation + 1, nextIndex - 1);
-                return ret;
+                return str.substring(startLocation + 1, nextIndex - 1);
             } else {
                 // bad, we ran out of characters
                 // rollback nextIndex
@@ -88,7 +104,13 @@ public class StringTokenizer {
                     nextIndex = startLocation;
                     // throw an exception
                     throw new InputMismatchException("Quotes encountered in the middle of unquoted string!");
+                } else if (!validPred.test(ch)) {
+                    // invalid character -> next token
+                    break;
                 }
+            }
+            if (startLocation == nextIndex) {
+                throw new InputMismatchException("Input is invalid!");
             }
             return str.substring(startLocation, nextIndex);
         }
