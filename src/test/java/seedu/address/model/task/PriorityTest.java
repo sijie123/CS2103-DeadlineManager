@@ -11,13 +11,15 @@ public class PriorityTest {
 
     @Test
     public void constructor_null_throwsNullPointerException() {
-        Assert.assertThrows(NullPointerException.class, () -> new Priority(null));
+        Assert.assertThrows(NullPointerException.class, () -> new Priority((String) null));
     }
 
     @Test
     public void constructor_invalidPriority_throwsIllegalArgumentException() {
         String invalidPriority = "";
+        Integer invalidPriorityInteger = -1;
         Assert.assertThrows(IllegalArgumentException.class, () -> new Priority(invalidPriority));
+        Assert.assertThrows(IllegalArgumentException.class, () -> new Priority(invalidPriorityInteger));
     }
 
     @Test
@@ -41,7 +43,7 @@ public class PriorityTest {
     public void isValidComparison() {
         Priority a = new Priority("3");
         Priority b = new Priority("4");
-        Priority c = new Priority("3");
+        Priority c = new Priority(3);
         assertTrue(a.compareTo(b) == -1);
         assertTrue(b.compareTo(a) == 1);
         assertTrue(a.compareTo(c) == 0);

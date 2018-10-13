@@ -26,6 +26,10 @@ public class Priority implements Comparable<Priority> {
         value = priority;
     }
 
+    public Priority(Integer priority) {
+        this(String.format("%d", priority));
+    }
+
     /**
      * Returns true if a given string is a valid priority number.
      */
