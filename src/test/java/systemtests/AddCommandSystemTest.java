@@ -28,6 +28,7 @@ import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PHONE_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PRIORITY_BOB;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
+import static seedu.address.model.task.Priority.NO_PRIORITY;
 import static seedu.address.testutil.TypicalPersons.ALICE;
 import static seedu.address.testutil.TypicalPersons.AMY;
 import static seedu.address.testutil.TypicalPersons.BOB;
@@ -169,12 +170,6 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
         assertCommandFailure(command,
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE));
 
-        /* Case: missing priority -> rejected */
-        command = AddCommand.COMMAND_WORD + NAME_DESC_AMY + PHONE_DESC_AMY + DEADLINE_DESC_AMY + EMAIL_DESC_AMY
-            + ADDRESS_DESC_AMY;
-        assertCommandFailure(command,
-            String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE));
-
         /* Case: missing deadline -> rejected */
         command = AddCommand.COMMAND_WORD + NAME_DESC_AMY + PHONE_DESC_AMY + PRIORITY_DESC_AMY + EMAIL_DESC_AMY
             + ADDRESS_DESC_AMY;
@@ -231,6 +226,15 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
         command = AddCommand.COMMAND_WORD + NAME_DESC_AMY + PHONE_DESC_AMY + PRIORITY_DESC_AMY + DEADLINE_DESC_AMY
             + EMAIL_DESC_AMY + ADDRESS_DESC_AMY + INVALID_TAG_DESC;
         assertCommandFailure(command, Tag.MESSAGE_TAG_CONSTRAINTS);
+
+        /* ------------------------- Perform add operations where optional fields are blank ------------------------- */
+
+        /* Case: missing priority -> success */
+        command = AddCommand.COMMAND_WORD + NAME_DESC_AMY + PHONE_DESC_AMY + DEADLINE_DESC_AMY + EMAIL_DESC_AMY
+                + ADDRESS_DESC_AMY + TAG_DESC_FRIEND;
+        toAdd = new PersonBuilder(AMY).withPriority(NO_PRIORITY).build();
+        assertCommandSuccess(command, toAdd);
+
     }
 
     /**

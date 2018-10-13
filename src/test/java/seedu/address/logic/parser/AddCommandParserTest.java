@@ -34,6 +34,7 @@ import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_FRIEND;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_HUSBAND;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
+import static seedu.address.model.task.Priority.NO_PRIORITY;
 import static seedu.address.testutil.TypicalPersons.AMY;
 import static seedu.address.testutil.TypicalPersons.BOB;
 
@@ -108,11 +109,10 @@ public class AddCommandParserTest {
 
     @Test
     public void parse_optionalFieldsMissing_success() {
-        // zero tags
-        Task expectedTask = new PersonBuilder(AMY).withTags().build();
+        // zero tags, no priority
+        Task expectedTask = new PersonBuilder(AMY).withTags().withPriority(NO_PRIORITY).build();
         assertParseSuccess(parser,
-            NAME_DESC_AMY + PHONE_DESC_AMY + PRIORITY_DESC_AMY + DEADLINE_DESC_AMY
-                + EMAIL_DESC_AMY + ADDRESS_DESC_AMY,
+            NAME_DESC_AMY + PHONE_DESC_AMY + DEADLINE_DESC_AMY + EMAIL_DESC_AMY + ADDRESS_DESC_AMY,
             new AddCommand(expectedTask));
     }
 
@@ -130,12 +130,6 @@ public class AddCommandParserTest {
         // missing phone prefix
         assertParseFailure(parser,
             NAME_DESC_BOB + VALID_PHONE_BOB + PRIORITY_DESC_BOB + DEADLINE_DESC_BOB
-                + EMAIL_DESC_BOB + ADDRESS_DESC_BOB,
-            expectedMessage);
-
-        // missing priority prefix
-        assertParseFailure(parser,
-            NAME_DESC_BOB + PHONE_DESC_BOB + VALID_PRIORITY_BOB + DEADLINE_DESC_BOB
                 + EMAIL_DESC_BOB + ADDRESS_DESC_BOB,
             expectedMessage);
 
