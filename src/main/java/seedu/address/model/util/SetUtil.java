@@ -31,7 +31,10 @@ public class SetUtil {
             // comma-separated quotable tokenizer
             StringTokenizer tokenizer = new StringTokenizer(testPhrase,
                 ch -> ch == ',', ch -> ch == '\'' || ch == '\"');
-            Set<T> items = tokenizer.toList().stream().map(token -> {
+            Set<T> items = tokenizer.toList().stream().map(String::trim).map(token -> {
+                if (token.isEmpty()) {
+                    throw new IllegalArgumentException("Tag cannot be empty");
+                }
                 try {
                     return klass.getDeclaredConstructor(String.class).newInstance(token);
                 } catch (NoSuchMethodException | InstantiationException | IllegalAccessException
