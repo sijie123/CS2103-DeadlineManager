@@ -36,4 +36,14 @@ public class PriorityTest {
         assertTrue(Priority.isValidPriority("3")); // 1, 2, 3, or 4
         assertTrue(Priority.isValidPriority("4"));
     }
+
+    @Test
+    public void isValidComparison() {
+        Priority a = new Priority("3");
+        Priority b = new Priority("4");
+        Priority c = new Priority("3");
+        assertTrue(a.compareTo(b) == -1);
+        assertTrue(b.compareTo(a) == 1);
+        assertTrue(a.compareTo(c) == 0);
+    }
 }

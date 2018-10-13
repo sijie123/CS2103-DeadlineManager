@@ -7,7 +7,7 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
  * Represents a Task's priority in the deadline manager. Guarantees: immutable; is valid as declared
  * in {@link #isValidPriority(String)}
  */
-public class Priority {
+public class Priority implements Comparable<Priority> {
 
 
     public static final String MESSAGE_PRIORITY_CONSTRAINTS =
@@ -50,4 +50,8 @@ public class Priority {
         return value.hashCode();
     }
 
+    @Override
+    public int compareTo(Priority other) {
+        return this.value.compareTo(other.value);
+    }
 }
