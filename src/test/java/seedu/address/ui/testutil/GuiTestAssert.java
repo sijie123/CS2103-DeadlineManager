@@ -1,6 +1,8 @@
 package seedu.address.ui.testutil;
 
 import static org.junit.Assert.assertEquals;
+import static seedu.address.ui.TaskCard.DEADLINE_FORMAT;
+import static seedu.address.ui.TaskCard.PRIORITY_FORMAT;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,24 +23,25 @@ public class GuiTestAssert {
     public static void assertCardEquals(TaskCardHandle expectedCard,
                                         TaskCardHandle actualCard) {
         assertEquals(expectedCard.getId(), actualCard.getId());
-        assertEquals(expectedCard.getAddress(), actualCard.getAddress());
-        assertEquals(expectedCard.getEmail(), actualCard.getEmail());
         assertEquals(expectedCard.getName(), actualCard.getName());
-        assertEquals(expectedCard.getPhone(), actualCard.getPhone());
         assertEquals(expectedCard.getTags(), actualCard.getTags());
     }
 
     /**
      * Asserts that {@code actualCard} displays the details of {@code expectedTask}.
      */
-    public static void assertCardDisplaysPerson(Task expectedTask, TaskCardHandle actualCard) {
+    public static void assertCardDisplaysTask(Task expectedTask, TaskCardHandle actualCard) {
         assertEquals(expectedTask.getName().value, actualCard.getName());
-        assertEquals(expectedTask.getPhone().value, actualCard.getPhone());
-        assertEquals(expectedTask.getEmail().value, actualCard.getEmail());
-        assertEquals(expectedTask.getAddress().value, actualCard.getAddress());
+        String expectedPriority = String.format(PRIORITY_FORMAT, expectedTask.getPriority().value);
+        assertEquals(expectedPriority, actualCard.getPriority());
+        String expectedDeadline = String.format(DEADLINE_FORMAT, expectedTask.getDeadline().toString());
+        assertEquals(expectedDeadline, actualCard.getDeadline());
         assertEquals(expectedTask.getTags().stream().map(tag -> tag.tagName)
                 .collect(Collectors.toList()),
             actualCard.getTags());
+        assertEquals(expectedTask.getAttachments().stream().map(attachment -> attachment.getName())
+                .collect(Collectors.toList()),
+            actualCard.getAttachments());
     }
 
     /**
@@ -49,7 +52,7 @@ public class GuiTestAssert {
                                           Task... tasks) {
         for (int i = 0; i < tasks.length; i++) {
             taskListPanelHandle.navigateToCard(i);
-            assertCardDisplaysPerson(tasks[i], taskListPanelHandle.getPersonCardHandle(i));
+            assertCardDisplaysTask(tasks[i], taskListPanelHandle.getTaskCardHandle(i));
         }
     }
 

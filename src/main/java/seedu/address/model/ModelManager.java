@@ -78,7 +78,7 @@ public class ModelManager extends ComponentManager implements Model {
 
     @Override
     public void addPerson(Task task) {
-        versionedAddressBook.addPerson(task);
+        versionedAddressBook.addTask(task);
         updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
         indicateAddressBookChanged();
     }

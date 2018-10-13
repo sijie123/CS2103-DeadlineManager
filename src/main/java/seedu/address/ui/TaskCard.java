@@ -12,6 +12,9 @@ import seedu.address.model.task.Task;
  */
 public class TaskCard extends UiPart<Region> {
 
+    public static final String DEADLINE_FORMAT = "Due on %s";
+    public static final String PRIORITY_FORMAT = "Priority %s";
+
     private static final String FXML = "TaskListCard.fxml";
 
     /**
@@ -32,26 +35,23 @@ public class TaskCard extends UiPart<Region> {
     @FXML
     private Label id;
     @FXML
-    private Label phone;
+    private Label deadline;
     @FXML
     private Label priority;
     @FXML
-    private Label address;
-    @FXML
-    private Label email;
-    @FXML
     private FlowPane tags;
+    @FXML
+    private FlowPane attachments;
 
     public TaskCard(Task task, int displayedIndex) {
         super(FXML);
         this.task = task;
         id.setText(displayedIndex + ". ");
         name.setText(task.getName().value);
-        phone.setText(task.getPhone().value);
-        priority.setText(task.getPriority().value);
-        address.setText(task.getAddress().value);
-        email.setText(task.getEmail().value);
+        priority.setText(String.format(PRIORITY_FORMAT, task.getPriority().value));
+        deadline.setText(String.format(DEADLINE_FORMAT, task.getDeadline().toString()));
         task.getTags().forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
+        task.getAttachments().forEach(attachment -> attachments.getChildren().add(new Label(attachment.getName())));
     }
 
     @Override

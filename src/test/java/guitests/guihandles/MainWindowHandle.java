@@ -18,7 +18,7 @@ public class MainWindowHandle extends StageHandle {
         super(stage);
 
         personListPanel = new TaskListPanelHandle(
-            getChildNode(TaskListPanelHandle.PERSON_LIST_VIEW_ID));
+            getChildNode(TaskListPanelHandle.TASK_LIST_VIEW_ID));
         resultDisplay = new ResultDisplayHandle(
             getChildNode(ResultDisplayHandle.RESULT_DISPLAY_ID));
         commandBox = new CommandBoxHandle(getChildNode(CommandBoxHandle.COMMAND_INPUT_FIELD_ID));

@@ -7,7 +7,7 @@ import static seedu.address.logic.commands.DeleteCommand.MESSAGE_DELETE_PERSON_S
 import static seedu.address.testutil.TestUtil.getLastIndex;
 import static seedu.address.testutil.TestUtil.getMidIndex;
 import static seedu.address.testutil.TestUtil.getPerson;
-import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
+import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_TASK;
 import static seedu.address.testutil.TypicalPersons.KEYWORD_MATCHING_MEIER;
 
 import org.junit.Test;
@@ -32,9 +32,9 @@ public class DeleteCommandSystemTest extends TaskCollectionSystemTest {
         /* Case: delete the first task in the list, command with leading spaces and trailing spaces -> deleted */
         Model expectedModel = getModel();
         String command =
-            "     " + DeleteCommand.COMMAND_WORD + "      " + INDEX_FIRST_PERSON.getOneBased()
+            "     " + DeleteCommand.COMMAND_WORD + "      " + INDEX_FIRST_TASK.getOneBased()
                 + "       ";
-        Task deletedTask = removePerson(expectedModel, INDEX_FIRST_PERSON);
+        Task deletedTask = removePerson(expectedModel, INDEX_FIRST_TASK);
         String expectedResultMessage = String.format(MESSAGE_DELETE_PERSON_SUCCESS, deletedTask);
         assertCommandSuccess(command, expectedModel, expectedResultMessage);
 
@@ -62,7 +62,7 @@ public class DeleteCommandSystemTest extends TaskCollectionSystemTest {
 
         /* Case: filtered task list, delete index within bounds of deadline manager and task list -> deleted */
         showPersonsWithName(KEYWORD_MATCHING_MEIER);
-        Index index = INDEX_FIRST_PERSON;
+        Index index = INDEX_FIRST_TASK;
         assertTrue(index.getZeroBased() < getModel().getFilteredPersonList().size());
         assertCommandSuccess(index);
 

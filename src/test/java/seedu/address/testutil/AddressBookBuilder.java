@@ -23,7 +23,7 @@ public class AddressBookBuilder {
      * Adds a new {@code Task} to the {@code TaskCollection} that we are building.
      */
     public AddressBookBuilder withPerson(Task task) {
-        taskCollection.addPerson(task);
+        taskCollection.addTask(task);
         return this;
     }
 
