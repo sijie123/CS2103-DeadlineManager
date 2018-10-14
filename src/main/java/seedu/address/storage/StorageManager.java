@@ -1,6 +1,8 @@
 package seedu.address.storage;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -8,8 +10,12 @@ import com.google.common.eventbus.Subscribe;
 
 import seedu.address.commons.core.ComponentManager;
 import seedu.address.commons.core.LogsCenter;
+import seedu.address.commons.events.model.ExportRequestEvent;
+import seedu.address.commons.events.model.ImportRequestEvent;
 import seedu.address.commons.events.model.TaskCollectionChangedEvent;
 import seedu.address.commons.events.storage.DataSavingExceptionEvent;
+import seedu.address.commons.events.storage.ImportDataAvailableEvent;
+import seedu.address.commons.events.storage.ImportExportExceptionEvent;
 import seedu.address.commons.exceptions.DataConversionException;
 import seedu.address.model.ReadOnlyTaskCollection;
 import seedu.address.model.UserPrefs;
@@ -78,6 +84,27 @@ public class StorageManager extends ComponentManager implements Storage {
     }
 
     @Override
+    public Optional<ReadOnlyTaskCollection> importTaskCollection(Path filePath)
+        throws DataConversionException, IOException {
+        if (!fileExists(filePath)) {
+            throw new IOException(MESSAGE_READ_FILE_MISSING_ERROR);
+        }
+        TaskCollectionStorage importExportStorage = new XmlTaskCollectionStorage(filePath);
+        logger.fine("Attempting to import from file: " + filePath);
+        return importExportStorage.readTaskCollection(filePath);
+    }
+
+    @Override
+    public void exportTaskCollection(ReadOnlyTaskCollection taskCollection, Path filePath) throws IOException {
+        if (fileExists(filePath)) {
+            throw new IOException(MESSAGE_WRITE_FILE_EXISTS_ERROR);
+        }
+        TaskCollectionStorage importExportStorage = new XmlTaskCollectionStorage(filePath);
+        logger.fine("Attempting to export to file: " + filePath);
+        importExportStorage.saveTaskCollection(taskCollection);
+    }
+
+    @Override
     @Subscribe
     public void handleTaskCollectionChangedEvent(TaskCollectionChangedEvent event) {
         logger.info(
@@ -87,6 +114,44 @@ public class StorageManager extends ComponentManager implements Storage {
         } catch (IOException e) {
             raise(new DataSavingExceptionEvent(e));
         }
+    }
+
+    @Override
+    @Subscribe
+    public void handleExportRequestEvent(ExportRequestEvent event) {
+        logger.info(LogsCenter.getEventHandlingLogMessage(event, "Exporting file"));
+        try {
+            exportTaskCollection(event.data, getPathFromFileName(event.filename));
+        } catch (IOException e) {
+            raise(new ImportExportExceptionEvent(e));
+        }
+    }
+
+    @Override
+    @Subscribe
+    public void handleImportRequestEvent(ImportRequestEvent event) {
+        logger.info(LogsCenter.getEventHandlingLogMessage(event, "Importing file"));
+        try {
+            ReadOnlyTaskCollection data = importTaskCollection(getPathFromFileName(event.filename)).get();
+            raise(new ImportDataAvailableEvent(data));
+        } catch (IOException | DataConversionException e) {
+            raise(new ImportExportExceptionEvent(e));
+        }
+    }
+
+    /**
+     * Helper function to determine whether file exists.
+     * @param filePath File to be inspected
+     * @return true if file exists, false otherwise
+     */
+    private static boolean fileExists(Path filePath) {
+        File file = new File(filePath.toString());
+        return file.exists() && file.isFile();
+    }
+
+
+    private Path getPathFromFileName(String fileName) {
+        return Paths.get(fileName);
     }
 
 }

@@ -3,7 +3,11 @@ package seedu.address.model;
 import java.util.Comparator;
 import java.util.function.Predicate;
 
+import com.google.common.eventbus.Subscribe;
+
 import javafx.collections.ObservableList;
+import seedu.address.commons.events.storage.ImportDataAvailableEvent;
+import seedu.address.commons.events.storage.ImportExportExceptionEvent;
 import seedu.address.model.task.Task;
 
 /**
@@ -91,4 +95,28 @@ public interface Model {
      * Saves the current deadline manager state for undo/redo.
      */
     void commitAddressBook();
+
+    boolean importExportFailed();
+
+    String getLastError();
+
+    /**
+     * Exports current deadline manager to file.
+     */
+    void exportAddressBook(String filename);
+
+    /**
+     * Imports tasks from file to the current deadline manager.
+     */
+    void importAddressBook(String filename);
+
+    /**
+     * Handler for the return result from Storage, when import data has been read.
+     * @param event the import data event
+     */
+    @Subscribe
+    void handleImportDataAvailableEvent(ImportDataAvailableEvent event);
+
+    @Subscribe
+    void handleImportExportExceptionEvent(ImportExportExceptionEvent event);
 }
