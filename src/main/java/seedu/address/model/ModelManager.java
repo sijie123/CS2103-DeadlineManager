@@ -28,6 +28,9 @@ import seedu.address.model.task.Task;
  */
 public class ModelManager extends ComponentManager implements Model {
 
+    /**
+     * An enum representing the possible conflict resolvers.
+     */
     public enum ImportConflictMode {
         OVERWRITE, DUPLICATE, IGNORE
     };
@@ -221,6 +224,11 @@ public class ModelManager extends ComponentManager implements Model {
         lastError = event.toString();
     }
 
+    /**
+     * Use the appropriate import conflict handler to resolve a conflict.
+     * If there is no conflict, simply add it to the current TaskCollection.
+     * @param task the task to deconflict
+     */
     private void resolveImportConflict(Task task) {
         if (!hasPerson(task)) {
             addPerson(task);
