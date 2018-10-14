@@ -11,8 +11,9 @@ public class Priority implements Comparable<Priority> {
 
 
     public static final String MESSAGE_PRIORITY_CONSTRAINTS =
-        "Priority should only be 1, 2, 3, or 4";
-    public static final String PRIORITY_VALIDATION_REGEX = "[1234]";
+        "Priority should only be 0, 1, 2, 3, or 4";
+    public static final String PRIORITY_VALIDATION_REGEX = "[01234]";
+    public static final String NO_PRIORITY = "0";
     public final String value;
 
     /**
