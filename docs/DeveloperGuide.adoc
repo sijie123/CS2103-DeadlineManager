@@ -324,6 +324,17 @@ image::UndoRedoActivityDiagram.png[width="650"]
 ** Cons: Requires dealing with commands that have already been undone: We must remember to skip these commands. Violates Single Responsibility Principle and Separation of Concerns as `HistoryManager` now needs to do two different things.
 // end::undoredo[]
 
+// tag::extendedfilter[]
+=== Extended filter feature
+==== Current implementation
+
+The extended filter feature aims to make filtering tasks flexible as well as intuitive.
+
+[TODO]
+
+
+// end::extendedfilter[]
+
 // tag::dataencryption[]
 === [Proposed] Data Encryption
 
