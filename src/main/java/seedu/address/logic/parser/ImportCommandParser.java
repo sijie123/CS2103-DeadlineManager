@@ -5,7 +5,6 @@ import static seedu.address.model.ModelManager.ImportConflictMode;
 
 import seedu.address.logic.commands.ImportCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.ModelManager;
 
 /**
  * Parses input arguments and creates a new ImportCommand object
@@ -33,8 +32,7 @@ public class ImportCommandParser implements Parser<ImportCommand> {
         }
         if (input.length == 1) {
             return new ImportCommand(filename);
-        }
-        else {
+        } else {
             String option = input[1].trim();
             switch (option) {
             case "/all":

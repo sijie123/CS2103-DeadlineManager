@@ -10,7 +10,6 @@ import org.junit.Test;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seedu.address.logic.CommandHistory;
-import seedu.address.model.ModelManager;
 import seedu.address.model.ModelManager.ImportConflictMode;
 import seedu.address.model.TaskCollection;
 import seedu.address.model.task.Task;

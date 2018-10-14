@@ -6,7 +6,6 @@ import static seedu.address.model.ModelManager.ImportConflictMode;
 import seedu.address.logic.CommandHistory;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
-import seedu.address.model.ModelManager;
 
 /**
  * Imports all tasks from an external deadline manager export file.
