@@ -21,6 +21,7 @@ public interface Storage extends ImportExportStorage, TaskCollectionStorage, Use
             + " Please rename to avoid losing data.";
     String MESSAGE_READ_FILE_MISSING_ERROR = "File does not exist."
             + " Double check your import file.";
+    String MESSAGE_READ_FILE_SAME_ERROR = "Cannot import from the current working file.";
 
     @Override
     Optional<UserPrefs> readUserPrefs() throws DataConversionException, IOException;

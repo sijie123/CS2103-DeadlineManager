@@ -18,30 +18,31 @@ import seedu.address.storage.StorageManager;
 /**
  * Contains integration tests (interaction with the Model) and unit tests for ListCommand.
  */
-public class ExportCommandTest {
+public class ImportCommandTest {
 
     public final String temporaryFilePath = "dummySaveFile";
+    public final String doesNotExistPath = "doesNotExist";
     private CommandHistory commandHistory = new CommandHistory();
     private String defaultFile = "fakeDefaultPath";
-    private ModelStubWithExportAddressBook modelStub = new ModelStubWithExportAddressBook(defaultFile);
+    private ModelStubWithImportAddressBook modelStub = new ModelStubWithImportAddressBook(defaultFile);
 
     @Test
-    public void execute_exportOnWorkingFile_exceptionThrown() {
-        IOException expectedException = new IOException(StorageManager.MESSAGE_WRITE_FILE_EXISTS_ERROR);
-        assertCommandFailure(new ExportCommand(defaultFile), modelStub, commandHistory,
-                String.format(ExportCommand.MESSAGE_EXPORT_ERROR, expectedException.toString()));
+    public void execute_importMissingFile_exceptionThrown() {
+        IOException expectedException = new IOException(StorageManager.MESSAGE_READ_FILE_MISSING_ERROR);
+        assertCommandFailure(new ImportCommand(doesNotExistPath), modelStub, commandHistory,
+                String.format(ImportCommand.MESSAGE_IMPORT_ERROR, expectedException.toString()));
     }
 
     @Test
-    public void execute_exportNewFile_exportSuccessful() {
-        assertCommandSuccess(new ExportCommand(temporaryFilePath), modelStub,
-                commandHistory, String.format(ExportCommand.MESSAGE_SUCCESS, temporaryFilePath), modelStub);
+    public void execute_importExistingFile_importSuccessful() {
+        assertCommandSuccess(new ImportCommand(temporaryFilePath), modelStub,
+                commandHistory, String.format(ImportCommand.MESSAGE_SUCCESS, temporaryFilePath), modelStub);
     }
 
-    private class ModelStubWithExportAddressBook extends ModelStub {
+    private class ModelStubWithImportAddressBook extends ModelStub {
         private String filename = "";
         private String lastError = null;
-        public ModelStubWithExportAddressBook(String defaultFile) {
+        public ModelStubWithImportAddressBook(String defaultFile) {
             filename = defaultFile;
         }
 
@@ -56,10 +57,21 @@ public class ExportCommandTest {
         }
 
         @Override
-        public void exportAddressBook(String filename) {
-            if (filename.equals(this.filename)) {
-                lastError = new IOException(Storage.MESSAGE_WRITE_FILE_EXISTS_ERROR).toString();
+        public void importAddressBook(String filename) {
+            if (filename.equals(temporaryFilePath)) {
+                //No error.
+                return;
             }
+            if (filename.equals(this.filename)) {
+                lastError = new IOException(Storage.MESSAGE_READ_FILE_SAME_ERROR).toString();
+                return;
+            }
+            if (filename.equals(doesNotExistPath)) {
+                lastError = new IOException(Storage.MESSAGE_READ_FILE_MISSING_ERROR).toString();
+                return;
+            }
+            lastError = new AssertionError("Should not use this filename").toString();
+
         }
 
         @Override

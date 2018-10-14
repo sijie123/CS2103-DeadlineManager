@@ -13,7 +13,7 @@ public class ImportCommand extends Command {
 
     public static final String COMMAND_WORD = "import";
     public static final String MESSAGE_IMPORT_ERROR = "Import failed. Error: %s";
-    public static final String MESSAGE_SUCCESS = "Imported successfully from external file.";
+    public static final String MESSAGE_SUCCESS = "Imported successfully from file: %s";
     public static final String MESSAGE_USAGE = "import filename";
     private String fileName;
     public ImportCommand(String fileName) {
@@ -26,10 +26,10 @@ public class ImportCommand extends Command {
         model.importAddressBook(fileName);
         if (model.importExportFailed()) {
             String errorMessage = model.getLastError();
-            return new CommandResult(String.format(MESSAGE_IMPORT_ERROR, errorMessage));
+            throw new CommandException(String.format(MESSAGE_IMPORT_ERROR, errorMessage));
         } else {
             //model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
-            return new CommandResult(MESSAGE_SUCCESS);
+            return new CommandResult(String.format(MESSAGE_SUCCESS, fileName));
         }
     }
 }
