@@ -7,6 +7,8 @@ import javafx.collections.ObservableList;
 import seedu.address.commons.events.storage.ImportDataAvailableEvent;
 import seedu.address.commons.events.storage.ImportExportExceptionEvent;
 import seedu.address.model.Model;
+import seedu.address.model.ModelManager;
+import seedu.address.model.ModelManager.ImportConflictMode;
 import seedu.address.model.ReadOnlyTaskCollection;
 import seedu.address.model.task.Task;
 
@@ -102,6 +104,11 @@ public class ModelStub implements Model {
 
     @Override
     public void importAddressBook(String filename) {
+        throw new AssertionError("This method should not be called.");
+    }
+
+    @Override
+    public void importAddressBook(String filename, ImportConflictMode conflictMode) {
         throw new AssertionError("This method should not be called.");
     }
 

@@ -28,12 +28,16 @@ import seedu.address.model.task.Task;
  */
 public class ModelManager extends ComponentManager implements Model {
 
+    public enum ImportConflictMode {
+        OVERWRITE, DUPLICATE, IGNORE
+    };
     private static final Logger logger = LogsCenter.getLogger(ModelManager.class);
 
     private final VersionedTaskCollection versionedAddressBook;
     private final FilteredList<Task> filteredTasks;
 
     private String lastError;
+    private ImportConflictMode conflictResolver;
 
     /**
      * Initializes a ModelManager with the given addressBook and userPrefs.
@@ -190,7 +194,13 @@ public class ModelManager extends ComponentManager implements Model {
 
     @Override
     public void importAddressBook(String filename) {
+        importAddressBook(filename, ImportConflictMode.IGNORE);
+    }
+
+    @Override
+    public void importAddressBook(String filename, ImportConflictMode mode) {
         requireNonNull(filename);
+        conflictResolver = mode;
         raise(new ImportRequestEvent(filename));
     }
 
@@ -200,7 +210,7 @@ public class ModelManager extends ComponentManager implements Model {
         //Handle merge conflict and what not
         ReadOnlyTaskCollection importData = event.data;
         for (Task task: importData.getTaskList()) {
-            addPerson(task);
+            resolveImportConflict(task);
         }
         updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
     }
@@ -209,5 +219,25 @@ public class ModelManager extends ComponentManager implements Model {
     @Subscribe
     public void handleImportExportExceptionEvent(ImportExportExceptionEvent event) {
         lastError = event.toString();
+    }
+
+    private void resolveImportConflict(Task task) {
+        if (!hasPerson(task)) {
+            addPerson(task);
+            return;
+        }
+        if (conflictResolver == null) {
+            return;
+        }
+        if (conflictResolver.equals(ImportConflictMode.IGNORE)) {
+            //Ignore duplicates
+        } else if (conflictResolver.equals(ImportConflictMode.DUPLICATE)) {
+            //Add anyway.
+            addPerson(task);
+        } else if (conflictResolver.equals(ImportConflictMode.OVERWRITE)) {
+            //Replace existing task.
+            deletePerson(task);
+            addPerson(task);
+        }
     }
 }

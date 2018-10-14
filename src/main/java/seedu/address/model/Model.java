@@ -111,6 +111,11 @@ public interface Model {
     void importAddressBook(String filename);
 
     /**
+     * Imports tasks from file to the current deadline manager.
+     */
+    void importAddressBook(String filename, ModelManager.ImportConflictMode mode);
+
+    /**
      * Handler for the return result from Storage, when import data has been read.
      * @param event the import data event
      */
