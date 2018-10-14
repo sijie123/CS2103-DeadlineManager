@@ -29,7 +29,7 @@ Deadline Manager (DLM) is for those who *prefer to use a desktop app for keeping
 .  Copy the file to the folder you want to use as the home folder for your deadline manager.
 .  Double-click the file to start the app. The GUI should appear in a few seconds.
 +
-//TODO: Update Ui Image
+
 image::Ui.png[width="790"]
 +
 .  Type the command in the command box and press kbd:[Enter] to execute it. +
@@ -73,14 +73,14 @@ A task can have any number of tags (including 0)
 ****
 
 [TIP]
-You can ask two tasks with the same attributes!
+You can have two tasks with the same attributes!
 
 Examples:
 
 * `add n/Assignment 2 d/1/1/2018 p/1` +
 Adds a task with name `Assignment 2` with a deadline on 1st January 2018 with priority 1 (highest priority).
 * `add n/v1.1 milestone d/9/10/2018 t/CS2103T t/Project p/2` +
-Adds a task with name `v1.1 milestone` with a deadline on 9th October 2018 with priority 2 (second highest priority). It is additionally tagged with 2 tags: `CS2103T1 and `Project`.
+Adds a task with name `v1.1 milestone` with a deadline on 9th October 2018 with priority 2 (second highest priority). It is additionally tagged with 2 tags: `CS2103T` and `Project`.
 
 //TODO: Kien
 === Add a recurring task : `addr`
