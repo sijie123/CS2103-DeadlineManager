@@ -250,17 +250,18 @@ Sorts the current list of tasks in view in descending order by name, where sorti
 Sorts the current list of tasks in view in ascending order by due date, where ties are broken by descending order of names.
 
 //TODO: Sidhant
+//Not sure if this is implemented
 ===  Resolve tasks : `resolve`
 Deletes a specified task from the deadline manager. The index refers to the entries of a previous call to list or search. +
 Format: `resolve INDEX`
 
 ****
-* Hides the task at the specified INDEX. The index refers to the index number shown in the displayed task list. The index must be a positive integer 1, 2, 3, …​
+* Deletes the task at the specified INDEX. The index refers to the index number shown in the displayed task list. The index must be a positive integer 1, 2, 3, …​
 ****
 
 Examples:
-* `resolve 1` +
-The 1st task displayed by the deadline manager will be deleted.
+
+* `resolve 1` + The 1st task displayed by the deadline manager will be deleted.
 
 
 //TODO: Sidhant
