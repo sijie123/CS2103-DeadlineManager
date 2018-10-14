@@ -251,7 +251,7 @@ Sorts the current list of tasks in view in ascending order by due date, where ti
 
 //TODO: Sidhant
 //Not sure if this is implemented
-===  Resolve tasks : `resolve`
+===  Resolve tasks : `resolve` (coming in v2.0)
 Deletes a specified task from the deadline manager. The index refers to the entries of a previous call to list or search. +
 Format: `resolve INDEX`
 
@@ -265,7 +265,7 @@ Examples:
 
 
 //TODO: Sidhant
-=== Snooze tasks : `snooze`
+=== Snooze tasks : `snooze` (coming in v2.0)
 Hides a specified task from the deadline manager until the time specified in the parameter has elapsed. The index refers to the entries of a previous call to list or search. +
 Format: `snooze INDEX d/DEADLINE`
 
@@ -293,6 +293,9 @@ Format: `INDEX COMMAND [p/FILEPATH] [n/FILENAME]`
 * For `delete` commands, `FILENAME` argument is required to represent the file to delete.
 * For `get` commands, `FILENAME` argument is required to represent the file to retrieve, `FILEPATH` argument is required to denote the destination you want the file to be exported to. If there is an existing file at `FILEPATH`, it would be overwritten without warning.
 ****
+
+[TIP]
+The application does not allow adding more than one file with the same filename to the same task, even if they are in different locations on the computer.
 
 Examples:
 
