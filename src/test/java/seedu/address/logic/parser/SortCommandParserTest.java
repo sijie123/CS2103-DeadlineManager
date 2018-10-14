@@ -34,7 +34,6 @@ public class SortCommandParserTest {
         assertParseThrowsException(parser, "dues<");
         assertParseThrowsException(parser, "name>>");
         assertParseThrowsException(parser, "name>>  due<");
-        assertParseThrowsException(parser, "d>  name<");
         assertParseThrowsException(parser, "name~");
     }
 
