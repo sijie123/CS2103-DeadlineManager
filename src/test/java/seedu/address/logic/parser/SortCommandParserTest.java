@@ -24,8 +24,10 @@ public class SortCommandParserTest {
     public void parse_validArgs_doesNotThrow() {
         assertParseSuccess(parser, "d<");
         assertParseSuccess(parser, "name>");
-        assertParseSuccess(parser, "d< name>");
+        assertParseSuccess(parser, "d<  name>");
         assertParseSuccess(parser, "d> d<");
+        assertParseSuccess(parser, "p< due>");
+        assertParseSuccess(parser, "p< tag<{cs2103t  cs2030 easy}");
     }
 
     @Test
@@ -35,6 +37,8 @@ public class SortCommandParserTest {
         assertParseThrowsException(parser, "name>>");
         assertParseThrowsException(parser, "name>>  due<");
         assertParseThrowsException(parser, "name~");
+        assertParseThrowsException(parser, "p< tag<{ cs2103t  cs2030 easy}");
+        assertParseThrowsException(parser, "p< tag<{ cs2103t  cs2030 easy}}");
     }
 
     /**

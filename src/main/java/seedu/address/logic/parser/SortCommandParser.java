@@ -113,12 +113,21 @@ public class SortCommandParser implements Parser<SortCommand> {
                 tags = tags.substring(1, tags.length() - 1); // removing '{' and '}'
 
                 String[] tagsOrder = tags.split("~+");
-
                 if (comparisonCharacter == '>') {
                     tagsOrder = reverseString(tagsOrder);
                 }
 
-                comparator = comparator.thenComparing(Task::getTags, createTagsComparator(tagsOrder));
+                Tag[] tagsArray = new Tag[tagsOrder.length];
+                for (int i = 0; i < tagsOrder.length; i++) {
+                    try {
+                        tagsArray[i] = new Tag(tagsOrder[i]);
+                    } catch (IllegalArgumentException e) {
+                        throw new ParseException(
+                                String.format(MESSAGE_INVALID_COMMAND_FORMAT, SortCommand.MESSAGE_USAGE));
+                    }
+                }
+
+                comparator = comparator.thenComparing(Task::getTags, createTagsComparator(tagsArray));
                 break;
             }
             default: {
@@ -145,15 +154,14 @@ public class SortCommandParser implements Parser<SortCommand> {
     }
 
     /**
-     * Builds a comparator to compare two sets of tags given {@code String[]} a string of tags as argument
+     * Builds a comparator to compare two sets of tags given {@code Tag[]} an array of tags as argument
      * and returns the comparator
      */
-    Comparator<Set<Tag>> createTagsComparator(String[] tagsOrder) {
+    Comparator<Set<Tag>> createTagsComparator(Tag[] tagsOrder) {
         Comparator<Set<Tag>> byTags = (Set<Tag> a, Set<Tag> b)-> {
             for (int i = 0; i < tagsOrder.length; i++) {
-                Tag currentTag = new Tag(tagsOrder[i]);
-                boolean containsA = a.contains(currentTag);
-                boolean containsB = b.contains(currentTag);
+                boolean containsA = a.contains(tagsOrder[i]);
+                boolean containsB = b.contains(tagsOrder[i]);
                 if (containsA && !containsB) {
                     return -1;
                 } else if (!containsA && containsB) {
