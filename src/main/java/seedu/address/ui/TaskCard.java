@@ -12,7 +12,7 @@ import seedu.address.model.task.Task;
  */
 public class TaskCard extends UiPart<Region> {
 
-    public static final String DEADLINE_FORMAT = "Due on %s";
+    public static final String DEADLINE_FORMAT = "Due %s";
     public static final String PRIORITY_FORMAT = "Priority %s";
 
     private static final String FXML = "TaskListCard.fxml";
