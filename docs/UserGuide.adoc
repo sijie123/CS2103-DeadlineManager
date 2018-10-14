@@ -282,7 +282,8 @@ A task is 'snoozed' as its deadline is now shifted backwards to 20th September 2
 
 //TODO: Ranald
 === Manage attachments of a task : `attachment`
-Allows the user to add, list, delete and retrieve attachments associated with a specific task. +
+Allows the user to add, list, delete and retrieve files associated with a specific task. +
+Deadline manager does not make a copy or backup the files added. Only the location of the files are stored and it can be modified, renamed, moved or deleted without Deadline manager's knowledge. As such, there is no guarantee for a file associated with a specific task to always exist. +
 Format: `INDEX COMMAND [p/FILEPATH] [n/FILENAME]`
 
 ****
