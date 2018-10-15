@@ -6,10 +6,7 @@ import java.util.stream.Stream;
 
 import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
 import seedu.address.model.tag.Tag;
-import seedu.address.model.task.Address;
-import seedu.address.model.task.Email;
 import seedu.address.model.task.Name;
-import seedu.address.model.task.Phone;
 import seedu.address.model.task.Priority;
 import seedu.address.model.task.Task;
 
@@ -34,11 +31,8 @@ public class EditPersonDescriptorBuilder {
     public EditPersonDescriptorBuilder(Task task) {
         descriptor = new EditPersonDescriptor();
         descriptor.setName(task.getName());
-        descriptor.setPhone(task.getPhone());
         descriptor.setPriority(task.getPriority());
-        descriptor.setEmail(task.getEmail());
         descriptor.setDeadline(task.getDeadline());
-        descriptor.setAddress(task.getAddress());
         descriptor.setTags(task.getTags());
     }
 
@@ -51,34 +45,10 @@ public class EditPersonDescriptorBuilder {
     }
 
     /**
-     * Sets the {@code Phone} of the {@code EditPersonDescriptor} that we are building.
-     */
-    public EditPersonDescriptorBuilder withPhone(String phone) {
-        descriptor.setPhone(new Phone(phone));
-        return this;
-    }
-
-    /**
      * Sets the {@code Priority} of the {@code EditPersonDescriptor} that we are building.
      */
     public EditPersonDescriptorBuilder withPriority(String priority) {
         descriptor.setPriority(new Priority(priority));
-        return this;
-    }
-
-    /**
-     * Sets the {@code Email} of the {@code EditPersonDescriptor} that we are building.
-     */
-    public EditPersonDescriptorBuilder withEmail(String email) {
-        descriptor.setEmail(new Email(email));
-        return this;
-    }
-
-    /**
-     * Sets the {@code Address} of the {@code EditPersonDescriptor} that we are building.
-     */
-    public EditPersonDescriptorBuilder withAddress(String address) {
-        descriptor.setAddress(new Address(address));
         return this;
     }
 

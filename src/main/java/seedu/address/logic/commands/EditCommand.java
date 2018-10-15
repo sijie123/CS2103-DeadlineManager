@@ -1,10 +1,7 @@
 package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PRIORITY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
@@ -23,11 +20,8 @@ import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.attachment.Attachment;
 import seedu.address.model.tag.Tag;
-import seedu.address.model.task.Address;
 import seedu.address.model.task.Deadline;
-import seedu.address.model.task.Email;
 import seedu.address.model.task.Name;
-import seedu.address.model.task.Phone;
 import seedu.address.model.task.Priority;
 import seedu.address.model.task.Task;
 
@@ -44,15 +38,10 @@ public class EditCommand extends Command {
             + "Existing values will be overwritten by the input values.\n"
             + "Parameters: INDEX (must be a positive integer) "
             + "[" + PREFIX_NAME + "NAME] "
-            + "[" + PREFIX_PHONE + "PHONE] "
             + "[" + PREFIX_PRIORITY + "PRIORITY] "
-            + "[" + PREFIX_EMAIL + "EMAIL] "
-            + "[" + PREFIX_ADDRESS + "ADDRESS] "
             + "[" + PREFIX_TAG + "TAG]...\n"
             + "Example: " + COMMAND_WORD + " 1 "
-            + PREFIX_PHONE + "91234567 "
-            + PREFIX_PRIORITY + "1 "
-            + PREFIX_EMAIL + "johndoe@example.com";
+            + PREFIX_PRIORITY + "1";
 
     public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited Task: %1$s";
     public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.";
@@ -100,18 +89,14 @@ public class EditCommand extends Command {
         assert taskToEdit != null;
 
         Name updatedName = editPersonDescriptor.getName().orElse(taskToEdit.getName());
-        Phone updatedPhone = editPersonDescriptor.getPhone().orElse(taskToEdit.getPhone());
         Priority updatedPriority = editPersonDescriptor.getPriority().orElse(taskToEdit.getPriority());
-        Email updatedEmail = editPersonDescriptor.getEmail().orElse(taskToEdit.getEmail());
-        Address updatedAddress = editPersonDescriptor.getAddress().orElse(taskToEdit.getAddress());
         Deadline updatedDeadline = editPersonDescriptor.getDeadline().orElse(taskToEdit.getDeadline());
         Set<Tag> updatedTags = editPersonDescriptor.getTags().orElse(taskToEdit.getTags());
 
         // Attachments are not modifiable via 'EditCommand'
         Set<Attachment> updatedAttachments = taskToEdit.getAttachments();
 
-        return new Task(updatedName, updatedPhone, updatedPriority, updatedEmail, updatedDeadline,
-            updatedAddress, updatedTags, updatedAttachments);
+        return new Task(updatedName, updatedPriority, updatedDeadline, updatedTags, updatedAttachments);
     }
 
     @Override
@@ -139,10 +124,7 @@ public class EditCommand extends Command {
     public static class EditPersonDescriptor {
 
         private Name name;
-        private Phone phone;
         private Priority priority;
-        private Email email;
-        private Address address;
         private Deadline deadline;
         private Set<Tag> tags;
 
@@ -155,11 +137,8 @@ public class EditCommand extends Command {
          */
         public EditPersonDescriptor(EditPersonDescriptor toCopy) {
             setName(toCopy.name);
-            setPhone(toCopy.phone);
             setPriority(toCopy.priority);
-            setEmail(toCopy.email);
             setDeadline(toCopy.deadline);
-            setAddress(toCopy.address);
             setTags(toCopy.tags);
         }
 
@@ -167,7 +146,7 @@ public class EditCommand extends Command {
          * Returns true if at least one field is edited.
          */
         public boolean isAnyFieldEdited() {
-            return CollectionUtil.isAnyNonNull(name, phone, priority, email, address, tags);
+            return CollectionUtil.isAnyNonNull(name, priority, tags); // TODO: @btzy deadline????
         }
 
         public void setName(Name name) {
@@ -178,14 +157,6 @@ public class EditCommand extends Command {
             return Optional.ofNullable(name);
         }
 
-        public void setPhone(Phone phone) {
-            this.phone = phone;
-        }
-
-        public Optional<Phone> getPhone() {
-            return Optional.ofNullable(phone);
-        }
-
         public void setPriority(Priority priority) {
             this.priority = priority;
         }
@@ -194,28 +165,12 @@ public class EditCommand extends Command {
             return Optional.ofNullable(priority);
         }
 
-        public void setEmail(Email email) {
-            this.email = email;
-        }
-
-        public Optional<Email> getEmail() {
-            return Optional.ofNullable(email);
-        }
-
         public void setDeadline(Deadline deadline) {
             this.deadline = deadline;
         }
 
         public Optional<Deadline> getDeadline() {
             return Optional.ofNullable(deadline);
-        }
-
-        public void setAddress(Address address) {
-            this.address = address;
-        }
-
-        public Optional<Address> getAddress() {
-            return Optional.ofNullable(address);
         }
 
         /**
@@ -251,11 +206,8 @@ public class EditCommand extends Command {
             EditPersonDescriptor e = (EditPersonDescriptor) other;
 
             return getName().equals(e.getName())
-                && getPhone().equals(e.getPhone())
                 && getPriority().equals(e.getPriority())
-                && getEmail().equals(e.getEmail())
                 && getDeadline().equals(e.getDeadline())
-                && getAddress().equals(e.getAddress())
                 && getTags().equals(e.getTags());
         }
     }
