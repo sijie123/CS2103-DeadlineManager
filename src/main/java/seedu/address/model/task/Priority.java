@@ -3,6 +3,7 @@ package seedu.address.model.task;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
 
+import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 
 import seedu.address.model.task.exceptions.InvalidPredicateException;
@@ -20,6 +21,7 @@ public class Priority implements Comparable<Priority> {
         "Priority should only be 0, 1, 2, 3, or 4";
     public static final String PRIORITY_VALIDATION_REGEX = "[01234]";
     public static final String NO_PRIORITY = "0";
+    public static final int LARGEST_PRIORITY_VALUE = 4;
     public final int value;
 
     /**
@@ -34,7 +36,15 @@ public class Priority implements Comparable<Priority> {
     }
 
     public Priority(int priority) {
+        checkArgument(isValidPriority(priority), MESSAGE_PRIORITY_CONSTRAINTS);
         this.value = priority;
+    }
+
+    /**
+     * Returns true if a given string is a valid priority number.
+     */
+    public static boolean isValidPriority(int test) {
+        return test >= 0 && test <= LARGEST_PRIORITY_VALUE;
     }
 
     /**
