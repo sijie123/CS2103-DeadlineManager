@@ -13,6 +13,7 @@ import seedu.address.model.tag.Tag;
 import seedu.address.model.task.Deadline;
 import seedu.address.model.task.FilterOperator;
 import seedu.address.model.task.Name;
+import seedu.address.model.task.Priority;
 import seedu.address.model.task.Task;
 import seedu.address.model.task.exceptions.InvalidPredicateException;
 import seedu.address.model.task.exceptions.InvalidPredicateOperatorException;
@@ -96,6 +97,12 @@ public class FilterCommandParser implements Parser<FilterCommand> {
             case "due": {
                 Predicate<Deadline> deadlinePredicate = Deadline.makeFilter(operator, testPhrase);
                 predicate = task -> deadlinePredicate.test(task.getDeadline());
+                break;
+            }
+            case "p": // fallthrough
+            case "priority": {
+                Predicate<Priority> priorityPredicate = Priority.makeFilter(operator, testPhrase);
+                predicate = task -> priorityPredicate.test(task.getPriority());
                 break;
             }
             case "t": // fallthrough
