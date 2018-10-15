@@ -3,7 +3,7 @@ package seedu.address.model.task;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static seedu.address.logic.commands.CommandTestUtil.VALID_ADDRESS_BOB;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_PRIORITY_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_HUSBAND;
 import static seedu.address.testutil.TypicalPersons.ALICE;
 import static seedu.address.testutil.TypicalPersons.BOB;
@@ -87,7 +87,7 @@ public class UniqueTaskListTest {
     @Test
     public void setPerson_editedPersonHasSameIdentity_success() {
         uniqueTaskList.add(ALICE);
-        Task editedAlice = new PersonBuilder(ALICE).withAddress(VALID_ADDRESS_BOB)
+        Task editedAlice = new PersonBuilder(ALICE).withPriority(VALID_PRIORITY_BOB)
             .withTags(VALID_TAG_HUSBAND)
             .build();
         uniqueTaskList.setTask(ALICE, editedAlice);

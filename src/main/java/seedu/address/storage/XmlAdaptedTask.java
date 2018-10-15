@@ -12,11 +12,8 @@ import javax.xml.bind.annotation.XmlElement;
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.attachment.Attachment;
 import seedu.address.model.tag.Tag;
-import seedu.address.model.task.Address;
 import seedu.address.model.task.Deadline;
-import seedu.address.model.task.Email;
 import seedu.address.model.task.Name;
-import seedu.address.model.task.Phone;
 import seedu.address.model.task.Priority;
 import seedu.address.model.task.Task;
 
@@ -30,15 +27,9 @@ public class XmlAdaptedTask {
     @XmlElement(required = true)
     private String name;
     @XmlElement(required = true)
-    private String phone;
-    @XmlElement(required = true)
     private String priority;
     @XmlElement(required = true)
     private String deadline;
-    @XmlElement(required = true)
-    private String email;
-    @XmlElement(required = true)
-    private String address;
 
     @XmlElement
     private List<XmlAdaptedTag> tagged = new ArrayList<>();
@@ -54,14 +45,11 @@ public class XmlAdaptedTask {
     /**
      * Constructs an {@code XmlAdaptedTask} with the given task details.
      */
-    public XmlAdaptedTask(String name, String phone, String priority, String deadline, String email, String address,
+    public XmlAdaptedTask(String name, String priority, String deadline,
                           List<XmlAdaptedTag> tagged, List<XmlAdaptedAttachment> attachments) {
         this.name = name;
-        this.phone = phone;
         this.priority = priority;
         this.deadline = deadline;
-        this.email = email;
-        this.address = address;
         if (tagged != null) {
             this.tagged = new ArrayList<>(tagged);
         }
@@ -77,11 +65,8 @@ public class XmlAdaptedTask {
      */
     public XmlAdaptedTask(Task source) {
         name = source.getName().value;
-        phone = source.getPhone().value;
         priority = source.getPriority().value;
         deadline = source.getDeadline().toString();
-        email = source.getEmail().value;
-        address = source.getAddress().value;
         tagged = source.getTags().stream()
             .map(XmlAdaptedTag::new)
             .collect(Collectors.toList());
@@ -108,15 +93,6 @@ public class XmlAdaptedTask {
         }
         final Name modelName = new Name(name);
 
-        if (phone == null) {
-            throw new IllegalValueException(
-                String.format(MISSING_FIELD_MESSAGE_FORMAT, Phone.class.getSimpleName()));
-        }
-        if (!Phone.isValidPhone(phone)) {
-            throw new IllegalValueException(Phone.MESSAGE_PHONE_CONSTRAINTS);
-        }
-        final Phone modelPhone = new Phone(phone);
-
         if (priority == null) {
             throw new IllegalValueException(
                 String.format(MISSING_FIELD_MESSAGE_FORMAT, Priority.class.getSimpleName()));
@@ -136,24 +112,6 @@ public class XmlAdaptedTask {
         } catch (IllegalArgumentException e) {
             throw new IllegalValueException(Deadline.MESSAGE_DEADLINE_CONSTRAINTS, e);
         }
-
-        if (email == null) {
-            throw new IllegalValueException(
-                String.format(MISSING_FIELD_MESSAGE_FORMAT, Email.class.getSimpleName()));
-        }
-        if (!Email.isValidEmail(email)) {
-            throw new IllegalValueException(Email.MESSAGE_EMAIL_CONSTRAINTS);
-        }
-        final Email modelEmail = new Email(email);
-
-        if (address == null) {
-            throw new IllegalValueException(
-                String.format(MISSING_FIELD_MESSAGE_FORMAT, Address.class.getSimpleName()));
-        }
-        if (!Address.isValidAddress(address)) {
-            throw new IllegalValueException(Address.MESSAGE_ADDRESS_CONSTRAINTS);
-        }
-        final Address modelAddress = new Address(address);
 
         final List<Tag> taskTags = new ArrayList<>();
         for (XmlAdaptedTag tag : tagged) {
@@ -176,8 +134,8 @@ public class XmlAdaptedTask {
             }
         }
 
-        return new Task(modelName, modelPhone, modelPriority, modelEmail,
-            modelDeadline, modelAddress, modelTags, modelAttachments);
+        return new Task(modelName, modelPriority,
+            modelDeadline, modelTags, modelAttachments);
     }
 
     @Override
@@ -192,10 +150,7 @@ public class XmlAdaptedTask {
 
         XmlAdaptedTask otherPerson = (XmlAdaptedTask) other;
         return Objects.equals(name, otherPerson.name)
-            && Objects.equals(phone, otherPerson.phone)
             && Objects.equals(priority, otherPerson.priority)
-            && Objects.equals(email, otherPerson.email)
-            && Objects.equals(address, otherPerson.address)
             && tagged.equals(otherPerson.tagged)
             && attachments.equals(otherPerson.attachments);
     }
