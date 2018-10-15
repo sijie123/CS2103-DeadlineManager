@@ -29,7 +29,7 @@ Deadline Manager (DLM) is for those who *prefer to use a desktop app for keeping
 .  Copy the file to the folder you want to use as the home folder for your deadline manager.
 .  Double-click the file to start the app. The GUI should appear in a few seconds.
 +
-//TODO: Update Ui Image
+
 image::Ui.png[width="790"]
 +
 .  Type the command in the command box and press kbd:[Enter] to execute it. +
@@ -73,14 +73,14 @@ A task can have any number of tags (including 0)
 ****
 
 [TIP]
-You can ask two tasks with the same attributes!
+You can have two tasks with the same attributes!
 
 Examples:
 
 * `add n/Assignment 2 d/1/1/2018 p/1` +
 Adds a task with name `Assignment 2` with a deadline on 1st January 2018 with priority 1 (highest priority).
 * `add n/v1.1 milestone d/9/10/2018 t/CS2103T t/Project p/2` +
-Adds a task with name `v1.1 milestone` with a deadline on 9th October 2018 with priority 2 (second highest priority). It is additionally tagged with 2 tags: `CS2103T1 and `Project`.
+Adds a task with name `v1.1 milestone` with a deadline on 9th October 2018 with priority 2 (second highest priority). It is additionally tagged with 2 tags: `CS2103T` and `Project`.
 
 //TODO: Kien
 === Add a recurring task : `addr`
@@ -250,21 +250,22 @@ Sorts the current list of tasks in view in descending order by name, where sorti
 Sorts the current list of tasks in view in ascending order by due date, where ties are broken by descending order of names.
 
 //TODO: Sidhant
-===  Resolve tasks : `resolve`
+//Not sure if this is implemented
+===  Resolve tasks : `resolve` (coming in v2.0)
 Deletes a specified task from the deadline manager. The index refers to the entries of a previous call to list or search. +
 Format: `resolve INDEX`
 
 ****
-* Hides the task at the specified INDEX. The index refers to the index number shown in the displayed task list. The index must be a positive integer 1, 2, 3, …​
+* Deletes the task at the specified INDEX. The index refers to the index number shown in the displayed task list. The index must be a positive integer 1, 2, 3, …​
 ****
 
 Examples:
-* `resolve 1` +
-The 1st task displayed by the deadline manager will be deleted.
+
+* `resolve 1` + The 1st task displayed by the deadline manager will be deleted.
 
 
 //TODO: Sidhant
-=== Snooze tasks : `snooze`
+=== Snooze tasks : `snooze` (coming in v2.0)
 Hides a specified task from the deadline manager until the time specified in the parameter has elapsed. The index refers to the entries of a previous call to list or search. +
 Format: `snooze INDEX d/DEADLINE`
 
@@ -281,7 +282,8 @@ A task is 'snoozed' as its deadline is now shifted backwards to 20th September 2
 
 //TODO: Ranald
 === Manage attachments of a task : `attachment`
-Allows the user to add, list, delete and retrieve attachments associated with a specific task. +
+Allows the user to add, list, delete and retrieve files associated with a specific task. +
+Deadline manager does not make a copy or backup the files added. Only the location of the files are stored and it can be modified, renamed, moved or deleted without Deadline manager's knowledge. As such, there is no guarantee for a file associated with a specific task to always exist. +
 Format: `INDEX COMMAND [p/FILEPATH] [n/FILENAME]`
 
 ****
@@ -292,6 +294,9 @@ Format: `INDEX COMMAND [p/FILEPATH] [n/FILENAME]`
 * For `delete` commands, `FILENAME` argument is required to represent the file to delete.
 * For `get` commands, `FILENAME` argument is required to represent the file to retrieve, `FILEPATH` argument is required to denote the destination you want the file to be exported to. If there is an existing file at `FILEPATH`, it would be overwritten without warning.
 ****
+
+[TIP]
+The application does not allow adding more than one file with the same filename to the same task, even if they are in different locations on the computer.
 
 Examples:
 
