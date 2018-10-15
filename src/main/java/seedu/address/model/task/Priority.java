@@ -30,7 +30,7 @@ public class Priority implements Comparable<Priority> {
     public Priority(String priority) {
         requireNonNull(priority);
         checkArgument(isValidPriority(priority), MESSAGE_PRIORITY_CONSTRAINTS);
-        this.value = priority.charAt(0) - '0';
+        this.value = Integer.parseInt(priority);
     }
 
     public Priority(int priority) {
