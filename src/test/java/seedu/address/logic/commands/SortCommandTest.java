@@ -63,14 +63,14 @@ public class SortCommandTest {
     public void execute_priorityAscendingNameAscending_success() {
         SortCommand command = ensureParseSuccess("priority< n<");
         command.execute(model, null);
-        assertEquals(Arrays.asList(ALICE, ELLE, BENSON, FIONA, CARL, GEORGE, DANIEL), model.getFilteredPersonList());
+        assertEquals(Arrays.asList(DANIEL, CARL, GEORGE, BENSON, FIONA, ALICE, ELLE), model.getFilteredPersonList());
     }
 
     @Test
     public void execute_priorityDescendingNameAscending_success() {
         SortCommand command = ensureParseSuccess("p>  name<");
         command.execute(model, null);
-        assertEquals(Arrays.asList(DANIEL, CARL, GEORGE, BENSON, FIONA, ALICE, ELLE), model.getFilteredPersonList());
+        assertEquals(Arrays.asList(ALICE, ELLE, BENSON, FIONA, CARL, GEORGE, DANIEL), model.getFilteredPersonList());
     }
 
     @Test
