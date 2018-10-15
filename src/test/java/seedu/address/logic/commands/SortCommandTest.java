@@ -61,7 +61,7 @@ public class SortCommandTest {
 
     @Test
     public void execute_priorityAscendingNameAscending_success() {
-       SortCommand command = ensureParseSuccess("priority< n<");
+        SortCommand command = ensureParseSuccess("priority< n<");
         command.execute(model, null);
         assertEquals(Arrays.asList(ALICE, ELLE, BENSON, FIONA, CARL, GEORGE, DANIEL), model.getFilteredPersonList());
     }

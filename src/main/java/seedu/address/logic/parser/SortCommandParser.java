@@ -158,7 +158,7 @@ public class SortCommandParser implements Parser<SortCommand> {
      * and returns the comparator
      */
     Comparator<Set<Tag>> createTagsComparator(Tag[] tagsOrder) {
-        Comparator<Set<Tag>> byTags = (Set<Tag> a, Set<Tag> b)-> {
+        Comparator<Set<Tag>> byTags = (Set<Tag> a, Set<Tag> b) -> {
             for (int i = 0; i < tagsOrder.length; i++) {
                 boolean containsA = a.contains(tagsOrder[i]);
                 boolean containsB = b.contains(tagsOrder[i]);
