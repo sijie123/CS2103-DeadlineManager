@@ -2,9 +2,9 @@ package seedu.address.logic.parser;
 
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.function.Predicate;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import seedu.address.logic.commands.FilterCommand;
@@ -13,6 +13,7 @@ import seedu.address.model.tag.Tag;
 import seedu.address.model.task.Deadline;
 import seedu.address.model.task.FilterOperator;
 import seedu.address.model.task.Name;
+import seedu.address.model.task.Priority;
 import seedu.address.model.task.Task;
 import seedu.address.model.task.exceptions.InvalidPredicateException;
 import seedu.address.model.task.exceptions.InvalidPredicateOperatorException;
@@ -48,23 +49,40 @@ public class FilterCommandParser implements Parser<FilterCommand> {
         // due=1/10/2018
         // test<blah
         // name>"hello world"
-        Pattern pattern = Pattern.compile("^([a-zA-Z]+)\\s*([\\=\\<\\>\\:])\\s*(\".+?\"|\'.+?\'|[\\S&&[^\"\']]+)$");
-        Matcher matcher = pattern.matcher(trimmedArgs);
 
-        if (!matcher.matches() || matcher.groupCount() != 3) {
-            throw new ParseException(
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE));
+        final Predicate<Character> allowedKeyCharacterPredicate = ch
+            -> (ch >= 'A' && ch <= 'Z')
+            || (ch >= 'a' && ch <= 'z');
+
+        try {
+            BooleanExpressionParser<Task> expressionParser =
+                new BooleanExpressionParser<>((tokenizer, reservedCharPredicate) -> {
+                    final String key = tokenizer.nextString(allowedKeyCharacterPredicate);
+                    final String opString = tokenizer.nextPattern(Pattern.compile("[\\=\\<\\>\\:]"));
+                    final FilterOperator operator = FilterOperator.parse(opString);
+                    final String value = tokenizer.nextString(reservedCharPredicate.negate());
+                    try {
+                        return createPredicate(key, operator, value);
+                    } catch (InvalidPredicateException e) {
+                        throw new ParseException(String.format(MESSAGE_INVALID_GENERAL_PREDICATE_FORMAT, key + ' '
+                            + opString + ' ' + operator), e);
+                    }
+                });
+            Predicate<Task> predicate = expressionParser.parse(args);
+
+            return new FilterCommand(predicate);
+
+        } catch (IllegalArgumentException | NoSuchElementException e) {
+            throw new ParseException("Invalid filter expression: " + e.getMessage(), e);
         }
 
-        final String key = matcher.group(1);
-        final FilterOperator operator = FilterOperator.parse(matcher.group(2));
-        String value = matcher.group(3);
-        if (value.startsWith("\"") || value.startsWith("\'")) {
-            assert value.length() >= 2 : "Regex error, string length not more than 2!";
-            value = value.substring(1, value.length() - 1);
-        }
-        final String testPhrase = value;
+    }
 
+    /**
+     * Creates a predicate from the specified key, operator, and testphrase.
+     */
+    private static Predicate<Task> createPredicate(String key, FilterOperator operator, String testPhrase)
+        throws ParseException, InvalidPredicateException {
         Predicate<Task> predicate;
 
         try {
@@ -81,6 +99,12 @@ public class FilterCommandParser implements Parser<FilterCommand> {
                 predicate = task -> deadlinePredicate.test(task.getDeadline());
                 break;
             }
+            case "p": // fallthrough
+            case "priority": {
+                Predicate<Priority> priorityPredicate = Priority.makeFilter(operator, testPhrase);
+                predicate = task -> priorityPredicate.test(task.getPriority());
+                break;
+            }
             case "t": // fallthrough
             case "tag": {
                 Predicate<Set<Tag>> tagsPredicate = SetUtil.makeFilter(Tag.class, operator, testPhrase);
@@ -94,11 +118,9 @@ public class FilterCommandParser implements Parser<FilterCommand> {
             throw new ParseException(String.format(MESSAGE_INVALID_OPERATOR_FORMAT, operator), e);
         } catch (InvalidPredicateTestPhraseException e) {
             throw new ParseException(String.format(MESSAGE_INVALID_TESTPHRASE_FORMAT, testPhrase), e);
-        } catch (InvalidPredicateException e) {
-            throw new ParseException(String.format(MESSAGE_INVALID_GENERAL_PREDICATE_FORMAT, trimmedArgs), e);
         }
 
-        return new FilterCommand(predicate);
+        return predicate;
     }
 
 }

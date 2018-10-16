@@ -234,6 +234,9 @@ The `Storage` component,
 
 * can save `UserPref` objects in json format and read it back.
 * can save the deadline manager data in xml format and read it back.
+* can export the last view in xml format and import it back.
+* is event-based. Methods are executed by listening to events such as AddressBookChangedEvent.
+Return data and errors are also passed back through firing events.
 
 [[Design-Commons]]
 === Common classes
@@ -248,13 +251,13 @@ This section describes some noteworthy details on how certain features are imple
 === Undo/Redo feature
 ==== Current Implementation
 
-The undo/redo mechanism is facilitated by `VersionedAddressBook`.
-It extends `AddressBook` with an undo/redo history, stored internally as an `addressBookStateList` and `currentStatePointer`.
+The undo/redo mechanism is facilitated by `VersionedTaskCollection`.
+It extends `TaskCollection` with an undo/redo history, stored internally as an `addressBookStateList` and `currentStatePointer`.
 Additionally, it implements the following operations:
 
-* `VersionedAddressBook#commit()` -- Saves the current deadline manager state in its history.
-* `VersionedAddressBook#undo()` -- Restores the previous deadline manager state from its history.
-* `VersionedAddressBook#redo()` -- Restores a previously undone deadline manager state from its history.
+* `VersionedTaskCollection#commit()` -- Saves the current deadline manager state in its history.
+* `VersionedTaskCollection#undo()` -- Restores the previous deadline manager state from its history.
+* `VersionedTaskCollection#redo()` -- Restores a previously undone deadline manager state from its history.
 
 These operations are exposed in the `Model` interface as `Model#commitAddressBook()`, `Model#undoAddressBook()` and `Model#redoAddressBook()` respectively.
 
@@ -323,6 +326,146 @@ image::UndoRedoActivityDiagram.png[width="650"]
 ** Pros: We do not need to maintain a separate list, and just reuse what is already in the codebase.
 ** Cons: Requires dealing with commands that have already been undone: We must remember to skip these commands. Violates Single Responsibility Principle and Separation of Concerns as `HistoryManager` now needs to do two different things.
 // end::undoredo[]
+
+// tag::importexport[]
+=== Import and Export feature
+//==== Current implementation
+
+The deadline supports import and export features. This feature uses 2 components: `Storage` and `Model`.
+
+==== Overview of components
+Internally, `StorageManager` implements the following APIs from `ImportExportStorage` interface:
+
+* `importTaskCollection`:  Imports and returns a `TaskCollection` given a filename
+* `exportTaskCollection`: Exports and writes to a file given a `TaskCollection`.
+
+Internally, it uses the same API as reading and saving the working addressbook file.
+However, additional checks are performed to ensure that the user does not inadvertently overwrite the current working file, or import and corrupt the current working file.
+`StorageManager` only handles the I/O from file, and the data read and written is handled by `Model`.
+
+[NOTE]
+An ImportExportExceptionEvent is raised if I/O fails for any reason.
+
+ModelManager implements the following APIs necessary for Import and Export:
+
+* `importTaskCollection`: Creates and posts a new import request event
+* `exportTaskCollection`: Creates and posts a new export request event.
+
+The request events are posted to the `EventCenter`, which will dispatch to all subscribed methods.
+
+==== Inter-component communication
+To facilitate communication between the two components, the deadline manager uses the event-driven model.
+An import or export request event is created by `ModelManager`, and a handler in `StorageManager` is invoked to handle the event.
+After data has been successfully read or written, the response is placed in another event for `ModelManager` to process.
+
+To achieve the above, `ModelManager` indicates an import/export request by creating these events:
+
+* `ImportRequestEvent`: Requests for a new import from file.
+* `ExportRequestEvent`: Requests to create a new export to file.
+
+`ModelManager` implements these additional methods to handle the responses from `Storage`:
+
+* `handleImportDataAvailableEvent`: Processes the read task collection and merges tasks into the current collection.
+* `handleImportExportExceptionEvent`: Indicates internally that the last import/export request has failed.
+
+[NOTE]
+It is the responsibility of the `Model` to feedback to the user in the case of an exception.
+
+
+Similarly, `StorageManager` returns the result of imports and errors with the following events:
+
+* `ImportExportExceptionEvent`: Indicates that an error has occurred with import or export.
+* `ImportDataAvailableEvent`: Indicates that the requested task collection has been read from disk.
+
+`StorageManager` implements these additional methods to handle requests from `Model`:
+
+* `handleImportRequestEvent`: Processes an import event and reads from file.
+* `handleExportRequestEvent`: Processes an export event and writes to file.
+
+==== Sequence Flow
+
+Given below is a sequence diagram illustrating the interactions between `Model` and `Storage` when exporting.
+
+image::ExportSequenceDiagram.png[width="800"]
+
+Step 1. The user executes export to file `dataFile`. The export command calls ModelManager's `exportTaskCollection`.
+
+Step 2. The `ModelManager` posts the `ExportRequestEvent` to the `EventsCenter`.
+
+Step 3. The `EventsCenter` will dispatch the `ExportRequestEvent` to `Storage`.
+
+Step 4. `Storage` will handle the `ExportRequestEvent` and write to file.
+
+Given below is a sequence diagram illustrating the interactions between `Model` and `Storage` when importing.
+
+image::ImportSequenceDiagram.png[width="800"]
+
+Step 1. The user executes import from file `dataFile`. The import command calls ModelManager's `importTaskCollection`.
+
+Step 2. The `ModelManager` posts the `ImportRequestEvent` to the `EventsCenter`.
+
+Step 3. The `EventsCenter` will dispatch the `ImportRequestEvent` to `Storage`.
+
+Step 4. `Storage` will handle the `ImportRequestEvent`, read from file, then post a new `ImportDataAvailableEvent` to `EventsCenter` to signal that data is available.
+
+Step 5. The `EventsCenter` will dispatch the `ImportDataAvailableEvent` back to `ModelManager`.
+
+Step 6. `ModelManager` will take the imported data and de-conflict the merged entries.
+
+==== Merge Deconflict
+An imported task can be deemed conflicting with an existing task if the two tasks compare `equal` with the internal implementation of Task's `equal` method.
+If the user attempts to import a new task that conflicts with an existing task, the task can be de-conflicted with one of the following algorithms:
+
+* `IgnoreResolver`: Discards the incoming task in favour of the existing task.
+* `OverwriteResolver`: Updates the existing task to reflect the values of the incoming task.
+* `DuplicateResolver`: Keep both copies.
+
+The user can specify the deconflict algorithm with flags. By default, the `IgnoreResolver` is used.
+
+// end::importexport[]
+
+// tag::sort[]
+=== Sort feature
+The sort command enables the user to sort the tasks currently being shown according to user defined custom comparator.
+It is made up of two main components - `SortCommandParser` and `SortCommand`
+
+==== Current Implementation
+The sort command is facilitated by `VersionedTaskCollection`.
+
+The sort command exposes the operation `updateSortedTaskList` to sort the task list.
+
+It is the responsibility of `SortCommandParser` to parse the user input into a comparator which can compare between two tasks.
+
+Then the comparator is passed onto the `SortCommand` which sorts the `versionedTaskCollection` according to the comparator.
+
+[NOTE]
+A `NullPointerException` is raised in case the `SortCommand` receives a `null` comparator.
+
+==== Sequence Flow
+
+Given below is a sequence of steps, illustrating the interaction between `SortCommandParser`, `SortCommand` and `ModelManager`
+
+Step 1. The user executes the sort command with a comparator typed by user.
+
+Step 2. The `SortCommandParser` receives the command with the user comparator given as a string.
+
+Step 3. The `SortCommandParser` parses the string into a valid comparator and calls the `SortCommand` with this comparator provided.
+
+Step 4. The `SortCommand` calls the `updateSortedTaskList` API method of `ModelManager`
+
+Step 5. The method `updateSortedTaskList` sorts the `versionTaskCollection` using JavaFx sort method
+
+==== Design Considerations
+
+===== Aspect: Which Task List to Sort
+
+* **Alternative 1 (current choice):** The entire `versionedTaskList` is sorted using JavaFx inbuilt sort method
+** Pros: Easy to implement.
+** Cons: May have performance issues in terms of slow running.
+* **Alternative 2:** The sorting is done ONLY on the viewable `filteredTasks` list.
+** Pros: Will be more efficient in terms of time complexity.
+** Cons: Requires significant changes to the codebase since sorting the `filteredTasks` requires it to be modifiable.
+// end::sort[]
 
 // tag::extendedfilter[]
 === Extended filter feature

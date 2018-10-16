@@ -2,31 +2,20 @@ package systemtests;
 
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
-import static seedu.address.logic.commands.CommandTestUtil.ADDRESS_DESC_AMY;
-import static seedu.address.logic.commands.CommandTestUtil.ADDRESS_DESC_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.DEADLINE_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.DEADLINE_DESC_BOB;
-import static seedu.address.logic.commands.CommandTestUtil.EMAIL_DESC_AMY;
-import static seedu.address.logic.commands.CommandTestUtil.EMAIL_DESC_BOB;
-import static seedu.address.logic.commands.CommandTestUtil.INVALID_ADDRESS_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_DEADLINE_DESC;
-import static seedu.address.logic.commands.CommandTestUtil.INVALID_EMAIL_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_NAME_DESC;
-import static seedu.address.logic.commands.CommandTestUtil.INVALID_PHONE_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_PRIORITY_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_TAG_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.NAME_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.NAME_DESC_BOB;
-import static seedu.address.logic.commands.CommandTestUtil.PHONE_DESC_AMY;
-import static seedu.address.logic.commands.CommandTestUtil.PHONE_DESC_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.PRIORITY_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.PRIORITY_DESC_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.TAG_DESC_FRIEND;
 import static seedu.address.logic.commands.CommandTestUtil.TAG_DESC_HUSBAND;
-import static seedu.address.logic.commands.CommandTestUtil.VALID_EMAIL_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_BOB;
-import static seedu.address.logic.commands.CommandTestUtil.VALID_PHONE_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PRIORITY_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_HUSBAND;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
@@ -46,11 +35,8 @@ import seedu.address.logic.commands.RedoCommand;
 import seedu.address.logic.commands.UndoCommand;
 import seedu.address.model.Model;
 import seedu.address.model.tag.Tag;
-import seedu.address.model.task.Address;
 import seedu.address.model.task.Deadline;
-import seedu.address.model.task.Email;
 import seedu.address.model.task.Name;
-import seedu.address.model.task.Phone;
 import seedu.address.model.task.Priority;
 import seedu.address.model.task.Task;
 import seedu.address.testutil.PersonBuilder;
@@ -68,10 +54,8 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
          */
         Index index = INDEX_FIRST_TASK;
         String command =
-            " " + EditCommand.COMMAND_WORD + "  " + index.getOneBased() + "  " + NAME_DESC_BOB
-                + "  "
-                + PHONE_DESC_BOB + " " + PRIORITY_DESC_BOB + " " + DEADLINE_DESC_BOB + " " + EMAIL_DESC_BOB
-                + "  " + ADDRESS_DESC_BOB + " " + TAG_DESC_HUSBAND + " ";
+            " " + EditCommand.COMMAND_WORD + "  " + index.getOneBased() + "   " + NAME_DESC_BOB
+                + "  " + PRIORITY_DESC_BOB + "  " + DEADLINE_DESC_BOB + " " + TAG_DESC_HUSBAND + " ";
         Task uneditedTask = getModel().getFilteredPersonList().get(index.getZeroBased());
         Task bobWithOriginalAttachments = new PersonBuilder(BOB)
             .withAttachments(uneditedTask.getAttachments())
@@ -96,8 +80,7 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
 
         /* Case: edit a task with new values same as existing values -> edited */
         command = EditCommand.COMMAND_WORD + " " + index.getOneBased() + NAME_DESC_BOB
-            + PHONE_DESC_BOB + PRIORITY_DESC_BOB + DEADLINE_DESC_BOB + EMAIL_DESC_BOB
-            + ADDRESS_DESC_BOB + TAG_DESC_FRIEND + TAG_DESC_HUSBAND;
+            + PRIORITY_DESC_BOB + DEADLINE_DESC_BOB + TAG_DESC_FRIEND + TAG_DESC_HUSBAND;
         assertCommandSuccess(command, index, bobWithOriginalAttachments);
 
         /* Case: edit a task with new values same as another task's values but with different name -> edited */
@@ -105,21 +88,18 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
         index = INDEX_SECOND_TASK;
         assertNotEquals(getModel().getFilteredPersonList().get(index.getZeroBased()), editedTask);
         command = EditCommand.COMMAND_WORD + " " + index.getOneBased() + NAME_DESC_AMY
-            + PHONE_DESC_BOB + PRIORITY_DESC_BOB + DEADLINE_DESC_BOB + EMAIL_DESC_BOB
-            + ADDRESS_DESC_BOB + TAG_DESC_FRIEND + TAG_DESC_HUSBAND;
+            + PRIORITY_DESC_BOB + DEADLINE_DESC_BOB + TAG_DESC_FRIEND + TAG_DESC_HUSBAND;
         editedTask = new PersonBuilder(bobWithOriginalAttachments).withName(VALID_NAME_AMY).build();
         assertCommandSuccess(command, index, editedTask);
 
-        /* Case: edit a task with new values same as another task's values but with different phone and email
+        /* Case: edit a task with new values same as another task's values
          * -> edited
          */
         index = INDEX_SECOND_TASK;
         command = EditCommand.COMMAND_WORD + " " + index.getOneBased() + NAME_DESC_BOB
-            + PHONE_DESC_AMY + PRIORITY_DESC_AMY + EMAIL_DESC_AMY
-            + ADDRESS_DESC_BOB + TAG_DESC_FRIEND + TAG_DESC_HUSBAND;
+            + PRIORITY_DESC_AMY + TAG_DESC_FRIEND + TAG_DESC_HUSBAND;
         editedTask =
-            new PersonBuilder(bobWithOriginalAttachments).withPriority(VALID_PRIORITY_AMY).withPhone(VALID_PHONE_AMY)
-                .withEmail(VALID_EMAIL_AMY).build();
+            new PersonBuilder(bobWithOriginalAttachments).withPriority(VALID_PRIORITY_AMY).build();
         assertCommandSuccess(command, index, editedTask);
 
         /* Case: clear tags -> cleared */
@@ -158,8 +138,7 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
         index = INDEX_FIRST_TASK;
         selectPerson(index);
         command = EditCommand.COMMAND_WORD + " " + index.getOneBased() + NAME_DESC_AMY
-            + PHONE_DESC_AMY + PRIORITY_DESC_AMY + DEADLINE_DESC_AMY + EMAIL_DESC_AMY
-            + ADDRESS_DESC_AMY + TAG_DESC_FRIEND;
+            + PRIORITY_DESC_AMY + DEADLINE_DESC_AMY + TAG_DESC_FRIEND;
         // this can be misleading: card selection actually remains unchanged but the
         // browser's url is updated to reflect the new task's name
         Task amyWithAttachments = new PersonBuilder(AMY)
@@ -195,11 +174,6 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
                 + INVALID_NAME_DESC,
             Name.MESSAGE_NAME_CONSTRAINTS);
 
-        /* Case: invalid phone -> rejected */
-        assertCommandFailure(EditCommand.COMMAND_WORD + " " + INDEX_FIRST_TASK.getOneBased()
-                + INVALID_PHONE_DESC,
-            Phone.MESSAGE_PHONE_CONSTRAINTS);
-
         /* Case: invalid priority -> rejected */
         assertCommandFailure(EditCommand.COMMAND_WORD + " " + INDEX_FIRST_TASK.getOneBased()
                 + INVALID_PRIORITY_DESC,
@@ -209,16 +183,6 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
         assertCommandFailure(EditCommand.COMMAND_WORD + " " + INDEX_FIRST_TASK.getOneBased()
                 + INVALID_DEADLINE_DESC,
             Deadline.MESSAGE_DEADLINE_CONSTRAINTS);
-
-        /* Case: invalid email -> rejected */
-        assertCommandFailure(EditCommand.COMMAND_WORD + " " + INDEX_FIRST_TASK.getOneBased()
-                + INVALID_EMAIL_DESC,
-            Email.MESSAGE_EMAIL_CONSTRAINTS);
-
-        /* Case: invalid address -> rejected */
-        assertCommandFailure(EditCommand.COMMAND_WORD + " " + INDEX_FIRST_TASK.getOneBased()
-                + INVALID_ADDRESS_DESC,
-            Address.MESSAGE_ADDRESS_CONSTRAINTS);
 
         /* Case: invalid tag -> rejected */
         assertCommandFailure(EditCommand.COMMAND_WORD + " " + INDEX_FIRST_TASK.getOneBased()

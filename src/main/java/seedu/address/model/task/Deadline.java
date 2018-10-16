@@ -26,7 +26,7 @@ public class Deadline implements Comparable<Deadline> {
     public final Date value;
 
     /**
-     * Constructs an {@code Address}.
+     * Constructs a {@code Deadline}.
      *
      * @param deadline A valid deadline.
      */
@@ -36,7 +36,7 @@ public class Deadline implements Comparable<Deadline> {
     }
 
     /**
-     * Constructs an {@code Address}.
+     * Constructs a {@code Deadline}.
      *
      * @param deadline A valid deadline.
      */

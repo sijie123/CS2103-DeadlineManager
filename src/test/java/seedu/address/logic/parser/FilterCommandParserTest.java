@@ -43,6 +43,16 @@ public class FilterCommandParserTest {
         assertParseSuccess(parser, "n<\"Hello World\"");
         assertParseSuccess(parser, "n:Test");
 
+        assertParseSuccess(parser, "p>1");
+        assertParseSuccess(parser, "p:1");
+        assertParseSuccess(parser, "p<1");
+        assertParseSuccess(parser, "p=1");
+        assertParseSuccess(parser, "p:0");
+        assertParseSuccess(parser, "p:2");
+        assertParseSuccess(parser, "p:3");
+        assertParseSuccess(parser, "p:4");
+        assertParseSuccess(parser, "p:\"3\"");
+
         assertParseSuccess(parser, "t:CS2101,CS2103");
         assertParseSuccess(parser, "t:CS2101");
         assertParseSuccess(parser, "t:\"CS2101,CS2103\"");
@@ -54,6 +64,42 @@ public class FilterCommandParserTest {
         assertParseSuccess(parser, "t>\"CS2101,CS2103\"");
         assertParseSuccess(parser, "t>\"CS2101,\'CS2103\'\"");
         assertParseSuccess(parser, "t:\"CS2101,,CS2103\"");
+
+        assertParseSuccess(parser, "n:Hello & n:World");
+        assertParseSuccess(parser, "n:Hello && n:World");
+        assertParseSuccess(parser, "n:Hello &&n:World");
+        assertParseSuccess(parser, "n:Hello&& n:World");
+        assertParseSuccess(parser, "n:Hello&n:World");
+        assertParseSuccess(parser, "n:Hello&&n:World");
+        assertParseSuccess(parser, "n:Hello | n:World");
+        assertParseSuccess(parser, "n:Hello || n:World");
+        assertParseSuccess(parser, "n:Hello ||n:World");
+        assertParseSuccess(parser, "n:Hello|| n:World");
+        assertParseSuccess(parser, "n:Hello|n:World");
+        assertParseSuccess(parser, "n:Hello||n:World");
+        assertParseSuccess(parser, "!n:Hello");
+        assertParseSuccess(parser, "!n:Hello||!n:World");
+        assertParseSuccess(parser, "(!n:Hello||!n:World)");
+        assertParseSuccess(parser, "(n:Hello||n:World)");
+        assertParseSuccess(parser, "(((n:Hello||n:World)))");
+        assertParseSuccess(parser, "(( (n:Hello   || n:World)) )");
+        assertParseSuccess(parser, "(n:Hello||n:World)&&n:Test");
+        assertParseSuccess(parser, "(n:Hello||n:World) && n:Test");
+        assertParseSuccess(parser, "(n:Hello || n:World) && n:Test");
+        assertParseSuccess(parser, "(n:Hello || d:1/10/2018) && t:CS2103");
+        assertParseSuccess(parser, "(n>Hello || d:1/10/2018) && t:CS2103");
+        assertParseSuccess(parser, "(n<Hello || d:1/10/2018) && t:CS2103");
+        assertParseSuccess(parser, "(n=Hello || d:1/10/2018) && t:CS2103");
+        assertParseSuccess(parser, "n=Hello || d:1/10/2018 && t:CS2103");
+        assertParseSuccess(parser, "(n:Hello || d:1/10/2018) && t:CS2103,CS2101");
+        assertParseSuccess(parser, "(n:Hello || d:1/10/2018) && t:\"CS2103,CS2101\"");
+        assertParseSuccess(parser, "(n:Hello || d:1/10/2018) && t:\'CS2103,CS2101\'");
+        assertParseSuccess(parser, "(n:Hello || d:1/10/2018) && t:\"CS2103, CS2101\"");
+        assertParseSuccess(parser, "(n:Hello || d:1/10/2018) && t:\'CS2103   ,  CS2101\'");
+        assertParseSuccess(parser, "(n:Hello || d:1/10/2018) && t:\'CS2103   ,  CS2101\'"
+            + " && (!n:World || ((!t:CS1231 || t:CS3230) && d:1/11/2018))");
+        assertParseSuccess(parser, "(n:Hello||d:1/10/2018)&&t:CS2103,CS2101"
+            + "&&(!n:World||((!t:CS1231||t:CS3230)&&d:1/11/2018))");
     }
 
     @Test
@@ -69,6 +115,8 @@ public class FilterCommandParserTest {
         assertParseThrowsException(parser, "d=");
         assertParseThrowsException(parser, "d>");
         assertParseThrowsException(parser, "d");
+        assertParseThrowsException(parser, "p:5");
+        assertParseThrowsException(parser, "p:b");
         assertParseThrowsException(parser, "=");
         assertParseThrowsException(parser, ":");
         assertParseThrowsException(parser, "-");
@@ -79,6 +127,14 @@ public class FilterCommandParserTest {
         assertParseThrowsException(parser, "name~");
         assertParseThrowsException(parser, "name:");
         assertParseThrowsException(parser, "t:\"CS2101,CS2103");
+        assertParseThrowsException(parser, "(t:\"CS2101,CS2103");
+        assertParseThrowsException(parser, "t:CS2101,CS2103 && ");
+        assertParseThrowsException(parser, "t:CS2101,CS2103 && )");
+        assertParseThrowsException(parser, "t:CS2101,CS2103 && n:Hello)");
+        assertParseThrowsException(parser, "(");
+        assertParseThrowsException(parser, ")");
+        assertParseThrowsException(parser, "&& n:Hello");
+        assertParseThrowsException(parser, "|| n:Hello");
     }
 
     /**
