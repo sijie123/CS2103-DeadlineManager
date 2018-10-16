@@ -23,7 +23,7 @@ public class DeleteCommand extends Command {
         + "Parameters: INDEX (must be a positive integer)\n"
         + "Example: " + COMMAND_WORD + " 1";
 
-    public static final String MESSAGE_DELETE_PERSON_SUCCESS = "Deleted Task: %1$s";
+    public static final String MESSAGE_DELETE_TASK_SUCCESS = "Deleted Task: %1$s";
 
     private final Index targetIndex;
 
@@ -43,7 +43,7 @@ public class DeleteCommand extends Command {
         Task taskToDelete = lastShownList.get(targetIndex.getZeroBased());
         model.deleteTask(taskToDelete);
         model.commitTaskCollection();
-        return new CommandResult(String.format(MESSAGE_DELETE_PERSON_SUCCESS, taskToDelete));
+        return new CommandResult(String.format(MESSAGE_DELETE_TASK_SUCCESS, taskToDelete));
     }
 
     @Override
