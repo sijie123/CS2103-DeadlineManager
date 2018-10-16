@@ -47,7 +47,7 @@ public class SampleDataUtil {
         };
     }
 
-    public static ReadOnlyTaskCollection getSampleAddressBook() {
+    public static ReadOnlyTaskCollection getSampleTaskCollection() {
         TaskCollection sampleAb = new TaskCollection();
         for (Task sampleTask : getSampleTasks()) {
             sampleAb.addTask(sampleTask);

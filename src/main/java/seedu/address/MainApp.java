@@ -90,16 +90,16 @@ public class MainApp extends Application {
         try {
             taskCollectionOptional = storage.readTaskCollection();
             if (!taskCollectionOptional.isPresent()) {
-                logger.info("Data file not found. Will be starting with a sample TaskCollection");
+                logger.info("Data file not found. Will be starting with a sample deadline manager");
             }
-            initialData = taskCollectionOptional.orElseGet(SampleDataUtil::getSampleAddressBook);
+            initialData = taskCollectionOptional.orElseGet(SampleDataUtil::getSampleTaskCollection);
         } catch (DataConversionException e) {
             logger.warning(
-                "Data file not in the correct format. Will be starting with an empty TaskCollection");
+                "Data file not in the correct format. Will be starting with an empty deadline manager");
             initialData = new TaskCollection();
         } catch (IOException e) {
             logger.warning(
-                "Problem while reading from the file. Will be starting with an empty TaskCollection");
+                "Problem while reading from the file. Will be starting with an empty deadline manager");
             initialData = new TaskCollection();
         }
 
