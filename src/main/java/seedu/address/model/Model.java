@@ -28,48 +28,48 @@ public interface Model {
     /**
      * Returns the TaskCollection
      */
-    ReadOnlyTaskCollection getAddressBook();
+    ReadOnlyTaskCollection getTaskCollection();
 
     /**
      * Returns true if a task with the same identity as {@code task} exists in the deadline manager.
      */
-    boolean hasPerson(Task task);
+    boolean hasTask(Task task);
 
     /**
      * Deletes the given task. The task must exist in the deadline manager.
      */
-    void deletePerson(Task target);
+    void deleteTask(Task target);
 
     /**
      * Adds the given task. {@code task} must not already exist in the deadline manager.
      */
-    void addPerson(Task task);
+    void addTask(Task task);
 
     /**
      * Replaces the given task {@code target} with {@code editedTask}. {@code target} must exist in
      * the deadline manager. The task identity of {@code editedTask} must not be the same as another
      * existing task in the deadline manager.
      */
-    void updatePerson(Task target, Task editedTask);
+    void updateTask(Task target, Task editedTask);
 
     /**
      * Returns an unmodifiable view of the filtered task list
      */
-    ObservableList<Task> getFilteredPersonList();
+    ObservableList<Task> getFilteredTaskList();
 
     /**
      * Updates the filter of the filtered task list to filter by the given {@code predicate}.
      *
      * @throws NullPointerException if {@code predicate} is null.
      */
-    void updateFilteredPersonList(Predicate<Task> predicate);
+    void updateFilteredTaskList(Predicate<Task> predicate);
 
     /**
      * Updates the sorted order of the tasks according by the given {@code comparator}.
      *
      * @throws NullPointerException if {@code comparator} is null.
      */
-    void updateSortedPersonList(Comparator<Task> comparator);
+    void updateSortedTaskList(Comparator<Task> comparator);
 
     /**
      * Returns true if the model has previous deadline manager states to restore.

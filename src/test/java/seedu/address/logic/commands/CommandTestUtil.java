@@ -97,8 +97,8 @@ public class CommandTestUtil {
                                             String expectedMessage) {
         // we are unable to defensively copy the model for comparison later, so we can
         // only do so by copying its components.
-        TaskCollection expectedTaskCollection = new TaskCollection(actualModel.getAddressBook());
-        List<Task> expectedFilteredList = new ArrayList<>(actualModel.getFilteredPersonList());
+        TaskCollection expectedTaskCollection = new TaskCollection(actualModel.getTaskCollection());
+        List<Task> expectedFilteredList = new ArrayList<>(actualModel.getFilteredTaskList());
 
         CommandHistory expectedCommandHistory = new CommandHistory(actualCommandHistory);
 
@@ -107,8 +107,8 @@ public class CommandTestUtil {
             throw new AssertionError("The expected CommandException was not thrown.");
         } catch (CommandException e) {
             assertEquals(expectedMessage, e.getMessage());
-            assertEquals(expectedTaskCollection, actualModel.getAddressBook());
-            assertEquals(expectedFilteredList, actualModel.getFilteredPersonList());
+            assertEquals(expectedTaskCollection, actualModel.getTaskCollection());
+            assertEquals(expectedFilteredList, actualModel.getFilteredTaskList());
             assertEquals(expectedCommandHistory, actualCommandHistory);
         }
     }
@@ -118,22 +118,22 @@ public class CommandTestUtil {
      * in the {@code model}'s deadline manager.
      */
     public static void showPersonAtIndex(Model model, Index targetIndex) {
-        assertTrue(targetIndex.getZeroBased() < model.getFilteredPersonList().size());
+        assertTrue(targetIndex.getZeroBased() < model.getFilteredTaskList().size());
 
-        Task task = model.getFilteredPersonList().get(targetIndex.getZeroBased());
+        Task task = model.getFilteredTaskList().get(targetIndex.getZeroBased());
         final String[] splitName = task.getName().value.split("\\s+");
-        model.updateFilteredPersonList(
+        model.updateFilteredTaskList(
             new NameContainsKeywordsPredicate(Arrays.asList(splitName[0])));
 
-        assertEquals(1, model.getFilteredPersonList().size());
+        assertEquals(1, model.getFilteredTaskList().size());
     }
 
     /**
      * Deletes the first task in {@code model}'s filtered list from {@code model}'s deadline manager.
      */
     public static void deleteFirstPerson(Model model) {
-        Task firstTask = model.getFilteredPersonList().get(0);
-        model.deletePerson(firstTask);
+        Task firstTask = model.getFilteredTaskList().get(0);
+        model.deleteTask(firstTask);
         model.commitAddressBook();
     }
 

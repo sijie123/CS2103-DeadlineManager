@@ -66,7 +66,7 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
 
         /* Case: redo adding Amy to the list -> Amy added again */
         command = RedoCommand.COMMAND_WORD;
-        model.addPerson(toAdd);
+        model.addTask(toAdd);
         expectedResultMessage = RedoCommand.MESSAGE_SUCCESS;
         assertCommandSuccess(command, model, expectedResultMessage);
 
@@ -197,7 +197,7 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
         Task toAddWithoutAttachments = new PersonBuilder(toAdd)
             .withAttachments()
             .build();
-        expectedModel.addPerson(toAddWithoutAttachments);
+        expectedModel.addTask(toAddWithoutAttachments);
         String expectedResultMessage = String.format(AddCommand.MESSAGE_SUCCESS, toAddWithoutAttachments);
 
         assertCommandSuccess(command, expectedModel, expectedResultMessage);

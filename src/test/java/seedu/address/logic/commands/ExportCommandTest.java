@@ -46,12 +46,12 @@ public class ExportCommandTest {
         }
 
         @Override
-        public TaskCollection getAddressBook() {
+        public TaskCollection getTaskCollection() {
             return new TaskCollection();
         }
 
         @Override
-        public ObservableList<Task> getFilteredPersonList() {
+        public ObservableList<Task> getFilteredTaskList() {
             return FXCollections.unmodifiableObservableList(new TaskCollection().getTaskList());
         }
 

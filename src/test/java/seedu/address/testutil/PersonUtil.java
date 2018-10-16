@@ -30,7 +30,7 @@ public class PersonUtil {
     public static String getPersonDetails(Task task) {
         StringBuilder sb = new StringBuilder();
         sb.append(PREFIX_NAME + task.getName().value + " ");
-        sb.append(PREFIX_PRIORITY + task.getPriority().value + " ");
+        sb.append(PREFIX_PRIORITY + task.getPriority().toString() + " ");
         sb.append(PREFIX_DEADLINE + task.getDeadline().toString() + " ");
         task.getTags().stream().forEach(
             s -> sb.append(PREFIX_TAG + s.tagName + " ")
@@ -46,7 +46,7 @@ public class PersonUtil {
         descriptor.getName()
             .ifPresent(name -> sb.append(PREFIX_NAME).append(name.value).append(" "));
         descriptor.getPriority()
-            .ifPresent(priority -> sb.append(PREFIX_PRIORITY).append(priority.value).append(" "));
+            .ifPresent(priority -> sb.append(PREFIX_PRIORITY).append(priority.toString()).append(" "));
         descriptor.getDeadline()
             .ifPresent(deadline -> sb.append(PREFIX_DEADLINE).append(deadline.toString()).append(" "));
         if (descriptor.getTags().isPresent()) {

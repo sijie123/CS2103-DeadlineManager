@@ -36,7 +36,7 @@ public class ModelManager extends ComponentManager implements Model {
     };
     private static final Logger logger = LogsCenter.getLogger(ModelManager.class);
 
-    private final VersionedTaskCollection versionedAddressBook;
+    private final VersionedTaskCollection versionedTaskCollection;
     private final FilteredList<Task> filteredTasks;
 
     private String lastError;
@@ -52,8 +52,8 @@ public class ModelManager extends ComponentManager implements Model {
         logger.fine(
             "Initializing with deadline manager: " + addressBook + " and user prefs " + userPrefs);
 
-        versionedAddressBook = new VersionedTaskCollection(addressBook);
-        filteredTasks = new FilteredList<>(versionedAddressBook.getTaskList());
+        versionedTaskCollection = new VersionedTaskCollection(addressBook);
+        filteredTasks = new FilteredList<>(versionedTaskCollection.getTaskList());
         lastError = null;
     }
 
@@ -63,68 +63,68 @@ public class ModelManager extends ComponentManager implements Model {
 
     @Override
     public void resetData(ReadOnlyTaskCollection newData) {
-        versionedAddressBook.resetData(newData);
-        indicateAddressBookChanged();
+        versionedTaskCollection.resetData(newData);
+        indicateTaskCollectionChanged();
     }
 
     @Override
-    public ReadOnlyTaskCollection getAddressBook() {
-        return versionedAddressBook;
+    public ReadOnlyTaskCollection getTaskCollection() {
+        return versionedTaskCollection;
     }
 
     /**
      * Raises an event to indicate the model has changed
      */
-    private void indicateAddressBookChanged() {
-        raise(new TaskCollectionChangedEvent(versionedAddressBook));
+    private void indicateTaskCollectionChanged() {
+        raise(new TaskCollectionChangedEvent(versionedTaskCollection));
     }
 
     @Override
-    public boolean hasPerson(Task task) {
+    public boolean hasTask(Task task) {
         requireNonNull(task);
-        return versionedAddressBook.hasTask(task);
+        return versionedTaskCollection.hasTask(task);
     }
 
     @Override
-    public void deletePerson(Task target) {
-        versionedAddressBook.removeTask(target);
-        indicateAddressBookChanged();
+    public void deleteTask(Task target) {
+        versionedTaskCollection.removeTask(target);
+        indicateTaskCollectionChanged();
     }
 
     @Override
-    public void addPerson(Task task) {
-        versionedAddressBook.addTask(task);
-        updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
-        indicateAddressBookChanged();
+    public void addTask(Task task) {
+        versionedTaskCollection.addTask(task);
+        updateFilteredTaskList(PREDICATE_SHOW_ALL_PERSONS);
+        indicateTaskCollectionChanged();
     }
 
     @Override
-    public void updatePerson(Task target, Task editedTask) {
+    public void updateTask(Task target, Task editedTask) {
         requireAllNonNull(target, editedTask);
 
-        versionedAddressBook.updateTask(target, editedTask);
-        indicateAddressBookChanged();
+        versionedTaskCollection.updateTask(target, editedTask);
+        indicateTaskCollectionChanged();
     }
 
     @Override
-    public void updateSortedPersonList(Comparator<Task> comparator) {
+    public void updateSortedTaskList(Comparator<Task> comparator) {
         requireNonNull(comparator);
-        versionedAddressBook.sort(comparator);
+        versionedTaskCollection.sort(comparator);
     }
 
     //=========== Filtered Task List Accessors =============================================================
 
     /**
      * Returns an unmodifiable view of the list of {@code Task} backed by the internal list of
-     * {@code versionedAddressBook}
+     * {@code versionedTaskCollection}
      */
     @Override
-    public ObservableList<Task> getFilteredPersonList() {
+    public ObservableList<Task> getFilteredTaskList() {
         return FXCollections.unmodifiableObservableList(filteredTasks);
     }
 
     @Override
-    public void updateFilteredPersonList(Predicate<Task> predicate) {
+    public void updateFilteredTaskList(Predicate<Task> predicate) {
         requireNonNull(predicate);
         filteredTasks.setPredicate(predicate);
     }
@@ -133,29 +133,29 @@ public class ModelManager extends ComponentManager implements Model {
 
     @Override
     public boolean canUndoAddressBook() {
-        return versionedAddressBook.canUndo();
+        return versionedTaskCollection.canUndo();
     }
 
     @Override
     public boolean canRedoAddressBook() {
-        return versionedAddressBook.canRedo();
+        return versionedTaskCollection.canRedo();
     }
 
     @Override
     public void undoAddressBook() {
-        versionedAddressBook.undo();
-        indicateAddressBookChanged();
+        versionedTaskCollection.undo();
+        indicateTaskCollectionChanged();
     }
 
     @Override
     public void redoAddressBook() {
-        versionedAddressBook.redo();
-        indicateAddressBookChanged();
+        versionedTaskCollection.redo();
+        indicateTaskCollectionChanged();
     }
 
     @Override
     public void commitAddressBook() {
-        versionedAddressBook.commit();
+        versionedTaskCollection.commit();
     }
 
     @Override
@@ -172,7 +172,7 @@ public class ModelManager extends ComponentManager implements Model {
 
         // state check
         ModelManager other = (ModelManager) obj;
-        return versionedAddressBook.equals(other.versionedAddressBook)
+        return versionedTaskCollection.equals(other.versionedTaskCollection)
             && filteredTasks.equals(other.filteredTasks);
     }
 
@@ -189,7 +189,7 @@ public class ModelManager extends ComponentManager implements Model {
     @Override
     public void exportAddressBook(String filename) {
         requireNonNull(filename);
-        List<Task> lastShownList = getFilteredPersonList();
+        List<Task> lastShownList = getFilteredTaskList();
         TaskCollection exportCollection = new TaskCollection();
         exportCollection.setTasks(lastShownList);
         raise(new ExportRequestEvent(exportCollection, filename));
@@ -215,7 +215,7 @@ public class ModelManager extends ComponentManager implements Model {
         for (Task task: importData.getTaskList()) {
             resolveImportConflict(task);
         }
-        updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        updateFilteredTaskList(PREDICATE_SHOW_ALL_PERSONS);
     }
 
     @Override
@@ -230,8 +230,8 @@ public class ModelManager extends ComponentManager implements Model {
      * @param task the task to deconflict
      */
     private void resolveImportConflict(Task task) {
-        if (!hasPerson(task)) {
-            addPerson(task);
+        if (!hasTask(task)) {
+            addTask(task);
             return;
         }
         if (conflictResolver == null) {
@@ -241,11 +241,11 @@ public class ModelManager extends ComponentManager implements Model {
             //Ignore duplicates
         } else if (conflictResolver.equals(ImportConflictMode.DUPLICATE)) {
             //Add anyway.
-            addPerson(task);
+            addTask(task);
         } else if (conflictResolver.equals(ImportConflictMode.OVERWRITE)) {
             //Replace existing task.
-            deletePerson(task);
-            addPerson(task);
+            deleteTask(task);
+            addTask(task);
         }
     }
 }

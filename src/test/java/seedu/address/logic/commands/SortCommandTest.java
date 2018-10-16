@@ -34,7 +34,7 @@ public class SortCommandTest {
     public void execute_nameAscending_success() {
         SortCommand command = ensureParseSuccess("n<");
         command.execute(model, null);
-        assertEquals(Arrays.asList(ALICE, BENSON, CARL, DANIEL, ELLE, FIONA, GEORGE), model.getFilteredPersonList());
+        assertEquals(Arrays.asList(ALICE, BENSON, CARL, DANIEL, ELLE, FIONA, GEORGE), model.getFilteredTaskList());
     }
 
 
@@ -42,49 +42,49 @@ public class SortCommandTest {
     public void execute_nameDescending_success() {
         SortCommand command = ensureParseSuccess("n>");
         command.execute(model, null);
-        assertEquals(Arrays.asList(GEORGE, FIONA, ELLE, DANIEL, CARL, BENSON, ALICE), model.getFilteredPersonList());
+        assertEquals(Arrays.asList(GEORGE, FIONA, ELLE, DANIEL, CARL, BENSON, ALICE), model.getFilteredTaskList());
     }
 
     @Test
     public void execute_dueAscendingNameAscending_success() {
         SortCommand command = ensureParseSuccess("d< n<");
         command.execute(model, null);
-        assertEquals(Arrays.asList(ALICE, ELLE, FIONA, GEORGE, CARL, BENSON, DANIEL), model.getFilteredPersonList());
+        assertEquals(Arrays.asList(ALICE, ELLE, FIONA, GEORGE, CARL, BENSON, DANIEL), model.getFilteredTaskList());
     }
 
     @Test
     public void execute_dueDescendingNameAscending_success() {
         SortCommand command = ensureParseSuccess("due>  n< ");
         command.execute(model, null);
-        assertEquals(Arrays.asList(DANIEL, BENSON, CARL, ELLE, FIONA, GEORGE, ALICE), model.getFilteredPersonList());
+        assertEquals(Arrays.asList(DANIEL, BENSON, CARL, ELLE, FIONA, GEORGE, ALICE), model.getFilteredTaskList());
     }
 
     @Test
     public void execute_priorityAscendingNameAscending_success() {
         SortCommand command = ensureParseSuccess("priority< n<");
         command.execute(model, null);
-        assertEquals(Arrays.asList(ALICE, ELLE, BENSON, FIONA, CARL, GEORGE, DANIEL), model.getFilteredPersonList());
+        assertEquals(Arrays.asList(DANIEL, CARL, GEORGE, BENSON, FIONA, ALICE, ELLE), model.getFilteredTaskList());
     }
 
     @Test
     public void execute_priorityDescendingNameAscending_success() {
         SortCommand command = ensureParseSuccess("p>  name<");
         command.execute(model, null);
-        assertEquals(Arrays.asList(DANIEL, CARL, GEORGE, BENSON, FIONA, ALICE, ELLE), model.getFilteredPersonList());
+        assertEquals(Arrays.asList(ALICE, ELLE, BENSON, FIONA, CARL, GEORGE, DANIEL), model.getFilteredTaskList());
     }
 
     @Test
     public void execute_tagAscendingNameDescending_success() {
         SortCommand command = ensureParseSuccess("tag<{owesMoney friend} n>");
         command.execute(model, null);
-        assertEquals(Arrays.asList(BENSON, GEORGE, FIONA, ELLE, DANIEL, CARL, ALICE), model.getFilteredPersonList());
+        assertEquals(Arrays.asList(BENSON, GEORGE, FIONA, ELLE, DANIEL, CARL, ALICE), model.getFilteredTaskList());
     }
 
     @Test
     public void execute_tagDescendingNameDescending_success() {
         SortCommand command = ensureParseSuccess("t>{owesMoney friend} n>");
         command.execute(model, null);
-        assertEquals(Arrays.asList(BENSON, GEORGE, FIONA, ELLE, DANIEL, CARL, ALICE), model.getFilteredPersonList());
+        assertEquals(Arrays.asList(BENSON, GEORGE, FIONA, ELLE, DANIEL, CARL, ALICE), model.getFilteredTaskList());
     }
 
     /**

@@ -34,49 +34,49 @@ public class FilterCommandTest {
     public void execute_nameSubstring_success() {
         FilterCommand command = ensureParseSuccess("n>Meier");
         command.execute(model, null);
-        assertEquals(Arrays.asList(BENSON, DANIEL), model.getFilteredPersonList());
+        assertEquals(Arrays.asList(BENSON, DANIEL), model.getFilteredTaskList());
     }
 
     @Test
     public void execute_nameSuperstring_success() {
         FilterCommand command = ensureParseSuccess("n<'Carl Kurz Test'");
         command.execute(model, null);
-        assertEquals(Arrays.asList(CARL), model.getFilteredPersonList());
+        assertEquals(Arrays.asList(CARL), model.getFilteredTaskList());
     }
 
     @Test
     public void execute_nameQuotedDouble_success() {
         FilterCommand command = ensureParseSuccess("n>\"Carl K\"");
         command.execute(model, null);
-        assertEquals(Arrays.asList(CARL), model.getFilteredPersonList());
+        assertEquals(Arrays.asList(CARL), model.getFilteredTaskList());
     }
 
     @Test
     public void execute_nameQuotedSingle_success() {
         FilterCommand command = ensureParseSuccess("n>\'Carl K\'");
         command.execute(model, null);
-        assertEquals(Arrays.asList(CARL), model.getFilteredPersonList());
+        assertEquals(Arrays.asList(CARL), model.getFilteredTaskList());
     }
 
     @Test
     public void execute_nameConvenience_success() {
         FilterCommand command = ensureParseSuccess("n:Meier");
         command.execute(model, null);
-        assertEquals(Arrays.asList(BENSON, DANIEL), model.getFilteredPersonList());
+        assertEquals(Arrays.asList(BENSON, DANIEL), model.getFilteredTaskList());
     }
 
     @Test
     public void execute_nameExact_success() {
         FilterCommand command = ensureParseSuccess("n:'Benson Meier'");
         command.execute(model, null);
-        assertEquals(Arrays.asList(BENSON), model.getFilteredPersonList());
+        assertEquals(Arrays.asList(BENSON), model.getFilteredTaskList());
     }
 
     @Test
     public void execute_nameLongform_success() {
         FilterCommand command = ensureParseSuccess("name:'Benson Meier'");
         command.execute(model, null);
-        assertEquals(Arrays.asList(BENSON), model.getFilteredPersonList());
+        assertEquals(Arrays.asList(BENSON), model.getFilteredTaskList());
     }
 
     @Test
@@ -85,54 +85,54 @@ public class FilterCommandTest {
 
         command = ensureParseSuccess("n: Meier");
         command.execute(model, null);
-        assertEquals(Arrays.asList(BENSON, DANIEL), model.getFilteredPersonList());
+        assertEquals(Arrays.asList(BENSON, DANIEL), model.getFilteredTaskList());
 
         command = ensureParseSuccess("n : Meier");
         command.execute(model, null);
-        assertEquals(Arrays.asList(BENSON, DANIEL), model.getFilteredPersonList());
+        assertEquals(Arrays.asList(BENSON, DANIEL), model.getFilteredTaskList());
 
         command = ensureParseSuccess("n :Meier");
         command.execute(model, null);
-        assertEquals(Arrays.asList(BENSON, DANIEL), model.getFilteredPersonList());
+        assertEquals(Arrays.asList(BENSON, DANIEL), model.getFilteredTaskList());
 
         command = ensureParseSuccess("n  :   Meier");
         command.execute(model, null);
-        assertEquals(Arrays.asList(BENSON, DANIEL), model.getFilteredPersonList());
+        assertEquals(Arrays.asList(BENSON, DANIEL), model.getFilteredTaskList());
     }
 
     @Test
     public void execute_dueExact_success() {
         FilterCommand command = ensureParseSuccess("d=1/10/2018");
         command.execute(model, null);
-        assertEquals(Arrays.asList(ALICE), model.getFilteredPersonList());
+        assertEquals(Arrays.asList(ALICE), model.getFilteredTaskList());
     }
 
     @Test
     public void execute_dueEarlier_success() {
         FilterCommand command = ensureParseSuccess("d<2/10/2018");
         command.execute(model, null);
-        assertEquals(Arrays.asList(ALICE, ELLE, FIONA, GEORGE), model.getFilteredPersonList());
+        assertEquals(Arrays.asList(ALICE, ELLE, FIONA, GEORGE), model.getFilteredTaskList());
     }
 
     @Test
     public void execute_dueLater_success() {
         FilterCommand command = ensureParseSuccess("d>1/11/2018");
         command.execute(model, null);
-        assertEquals(Arrays.asList(BENSON, DANIEL), model.getFilteredPersonList());
+        assertEquals(Arrays.asList(BENSON, DANIEL), model.getFilteredTaskList());
     }
 
     @Test
     public void execute_dueConvenience_success() {
         FilterCommand command = ensureParseSuccess("d:2/10/2018");
         command.execute(model, null);
-        assertEquals(Arrays.asList(ALICE, ELLE, FIONA, GEORGE), model.getFilteredPersonList());
+        assertEquals(Arrays.asList(ALICE, ELLE, FIONA, GEORGE), model.getFilteredTaskList());
     }
 
     @Test
     public void execute_dueLongform_success() {
         FilterCommand command = ensureParseSuccess("due:2/10/2018");
         command.execute(model, null);
-        assertEquals(Arrays.asList(ALICE, ELLE, FIONA, GEORGE), model.getFilteredPersonList());
+        assertEquals(Arrays.asList(ALICE, ELLE, FIONA, GEORGE), model.getFilteredTaskList());
     }
 
     @Test
@@ -141,19 +141,19 @@ public class FilterCommandTest {
 
         command = ensureParseSuccess("due: 2/10/2018");
         command.execute(model, null);
-        assertEquals(Arrays.asList(ALICE, ELLE, FIONA, GEORGE), model.getFilteredPersonList());
+        assertEquals(Arrays.asList(ALICE, ELLE, FIONA, GEORGE), model.getFilteredTaskList());
 
         command = ensureParseSuccess("due : 2/10/2018");
         command.execute(model, null);
-        assertEquals(Arrays.asList(ALICE, ELLE, FIONA, GEORGE), model.getFilteredPersonList());
+        assertEquals(Arrays.asList(ALICE, ELLE, FIONA, GEORGE), model.getFilteredTaskList());
 
         command = ensureParseSuccess("due :2/10/2018");
         command.execute(model, null);
-        assertEquals(Arrays.asList(ALICE, ELLE, FIONA, GEORGE), model.getFilteredPersonList());
+        assertEquals(Arrays.asList(ALICE, ELLE, FIONA, GEORGE), model.getFilteredTaskList());
 
         command = ensureParseSuccess("due  :   2/10/2018");
         command.execute(model, null);
-        assertEquals(Arrays.asList(ALICE, ELLE, FIONA, GEORGE), model.getFilteredPersonList());
+        assertEquals(Arrays.asList(ALICE, ELLE, FIONA, GEORGE), model.getFilteredTaskList());
     }
 
     /**

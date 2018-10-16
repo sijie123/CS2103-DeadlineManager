@@ -20,7 +20,8 @@ public class SortCommand extends Command {
                     + "and displays them as a list with index numbers.\n"
                     + "Parameters: SORT_COMPARATOR [SORT_COMPARATORS]...\n"
                     + "Example 1: " + COMMAND_WORD + " name> due<\n"
-                    + "Example 2: " + COMMAND_WORD + " d>\n";
+                    + "Example 2: " + COMMAND_WORD + " d>\n"
+                    + "Example 3: " + COMMAND_WORD + " tag<{tag1 tag2 tag3} priority<\n";
 
     public static final String MESSAGE_SUCCESS = "Sorted list.";
 
@@ -33,7 +34,7 @@ public class SortCommand extends Command {
     @Override
     public CommandResult execute(Model model, CommandHistory history) {
         requireNonNull(model);
-        model.updateSortedPersonList(comparator);
+        model.updateSortedTaskList(comparator);
         return new CommandResult(MESSAGE_SUCCESS);
     }
 }

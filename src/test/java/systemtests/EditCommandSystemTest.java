@@ -56,7 +56,7 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
         String command =
             " " + EditCommand.COMMAND_WORD + "  " + index.getOneBased() + "   " + NAME_DESC_BOB
                 + "  " + PRIORITY_DESC_BOB + "  " + DEADLINE_DESC_BOB + " " + TAG_DESC_HUSBAND + " ";
-        Task uneditedTask = getModel().getFilteredPersonList().get(index.getZeroBased());
+        Task uneditedTask = getModel().getFilteredTaskList().get(index.getZeroBased());
         Task bobWithOriginalAttachments = new PersonBuilder(BOB)
             .withAttachments(uneditedTask.getAttachments())
             .build();
@@ -73,8 +73,8 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
         /* Case: redo editing the last task in the list -> last task edited again */
         command = RedoCommand.COMMAND_WORD;
         expectedResultMessage = RedoCommand.MESSAGE_SUCCESS;
-        model.updatePerson(
-            getModel().getFilteredPersonList().get(INDEX_FIRST_TASK.getZeroBased()),
+        model.updateTask(
+            getModel().getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased()),
             editedTask);
         assertCommandSuccess(command, model, expectedResultMessage);
 
@@ -84,9 +84,9 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
         assertCommandSuccess(command, index, bobWithOriginalAttachments);
 
         /* Case: edit a task with new values same as another task's values but with different name -> edited */
-        assertTrue(getModel().getAddressBook().getTaskList().contains(bobWithOriginalAttachments));
+        assertTrue(getModel().getTaskCollection().getTaskList().contains(bobWithOriginalAttachments));
         index = INDEX_SECOND_TASK;
-        assertNotEquals(getModel().getFilteredPersonList().get(index.getZeroBased()), editedTask);
+        assertNotEquals(getModel().getFilteredTaskList().get(index.getZeroBased()), editedTask);
         command = EditCommand.COMMAND_WORD + " " + index.getOneBased() + NAME_DESC_AMY
             + PRIORITY_DESC_BOB + DEADLINE_DESC_BOB + TAG_DESC_FRIEND + TAG_DESC_HUSBAND;
         editedTask = new PersonBuilder(bobWithOriginalAttachments).withName(VALID_NAME_AMY).build();
@@ -106,7 +106,7 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
         index = INDEX_FIRST_TASK;
         command =
             EditCommand.COMMAND_WORD + " " + index.getOneBased() + " " + PREFIX_TAG.getPrefix();
-        Task taskToEdit = getModel().getFilteredPersonList().get(index.getZeroBased());
+        Task taskToEdit = getModel().getFilteredTaskList().get(index.getZeroBased());
         editedTask = new PersonBuilder(taskToEdit).withTags().build();
         assertCommandSuccess(command, index, editedTask);
 
@@ -115,9 +115,9 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
         /* Case: filtered task list, edit index within bounds of deadline manager and task list -> edited */
         showPersonsWithName(KEYWORD_MATCHING_MEIER);
         index = INDEX_FIRST_TASK;
-        assertTrue(index.getZeroBased() < getModel().getFilteredPersonList().size());
+        assertTrue(index.getZeroBased() < getModel().getFilteredTaskList().size());
         command = EditCommand.COMMAND_WORD + " " + index.getOneBased() + " " + NAME_DESC_BOB;
-        taskToEdit = getModel().getFilteredPersonList().get(index.getZeroBased());
+        taskToEdit = getModel().getFilteredTaskList().get(index.getZeroBased());
         editedTask = new PersonBuilder(taskToEdit).withName(VALID_NAME_BOB).build();
         assertCommandSuccess(command, index, editedTask);
 
@@ -125,7 +125,7 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
          * -> rejected
          */
         showPersonsWithName(KEYWORD_MATCHING_MEIER);
-        int invalidIndex = getModel().getAddressBook().getTaskList().size();
+        int invalidIndex = getModel().getTaskCollection().getTaskList().size();
         assertCommandFailure(EditCommand.COMMAND_WORD + " " + invalidIndex + NAME_DESC_BOB,
             Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
 
@@ -142,7 +142,7 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
         // this can be misleading: card selection actually remains unchanged but the
         // browser's url is updated to reflect the new task's name
         Task amyWithAttachments = new PersonBuilder(AMY)
-            .withAttachments(getModel().getFilteredPersonList().get(index.getZeroBased()).getAttachments())
+            .withAttachments(getModel().getFilteredTaskList().get(index.getZeroBased()).getAttachments())
             .build();
         assertCommandSuccess(command, index, amyWithAttachments, index);
 
@@ -157,7 +157,7 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
             String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
 
         /* Case: invalid index (size + 1) -> rejected */
-        invalidIndex = getModel().getFilteredPersonList().size() + 1;
+        invalidIndex = getModel().getFilteredTaskList().size() + 1;
         assertCommandFailure(EditCommand.COMMAND_WORD + " " + invalidIndex + NAME_DESC_BOB,
             Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
 
@@ -214,9 +214,9 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
     private void assertCommandSuccess(String command, Index toEdit, Task editedTask,
                                       Index expectedSelectedCardIndex) {
         Model expectedModel = getModel();
-        expectedModel.updatePerson(expectedModel.getFilteredPersonList().get(toEdit.getZeroBased()),
+        expectedModel.updateTask(expectedModel.getFilteredTaskList().get(toEdit.getZeroBased()),
             editedTask);
-        expectedModel.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        expectedModel.updateFilteredTaskList(PREDICATE_SHOW_ALL_PERSONS);
 
         assertCommandSuccess(command, expectedModel,
             String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, editedTask),
@@ -251,7 +251,7 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
                                       String expectedResultMessage,
                                       Index expectedSelectedCardIndex) {
         executeCommand(command);
-        expectedModel.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        expectedModel.updateFilteredTaskList(PREDICATE_SHOW_ALL_PERSONS);
         assertApplicationDisplaysExpected("", expectedResultMessage, expectedModel);
         assertCommandBoxShowsDefaultStyle();
         if (expectedSelectedCardIndex != null) {
