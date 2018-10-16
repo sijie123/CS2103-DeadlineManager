@@ -478,13 +478,35 @@ The extended filter feature aims to make filtering tasks flexible as well as int
 
 
 // tag::attachments[]
-=== Attachments feature
+=== Attachment feature
 The attachment feature aims to help users organise and keep track of important files needed for the respective tasks. It allows users to associate files in their computer with a particular task. When the user decides to perform the task, it is possible to know where the file is and export it to an appropriate location.
 
 ==== Current implementation
-The attachment feature is mainly implemented by `AttachmentCommand`. As `AttachmentCommand` is an all-purpose command that allows users to perform numerous actions related to attachments, a nested abstract class `AttachmentAction` is defined within `AttachmentCommand`. There are 4 classes that extend `AttachmentAction` in order to implement the various actions of the attachment feature. `AttachmentCommandParser` parses the arguments provided by the user and constructs the corresponding classes of `AttachmentAction`. A `AttachmentCommand` is then created with the constructed `AttachmentAction` and executed.
+The attachment feature is mainly implemented by `AttachmentCommand`. As `AttachmentCommand` is an all-purpose command that allows users to perform numerous actions related to attachments, a nested abstract class `AttachmentAction` is defined within `AttachmentCommand`. There are 4 classes that extend `AttachmentAction` in order to implement the various actions of the attachment feature. The command line arguments for the attachment command is parsed by `AttachmentCommandParser`.
 
-==== AttachmentAction
+==== Sequence Flow
+
+Given below is a sequence of steps, illustrating the interaction between `AttachmentCommandParser`, `AttachmentCommand` and classes that implement `AttachmentAction` after a user enters a relevant command.
+
+Step 1. The user enters an attachment command which involves either `add`, `list`, `delete` or `get`.
+
+Step 2. The `AttachmentCommandParser` receives the command with the arguments given as a string.
+
+Step 3. The `AttachmentCommandParser` interprets the arguments and constructs either a `AddAttachmentAction` for `add`, `ListAttachmentAction` for `list`, `DeleteAttachmentAction` for `delete` or `GetAttachmentAction` for `get`. The relevant arguments will also be passed as parameters to the constructors of these classes. Do note that these classes all extends from the abstract class `AttachmentAction`.
+
+Step 4. A `AttachmentCommand` is constructed and initialized with the `AttachmentAction` constructed in Step 3.
+
+Given below is another sequence of steps, illustrating the interaction between `AttachmentCommand` and classes that implement `AttachmentAction` when the `AttachmentCommand#execute` method is invoked by the `LogicManager`.
+
+Step 1. The task identified by the user is retrieved from the `Model`.
+
+Step 2. The `perform` method of the `AttachmentAction` is invoked, with the task retrieved in Step 1 as the parameter.
+
+Step 3. The `Model` is updated with the `Task` object returned by the `perform` method in Step 2.
+
+Step 4. The `resultMessage` method of `AttachmentAction` is invoked. The returned value is used to construct a `CommandResult` object and returned to the `LogicManager`.
+
+==== AttachmentAction and implementing classes
 `AttachmentAction` is an abstract static class nested within `AttachmentCommand`. It defines the following 2 APIs:
 
 * `public abstract Task perform(Task taskToEdit)` This method is invoked by `AttachmentCommand` to perform the action on the task provided. Since `Task` is immutable, a new task with the modified values should be returned by the method. Implementing classes would need to implement this method with the logic for the respective actions.
