@@ -28,10 +28,10 @@ import seedu.address.testutil.PersonBuilder;
  * Contains unit tests for AttachmentCommand.
  */
 public class AttachmentCommandTest {
+    private static File nonExistentFile = new File("not-here1827364.txt");
 
     private Model model = new ModelManager(getTypicalAddressBook(), new UserPrefs());
     private CommandHistory commandHistory = new CommandHistory();
-    private static File nonExistentFile = new File("not-here1827364.txt");
 
     /**
      * Creates a temporary file for use in testing Attachment Command
