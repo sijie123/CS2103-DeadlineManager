@@ -73,7 +73,7 @@ public class StatusBarFooter extends UiPart<Region> {
     }
 
     @Subscribe
-    public void handleAddressBookChangedEvent(TaskCollectionChangedEvent abce) {
+    public void handleTaskCollectionChangedEvent(TaskCollectionChangedEvent abce) {
         long now = clock.millis();
         String lastUpdated = new Date(now).toString();
         logger.info(LogsCenter

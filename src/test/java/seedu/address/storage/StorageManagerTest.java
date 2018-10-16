@@ -149,7 +149,7 @@ public class StorageManagerTest {
         }
 
         @Override
-        public void saveTaskCollection(ReadOnlyTaskCollection addressBook, Path filePath)
+        public void saveTaskCollection(ReadOnlyTaskCollection taskCollection, Path filePath)
             throws IOException {
             throw new IOException("dummy exception");
         }

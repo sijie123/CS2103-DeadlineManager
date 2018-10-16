@@ -16,10 +16,10 @@ public class XmlFileStorage {
     /**
      * Saves the given deadline manager data to the specified file.
      */
-    public static void saveDataToFile(Path file, XmlSerializableTaskCollection addressBook)
+    public static void saveDataToFile(Path file, XmlSerializableTaskCollection taskCollection)
         throws FileNotFoundException {
         try {
-            XmlUtil.saveDataToFile(file, addressBook);
+            XmlUtil.saveDataToFile(file, taskCollection);
         } catch (JAXBException e) {
             throw new AssertionError("Unexpected exception " + e.getMessage(), e);
         }
