@@ -19,7 +19,7 @@ import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PRIORITY_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_HUSBAND;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
-import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
+import static seedu.address.model.Model.PREDICATE_SHOW_ALL_TASKS;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_TASK;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_TASK;
 import static seedu.address.testutil.TypicalPersons.AMY;
@@ -216,10 +216,10 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
         Model expectedModel = getModel();
         expectedModel.updateTask(expectedModel.getFilteredTaskList().get(toEdit.getZeroBased()),
             editedTask);
-        expectedModel.updateFilteredTaskList(PREDICATE_SHOW_ALL_PERSONS);
+        expectedModel.updateFilteredTaskList(PREDICATE_SHOW_ALL_TASKS);
 
         assertCommandSuccess(command, expectedModel,
-            String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, editedTask),
+            String.format(EditCommand.MESSAGE_EDIT_TASK_SUCCESS, editedTask),
             expectedSelectedCardIndex);
     }
 
@@ -251,7 +251,7 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
                                       String expectedResultMessage,
                                       Index expectedSelectedCardIndex) {
         executeCommand(command);
-        expectedModel.updateFilteredTaskList(PREDICATE_SHOW_ALL_PERSONS);
+        expectedModel.updateFilteredTaskList(PREDICATE_SHOW_ALL_TASKS);
         assertApplicationDisplaysExpected("", expectedResultMessage, expectedModel);
         assertCommandBoxShowsDefaultStyle();
         if (expectedSelectedCardIndex != null) {

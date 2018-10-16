@@ -19,7 +19,7 @@ import org.junit.Test;
 import seedu.address.commons.core.Messages;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.CommandHistory;
-import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
+import seedu.address.logic.commands.EditCommand.EditTaskDescriptor;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.TaskCollection;
@@ -44,10 +44,10 @@ public class EditCommandTest {
             .withAttachments(model.getFilteredTaskList().get(0).getAttachments())
             .build();
 
-        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(editedTask).build();
+        EditTaskDescriptor descriptor = new EditPersonDescriptorBuilder(editedTask).build();
         EditCommand editCommand = new EditCommand(INDEX_FIRST_TASK, descriptor);
 
-        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, editedTask);
+        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_TASK_SUCCESS, editedTask);
 
         Model expectedModel = new ModelManager(new TaskCollection(model.getTaskCollection()),
             new UserPrefs());
@@ -66,11 +66,11 @@ public class EditCommandTest {
         Task editedTask = personInList.withName(VALID_NAME_BOB)
             .withTags(VALID_TAG_HUSBAND).build();
 
-        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withName(VALID_NAME_BOB)
+        EditCommand.EditTaskDescriptor descriptor = new EditPersonDescriptorBuilder().withName(VALID_NAME_BOB)
             .withTags(VALID_TAG_HUSBAND).build();
         EditCommand editCommand = new EditCommand(indexLastPerson, descriptor);
 
-        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, editedTask);
+        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_TASK_SUCCESS, editedTask);
 
         Model expectedModel = new ModelManager(new TaskCollection(model.getTaskCollection()),
             new UserPrefs());
@@ -82,10 +82,10 @@ public class EditCommandTest {
 
     @Test
     public void execute_noFieldSpecifiedUnfilteredList_success() {
-        EditCommand editCommand = new EditCommand(INDEX_FIRST_TASK, new EditPersonDescriptor());
+        EditCommand editCommand = new EditCommand(INDEX_FIRST_TASK, new EditCommand.EditTaskDescriptor());
         Task editedTask = model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased());
 
-        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, editedTask);
+        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_TASK_SUCCESS, editedTask);
 
         Model expectedModel = new ModelManager(new TaskCollection(model.getTaskCollection()),
             new UserPrefs());
@@ -104,7 +104,7 @@ public class EditCommandTest {
         EditCommand editCommand = new EditCommand(INDEX_FIRST_TASK,
             new EditPersonDescriptorBuilder().withName(VALID_NAME_BOB).build());
 
-        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, editedTask);
+        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_TASK_SUCCESS, editedTask);
 
         Model expectedModel = new ModelManager(new TaskCollection(model.getTaskCollection()),
             new UserPrefs());
@@ -117,10 +117,10 @@ public class EditCommandTest {
     @Test
     public void execute_duplicatePersonUnfilteredList_success() {
         Task firstTask = model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased());
-        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(firstTask).build();
+        EditCommand.EditTaskDescriptor descriptor = new EditPersonDescriptorBuilder(firstTask).build();
         EditCommand editCommand = new EditCommand(INDEX_SECOND_TASK, descriptor);
 
-        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS,
+        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_TASK_SUCCESS,
             model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased()));
 
         Model expectedModel = new ModelManager(new TaskCollection(model.getTaskCollection()),
@@ -135,7 +135,7 @@ public class EditCommandTest {
     @Test
     public void execute_invalidPersonIndexUnfilteredList_failure() {
         Index outOfBoundIndex = Index.fromOneBased(model.getFilteredTaskList().size() + 1);
-        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withName(VALID_NAME_BOB)
+        EditTaskDescriptor descriptor = new EditPersonDescriptorBuilder().withName(VALID_NAME_BOB)
             .build();
         EditCommand editCommand = new EditCommand(outOfBoundIndex, descriptor);
 
@@ -167,7 +167,7 @@ public class EditCommandTest {
         Task editedTask = new PersonBuilder()
             .withAttachments(taskToEdit.getAttachments())
             .build();
-        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(editedTask).build();
+        EditTaskDescriptor descriptor = new EditPersonDescriptorBuilder(editedTask).build();
         EditCommand editCommand = new EditCommand(INDEX_FIRST_TASK, descriptor);
         Model expectedModel = new ModelManager(new TaskCollection(model.getTaskCollection()),
             new UserPrefs());
@@ -191,7 +191,7 @@ public class EditCommandTest {
     @Test
     public void executeUndoRedo_invalidIndexUnfilteredList_failure() {
         Index outOfBoundIndex = Index.fromOneBased(model.getFilteredTaskList().size() + 1);
-        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withName(VALID_NAME_BOB)
+        EditTaskDescriptor descriptor = new EditPersonDescriptorBuilder().withName(VALID_NAME_BOB)
             .build();
         EditCommand editCommand = new EditCommand(outOfBoundIndex, descriptor);
 
@@ -217,7 +217,7 @@ public class EditCommandTest {
         Task editedTask = new PersonBuilder()
             .withAttachments(taskToEdit.getAttachments())
             .build();
-        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(editedTask).build();
+        EditCommand.EditTaskDescriptor descriptor = new EditPersonDescriptorBuilder(editedTask).build();
         EditCommand editCommand = new EditCommand(INDEX_FIRST_TASK, descriptor);
         Model expectedModel = new ModelManager(new TaskCollection(model.getTaskCollection()),
             new UserPrefs());
@@ -246,7 +246,7 @@ public class EditCommandTest {
         final EditCommand standardCommand = new EditCommand(INDEX_FIRST_TASK, DESC_AMY);
 
         // same values -> returns true
-        EditPersonDescriptor copyDescriptor = new EditPersonDescriptor(DESC_AMY);
+        EditCommand.EditTaskDescriptor copyDescriptor = new EditCommand.EditTaskDescriptor(DESC_AMY);
         EditCommand commandWithSameValues = new EditCommand(INDEX_FIRST_TASK, copyDescriptor);
         assertTrue(standardCommand.equals(commandWithSameValues));
 

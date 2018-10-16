@@ -4,7 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_FILENAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_FILEPATH;
-import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
+import static seedu.address.model.Model.PREDICATE_SHOW_ALL_TASKS;
 
 import java.io.File;
 import java.io.IOException;
@@ -83,7 +83,7 @@ public class AttachmentCommand extends Command {
         Task editedTask = attachmentAction.perform(taskToEdit);
 
         model.updateTask(taskToEdit, editedTask);
-        model.updateFilteredTaskList(PREDICATE_SHOW_ALL_PERSONS);
+        model.updateFilteredTaskList(PREDICATE_SHOW_ALL_TASKS);
         model.commitAddressBook();
         return new CommandResult(attachmentAction.resultMessage());
     }

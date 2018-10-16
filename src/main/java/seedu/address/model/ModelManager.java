@@ -94,7 +94,7 @@ public class ModelManager extends ComponentManager implements Model {
     @Override
     public void addTask(Task task) {
         versionedTaskCollection.addTask(task);
-        updateFilteredTaskList(PREDICATE_SHOW_ALL_PERSONS);
+        updateFilteredTaskList(PREDICATE_SHOW_ALL_TASKS);
         indicateTaskCollectionChanged();
     }
 
@@ -215,7 +215,7 @@ public class ModelManager extends ComponentManager implements Model {
         for (Task task: importData.getTaskList()) {
             resolveImportConflict(task);
         }
-        updateFilteredTaskList(PREDICATE_SHOW_ALL_PERSONS);
+        updateFilteredTaskList(PREDICATE_SHOW_ALL_TASKS);
     }
 
     @Override
