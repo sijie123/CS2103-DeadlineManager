@@ -65,7 +65,7 @@ public class XmlAdaptedTask {
      */
     public XmlAdaptedTask(Task source) {
         name = source.getName().value;
-        priority = source.getPriority().value;
+        priority = source.getPriority().toString();
         deadline = source.getDeadline().toString();
         tagged = source.getTags().stream()
             .map(XmlAdaptedTag::new)

@@ -44,8 +44,8 @@ public class PriorityTest {
         Priority a = new Priority("3");
         Priority b = new Priority("4");
         Priority c = new Priority(3);
-        assertTrue(a.compareTo(b) == -1);
-        assertTrue(b.compareTo(a) == 1);
+        assertTrue(a.compareTo(b) == 1);
+        assertTrue(b.compareTo(a) == -1);
         assertTrue(a.compareTo(c) == 0);
     }
 }
