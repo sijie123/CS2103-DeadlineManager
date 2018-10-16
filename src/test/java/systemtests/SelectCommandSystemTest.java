@@ -2,9 +2,9 @@ package systemtests;
 
 import static org.junit.Assert.assertTrue;
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-import static seedu.address.commons.core.Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX;
+import static seedu.address.commons.core.Messages.MESSAGE_INVALID_TASK_DISPLAYED_INDEX;
 import static seedu.address.commons.core.Messages.MESSAGE_UNKNOWN_COMMAND;
-import static seedu.address.logic.commands.SelectCommand.MESSAGE_SELECT_PERSON_SUCCESS;
+import static seedu.address.logic.commands.SelectCommand.MESSAGE_SELECT_TASK_SUCCESS;
 import static seedu.address.testutil.TestUtil.getLastIndex;
 import static seedu.address.testutil.TestUtil.getMidIndex;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_TASK;
@@ -62,7 +62,7 @@ public class SelectCommandSystemTest extends TaskCollectionSystemTest {
         showPersonsWithName(KEYWORD_MATCHING_MEIER);
         int invalidIndex = getModel().getTaskCollection().getTaskList().size();
         assertCommandFailure(SelectCommand.COMMAND_WORD + " " + invalidIndex,
-            MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+            MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
 
         /* Case: filtered task list, select index within bounds of deadline manager and task list -> selected */
         Index validIndex = Index.fromOneBased(1);
@@ -83,7 +83,7 @@ public class SelectCommandSystemTest extends TaskCollectionSystemTest {
         /* Case: invalid index (size + 1) -> rejected */
         invalidIndex = getModel().getFilteredTaskList().size() + 1;
         assertCommandFailure(SelectCommand.COMMAND_WORD + " " + invalidIndex,
-            MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+            MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
 
         /* Case: invalid arguments (alphabets) -> rejected */
         assertCommandFailure(SelectCommand.COMMAND_WORD + " abc",
@@ -99,7 +99,7 @@ public class SelectCommandSystemTest extends TaskCollectionSystemTest {
         /* Case: select from empty deadline manager -> rejected */
         deleteAllPersons();
         assertCommandFailure(SelectCommand.COMMAND_WORD + " " + INDEX_FIRST_TASK.getOneBased(),
-            MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+            MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
     }
 
     /**
@@ -118,7 +118,7 @@ public class SelectCommandSystemTest extends TaskCollectionSystemTest {
     private void assertCommandSuccess(String command, Index expectedSelectedCardIndex) {
         Model expectedModel = getModel();
         String expectedResultMessage = String.format(
-            MESSAGE_SELECT_PERSON_SUCCESS, expectedSelectedCardIndex.getOneBased());
+            MESSAGE_SELECT_TASK_SUCCESS, expectedSelectedCardIndex.getOneBased());
         int preExecutionSelectedCardIndex = getPersonListPanel().getSelectedCardIndex();
 
         executeCommand(command);
