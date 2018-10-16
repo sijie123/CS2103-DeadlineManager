@@ -329,11 +329,74 @@ image::UndoRedoActivityDiagram.png[width="650"]
 ==== Current implementation
 
 The extended filter feature aims to make filtering tasks flexible as well as intuitive.
-
-[TODO]
-
+// [TODO]
 
 // end::extendedfilter[]
+
+
+// tag::attachments[]
+=== Attachments feature
+The attachment feature aims to help users organise and keep track of important files needed for the respective tasks. It allows users to associate files in their computer with a particular task. When the user decides to perform the task, it is possible to know where the file is and export it to an appropriate location.
+
+==== Current implementation
+The attachment feature is mainly implemented by `AttachmentCommand`. As `AttachmentCommand` is an all-purpose command that allows users to perform numerous actions related to attachments, a nested abstract class `AttachmentAction` is defined within `AttachmentCommand`. There are 4 classes that extend `AttachmentAction` in order to implement the various actions of the attachment feature. `AttachmentCommandParser` parses the arguments provided by the user and constructs the corresponding classes of `AttachmentAction`. A `AttachmentCommand` is then created with the constructed `AttachmentAction` and executed.
+
+==== AttachmentAction
+`AttachmentAction` is an abstract static class nested within `AttachmentCommand`. It defines the following 2 APIs:
+
+* `public abstract Task perform(Task taskToEdit)` This method is invoked by `AttachmentCommand` to perform the action on the task provided. Since `Task` is immutable, a new task with the modified values should be returned by the method. Implementing classes would need to implement this method with the logic for the respective actions.
+
+*  `public String resultMessage()` This method will be invoked by `AttachmentCommand` to retrieve the response message after a call to `perform`. It would be good for implementing classes to override the default implementation to provide a more customized response message.
+
+===== AddAttachmentAction
+`AddAttachmentAction` implements `AttachmentAction` and provides the implementations required for the user to associate a file with a task. In other words, it adds an attachment to a task. The constructor class takes in a single parameter, `filePath`, denoting the path to the file to be associated with the task. The `perform` method of `AddAttachmentAction` executes the following:
+
+. Checks if a file exists at the specified `filePath`. A `CommandException` will be raised if this is not the case.
+. Checks if the task already contains an attachment with the same filename. A `CommandException` will be raised if this is not the case.
+. Constructs a new `Attachment` object using the file at the specified `filePath`.
+. Constructs a new `Task` object with the same attributes as the original task, but with the additional `Attachment` object added to the set of attachments.
+
+
+===== ListAttachmentAction
+`ListAttachmentAction` implements `AttachmentAction` and provides the implementations required for the user to list all the files associated with a task. In other words, it provides a listing of all attachments that are added to the task. The constructor class requries no parameters. The `perform` method of `ListAttachmentAction` executes the following:
+
+. Prints the total number of attachments in the specified task.
+. Prints the filename of each of the attachments in the specified task, with one attachment per line.
+
+===== DeleteAttachmentAction
+`DeleteAttachmentAction` implements `AttachmentAction` and provides the implementations required for the user to unassociate a file that was previously associated with the task as attachment. In other words, it removes an attachment from a task. The constructor class takes in a single parameter, `fileName`, denoting the name of the attachment that is to be unassociated with the task. The `perform` method of `DeleteAttachmentAction` executes the following:
+
+. Checks if `fileName` corresponds to a valid attachment in the specified task. A  `CommandException` will be raised if this is not the case. The `fileName` is case senstitive.
+. Constructs a new `Task` object with the same attributes as the original task, but with the `Attachment` object identified by the `fileName` removed from the set of attachments.
+
+===== GetAttachmentAction
+`GetAttachmentAction` implements `AttachmentAction` and provides the implementations required for the user to retrieve a file that was previously associated with the task as attachment. In other words, it allows users to copy an attachment from a task out to the file system. The constructor class takes in two parameters, `filename`, denoting the name of the attachment and `savePath`, denoting the path to copy the attachment to. The `perform` method of `GetAttachmentAction` executes the following:
+
+. Checks if `fileName` corresponds to a valid attachment in the specified task. A  `CommandException` will be raised if this is not the case. The `fileName` is case senstitive.
+. Checks if the attachment identified by `fileName` still exists on the user's filesystem. A `CommandException` will be raised if this is not the case.
+. Copies the attachment from where it was previously associated to `savePath` on the filesystem.
+
+==== Design considerations
+
+===== Aspect: How to associate files to tasks
+* **Alternative 1 (current choice):** Saves the path to the file.
+** Pros: Easy to implement. Reduces storage footprint.
+** Cons: Associated file can cease to exist, due to it being renamed, moved or deleted.
+
+* **Alternative 2:** Copies the entire file to a user specified directory.
+** Pros: Deletion of the associated file (in its original location) will not affect the application.
+** Cons: Harder to implement file management system on the file system. Uses more storage space. User will not be able to update the attachment without deleting and re-adding the file.
+
+===== Aspect: How to identify attachments within a task
+
+* **Alternative 1 (current choice):** Use the file name as an identifier.
+** Pros: More user friendly as there is less words to type.
+** Cons: Cannot have more than one attachment with the same file name in the same task. For example: `folder1/Template.docx` and `folder2/Template.docx` cannot be simultaneously added as attachments to the same task.
+* **Alternative 2:** Use the path to the file as an identifier.
+** Pros: Allows for more than one attachments with the same file name to be associated with the same task. For example: `folder1/Template.docx` and `folder2/Template.docx` can be added to the same task as attachments.
+** Cons: Cumbersome for the user to type the full path to identify the file.
+
+// end::eattachments[]
 
 // tag::dataencryption[]
 === [Proposed] Data Encryption
