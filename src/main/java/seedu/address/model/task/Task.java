@@ -18,28 +18,22 @@ public class Task {
 
     // Identity fields
     private final Name name;
-    private final Phone phone;
     private final Priority priority;
-    private final Email email;
 
     // Data fields
     private final Deadline deadline;
-    private final Address address;
     private final Set<Tag> tags = new HashSet<>();
     private final Set<Attachment> attachments = new HashSet<>();
 
     /**
      * Every field must be present and not null.
      */
-    public Task(Name name, Phone phone, Priority priority, Email email, Deadline deadline, Address address,
+    public Task(Name name, Priority priority, Deadline deadline,
                 Set<Tag> tags, Set<Attachment> attachments) {
-        requireAllNonNull(name, phone, priority, email, deadline, address, tags, attachments);
+        requireAllNonNull(name, priority, deadline, tags, attachments);
         this.name = name;
-        this.phone = phone;
         this.priority = priority;
-        this.email = email;
         this.deadline = deadline;
-        this.address = address;
         this.tags.addAll(tags);
         this.attachments.addAll(attachments);
     }
@@ -47,42 +41,27 @@ public class Task {
     /**
      * Convenience constructor. Tasks are initialized without any attachments.
      */
-    public Task(Name name, Phone phone, Priority priority, Email email,
-                Deadline deadline, Address address, Set<Tag> tags) {
-        this(name, phone, priority, email, deadline,
-            address, tags, new HashSet<>());
+    public Task(Name name, Priority priority, Deadline deadline, Set<Tag> tags) {
+        this(name, priority, deadline, tags, new HashSet<>());
     }
 
     /**
      * Convenience constructor, to be removed eventually
      */
-    public Task(Name name, Phone phone, Priority priority, Email email, Address address, Set<Tag> tags) {
-        this(name, phone, priority, email, new Deadline("1/10/2018"),
-            address, tags);
+    public Task(Name name, Priority priority, Set<Tag> tags) {
+        this(name, priority, new Deadline("1/10/2018"), tags);
     }
 
     public Name getName() {
         return name;
     }
 
-    public Phone getPhone() {
-        return phone;
-    }
-
     public Priority getPriority() {
         return priority;
     }
 
-    public Email getEmail() {
-        return email;
-    }
-
     public Deadline getDeadline() {
         return deadline;
-    }
-
-    public Address getAddress() {
-        return address;
     }
 
     /**
@@ -117,10 +96,7 @@ public class Task {
         }
         Task otherTask = (Task) other;
         return otherTask.getName().equals(getName())
-            && otherTask.getPhone().equals(getPhone())
             && otherTask.getPriority().equals(getPriority())
-            && otherTask.getEmail().equals(getEmail())
-            && otherTask.getAddress().equals(getAddress())
             && otherTask.getTags().equals(getTags())
             && otherTask.getDeadline().equals(getDeadline())
             && otherTask.getAttachments().equals(getAttachments());
@@ -129,23 +105,17 @@ public class Task {
     @Override
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own
-        return Objects.hash(name, phone, priority, email, address, tags, deadline, attachments);
+        return Objects.hash(name, priority, tags, deadline, attachments);
     }
 
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
         builder.append(getName())
-            .append(" Phone: ")
-            .append(getPhone())
             .append(" Priority: ")
             .append(getPriority())
             .append(" Deadline: ")
             .append(getDeadline())
-            .append(" Email: ")
-            .append(getEmail())
-            .append(" Address: ")
-            .append(getAddress())
             .append(" Tags: ");
         getTags().forEach(builder::append);
         builder.append(" Attachments: ");

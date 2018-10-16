@@ -4,18 +4,23 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
+
+import com.google.common.eventbus.Subscribe;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-
 import seedu.address.commons.core.ComponentManager;
 import seedu.address.commons.core.LogsCenter;
+import seedu.address.commons.events.model.ExportRequestEvent;
+import seedu.address.commons.events.model.ImportRequestEvent;
 import seedu.address.commons.events.model.TaskCollectionChangedEvent;
+import seedu.address.commons.events.storage.ImportDataAvailableEvent;
+import seedu.address.commons.events.storage.ImportExportExceptionEvent;
 import seedu.address.model.task.Task;
-
 
 
 /**
@@ -23,10 +28,19 @@ import seedu.address.model.task.Task;
  */
 public class ModelManager extends ComponentManager implements Model {
 
+    /**
+     * An enum representing the possible conflict resolvers.
+     */
+    public enum ImportConflictMode {
+        OVERWRITE, DUPLICATE, IGNORE
+    };
     private static final Logger logger = LogsCenter.getLogger(ModelManager.class);
 
     private final VersionedTaskCollection versionedAddressBook;
     private final FilteredList<Task> filteredTasks;
+
+    private String lastError;
+    private ImportConflictMode conflictResolver;
 
     /**
      * Initializes a ModelManager with the given addressBook and userPrefs.
@@ -40,6 +54,7 @@ public class ModelManager extends ComponentManager implements Model {
 
         versionedAddressBook = new VersionedTaskCollection(addressBook);
         filteredTasks = new FilteredList<>(versionedAddressBook.getTaskList());
+        lastError = null;
     }
 
     public ModelManager() {
@@ -161,4 +176,76 @@ public class ModelManager extends ComponentManager implements Model {
             && filteredTasks.equals(other.filteredTasks);
     }
 
+    //==========Import/Export===================================================================
+
+    public boolean importExportFailed() {
+        return lastError != null;
+    }
+    public String getLastError() {
+        String err = lastError;
+        lastError = null;
+        return err;
+    }
+    @Override
+    public void exportAddressBook(String filename) {
+        requireNonNull(filename);
+        List<Task> lastShownList = getFilteredPersonList();
+        TaskCollection exportCollection = new TaskCollection();
+        exportCollection.setTasks(lastShownList);
+        raise(new ExportRequestEvent(exportCollection, filename));
+    }
+
+    @Override
+    public void importAddressBook(String filename) {
+        importAddressBook(filename, ImportConflictMode.IGNORE);
+    }
+
+    @Override
+    public void importAddressBook(String filename, ImportConflictMode mode) {
+        requireNonNull(filename);
+        conflictResolver = mode;
+        raise(new ImportRequestEvent(filename));
+    }
+
+    @Override
+    @Subscribe
+    public void handleImportDataAvailableEvent(ImportDataAvailableEvent event) {
+        //Handle merge conflict and what not
+        ReadOnlyTaskCollection importData = event.data;
+        for (Task task: importData.getTaskList()) {
+            resolveImportConflict(task);
+        }
+        updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+    }
+
+    @Override
+    @Subscribe
+    public void handleImportExportExceptionEvent(ImportExportExceptionEvent event) {
+        lastError = event.toString();
+    }
+
+    /**
+     * Use the appropriate import conflict handler to resolve a conflict.
+     * If there is no conflict, simply add it to the current TaskCollection.
+     * @param task the task to deconflict
+     */
+    private void resolveImportConflict(Task task) {
+        if (!hasPerson(task)) {
+            addPerson(task);
+            return;
+        }
+        if (conflictResolver == null) {
+            return;
+        }
+        if (conflictResolver.equals(ImportConflictMode.IGNORE)) {
+            //Ignore duplicates
+        } else if (conflictResolver.equals(ImportConflictMode.DUPLICATE)) {
+            //Add anyway.
+            addPerson(task);
+        } else if (conflictResolver.equals(ImportConflictMode.OVERWRITE)) {
+            //Replace existing task.
+            deletePerson(task);
+            addPerson(task);
+        }
+    }
 }

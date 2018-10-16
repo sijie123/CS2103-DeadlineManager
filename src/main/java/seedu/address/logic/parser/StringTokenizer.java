@@ -124,15 +124,29 @@ public class StringTokenizer {
             throw new NoSuchElementException("Reached end of string while reading delimiter!");
         }
 
-        Matcher matcher = pattern.matcher(str.subSequence(nextIndex, str.length()));
+        CharSequence tmp = str.subSequence(nextIndex, str.length());
+        Matcher matcher = pattern.matcher(tmp);
 
-        if (!matcher.matches() || matcher.start() != 0) {
+        if (!matcher.find() || matcher.start() != 0) {
             throw new InputMismatchException("The next token does not match the given pattern!");
         }
 
         nextIndex += matcher.end();
 
         return matcher.group();
+    }
+
+    /**
+     * Try to consume the next token specified with the regex.
+     * Returns null if no token available.
+     * @throws NoSuchElementException if the string has reached the end.
+     */
+    public String tryNextPattern(Pattern pattern) {
+        try {
+            return nextPattern(pattern);
+        } catch (InputMismatchException e) {
+            return null;
+        }
     }
 
     /**

@@ -16,6 +16,7 @@ import org.junit.rules.TemporaryFolder;
 
 import seedu.address.commons.events.model.TaskCollectionChangedEvent;
 import seedu.address.commons.events.storage.DataSavingExceptionEvent;
+import seedu.address.commons.exceptions.DataConversionException;
 import seedu.address.model.ReadOnlyTaskCollection;
 import seedu.address.model.TaskCollection;
 import seedu.address.model.UserPrefs;
@@ -92,7 +93,35 @@ public class StorageManagerTest {
         TaskCollection original = getTypicalAddressBook();
         storageManager.saveTaskCollection(original);
         Assert.assertThrows(IOException.class, Storage.MESSAGE_WRITE_FILE_EXISTS_ERROR, () ->
-                Storage.exportTaskCollection(original, storageManager.getTaskCollectionFilePath()));
+                storageManager.exportTaskCollection(original, storageManager.getTaskCollectionFilePath()));
+    }
+
+    @Test
+    public void exportNewFile_success() {
+        TaskCollection original = getTypicalAddressBook();
+        try {
+            storageManager.exportTaskCollection(original, getTempFilePath("exportNewNonExistent"));
+        } catch (IOException ioe) {
+            throw new AssertionError("Export on non-existent file should not throw.");
+        }
+    }
+
+    @Test
+    public void importNonExistingFile_exceptionThrown() {
+        Assert.assertThrows(IOException.class, Storage.MESSAGE_READ_FILE_MISSING_ERROR, () ->
+                storageManager.importTaskCollection(getTempFilePath("nonExistent")));
+    }
+
+    @Test
+    public void importExistingFile_success() throws DataConversionException {
+        TaskCollection original = getTypicalAddressBook();
+        try {
+            storageManager.saveTaskCollection(original);
+            ReadOnlyTaskCollection read = storageManager
+                    .importTaskCollection(storageManager.getTaskCollectionFilePath()).get();
+        } catch (IOException e) {
+            throw new AssertionError("Import on existent file should not throw.");
+        }
     }
 
     @Test
@@ -103,8 +132,9 @@ public class StorageManagerTest {
          * More extensive testing of importing exporting is done in {@link XmlTaskCollectionStorageTest} class.
          */
         TaskCollection original = getTypicalAddressBook();
-        Storage.exportTaskCollection(original, getTempFilePath("dummyExport"));
-        ReadOnlyTaskCollection retrieved = Storage.importTaskCollection(getTempFilePath("dummyExport")).get();
+        storageManager.exportTaskCollection(original, getTempFilePath("dummyExport"));
+        ReadOnlyTaskCollection retrieved = storageManager.importTaskCollection(getTempFilePath("dummyExport"))
+                                                         .get();
         assertEquals(original, new TaskCollection(retrieved));
     }
 

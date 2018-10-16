@@ -100,11 +100,8 @@ public class TaskListPanelTest extends GuiUnitTest {
         for (int i = 0; i < taskCount; i++) {
             builder.append("<tasks>\n");
             builder.append("<name>").append(i).append("a</name>\n");
-            builder.append("<phone>000</phone>\n");
             builder.append("<priority>1</priority>\n");
             builder.append("<deadline>1/10/2018</deadline>\n");
-            builder.append("<email>a@aa</email>\n");
-            builder.append("<address>a</address>\n");
             builder.append("</tasks>\n");
         }
         builder.append("</taskcollection>\n");
