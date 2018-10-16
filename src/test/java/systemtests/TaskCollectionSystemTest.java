@@ -40,7 +40,7 @@ import seedu.address.logic.commands.ListCommand;
 import seedu.address.logic.commands.SelectCommand;
 import seedu.address.model.Model;
 import seedu.address.model.TaskCollection;
-import seedu.address.testutil.TypicalPersons;
+import seedu.address.testutil.TypicalTasks;
 import seedu.address.ui.BrowserPanel;
 import seedu.address.ui.CommandBox;
 
@@ -87,7 +87,7 @@ public abstract class TaskCollectionSystemTest {
      * Returns the data to be loaded into the file in {@link #getDataFileLocation()}.
      */
     protected TaskCollection getInitialData() {
-        return TypicalPersons.getTypicalAddressBook();
+        return TypicalTasks.getTypicalTaskCollections();
     }
 
     /**
@@ -187,7 +187,7 @@ public abstract class TaskCollectionSystemTest {
         assertEquals(expectedCommandInput, getCommandBox().getInput());
         assertEquals(expectedResultMessage, getResultDisplay().getText());
         assertEquals(new TaskCollection(expectedModel.getTaskCollection()),
-            testApp.readStorageAddressBook());
+            testApp.readStorageTaskCollection());
         assertListMatching(getPersonListPanel(), expectedModel.getFilteredTaskList());
     }
 

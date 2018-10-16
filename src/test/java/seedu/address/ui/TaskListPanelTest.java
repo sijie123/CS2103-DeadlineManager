@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static seedu.address.testutil.EventsUtil.postNow;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_TASK;
-import static seedu.address.testutil.TypicalPersons.getTypicalPersons;
+import static seedu.address.testutil.TypicalTasks.getTypicalPersons;
 import static seedu.address.ui.testutil.GuiTestAssert.assertCardDisplaysTask;
 import static seedu.address.ui.testutil.GuiTestAssert.assertCardEquals;
 
@@ -84,9 +84,9 @@ public class TaskListPanelTest extends GuiUnitTest {
      */
     private ObservableList<Task> createBackingList(int personCount) throws Exception {
         Path xmlFile = createXmlFileWithTasks(personCount);
-        XmlSerializableTaskCollection xmlAddressBook =
+        XmlSerializableTaskCollection xmlDeadlineManager =
             XmlUtil.getDataFromFile(xmlFile, XmlSerializableTaskCollection.class);
-        return FXCollections.observableArrayList(xmlAddressBook.toModelType().getTaskList());
+        return FXCollections.observableArrayList(xmlDeadlineManager.toModelType().getTaskList());
     }
 
     /**

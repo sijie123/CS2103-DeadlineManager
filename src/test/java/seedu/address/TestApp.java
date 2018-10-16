@@ -71,7 +71,7 @@ public class TestApp extends MainApp {
     /**
      * Returns a defensive copy of the deadline manager data stored inside the storage file.
      */
-    public TaskCollection readStorageAddressBook() {
+    public TaskCollection readStorageTaskCollection() {
         try {
             return new TaskCollection(storage.readTaskCollection().get());
         } catch (DataConversionException dce) {

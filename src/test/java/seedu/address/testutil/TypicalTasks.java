@@ -19,7 +19,7 @@ import seedu.address.model.task.Task;
 /**
  * A utility class containing a list of {@code Task} objects to be used in tests.
  */
-public class TypicalPersons {
+public class TypicalTasks {
 
     public static final Task ALICE = new PersonBuilder()
         .withName("Alice Pauline")
@@ -93,13 +93,13 @@ public class TypicalPersons {
 
     public static final String KEYWORD_MATCHING_MEIER = "Meier"; // A keyword that matches MEIER
 
-    private TypicalPersons() {
+    private TypicalTasks() {
     } // prevents instantiation
 
     /**
-     * Returns an {@code TaskCollection} with all the typical persons.
+     * Returns an {@code TaskCollection} with all the typical tasks.
      */
-    public static TaskCollection getTypicalAddressBook() {
+    public static TaskCollection getTypicalTaskCollections() {
         TaskCollection ab = new TaskCollection();
         for (Task task : getTypicalPersons()) {
             ab.addTask(task);

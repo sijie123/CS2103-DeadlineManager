@@ -12,7 +12,7 @@ import org.junit.rules.ExpectedException;
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.commons.util.XmlUtil;
 import seedu.address.model.TaskCollection;
-import seedu.address.testutil.TypicalPersons;
+import seedu.address.testutil.TypicalTasks;
 
 public class XmlSerializableTaskCollectionTest {
 
@@ -31,7 +31,7 @@ public class XmlSerializableTaskCollectionTest {
         XmlSerializableTaskCollection dataFromFile = XmlUtil.getDataFromFile(TYPICAL_PERSONS_FILE,
             XmlSerializableTaskCollection.class);
         TaskCollection taskCollectionFromFile = dataFromFile.toModelType();
-        TaskCollection typicalPersonsTaskCollection = TypicalPersons.getTypicalAddressBook();
+        TaskCollection typicalPersonsTaskCollection = TypicalTasks.getTypicalTaskCollections();
         assertEquals(taskCollectionFromFile, typicalPersonsTaskCollection);
     }
 
