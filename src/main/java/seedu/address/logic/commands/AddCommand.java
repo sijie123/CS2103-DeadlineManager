@@ -25,14 +25,14 @@ public class AddCommand extends Command {
         + PREFIX_DEADLINE + "DEADLINE "
         + "[" + PREFIX_TAG + "TAG]...\n"
         + "Example: " + COMMAND_WORD + " "
-        + PREFIX_NAME + "John Doe "
+        + PREFIX_NAME + "CS2103T Peer Feedback "
         + PREFIX_PRIORITY + "1 "
-        + PREFIX_DEADLINE + "1/1/2018 "
-        + PREFIX_TAG + "friends "
-        + PREFIX_TAG + "owesMoney";
+        + PREFIX_DEADLINE + "10/11/2018 "
+        + PREFIX_TAG + "cs2103t "
+        + PREFIX_TAG + "project";
 
     public static final String MESSAGE_SUCCESS = "New task added: %1$s";
-    public static final String MESSAGE_DUPLICATE_PERSON = "This task already exists in the deadline manager";
+    public static final String MESSAGE_DUPLICATE_TASK = "This task already exists in the deadline manager";
 
     private final Task toAdd;
 
@@ -49,7 +49,7 @@ public class AddCommand extends Command {
         requireNonNull(model);
 
         if (model.hasTask(toAdd)) {
-            throw new CommandException(MESSAGE_DUPLICATE_PERSON);
+            throw new CommandException(MESSAGE_DUPLICATE_TASK);
         }
 
         model.addTask(toAdd);

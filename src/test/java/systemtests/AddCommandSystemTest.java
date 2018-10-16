@@ -125,7 +125,7 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
 
         /* Case: add a duplicate task -> rejected */
         command = PersonUtil.getAddCommand(HOON);
-        assertCommandFailure(command, AddCommand.MESSAGE_DUPLICATE_PERSON);
+        assertCommandFailure(command, AddCommand.MESSAGE_DUPLICATE_TASK);
 
         /* Case: missing name -> rejected */
         command = AddCommand.COMMAND_WORD + PRIORITY_DESC_AMY + DEADLINE_DESC_AMY;
