@@ -126,7 +126,7 @@ public class AttachmentCommandTest {
         AttachmentCommand.AttachmentAction action =
             new AttachmentCommand.AddAttachmentAction(filePath);
         AttachmentCommand attachmentCommand = new AttachmentCommand(INDEX_FIRST_TASK, action);
-        String expectedMessage =  Attachment.MESSAGE_DUPLICATE_ATTACHMENT_NAME;
+        String expectedMessage = Attachment.MESSAGE_DUPLICATE_ATTACHMENT_NAME;
         assertCommandFailure(attachmentCommand, modelStub, commandHistory, expectedMessage);
 
         //Attempt to add it using relative path --> should fail
@@ -207,7 +207,7 @@ public class AttachmentCommandTest {
         AttachmentCommand.AttachmentAction action =
             new AttachmentCommand.DeleteAttachmentAction(fileName);
         AttachmentCommand attachmentCommand = new AttachmentCommand(INDEX_FIRST_TASK, action);
-        String expectedMessage =  String.format(
+        String expectedMessage = String.format(
             AttachmentCommand.DeleteAttachmentAction.MESSAGE_SUCCESS, fileName);
 
         Model expectedModel = new ModelManager(new TaskCollection(modelStub.getAddressBook()),
