@@ -8,14 +8,14 @@ import java.util.List;
  */
 public class VersionedTaskCollection extends TaskCollection {
 
-    private final List<ReadOnlyTaskCollection> addressBookStateList;
+    private final List<ReadOnlyTaskCollection> taskCollectionStateList;
     private int currentStatePointer;
 
     public VersionedTaskCollection(ReadOnlyTaskCollection initialState) {
         super(initialState);
 
-        addressBookStateList = new ArrayList<>();
-        addressBookStateList.add(new TaskCollection(initialState));
+        taskCollectionStateList = new ArrayList<>();
+        taskCollectionStateList.add(new TaskCollection(initialState));
         currentStatePointer = 0;
     }
 
@@ -25,12 +25,12 @@ public class VersionedTaskCollection extends TaskCollection {
      */
     public void commit() {
         removeStatesAfterCurrentPointer();
-        addressBookStateList.add(new TaskCollection(this));
+        taskCollectionStateList.add(new TaskCollection(this));
         currentStatePointer++;
     }
 
     private void removeStatesAfterCurrentPointer() {
-        addressBookStateList.subList(currentStatePointer + 1, addressBookStateList.size()).clear();
+        taskCollectionStateList.subList(currentStatePointer + 1, taskCollectionStateList.size()).clear();
     }
 
     /**
@@ -41,7 +41,7 @@ public class VersionedTaskCollection extends TaskCollection {
             throw new NoUndoableStateException();
         }
         currentStatePointer--;
-        resetData(addressBookStateList.get(currentStatePointer));
+        resetData(taskCollectionStateList.get(currentStatePointer));
     }
 
     /**
@@ -52,7 +52,7 @@ public class VersionedTaskCollection extends TaskCollection {
             throw new NoRedoableStateException();
         }
         currentStatePointer++;
-        resetData(addressBookStateList.get(currentStatePointer));
+        resetData(taskCollectionStateList.get(currentStatePointer));
     }
 
     /**
@@ -66,7 +66,7 @@ public class VersionedTaskCollection extends TaskCollection {
      * Returns true if {@code redo()} has deadline manager states to redo.
      */
     public boolean canRedo() {
-        return currentStatePointer < addressBookStateList.size() - 1;
+        return currentStatePointer < taskCollectionStateList.size() - 1;
     }
 
     @Override
@@ -81,12 +81,12 @@ public class VersionedTaskCollection extends TaskCollection {
             return false;
         }
 
-        VersionedTaskCollection otherVersionedAddressBook = (VersionedTaskCollection) other;
+        VersionedTaskCollection otherVersionedTaskCollection = (VersionedTaskCollection) other;
 
         // state check
-        return super.equals(otherVersionedAddressBook)
-            && addressBookStateList.equals(otherVersionedAddressBook.addressBookStateList)
-            && currentStatePointer == otherVersionedAddressBook.currentStatePointer;
+        return super.equals(otherVersionedTaskCollection)
+            && taskCollectionStateList.equals(otherVersionedTaskCollection.taskCollectionStateList)
+            && currentStatePointer == otherVersionedTaskCollection.currentStatePointer;
     }
 
     /**
@@ -95,7 +95,7 @@ public class VersionedTaskCollection extends TaskCollection {
     public static class NoUndoableStateException extends RuntimeException {
 
         private NoUndoableStateException() {
-            super("Current state pointer at start of addressBookState list, unable to undo.");
+            super("Current state pointer at start of taskCollectionState list, unable to undo.");
         }
     }
 
@@ -105,7 +105,7 @@ public class VersionedTaskCollection extends TaskCollection {
     public static class NoRedoableStateException extends RuntimeException {
 
         private NoRedoableStateException() {
-            super("Current state pointer at end of addressBookState list, unable to redo.");
+            super("Current state pointer at end of taskCollectionState list, unable to redo.");
         }
     }
 }

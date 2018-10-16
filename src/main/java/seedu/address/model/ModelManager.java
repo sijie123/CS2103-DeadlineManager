@@ -43,16 +43,16 @@ public class ModelManager extends ComponentManager implements Model {
     private ImportConflictMode conflictResolver;
 
     /**
-     * Initializes a ModelManager with the given addressBook and userPrefs.
+     * Initializes a ModelManager with the given taskCollection and userPrefs.
      */
-    public ModelManager(ReadOnlyTaskCollection addressBook, UserPrefs userPrefs) {
+    public ModelManager(ReadOnlyTaskCollection taskCollection, UserPrefs userPrefs) {
         super();
-        requireAllNonNull(addressBook, userPrefs);
+        requireAllNonNull(taskCollection, userPrefs);
 
         logger.fine(
-            "Initializing with deadline manager: " + addressBook + " and user prefs " + userPrefs);
+            "Initializing with deadline manager: " + taskCollection + " and user prefs " + userPrefs);
 
-        versionedTaskCollection = new VersionedTaskCollection(addressBook);
+        versionedTaskCollection = new VersionedTaskCollection(taskCollection);
         filteredTasks = new FilteredList<>(versionedTaskCollection.getTaskList());
         lastError = null;
     }
