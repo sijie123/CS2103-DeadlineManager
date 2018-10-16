@@ -251,13 +251,13 @@ This section describes some noteworthy details on how certain features are imple
 === Undo/Redo feature
 ==== Current Implementation
 
-The undo/redo mechanism is facilitated by `VersionedAddressBook`.
-It extends `AddressBook` with an undo/redo history, stored internally as an `addressBookStateList` and `currentStatePointer`.
+The undo/redo mechanism is facilitated by `VersionedTaskCollection`.
+It extends `TaskCollection` with an undo/redo history, stored internally as an `addressBookStateList` and `currentStatePointer`.
 Additionally, it implements the following operations:
 
-* `VersionedAddressBook#commit()` -- Saves the current deadline manager state in its history.
-* `VersionedAddressBook#undo()` -- Restores the previous deadline manager state from its history.
-* `VersionedAddressBook#redo()` -- Restores a previously undone deadline manager state from its history.
+* `VersionedTaskCollection#commit()` -- Saves the current deadline manager state in its history.
+* `VersionedTaskCollection#undo()` -- Restores the previous deadline manager state from its history.
+* `VersionedTaskCollection#redo()` -- Restores a previously undone deadline manager state from its history.
 
 These operations are exposed in the `Model` interface as `Model#commitAddressBook()`, `Model#undoAddressBook()` and `Model#redoAddressBook()` respectively.
 
@@ -424,6 +424,48 @@ The user can specify the deconflict algorithm with flags. By default, the `Ignor
 
 // end::importexport[]
 
+// tag::sort[]
+=== Sort feature
+The sort command enables the user to sort the tasks currently being shown according to user defined custom comparator.
+It is made up of two main components - `SortCommandParser` and `SortCommand`
+
+==== Current Implementation
+The sort command is facilitated by `VersionedTaskCollection`.
+
+The sort command exposes the operation `updateSortedTaskList` to sort the task list.
+
+It is the responsibility of `SortCommandParser` to parse the user input into a comparator which can compare between two tasks.
+
+Then the comparator is passed onto the `SortCommand` which sorts the `versionedTaskCollection` according to the comparator.
+
+[NOTE]
+A `NullPointerException` is raised in case the `SortCommand` receives a `null` comparator.
+
+==== Sequence Flow
+
+Given below is a sequence of steps, illustrating the interaction between `SortCommandParser`, `SortCommand` and `ModelManager`
+
+Step 1. The user executes the sort command with a comparator typed by user.
+
+Step 2. The `SortCommandParser` receives the command with the user comparator given as a string.
+
+Step 3. The `SortCommandParser` parses the string into a valid comparator and calls the `SortCommand` with this comparator provided.
+
+Step 4. The `SortCommand` calls the `updateSortedTaskList` API method of `ModelManager`
+
+Step 5. The method `updateSortedTaskList` sorts the `versionTaskCollection` using JavaFx sort method
+
+==== Design Considerations
+
+===== Aspect: Which Task List to Sort
+
+* **Alternative 1 (current choice):** The entire `versionedTaskList` is sorted using JavaFx inbuilt sort method
+** Pros: Easy to implement.
+** Cons: May have performance issues in terms of slow running.
+* **Alternative 2:** The sorting is done ONLY on the viewable `filteredTasks` list.
+** Pros: Will be more efficient in terms of time complexity.
+** Cons: Requires significant changes to the codebase since sorting the `filteredTasks` requires it to be modifiable.
+// end::sort[]
 
 // tag::extendedfilter[]
 === Extended filter feature

@@ -234,13 +234,32 @@ This is an alias for `filter`.  They perform exactly the same function.  The ali
 === Sorting the tasks in the current view : `sort`
 
 Sorts the lists of all the tasks which the user is currently viewing. Generally meant to be used in combination with `filter`. +
+
+When this command is used, Deadline Manager will sort all the currently displayed tasks according to the user specified comparison method +
+Sort comparators are the core of the `sort` command.  Each sort comparator specifies a particular attribute (e.g. deadline, priority) and a comparison direction, i.e ascending or descending.
+
+The entire sorting command is composed of a chain of sort comparators which would be useful to determine which task to show earlier and latter +
+
+****
+
+What this means is that in case two tasks are in tie according to the first comparator, +
+then the decision to place which task first is determined by the next comparator, and so on.
+
+****
+
 Format: `sort SORT_COMPARATOR [SORT_COMPARATORS]...` +
 ****
-* Format of `SORT_COMPARATOR`: `(n|name|d|due)(<|>)`
+* Format of `SORT_COMPARATOR`: `(n|name|d|due|p|priority)(<|>)` OR `(t|tag)(<|>){TAG1 TAG2 TAG3 ...}
 * Sorts the list by the 1st comparator, in case of ties, sorts by 2nd comparator and so on.
-* `n` stands for name of the task and `d` stands for deadline of the task
+* Meaning of the operators for each valid key:
+** When `key` is `n` or `name`, the task name is compared. Comparision is case-insensitive.
+** When `key` is `d` or `due`, the task's due date is compared.
+** When `key` is `p` or `priority`, the task's priority is compared.
+** When `key` is `t` or `tag`, the task's tags are compared.
+[NOTE]
+For sorting by tags the user has to specify which tags are more important and which are less important.
+** Any other `key` will cause Deadline Manager to produce an error.
 * < stands for sorting in ascending order and > stands for sorting in descending order
-* For names, sorting is done in alphabetical ascending and descending order respectively.
 ****
 Examples:
 
@@ -248,6 +267,16 @@ Examples:
 Sorts the current list of tasks in view in descending order by name, where sorting is done in alphabetical manner.
 * `sort due< name>` +
 Sorts the current list of tasks in view in ascending order by due date, where ties are broken by descending order of names.
+* `sort priority<` +
+Sorts the current list of tasks in view in ascending order by priority.
+* `sort tag<{cs2100 family cs2103t}` +
+Sorts the current list of tasks in view in ascending order by tags. In this case all the tasks with the tag `cs2100` will be placed
+earlier as compared to tasks with the tag `family`, finally followed by those tasks with the tag `cs2103t`
+
+****
+* In case a task does not belong to any of the tags mentioned it will be placed at the bottom of the sorted list.
+* In case a task contains more than one tag specified by the user, then it will be attempted to be sorted according to those tags first which place it former in the sorted list.
+****
 
 //TODO: Sidhant
 //Not sure if this is implemented
