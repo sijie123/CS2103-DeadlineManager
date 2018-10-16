@@ -8,6 +8,7 @@ import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -242,4 +243,57 @@ public class AttachmentCommandTest {
         Model expectedModel = model;
         assertCommandSuccess(attachmentCommand, model, commandHistory, expectedMessage, expectedModel);
     }
+
+
+    @Test
+    public void execute_getAttachmentInvalid_error() {
+        Task task = model.getFilteredPersonList().get(0);
+        String nonExistentFileName = nonExistentFile.getName();
+        AttachmentCommand.AttachmentAction action =
+            new AttachmentCommand.GetAttachmentAction(nonExistentFileName, nonExistentFileName);
+        AttachmentCommand attachmentCommand = new AttachmentCommand(INDEX_FIRST_TASK, action);
+
+        String expectedMessage = String.format(
+            AttachmentCommand.GetAttachmentAction.MESSAGE_NAME_NOT_FOUND, nonExistentFileName);
+
+        assertCommandFailure(attachmentCommand, model, commandHistory, expectedMessage);
+    }
+
+
+    @Test
+    public void execute_getAttachment_success() {
+        File tempFile = createTestFile();
+        // Construct a file with one attachment
+        Task originalTask = model.getFilteredPersonList().get(INDEX_FIRST_TASK.getZeroBased());
+        Task taskWithAttachment = addAttachmentToTask(originalTask, new Attachment(tempFile));
+        Model modelStub = new ModelManager(new TaskCollection(model.getAddressBook()),
+            new UserPrefs());
+        modelStub.updatePerson(originalTask, taskWithAttachment);
+        modelStub.commitAddressBook();
+
+
+        File outputFile = createTestFile();
+        deleteTestFile(outputFile);
+
+        //Attempt to get it from attachments
+        String fileName = tempFile.getName();
+        String outputPath = outputFile.getPath();
+        AttachmentCommand.AttachmentAction action =
+            new AttachmentCommand.GetAttachmentAction(fileName, outputPath);
+        AttachmentCommand attachmentCommand = new AttachmentCommand(INDEX_FIRST_TASK, action);
+        String expectedMessage = String.format(
+            AttachmentCommand.GetAttachmentAction.MESSAGE_SUCCESS, fileName, outputPath);
+
+        Model expectedModel = modelStub;
+
+        assertCommandSuccess(attachmentCommand, modelStub, commandHistory, expectedMessage, expectedModel);
+
+        //TODO: Upgrade to check contents of the file
+        //assertTrue(Arrays.equals(Files.readAllBytes(tempFile.toPath()), Files.readAllBytes(outputFile.toPath())));
+
+        deleteTestFile(tempFile);
+        deleteTestFile(outputFile);
+
+    }
+
 }
