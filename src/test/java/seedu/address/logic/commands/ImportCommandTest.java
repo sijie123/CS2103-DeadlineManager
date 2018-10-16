@@ -58,12 +58,12 @@ public class ImportCommandTest {
         }
 
         @Override
-        public void importAddressBook(String filename) {
-            importAddressBook(filename, ImportConflictMode.IGNORE);
+        public void importTaskCollection(String filename) {
+            importTaskCollection(filename, ImportConflictMode.IGNORE);
         }
 
         @Override
-        public void importAddressBook(String filename, ImportConflictMode conflictMode) {
+        public void importTaskCollection(String filename, ImportConflictMode conflictMode) {
             if (filename.equals(temporaryFilePath)) {
                 //No error.
                 return;

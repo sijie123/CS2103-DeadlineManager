@@ -123,7 +123,7 @@ public class AddCommandTest {
         }
 
         @Override
-        public void commitAddressBook() {
+        public void commitTaskCollection() {
             // called by {@code AddCommand#execute()}
         }
 

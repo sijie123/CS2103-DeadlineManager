@@ -134,7 +134,7 @@ public class CommandTestUtil {
     public static void deleteFirstPerson(Model model) {
         Task firstTask = model.getFilteredTaskList().get(0);
         model.deleteTask(firstTask);
-        model.commitAddressBook();
+        model.commitTaskCollection();
     }
 
 }

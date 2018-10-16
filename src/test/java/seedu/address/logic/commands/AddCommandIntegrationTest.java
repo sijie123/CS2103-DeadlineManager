@@ -33,7 +33,7 @@ public class AddCommandIntegrationTest {
 
         Model expectedModel = new ModelManager(model.getTaskCollection(), new UserPrefs());
         expectedModel.addTask(validTask);
-        expectedModel.commitAddressBook();
+        expectedModel.commitTaskCollection();
 
         assertCommandSuccess(new AddCommand(validTask), model, commandHistory,
             String.format(AddCommand.MESSAGE_SUCCESS, validTask), expectedModel);

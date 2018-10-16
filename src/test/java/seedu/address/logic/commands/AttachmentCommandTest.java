@@ -104,7 +104,7 @@ public class AttachmentCommandTest {
         Model expectedModel = new ModelManager(new TaskCollection(model.getTaskCollection()),
             new UserPrefs());
         expectedModel.updateTask(model.getFilteredTaskList().get(0), expectedTask);
-        expectedModel.commitAddressBook();
+        expectedModel.commitTaskCollection();
 
         assertCommandSuccess(attachmentCommand, model, commandHistory, expectedMessage, expectedModel);
 
@@ -121,7 +121,7 @@ public class AttachmentCommandTest {
         Model modelStub = new ModelManager(new TaskCollection(model.getTaskCollection()),
             new UserPrefs());
         modelStub.updateTask(model.getFilteredTaskList().get(0), task);
-        modelStub.commitAddressBook();
+        modelStub.commitTaskCollection();
 
         //Attempt to add it again using absolute path -> should fail
         String filePath = tempFile.getAbsolutePath();
@@ -166,7 +166,7 @@ public class AttachmentCommandTest {
                 AttachmentCommand.AddAttachmentAction.MESSAGE_SUCCESS, tempFiles[i].getName());
             Task expectedTask = addAttachmentToTask(task, new Attachment(tempFiles[i]));
             expectedModel.updateTask(task, expectedTask);
-            expectedModel.commitAddressBook();
+            expectedModel.commitTaskCollection();
             assertCommandSuccess(attachmentCommand, model, commandHistory, expectedMessage, expectedModel);
             task = expectedTask;
         }
@@ -199,7 +199,7 @@ public class AttachmentCommandTest {
         Model modelStub = new ModelManager(new TaskCollection(model.getTaskCollection()),
             new UserPrefs());
         modelStub.updateTask(originalTask, taskWithAttachment);
-        modelStub.commitAddressBook();
+        modelStub.commitTaskCollection();
 
         Model baseModel = new ModelManager(new TaskCollection(modelStub.getTaskCollection()),
             new UserPrefs());
@@ -215,7 +215,7 @@ public class AttachmentCommandTest {
         Model expectedModel = new ModelManager(new TaskCollection(modelStub.getTaskCollection()),
             new UserPrefs());
         expectedModel.updateTask(taskWithAttachment, originalTask);
-        expectedModel.commitAddressBook();
+        expectedModel.commitTaskCollection();
 
         assertCommandSuccess(attachmentCommand, baseModel, commandHistory, expectedMessage, expectedModel);
 
@@ -268,7 +268,7 @@ public class AttachmentCommandTest {
         Model modelStub = new ModelManager(new TaskCollection(model.getTaskCollection()),
             new UserPrefs());
         modelStub.updateTask(originalTask, taskWithAttachment);
-        modelStub.commitAddressBook();
+        modelStub.commitTaskCollection();
 
 
         File outputFile = createTestFile();

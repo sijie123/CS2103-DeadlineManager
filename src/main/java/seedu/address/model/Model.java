@@ -74,27 +74,27 @@ public interface Model {
     /**
      * Returns true if the model has previous deadline manager states to restore.
      */
-    boolean canUndoAddressBook();
+    boolean canUndoTaskCollection();
 
     /**
      * Returns true if the model has undone deadline manager states to restore.
      */
-    boolean canRedoAddressBook();
+    boolean canRedoTaskCollection();
 
     /**
      * Restores the model's deadline manager to its previous state.
      */
-    void undoAddressBook();
+    void undoTaskCollection();
 
     /**
      * Restores the model's deadline manager to its previously undone state.
      */
-    void redoAddressBook();
+    void redoTaskCollection();
 
     /**
      * Saves the current deadline manager state for undo/redo.
      */
-    void commitAddressBook();
+    void commitTaskCollection();
 
     boolean importExportFailed();
 
@@ -103,17 +103,17 @@ public interface Model {
     /**
      * Exports current deadline manager to file.
      */
-    void exportAddressBook(String filename);
+    void exportTaskCollection(String filename);
 
     /**
      * Imports tasks from file to the current deadline manager.
      */
-    void importAddressBook(String filename);
+    void importTaskCollection(String filename);
 
     /**
      * Imports tasks from file to the current deadline manager.
      */
-    void importAddressBook(String filename, ModelManager.ImportConflictMode mode);
+    void importTaskCollection(String filename, ModelManager.ImportConflictMode mode);
 
     /**
      * Handler for the return result from Storage, when import data has been read.

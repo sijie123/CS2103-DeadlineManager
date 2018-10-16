@@ -132,29 +132,29 @@ public class ModelManager extends ComponentManager implements Model {
     //=========== Undo/Redo =================================================================================
 
     @Override
-    public boolean canUndoAddressBook() {
+    public boolean canUndoTaskCollection() {
         return versionedTaskCollection.canUndo();
     }
 
     @Override
-    public boolean canRedoAddressBook() {
+    public boolean canRedoTaskCollection() {
         return versionedTaskCollection.canRedo();
     }
 
     @Override
-    public void undoAddressBook() {
+    public void undoTaskCollection() {
         versionedTaskCollection.undo();
         indicateTaskCollectionChanged();
     }
 
     @Override
-    public void redoAddressBook() {
+    public void redoTaskCollection() {
         versionedTaskCollection.redo();
         indicateTaskCollectionChanged();
     }
 
     @Override
-    public void commitAddressBook() {
+    public void commitTaskCollection() {
         versionedTaskCollection.commit();
     }
 
@@ -187,7 +187,7 @@ public class ModelManager extends ComponentManager implements Model {
         return err;
     }
     @Override
-    public void exportAddressBook(String filename) {
+    public void exportTaskCollection(String filename) {
         requireNonNull(filename);
         List<Task> lastShownList = getFilteredTaskList();
         TaskCollection exportCollection = new TaskCollection();
@@ -196,12 +196,12 @@ public class ModelManager extends ComponentManager implements Model {
     }
 
     @Override
-    public void importAddressBook(String filename) {
-        importAddressBook(filename, ImportConflictMode.IGNORE);
+    public void importTaskCollection(String filename) {
+        importTaskCollection(filename, ImportConflictMode.IGNORE);
     }
 
     @Override
-    public void importAddressBook(String filename, ImportConflictMode mode) {
+    public void importTaskCollection(String filename, ImportConflictMode mode) {
         requireNonNull(filename);
         conflictResolver = mode;
         raise(new ImportRequestEvent(filename));

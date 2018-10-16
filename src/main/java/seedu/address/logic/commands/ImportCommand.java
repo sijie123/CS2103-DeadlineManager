@@ -30,7 +30,7 @@ public class ImportCommand extends Command {
     @Override
     public CommandResult execute(Model model, CommandHistory history) throws CommandException {
         requireNonNull(model);
-        model.importAddressBook(fileName, conflictResolver);
+        model.importTaskCollection(fileName, conflictResolver);
         if (model.importExportFailed()) {
             String errorMessage = model.getLastError();
             throw new CommandException(String.format(MESSAGE_IMPORT_ERROR, errorMessage));

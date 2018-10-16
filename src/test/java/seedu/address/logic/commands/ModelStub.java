@@ -62,27 +62,27 @@ public class ModelStub implements Model {
     }
 
     @Override
-    public boolean canUndoAddressBook() {
+    public boolean canUndoTaskCollection() {
         throw new AssertionError("This method should not be called.");
     }
 
     @Override
-    public boolean canRedoAddressBook() {
+    public boolean canRedoTaskCollection() {
         throw new AssertionError("This method should not be called.");
     }
 
     @Override
-    public void undoAddressBook() {
+    public void undoTaskCollection() {
         throw new AssertionError("This method should not be called.");
     }
 
     @Override
-    public void redoAddressBook() {
+    public void redoTaskCollection() {
         throw new AssertionError("This method should not be called.");
     }
 
     @Override
-    public void commitAddressBook() {
+    public void commitTaskCollection() {
         throw new AssertionError("This method should not be called.");
     }
 
@@ -97,17 +97,17 @@ public class ModelStub implements Model {
     }
 
     @Override
-    public void exportAddressBook(String filename) {
+    public void exportTaskCollection(String filename) {
         throw new AssertionError("This method should not be called.");
     }
 
     @Override
-    public void importAddressBook(String filename) {
+    public void importTaskCollection(String filename) {
         throw new AssertionError("This method should not be called.");
     }
 
     @Override
-    public void importAddressBook(String filename, ImportConflictMode conflictMode) {
+    public void importTaskCollection(String filename, ImportConflictMode conflictMode) {
         throw new AssertionError("This method should not be called.");
     }
 

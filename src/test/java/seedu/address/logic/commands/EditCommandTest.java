@@ -52,7 +52,7 @@ public class EditCommandTest {
         Model expectedModel = new ModelManager(new TaskCollection(model.getTaskCollection()),
             new UserPrefs());
         expectedModel.updateTask(model.getFilteredTaskList().get(0), editedTask);
-        expectedModel.commitAddressBook();
+        expectedModel.commitTaskCollection();
 
         assertCommandSuccess(editCommand, model, commandHistory, expectedMessage, expectedModel);
     }
@@ -75,7 +75,7 @@ public class EditCommandTest {
         Model expectedModel = new ModelManager(new TaskCollection(model.getTaskCollection()),
             new UserPrefs());
         expectedModel.updateTask(lastTask, editedTask);
-        expectedModel.commitAddressBook();
+        expectedModel.commitTaskCollection();
 
         assertCommandSuccess(editCommand, model, commandHistory, expectedMessage, expectedModel);
     }
@@ -89,7 +89,7 @@ public class EditCommandTest {
 
         Model expectedModel = new ModelManager(new TaskCollection(model.getTaskCollection()),
             new UserPrefs());
-        expectedModel.commitAddressBook();
+        expectedModel.commitTaskCollection();
 
         assertCommandSuccess(editCommand, model, commandHistory, expectedMessage, expectedModel);
     }
@@ -109,7 +109,7 @@ public class EditCommandTest {
         Model expectedModel = new ModelManager(new TaskCollection(model.getTaskCollection()),
             new UserPrefs());
         expectedModel.updateTask(model.getFilteredTaskList().get(0), editedTask);
-        expectedModel.commitAddressBook();
+        expectedModel.commitTaskCollection();
 
         assertCommandSuccess(editCommand, model, commandHistory, expectedMessage, expectedModel);
     }
@@ -126,7 +126,7 @@ public class EditCommandTest {
         Model expectedModel = new ModelManager(new TaskCollection(model.getTaskCollection()),
             new UserPrefs());
         expectedModel.updateTask(model.getFilteredTaskList().get(1), firstTask);
-        expectedModel.commitAddressBook();
+        expectedModel.commitTaskCollection();
 
         assertCommandSuccess(editCommand, model, commandHistory,
             expectedMessage, expectedModel);
@@ -172,18 +172,18 @@ public class EditCommandTest {
         Model expectedModel = new ModelManager(new TaskCollection(model.getTaskCollection()),
             new UserPrefs());
         expectedModel.updateTask(taskToEdit, editedTask);
-        expectedModel.commitAddressBook();
+        expectedModel.commitTaskCollection();
 
         // edit -> first task edited
         editCommand.execute(model, commandHistory);
 
         // undo -> reverts addressbook back to previous state and filtered task list to show all persons
-        expectedModel.undoAddressBook();
+        expectedModel.undoTaskCollection();
         assertCommandSuccess(new UndoCommand(), model, commandHistory, UndoCommand.MESSAGE_SUCCESS,
             expectedModel);
 
         // redo -> same first task edited again
-        expectedModel.redoAddressBook();
+        expectedModel.redoTaskCollection();
         assertCommandSuccess(new RedoCommand(), model, commandHistory, RedoCommand.MESSAGE_SUCCESS,
             expectedModel);
     }
@@ -223,20 +223,20 @@ public class EditCommandTest {
             new UserPrefs());
 
         expectedModel.updateTask(taskToEdit, editedTask);
-        expectedModel.commitAddressBook();
+        expectedModel.commitTaskCollection();
 
         // edit -> edits second task in unfiltered task list / first task in filtered task list
         editCommand.execute(model, commandHistory);
 
         // undo -> reverts addressbook back to previous state and filtered task list to show all persons
-        expectedModel.undoAddressBook();
+        expectedModel.undoTaskCollection();
         assertCommandSuccess(new UndoCommand(), model, commandHistory, UndoCommand.MESSAGE_SUCCESS,
             expectedModel);
 
         assertNotEquals(model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased()),
             taskToEdit);
         // redo -> edits same second task in unfiltered task list
-        expectedModel.redoAddressBook();
+        expectedModel.redoTaskCollection();
         assertCommandSuccess(new RedoCommand(), model, commandHistory, RedoCommand.MESSAGE_SUCCESS,
             expectedModel);
     }

@@ -42,7 +42,7 @@ public class DeleteCommand extends Command {
 
         Task taskToDelete = lastShownList.get(targetIndex.getZeroBased());
         model.deleteTask(taskToDelete);
-        model.commitAddressBook();
+        model.commitTaskCollection();
         return new CommandResult(String.format(MESSAGE_DELETE_PERSON_SUCCESS, taskToDelete));
     }
 

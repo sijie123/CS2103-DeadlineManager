@@ -39,7 +39,7 @@ public class DeleteCommandTest {
 
         ModelManager expectedModel = new ModelManager(model.getTaskCollection(), new UserPrefs());
         expectedModel.deleteTask(taskToDelete);
-        expectedModel.commitAddressBook();
+        expectedModel.commitTaskCollection();
 
         assertCommandSuccess(deleteCommand, model, commandHistory, expectedMessage, expectedModel);
     }
@@ -65,7 +65,7 @@ public class DeleteCommandTest {
 
         Model expectedModel = new ModelManager(model.getTaskCollection(), new UserPrefs());
         expectedModel.deleteTask(taskToDelete);
-        expectedModel.commitAddressBook();
+        expectedModel.commitTaskCollection();
         showNoPerson(expectedModel);
 
         assertCommandSuccess(deleteCommand, model, commandHistory, expectedMessage, expectedModel);
@@ -91,18 +91,18 @@ public class DeleteCommandTest {
         DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_TASK);
         Model expectedModel = new ModelManager(model.getTaskCollection(), new UserPrefs());
         expectedModel.deleteTask(taskToDelete);
-        expectedModel.commitAddressBook();
+        expectedModel.commitTaskCollection();
 
         // delete -> first task deleted
         deleteCommand.execute(model, commandHistory);
 
         // undo -> reverts addressbook back to previous state and filtered task list to show all persons
-        expectedModel.undoAddressBook();
+        expectedModel.undoTaskCollection();
         assertCommandSuccess(new UndoCommand(), model, commandHistory, UndoCommand.MESSAGE_SUCCESS,
             expectedModel);
 
         // redo -> same first task deleted again
-        expectedModel.redoAddressBook();
+        expectedModel.redoTaskCollection();
         assertCommandSuccess(new RedoCommand(), model, commandHistory, RedoCommand.MESSAGE_SUCCESS,
             expectedModel);
     }
@@ -135,20 +135,20 @@ public class DeleteCommandTest {
         showPersonAtIndex(model, INDEX_SECOND_TASK);
         Task taskToDelete = model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased());
         expectedModel.deleteTask(taskToDelete);
-        expectedModel.commitAddressBook();
+        expectedModel.commitTaskCollection();
 
         // delete -> deletes second task in unfiltered task list / first task in filtered task list
         deleteCommand.execute(model, commandHistory);
 
         // undo -> reverts addressbook back to previous state and filtered task list to show all persons
-        expectedModel.undoAddressBook();
+        expectedModel.undoTaskCollection();
         assertCommandSuccess(new UndoCommand(), model, commandHistory, UndoCommand.MESSAGE_SUCCESS,
             expectedModel);
 
         assertNotEquals(taskToDelete,
             model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased()));
         // redo -> deletes same second task in unfiltered task list
-        expectedModel.redoAddressBook();
+        expectedModel.redoTaskCollection();
         assertCommandSuccess(new RedoCommand(), model, commandHistory, RedoCommand.MESSAGE_SUCCESS,
             expectedModel);
     }

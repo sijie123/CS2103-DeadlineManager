@@ -84,7 +84,7 @@ public class AttachmentCommand extends Command {
 
         model.updateTask(taskToEdit, editedTask);
         model.updateFilteredTaskList(PREDICATE_SHOW_ALL_TASKS);
-        model.commitAddressBook();
+        model.commitTaskCollection();
         return new CommandResult(attachmentAction.resultMessage());
     }
 

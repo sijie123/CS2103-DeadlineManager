@@ -76,7 +76,7 @@ public class EditCommand extends Command {
 
         model.updateTask(taskToEdit, editedTask);
         model.updateFilteredTaskList(PREDICATE_SHOW_ALL_TASKS);
-        model.commitAddressBook();
+        model.commitTaskCollection();
         return new CommandResult(String.format(MESSAGE_EDIT_TASK_SUCCESS, editedTask));
     }
 
