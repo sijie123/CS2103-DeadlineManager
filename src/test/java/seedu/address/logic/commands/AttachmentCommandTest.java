@@ -1,6 +1,8 @@
 package seedu.address.logic.commands;
 
 import static org.junit.Assert.assertTrue;
+import static seedu.address.logic.commands.AttachmentCommand.ListAttachmentAction.MESSAGE_LIST_ATTACHMENT_DETAILS;
+import static seedu.address.logic.commands.AttachmentCommand.ListAttachmentAction.MESSAGE_TOTAL_ATTACHMENTS;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_TASK;
@@ -220,4 +222,23 @@ public class AttachmentCommandTest {
         deleteTestFile(tempFile);
     }
 
+    @Test
+    public void execute_listAttachment_success() {
+        AttachmentCommand.AttachmentAction action = new AttachmentCommand.ListAttachmentAction();
+        AttachmentCommand attachmentCommand = new AttachmentCommand(INDEX_FIRST_TASK, action);
+        Task task = model.getFilteredPersonList().get(INDEX_FIRST_TASK.getZeroBased());
+
+        Set<Attachment> attachments = task.getAttachments();
+        String expectedMessage = String.format(
+            AttachmentCommand.ListAttachmentAction.MESSAGE_TOTAL_ATTACHMENTS, attachments.size());
+        int indexCounter = 0;
+        for (Attachment attachment : attachments) {
+            indexCounter++;
+            expectedMessage += String.format(
+                AttachmentCommand.ListAttachmentAction.MESSAGE_LIST_ATTACHMENT_DETAILS, indexCounter, attachment.toString());
+        }
+
+        Model expectedModel = model;
+        assertCommandSuccess(attachmentCommand, model, commandHistory, expectedMessage, expectedModel);
+    }
 }

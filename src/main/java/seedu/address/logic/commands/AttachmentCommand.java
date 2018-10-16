@@ -257,16 +257,18 @@ public class AttachmentCommand extends Command {
      */
     public static class ListAttachmentAction extends AttachmentAction {
         private String resultMessage = "Action Not Performed";
+        public static final String MESSAGE_TOTAL_ATTACHMENTS = "%d attachments in total.\n";
+        public static final String MESSAGE_LIST_ATTACHMENT_DETAILS = "%d) %s\n";
 
         @Override
         public Task perform(Task taskToEdit) throws CommandException {
             assert taskToEdit != null;
             Set<Attachment> attachments = taskToEdit.getAttachments();
-            resultMessage = String.format("%d attachments in total.\n", attachments.size());
+            resultMessage = String.format(MESSAGE_TOTAL_ATTACHMENTS, attachments.size());
             int indexCounter = 0;
             for (Attachment attachment : attachments) {
                 indexCounter++;
-                resultMessage += String.format("%d) %s\n", indexCounter, attachment.toString());
+                resultMessage += String.format(MESSAGE_LIST_ATTACHMENT_DETAILS, indexCounter, attachment.toString());
             }
             return taskToEdit;
         }
