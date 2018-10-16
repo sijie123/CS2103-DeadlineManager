@@ -31,8 +31,8 @@ public class AddCommandIntegrationTest {
     public void execute_newPerson_success() {
         Task validTask = new PersonBuilder().build();
 
-        Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
-        expectedModel.addPerson(validTask);
+        Model expectedModel = new ModelManager(model.getTaskCollection(), new UserPrefs());
+        expectedModel.addTask(validTask);
         expectedModel.commitAddressBook();
 
         assertCommandSuccess(new AddCommand(validTask), model, commandHistory,
@@ -41,7 +41,7 @@ public class AddCommandIntegrationTest {
 
     @Test
     public void execute_duplicatePerson_throwsCommandException() {
-        Task taskInList = model.getAddressBook().getTaskList().get(0);
+        Task taskInList = model.getTaskCollection().getTaskList().get(0);
         assertCommandFailure(new AddCommand(taskInList), model, commandHistory,
             AddCommand.MESSAGE_DUPLICATE_PERSON);
     }

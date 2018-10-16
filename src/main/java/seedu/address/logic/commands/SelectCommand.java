@@ -37,7 +37,7 @@ public class SelectCommand extends Command {
     public CommandResult execute(Model model, CommandHistory history) throws CommandException {
         requireNonNull(model);
 
-        List<Task> filteredTaskList = model.getFilteredPersonList();
+        List<Task> filteredTaskList = model.getFilteredTaskList();
 
         if (targetIndex.getZeroBased() >= filteredTaskList.size()) {
             throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);

@@ -17,7 +17,7 @@ import seedu.address.model.task.Task;
 public class ModelStub implements Model {
 
     @Override
-    public void addPerson(Task task) {
+    public void addTask(Task task) {
         throw new AssertionError("This method should not be called.");
     }
 
@@ -27,37 +27,37 @@ public class ModelStub implements Model {
     }
 
     @Override
-    public ReadOnlyTaskCollection getAddressBook() {
+    public ReadOnlyTaskCollection getTaskCollection() {
         throw new AssertionError("This method should not be called.");
     }
 
     @Override
-    public boolean hasPerson(Task task) {
+    public boolean hasTask(Task task) {
         throw new AssertionError("This method should not be called.");
     }
 
     @Override
-    public void deletePerson(Task target) {
+    public void deleteTask(Task target) {
         throw new AssertionError("This method should not be called.");
     }
 
     @Override
-    public void updatePerson(Task target, Task editedTask) {
+    public void updateTask(Task target, Task editedTask) {
         throw new AssertionError("This method should not be called.");
     }
 
     @Override
-    public void updateSortedPersonList(Comparator<Task> comparator) {
+    public void updateSortedTaskList(Comparator<Task> comparator) {
         throw new AssertionError("This method should not be called.");
     }
 
     @Override
-    public ObservableList<Task> getFilteredPersonList() {
+    public ObservableList<Task> getFilteredTaskList() {
         throw new AssertionError("This method should not be called.");
     }
 
     @Override
-    public void updateFilteredPersonList(Predicate<Task> predicate) {
+    public void updateFilteredTaskList(Predicate<Task> predicate) {
         throw new AssertionError("This method should not be called.");
     }
 

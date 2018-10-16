@@ -63,14 +63,14 @@ public class DeleteCommandSystemTest extends TaskCollectionSystemTest {
         /* Case: filtered task list, delete index within bounds of deadline manager and task list -> deleted */
         showPersonsWithName(KEYWORD_MATCHING_MEIER);
         Index index = INDEX_FIRST_TASK;
-        assertTrue(index.getZeroBased() < getModel().getFilteredPersonList().size());
+        assertTrue(index.getZeroBased() < getModel().getFilteredTaskList().size());
         assertCommandSuccess(index);
 
         /* Case: filtered task list, delete index within bounds of deadline manager but out of bounds of task list
          * -> rejected
          */
         showPersonsWithName(KEYWORD_MATCHING_MEIER);
-        int invalidIndex = getModel().getAddressBook().getTaskList().size();
+        int invalidIndex = getModel().getTaskCollection().getTaskList().size();
         command = DeleteCommand.COMMAND_WORD + " " + invalidIndex;
         assertCommandFailure(command, MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
 
@@ -99,7 +99,7 @@ public class DeleteCommandSystemTest extends TaskCollectionSystemTest {
 
         /* Case: invalid index (size + 1) -> rejected */
         Index outOfBoundsIndex = Index.fromOneBased(
-            getModel().getAddressBook().getTaskList().size() + 1);
+            getModel().getTaskCollection().getTaskList().size() + 1);
         command = DeleteCommand.COMMAND_WORD + " " + outOfBoundsIndex.getOneBased();
         assertCommandFailure(command, MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
 
@@ -122,7 +122,7 @@ public class DeleteCommandSystemTest extends TaskCollectionSystemTest {
      */
     private Task removePerson(Model model, Index index) {
         Task targetTask = getPerson(model, index);
-        model.deletePerson(targetTask);
+        model.deleteTask(targetTask);
         return targetTask;
     }
 
