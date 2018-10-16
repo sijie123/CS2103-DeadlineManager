@@ -33,7 +33,7 @@ public class SortCommand extends Command {
     @Override
     public CommandResult execute(Model model, CommandHistory history) {
         requireNonNull(model);
-        model.updateSortedPersonList(comparator);
+        model.updateSortedTaskList(comparator);
         return new CommandResult(MESSAGE_SUCCESS);
     }
 }

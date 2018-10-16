@@ -97,7 +97,7 @@ public class AddCommandTest {
         }
 
         @Override
-        public boolean hasPerson(Task task) {
+        public boolean hasTask(Task task) {
             requireNonNull(task);
             return this.task.equals(task);
         }
@@ -111,13 +111,13 @@ public class AddCommandTest {
         final ArrayList<Task> personsAdded = new ArrayList<>();
 
         @Override
-        public boolean hasPerson(Task task) {
+        public boolean hasTask(Task task) {
             requireNonNull(task);
             return personsAdded.contains(task);
         }
 
         @Override
-        public void addPerson(Task task) {
+        public void addTask(Task task) {
             requireNonNull(task);
             personsAdded.add(task);
         }
@@ -128,7 +128,7 @@ public class AddCommandTest {
         }
 
         @Override
-        public ReadOnlyTaskCollection getAddressBook() {
+        public ReadOnlyTaskCollection getTaskCollection() {
             return new TaskCollection();
         }
 

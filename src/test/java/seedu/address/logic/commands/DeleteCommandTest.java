@@ -31,14 +31,14 @@ public class DeleteCommandTest {
 
     @Test
     public void execute_validIndexUnfilteredList_success() {
-        Task taskToDelete = model.getFilteredPersonList().get(INDEX_FIRST_TASK.getZeroBased());
+        Task taskToDelete = model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased());
         DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_TASK);
 
         String expectedMessage = String
             .format(DeleteCommand.MESSAGE_DELETE_PERSON_SUCCESS, taskToDelete);
 
-        ModelManager expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
-        expectedModel.deletePerson(taskToDelete);
+        ModelManager expectedModel = new ModelManager(model.getTaskCollection(), new UserPrefs());
+        expectedModel.deleteTask(taskToDelete);
         expectedModel.commitAddressBook();
 
         assertCommandSuccess(deleteCommand, model, commandHistory, expectedMessage, expectedModel);
@@ -46,7 +46,7 @@ public class DeleteCommandTest {
 
     @Test
     public void execute_invalidIndexUnfilteredList_throwsCommandException() {
-        Index outOfBoundIndex = Index.fromOneBased(model.getFilteredPersonList().size() + 1);
+        Index outOfBoundIndex = Index.fromOneBased(model.getFilteredTaskList().size() + 1);
         DeleteCommand deleteCommand = new DeleteCommand(outOfBoundIndex);
 
         assertCommandFailure(deleteCommand, model, commandHistory,
@@ -57,14 +57,14 @@ public class DeleteCommandTest {
     public void execute_validIndexFilteredList_success() {
         showPersonAtIndex(model, INDEX_FIRST_TASK);
 
-        Task taskToDelete = model.getFilteredPersonList().get(INDEX_FIRST_TASK.getZeroBased());
+        Task taskToDelete = model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased());
         DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_TASK);
 
         String expectedMessage = String
             .format(DeleteCommand.MESSAGE_DELETE_PERSON_SUCCESS, taskToDelete);
 
-        Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
-        expectedModel.deletePerson(taskToDelete);
+        Model expectedModel = new ModelManager(model.getTaskCollection(), new UserPrefs());
+        expectedModel.deleteTask(taskToDelete);
         expectedModel.commitAddressBook();
         showNoPerson(expectedModel);
 
@@ -77,7 +77,7 @@ public class DeleteCommandTest {
 
         Index outOfBoundIndex = INDEX_SECOND_TASK;
         // ensures that outOfBoundIndex is still in bounds of deadline manager list
-        assertTrue(outOfBoundIndex.getZeroBased() < model.getAddressBook().getTaskList().size());
+        assertTrue(outOfBoundIndex.getZeroBased() < model.getTaskCollection().getTaskList().size());
 
         DeleteCommand deleteCommand = new DeleteCommand(outOfBoundIndex);
 
@@ -87,10 +87,10 @@ public class DeleteCommandTest {
 
     @Test
     public void executeUndoRedo_validIndexUnfilteredList_success() throws Exception {
-        Task taskToDelete = model.getFilteredPersonList().get(INDEX_FIRST_TASK.getZeroBased());
+        Task taskToDelete = model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased());
         DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_TASK);
-        Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
-        expectedModel.deletePerson(taskToDelete);
+        Model expectedModel = new ModelManager(model.getTaskCollection(), new UserPrefs());
+        expectedModel.deleteTask(taskToDelete);
         expectedModel.commitAddressBook();
 
         // delete -> first task deleted
@@ -109,7 +109,7 @@ public class DeleteCommandTest {
 
     @Test
     public void executeUndoRedo_invalidIndexUnfilteredList_failure() {
-        Index outOfBoundIndex = Index.fromOneBased(model.getFilteredPersonList().size() + 1);
+        Index outOfBoundIndex = Index.fromOneBased(model.getFilteredTaskList().size() + 1);
         DeleteCommand deleteCommand = new DeleteCommand(outOfBoundIndex);
 
         // execution failed -> deadline manager state not added into model
@@ -130,11 +130,11 @@ public class DeleteCommandTest {
     @Test
     public void executeUndoRedo_validIndexFilteredList_samePersonDeleted() throws Exception {
         DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_TASK);
-        Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
+        Model expectedModel = new ModelManager(model.getTaskCollection(), new UserPrefs());
 
         showPersonAtIndex(model, INDEX_SECOND_TASK);
-        Task taskToDelete = model.getFilteredPersonList().get(INDEX_FIRST_TASK.getZeroBased());
-        expectedModel.deletePerson(taskToDelete);
+        Task taskToDelete = model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased());
+        expectedModel.deleteTask(taskToDelete);
         expectedModel.commitAddressBook();
 
         // delete -> deletes second task in unfiltered task list / first task in filtered task list
@@ -146,7 +146,7 @@ public class DeleteCommandTest {
             expectedModel);
 
         assertNotEquals(taskToDelete,
-            model.getFilteredPersonList().get(INDEX_FIRST_TASK.getZeroBased()));
+            model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased()));
         // redo -> deletes same second task in unfiltered task list
         expectedModel.redoAddressBook();
         assertCommandSuccess(new RedoCommand(), model, commandHistory, RedoCommand.MESSAGE_SUCCESS,
@@ -179,8 +179,8 @@ public class DeleteCommandTest {
      * Updates {@code model}'s filtered list to show no one.
      */
     private void showNoPerson(Model model) {
-        model.updateFilteredPersonList(p -> false);
+        model.updateFilteredTaskList(p -> false);
 
-        assertTrue(model.getFilteredPersonList().isEmpty());
+        assertTrue(model.getFilteredTaskList().isEmpty());
     }
 }

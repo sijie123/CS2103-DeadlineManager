@@ -37,7 +37,7 @@ public class SelectCommandTest {
 
     @Test
     public void execute_validIndexUnfilteredList_success() {
-        Index lastPersonIndex = Index.fromOneBased(model.getFilteredPersonList().size());
+        Index lastPersonIndex = Index.fromOneBased(model.getFilteredTaskList().size());
 
         assertExecutionSuccess(INDEX_FIRST_TASK);
         assertExecutionSuccess(INDEX_THIRD_TASK);
@@ -46,7 +46,7 @@ public class SelectCommandTest {
 
     @Test
     public void execute_invalidIndexUnfilteredList_failure() {
-        Index outOfBoundsIndex = Index.fromOneBased(model.getFilteredPersonList().size() + 1);
+        Index outOfBoundsIndex = Index.fromOneBased(model.getFilteredTaskList().size() + 1);
 
         assertExecutionFailure(outOfBoundsIndex, Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
     }
@@ -66,7 +66,7 @@ public class SelectCommandTest {
 
         Index outOfBoundsIndex = INDEX_SECOND_TASK;
         // ensures that outOfBoundIndex is still in bounds of deadline manager list
-        assertTrue(outOfBoundsIndex.getZeroBased() < model.getAddressBook().getTaskList().size());
+        assertTrue(outOfBoundsIndex.getZeroBased() < model.getTaskCollection().getTaskList().size());
 
         assertExecutionFailure(outOfBoundsIndex, Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
     }

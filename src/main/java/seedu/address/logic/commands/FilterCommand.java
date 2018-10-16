@@ -32,10 +32,10 @@ public class FilterCommand extends Command {
     @Override
     public CommandResult execute(Model model, CommandHistory history) {
         requireNonNull(model);
-        model.updateFilteredPersonList(predicate);
+        model.updateFilteredTaskList(predicate);
         return new CommandResult(
             String.format(Messages.MESSAGE_PERSONS_LISTED_OVERVIEW,
-                model.getFilteredPersonList().size()));
+                model.getFilteredTaskList().size()));
     }
 
     // FilterCommand should only compare equal by identity -

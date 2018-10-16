@@ -145,8 +145,8 @@ public abstract class TaskCollectionSystemTest {
      */
     protected void showAllPersons() {
         executeCommand(ListCommand.COMMAND_WORD);
-        assertEquals(getModel().getAddressBook().getTaskList().size(),
-            getModel().getFilteredPersonList().size());
+        assertEquals(getModel().getTaskCollection().getTaskList().size(),
+            getModel().getFilteredTaskList().size());
     }
 
     /**
@@ -155,7 +155,7 @@ public abstract class TaskCollectionSystemTest {
      */
     protected void showPersonsWithName(String keyword) {
         executeCommand(FindCommand.COMMAND_WORD + " " + keyword);
-        assertTrue(getModel().getFilteredPersonList().size() < getModel().getAddressBook()
+        assertTrue(getModel().getFilteredTaskList().size() < getModel().getTaskCollection()
             .getTaskList().size());
     }
 
@@ -172,7 +172,7 @@ public abstract class TaskCollectionSystemTest {
      */
     protected void deleteAllPersons() {
         executeCommand(ClearCommand.COMMAND_WORD);
-        assertEquals(0, getModel().getAddressBook().getTaskList().size());
+        assertEquals(0, getModel().getTaskCollection().getTaskList().size());
     }
 
     /**
@@ -186,9 +186,9 @@ public abstract class TaskCollectionSystemTest {
                                                      Model expectedModel) {
         assertEquals(expectedCommandInput, getCommandBox().getInput());
         assertEquals(expectedResultMessage, getResultDisplay().getText());
-        assertEquals(new TaskCollection(expectedModel.getAddressBook()),
+        assertEquals(new TaskCollection(expectedModel.getTaskCollection()),
             testApp.readStorageAddressBook());
-        assertListMatching(getPersonListPanel(), expectedModel.getFilteredPersonList());
+        assertListMatching(getPersonListPanel(), expectedModel.getFilteredTaskList());
     }
 
     /**
@@ -291,7 +291,7 @@ public abstract class TaskCollectionSystemTest {
     private void assertApplicationStartingStateIsCorrect() {
         assertEquals("", getCommandBox().getInput());
         assertEquals("", getResultDisplay().getText());
-        assertListMatching(getPersonListPanel(), getModel().getFilteredPersonList());
+        assertListMatching(getPersonListPanel(), getModel().getFilteredTaskList());
         assertEquals(MainApp.class.getResource(FXML_FILE_FOLDER + DEFAULT_PAGE),
             getBrowserPanel().getLoadedUrl());
         assertEquals(Paths.get(".").resolve(testApp.getStorageSaveLocation()).toString(),
