@@ -64,11 +64,10 @@ public class AttachmentCommand extends Command {
      */
     public AttachmentCommand(Index index, AttachmentAction attachmentAction) {
         requireNonNull(index);
-        //requireNonNull(attachmentAction);
+        requireNonNull(attachmentAction);
 
         this.index = index;
         this.attachmentAction = attachmentAction;
-        //this.AttachmentAction = attachmentCommandDescriptor;
     }
 
     @Override
@@ -164,8 +163,9 @@ public class AttachmentCommand extends Command {
 
     /**
      * Utility function to determine if an attachment with name (@code name) exists in the set of attachments.
+     *
      * @param attachments Set of attachments
-     * @param name Name to search
+     * @param name        Name to search
      * @return True if there is an attachment with name (@code name)
      */
     private static boolean isAttachmentName(Set<Attachment> attachments, String name) {
@@ -178,8 +178,9 @@ public class AttachmentCommand extends Command {
 
     /**
      * Utility function to obtain an attachment object from a set of attachments, based on name.
+     *
      * @param attachments Set of attachments
-     * @param name Name to search
+     * @param name        Name to search
      * @return Null if there is no attachment with the provided name in the set.
      */
     private static Attachment getAttachment(Set<Attachment> attachments, String name) {
@@ -321,12 +322,12 @@ public class AttachmentCommand extends Command {
             + "It might have been deleted or moved";
 
         private String resultMessage = "Action Not Performed";
-        private final String nameToGet;
+        private final String fileName;
         private final String savePath;
 
-        public GetAttachmentAction(String nameToGet, String savePath) {
-            requireAllNonNull(nameToGet, savePath);
-            this.nameToGet = nameToGet;
+        public GetAttachmentAction(String fileName, String savePath) {
+            requireAllNonNull(fileName, savePath);
+            this.fileName = fileName;
             this.savePath = savePath;
         }
 
@@ -358,9 +359,9 @@ public class AttachmentCommand extends Command {
         @Override
         public Task perform(Task taskToEdit) throws CommandException {
             assert taskToEdit != null;
-            Attachment attachmentToGet = getAttachment(taskToEdit.getAttachments(), nameToGet);
+            Attachment attachmentToGet = getAttachment(taskToEdit.getAttachments(), fileName);
             if (attachmentToGet == null) {
-                throw new CommandException(String.format(MESSAGE_NAME_NOT_FOUND, nameToGet));
+                throw new CommandException(String.format(MESSAGE_NAME_NOT_FOUND, fileName));
             }
             File saveFile = new File(savePath);
             copyFileToDestination(attachmentToGet.file, saveFile);
