@@ -8,7 +8,6 @@ import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
