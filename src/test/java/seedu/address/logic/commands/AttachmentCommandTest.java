@@ -28,7 +28,7 @@ import seedu.address.testutil.PersonBuilder;
  * Contains unit tests for AttachmentCommand.
  */
 public class AttachmentCommandTest {
-    private static File nonExistentFile = new File("not-here1827364.txt");
+    private static File nonExistentFile = new File("blabla/not-here1827364.txt");
 
     private Model model = new ModelManager(getTypicalAddressBook(), new UserPrefs());
     private CommandHistory commandHistory = new CommandHistory();
@@ -105,6 +105,119 @@ public class AttachmentCommandTest {
         expectedModel.commitAddressBook();
 
         assertCommandSuccess(attachmentCommand, model, commandHistory, expectedMessage, expectedModel);
+
+        deleteTestFile(tempFile);
+    }
+
+    @Test
+    public void execute_addAttachmentFileDuplicatedFile_error() {
+        File tempFile = createTestFile();
+        // Construct a file with one attachment
+        Task task = addAttachmentToTask(
+            model.getFilteredPersonList().get(INDEX_FIRST_TASK.getZeroBased()),
+            new Attachment(tempFile));
+        Model modelStub = new ModelManager(new TaskCollection(model.getAddressBook()),
+            new UserPrefs());
+        modelStub.updatePerson(model.getFilteredPersonList().get(0), task);
+        modelStub.commitAddressBook();
+
+        //Attempt to add it again using absolute path -> should fail
+        String filePath = tempFile.getAbsolutePath();
+        AttachmentCommand.AttachmentAction action =
+            new AttachmentCommand.AddAttachmentAction(filePath);
+        AttachmentCommand attachmentCommand = new AttachmentCommand(INDEX_FIRST_TASK, action);
+        String expectedMessage =  Attachment.MESSAGE_DUPLICATE_ATTACHMENT_NAME;
+        assertCommandFailure(attachmentCommand, modelStub, commandHistory, expectedMessage);
+
+        //Attempt to add it using relative path --> should fail
+        filePath = tempFile.getPath();
+        action = new AttachmentCommand.AddAttachmentAction(filePath);
+        attachmentCommand = new AttachmentCommand(INDEX_FIRST_TASK, action);
+        assertCommandFailure(attachmentCommand, modelStub, commandHistory, expectedMessage);
+
+        //Attempt to add a non-existing file with duplicated name --> should show file not exists
+        filePath = tempFile.getName();
+        action = new AttachmentCommand.AddAttachmentAction(filePath);
+        attachmentCommand = new AttachmentCommand(INDEX_FIRST_TASK, action);
+        expectedMessage = String.format(
+            AttachmentCommand.AddAttachmentAction.MESSAGE_ADD_NOT_A_FILE, filePath);
+        assertCommandFailure(attachmentCommand, modelStub, commandHistory, expectedMessage);
+
+        deleteTestFile(tempFile);
+    }
+
+    @Test
+    public void execute_addAttachmentMultipleFiles_success() {
+        int numberOfFiles = 25;
+        File[] tempFiles = new File[numberOfFiles];
+        Task task = model.getFilteredPersonList().get(INDEX_FIRST_TASK.getZeroBased());
+        Model expectedModel = new ModelManager(new TaskCollection(model.getAddressBook()),
+            new UserPrefs());
+
+        for (int i = 0; i < numberOfFiles; i++) {
+            tempFiles[i] = createTestFile();
+            String filePath = tempFiles[i].getAbsolutePath();
+            AttachmentCommand.AttachmentAction action =
+                new AttachmentCommand.AddAttachmentAction(filePath);
+            AttachmentCommand attachmentCommand = new AttachmentCommand(INDEX_FIRST_TASK, action);
+            String expectedMessage = String.format(
+                AttachmentCommand.AddAttachmentAction.MESSAGE_SUCCESS, tempFiles[i].getName());
+            Task expectedTask = addAttachmentToTask(task, new Attachment(tempFiles[i]));
+            expectedModel.updatePerson(task, expectedTask);
+            expectedModel.commitAddressBook();
+            assertCommandSuccess(attachmentCommand, model, commandHistory, expectedMessage, expectedModel);
+            task = expectedTask;
+        }
+
+        for (int i = 0; i < numberOfFiles; i++) {
+            deleteTestFile(tempFiles[i]);
+        }
+    }
+
+    @Test
+    public void execute_deleteAttachmentInvalid_error() {
+        Task task = model.getFilteredPersonList().get(0);
+        String nonExistentFileName = nonExistentFile.getName();
+        AttachmentCommand.AttachmentAction action =
+            new AttachmentCommand.DeleteAttachmentAction(nonExistentFileName);
+        AttachmentCommand attachmentCommand = new AttachmentCommand(INDEX_FIRST_TASK, action);
+
+        String expectedMessage = String.format(
+            AttachmentCommand.DeleteAttachmentAction.MESSAGE_NAME_NOT_FOUND, nonExistentFileName);
+
+        assertCommandFailure(attachmentCommand, model, commandHistory, expectedMessage);
+    }
+
+    @Test
+    public void execute_deleteAttachment_success() {
+        File tempFile = createTestFile();
+        // Construct a file with one attachment
+        Task originalTask = model.getFilteredPersonList().get(INDEX_FIRST_TASK.getZeroBased());
+        Task taskWithAttachment = addAttachmentToTask(originalTask, new Attachment(tempFile));
+        Model modelStub = new ModelManager(new TaskCollection(model.getAddressBook()),
+            new UserPrefs());
+        modelStub.updatePerson(originalTask, taskWithAttachment);
+        modelStub.commitAddressBook();
+
+        Model baseModel = new ModelManager(new TaskCollection(modelStub.getAddressBook()),
+            new UserPrefs());
+
+        //Attempt to remove it from attachments
+        String fileName = tempFile.getName();
+        AttachmentCommand.AttachmentAction action =
+            new AttachmentCommand.DeleteAttachmentAction(fileName);
+        AttachmentCommand attachmentCommand = new AttachmentCommand(INDEX_FIRST_TASK, action);
+        String expectedMessage =  String.format(
+            AttachmentCommand.DeleteAttachmentAction.MESSAGE_SUCCESS, fileName);
+
+        Model expectedModel = new ModelManager(new TaskCollection(modelStub.getAddressBook()),
+            new UserPrefs());
+        expectedModel.updatePerson(taskWithAttachment, originalTask);
+        expectedModel.commitAddressBook();
+
+        assertCommandSuccess(attachmentCommand, baseModel, commandHistory, expectedMessage, expectedModel);
+
+        deleteTestFile(tempFile);
     }
 
 }
