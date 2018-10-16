@@ -39,7 +39,7 @@ public class TaskCollectionParserTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    private final AddressBookParser parser = new AddressBookParser();
+    private final TaskCollectionParser parser = new TaskCollectionParser();
 
     @Test
     public void parseCommand_add() throws Exception {

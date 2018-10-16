@@ -24,7 +24,7 @@ public interface Logic {
     /**
      * Returns an unmodifiable view of the filtered list of persons
      */
-    ObservableList<Task> getFilteredPersonList();
+    ObservableList<Task> getFilteredTaskList();
 
     /**
      * Returns the list of input entered by the user, encapsulated in a {@code ListElementPointer}

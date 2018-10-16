@@ -41,7 +41,7 @@ public class BrowserPanel extends UiPart<Region> {
         registerAsAnEventHandler(this);
     }
 
-    private void loadPersonPage(Task task) {
+    private void loadTaskPage(Task task) {
         loadPage(SEARCH_PAGE_URL + task.getName().value);
     }
 
@@ -67,6 +67,6 @@ public class BrowserPanel extends UiPart<Region> {
     @Subscribe
     private void handleTaskPanelSelectionChangedEvent(TaskPanelSelectionChangedEvent event) {
         logger.info(LogsCenter.getEventHandlingLogMessage(event));
-        loadPersonPage(event.getNewSelection());
+        loadTaskPage(event.getNewSelection());
     }
 }
