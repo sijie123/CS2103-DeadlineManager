@@ -12,9 +12,9 @@ import seedu.address.model.task.exceptions.DuplicateTaskException;
 import seedu.address.model.task.exceptions.TaskNotFoundException;
 
 /**
- * A list of persons that enforces uniqueness between its elements and does not allow nulls. A task
+ * A list of tasks that enforces uniqueness between its elements and does not allow nulls. A task
  * is considered unique by comparing using {@code Task#isSameTask(Task)}. As such, adding and
- * updating of persons uses Task#isSameTask(Task) for equality so as to ensure that the task being
+ * updating of tasks uses Task#isSameTask(Task) for equality so as to ensure that the task being
  * added or updated is unique in terms of identity in the UniqueTaskList. However, the removal of a
  * task uses Task#equals(Object) so as to ensure that the task with exactly the same fields will be
  * removed.

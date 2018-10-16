@@ -10,7 +10,7 @@ import seedu.address.model.Model;
 import seedu.address.model.task.Task;
 
 /**
- * Finds and lists all persons in deadline manager whose name contains any of the argument keywords.
+ * Finds and lists all tasks in deadline manager whose name contains any of the argument keywords.
  * Keyword matching is case insensitive.
  */
 public class FilterCommand extends Command {
