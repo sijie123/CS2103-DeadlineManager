@@ -469,12 +469,87 @@ Step 5. The method `updateSortedTaskList` sorts the `versionTaskCollection` usin
 
 // tag::extendedfilter[]
 === Extended filter feature
-==== Current implementation
 
-The extended filter feature aims to make filtering tasks flexible as well as intuitive.
-// [TODO]
+The deadline manager supports a very flexible filtering system.  The filtering system can be utilized with the `filter` command.
 
-// end::extendedfilter[]
+==== Overview
+
+When a user invokes the `filter` command (e.g. `filter t:CS2101 & n:Assignment`), the following steps are taken by the program:
+
+1. Extract the text describing the filter operation (e.g. `t:CS2101 & n:Assignment`)
+2. Parse the text describing the filter operation into a predicate (i.e. `Predicate<Task>`)
+3. Apply the predicate on the model (this simply calls `Model#updateFilteredPersonList()`, which internally leverages on JavaFX's `FilteredList` class to provide filtering by predicate)
+
+Step 1 is performed by the `AddressBookParser` class, and no special actions need to be taken by the filtering system.
+
+Step 3 is performed by the `FilterCommand` class.  It is a simple operation that simply delegates the task to `Model#updateFilteredPersonList()`.
+
+The overwhelming majority of code for the filtering system comes from step 2, which is performed by the `FilterCommandParser` class.  The ability to parse complex filter descriptions into usable predicates forms the core of the filtering feature, and this ability makes the filtering system very flexible.
+
+In the rest of this guide that describes the filtering system, we use the term _filter expression_ to refer to the full filter operation that the user typed (e.g. `t:CS2101 & n:Assignment`, or even `t:CS2101 & ( n:Assignment | n:Homework) & p<3`), and the term _filter unit_ to refer to substrings of the filter expression that represent single indivisible predicates (e.g. `t:CS2101`, or `n:Homework`).
+
+There are three parts to parsing the filter operation:
+
+1. A boolean expression parser that understands the high-level syntax of the filter expression and digests the filter expression into filter units
+2. A parser that splits each filter unit (e.g. `t:CS2101`) into its three constituent parts (e.g. `t`, `:`, `CS2101`) -- this is the lambda expression in the sequence diagram below
+3. A method for each field (e.g. `Name`, `Deadline`, `Priority`, `Set<Tag>`) that interprets the parts from the previous part in the context of that particular field, and returns the predicate that is required  -- this is referred to as the _field-specific parser_, and is implemented as a static method in each filterable field
+
+A tokenizer (this is the `StringTokenizer` class in the `parser` subdirectory) is shared by parts 1 and 2 to split the filter expression into tokens.
+
+image::FilterOperationSequenceDiagram.png[width="800"]
+
+The above diagram shows the simplified sequence of operations to parse a filter expression into a predicate.  Take note of the following simplifications in the sequence diagram above:
+
+* "Field" represents any filterable field -- `Name`, `Deadline`, `Priority`, or `Tag`.  For tags, filtering is more complicated as there can be any number of tags on a task, but the above sequence diagram still gives a rough idea of how parsing works.
+* Strictly speaking, the "loop" is not actually a loop.  As the boolean expression parser parses the filter expression, it invokes the lambda expression whenever a filter unit is encountered.  For simplicity, the sequence diagram above hides the complexity within the boolean expression parser.
+
+==== String tokenizer
+
+This is represented by the class `seedu.address.logic.parser.StringTokenizer`.
+
+[NOTE]
+This class is not to be confused with `java.util.StringTokenizer`.
+
+This class is initialized with the whole filter expression, and can be queried for a token multiple times -- each query consumes and returns the next available token, in a similar way to `java.util.Scanner`.
+
+There are two ways to consume tokens using the string tokenizer:
+
+* Consume a text string.  This is used for consuming tokens that are intended to be textual (e.g. `t`, `CS2101`).  Consumption of text strings is quote-aware -- if the text string is quoted using single or double quotes, the text string would be consumed as a single token, even if it contains spaces or special characters.  This is useful when the user wants to search for a name that contains those characters.
+* Consume a token by a regular expression.  This is used for consuming symbolic tokens (e.g. `:`, `|`, `&`, `(`).
+
+[NOTE]
+The string tokenizer class is also used to parse comma-separated tag expressions.
+
+==== Boolean expression parser
+
+This is represented by the class `seedu.address.logic.parser.BooleanExpressionParser<T>`, and it is a general boolean expression parser that is designed to be unaware of the syntax of individual filter units.
+
+The following operators are recognized (highest precedence first):
+
+* `!`: Logical negation (NOT) of two predicates
+* `&` or `&&`: Logical conjunction (AND) of two predicates
+* `|` or `||`: Logical disjunction (OR) of two predicates
+
+Parentheses (`(` and `)`) are also recognized and respected, and they may be nested to arbitrary depth.
+
+The boolean expression parser uses the link:https://en.wikipedia.org/wiki/Shunting-yard_algorithm[shunting yard algorithm] to provide precedence-respecting parsing of the filter expression.
+
+The boolean expression parser functions as follows:
+
+1. The boolean expression parser is constructed with the filter expression, and it constructs a `StringTokenizer` instance from the given filter expression.
+2. When the start of an operand (i.e. filter unit) is encountered, it hands over the `StringTokenizer` instance to the filter unit parser (this is defined in the `FilterCommandParser` class).  The filter unit parser determines the field name, and then uses the field-specific parser to construct the predicate (i.e. `Predicate<Task>` instance) that the filter unit represents.  This predicate is returned to the boolean expression parser.
+
+Application of operators (i.e. `!`, `&`, `|`) is done by the boolean expression parser itself (i.e. without delegating the work to other classes).
+
+==== Filter unit parser
+
+[NOTE]
+This section is under construction.
+
+==== Field-specific parser
+
+[NOTE]
+This section is under construction.
 
 
 // tag::attachments[]
