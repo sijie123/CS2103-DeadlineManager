@@ -164,8 +164,9 @@ public class AttachmentCommand extends Command {
 
     /**
      * Utility function to determine if an attachment with name (@code name) exists in the set of attachments.
+     *
      * @param attachments Set of attachments
-     * @param name Name to search
+     * @param name        Name to search
      * @return True if there is an attachment with name (@code name)
      */
     private static boolean isAttachmentName(Set<Attachment> attachments, String name) {
@@ -178,8 +179,9 @@ public class AttachmentCommand extends Command {
 
     /**
      * Utility function to obtain an attachment object from a set of attachments, based on name.
+     *
      * @param attachments Set of attachments
-     * @param name Name to search
+     * @param name        Name to search
      * @return Null if there is no attachment with the provided name in the set.
      */
     private static Attachment getAttachment(Set<Attachment> attachments, String name) {
@@ -256,17 +258,21 @@ public class AttachmentCommand extends Command {
      * Action to list all attachments.
      */
     public static class ListAttachmentAction extends AttachmentAction {
+
+        public static final String MESSAGE_TOTAL_ATTACHMENTS = "%d attachments in total.\n";
+        public static final String MESSAGE_LIST_ATTACHMENT_DETAILS = "%d) %s\n";
+
         private String resultMessage = "Action Not Performed";
 
         @Override
         public Task perform(Task taskToEdit) throws CommandException {
             assert taskToEdit != null;
             Set<Attachment> attachments = taskToEdit.getAttachments();
-            resultMessage = String.format("%d attachments in total.\n", attachments.size());
+            resultMessage = String.format(MESSAGE_TOTAL_ATTACHMENTS, attachments.size());
             int indexCounter = 0;
             for (Attachment attachment : attachments) {
                 indexCounter++;
-                resultMessage += String.format("%d) %s\n", indexCounter, attachment.toString());
+                resultMessage += String.format(MESSAGE_LIST_ATTACHMENT_DETAILS, indexCounter, attachment.toString());
             }
             return taskToEdit;
         }
