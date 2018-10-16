@@ -12,7 +12,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.Region;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.events.ui.JumpToListRequestEvent;
-import seedu.address.commons.events.ui.PersonPanelSelectionChangedEvent;
+import seedu.address.commons.events.ui.TaskPanelSelectionChangedEvent;
 import seedu.address.model.task.Task;
 
 /**
@@ -43,7 +43,7 @@ public class TaskListPanel extends UiPart<Region> {
             .addListener((observable, oldValue, newValue) -> {
                 if (newValue != null) {
                     logger.fine("Selection in task list panel changed to : '" + newValue + "'");
-                    raise(new PersonPanelSelectionChangedEvent(newValue));
+                    raise(new TaskPanelSelectionChangedEvent(newValue));
                 }
             });
     }
