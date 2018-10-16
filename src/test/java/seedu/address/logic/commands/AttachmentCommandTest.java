@@ -1,8 +1,6 @@
 package seedu.address.logic.commands;
 
 import static org.junit.Assert.assertTrue;
-import static seedu.address.logic.commands.AttachmentCommand.ListAttachmentAction.MESSAGE_LIST_ATTACHMENT_DETAILS;
-import static seedu.address.logic.commands.AttachmentCommand.ListAttachmentAction.MESSAGE_TOTAL_ATTACHMENTS;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_TASK;
@@ -56,7 +54,8 @@ public class AttachmentCommandTest {
 
     /**
      * Creates a copy of the provided task with additional attachments.
-     * @param task The original task
+     *
+     * @param task        The original task
      * @param attachments Attachments to be added to the task
      */
     private Task addAttachmentToTask(Task task, Attachment... attachments) {
@@ -66,6 +65,7 @@ public class AttachmentCommandTest {
         Task modifiedTask = new PersonBuilder(task).withAttachments(attachmentSet).build();
         return modifiedTask;
     }
+
     /**
      * TODO:
      * - Add attachment
@@ -235,7 +235,8 @@ public class AttachmentCommandTest {
         for (Attachment attachment : attachments) {
             indexCounter++;
             expectedMessage += String.format(
-                AttachmentCommand.ListAttachmentAction.MESSAGE_LIST_ATTACHMENT_DETAILS, indexCounter, attachment.toString());
+                AttachmentCommand.ListAttachmentAction.MESSAGE_LIST_ATTACHMENT_DETAILS, indexCounter,
+                attachment.toString());
         }
 
         Model expectedModel = model;
