@@ -343,29 +343,44 @@ Internally, it uses the same API as reading and saving the working addressbook f
 However, additional checks are performed to ensure that the user does not inadvertently overwrite the current working file, or import and corrupt the current working file.
 `StorageManager` only handles the I/O from file, and the data read and written is handled by `Model`.
 
+[NOTE]
+An ImportExportExceptionEvent is raised if I/O fails for any reason.
+
 ModelManager implements the following APIs necessary for Import and Export:
 
-* `importTaskCollection`: Creates a new import request event
-* `exportTaskCollection`: Creates a new export request event.
+* `importTaskCollection`: Creates and posts a new import request event
+* `exportTaskCollection`: Creates and posts a new export request event.
+
+The request events are posted to the `EventCenter`, which will dispatch to all subscribed methods.
 
 ==== Inter-component communication
 To facilitate communication between the two components, the deadline manager uses the event-driven model.
-An import or export request event is first generated, then `StorageManager` will handle the event.
-After data has been successfully read or written, another event is generated for `Model` to process.
+An import or export request event is created by `ModelManager`, and a handler in `StorageManager` is invoked to handle the event.
+After data has been successfully read or written, the response is placed in another event for `ModelManager` to process.
 
-Hence, `StorageManager` implements these additional methods to handle requests:
+To achieve the above, `ModelManager` indicates an import/export request by creating these events:
 
-* `handleImportRequestEvent`: Processes an import event and reads from file
-* `handleExportRequestEvent`: Processes an export event and writes to file
+* `ImportRequestEvent`: Requests for a new import from file.
+* `ExportRequestEvent`: Requests to create a new export to file.
 
-`StorageManager` passes the result of imports and errors with the following events:
-* `ImportExportExceptionEvent`: Indicates that an error has occurred with import or export.
-* `ImportDataAvailableEvent`: Indicates that the requested task collection has been read from disk.
-
-Similarly, `ModelManager` implements these additional methods to handle requests:
+`ModelManager` implements these additional methods to handle the responses from `Storage`:
 
 * `handleImportDataAvailableEvent`: Processes the read task collection and merges tasks into the current collection.
 * `handleImportExportExceptionEvent`: Indicates internally that the last import/export request has failed.
+
+[NOTE]
+It is the responsibility of the `Model` to feedback to the user in the case of an exception.
+
+
+Similarly, `StorageManager` returns the result of imports and errors with the following events:
+
+* `ImportExportExceptionEvent`: Indicates that an error has occurred with import or export.
+* `ImportDataAvailableEvent`: Indicates that the requested task collection has been read from disk.
+
+`StorageManager` implements these additional methods to handle requests from `Model`:
+
+* `handleImportRequestEvent`: Processes an import event and reads from file.
+* `handleExportRequestEvent`: Processes an export event and writes to file.
 
 ==== Sequence Flow
 
