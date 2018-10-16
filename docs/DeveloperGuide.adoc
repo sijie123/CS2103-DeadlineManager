@@ -479,7 +479,7 @@ The extended filter feature aims to make filtering tasks flexible as well as int
 
 // tag::attachments[]
 === Attachment feature
-The attachment feature aims to help users organise and keep track of important files needed for the respective tasks. It allows users to associate files in their computer with a particular task. When the user decides to perform the task, it is possible to know where the file is and export it to an appropriate location.
+The attachment feature aims to help users organise and keep track of important files needed for the respective tasks. It allows users to associate files in their computer with a particular task. When the user decides to perform the task, this feature provides functionality to identify previously associated files and export it to an appropriate location.
 
 ==== Current implementation
 The attachment feature is mainly implemented by `AttachmentCommand`. As `AttachmentCommand` is an all-purpose command that allows users to perform numerous actions related to attachments, a nested abstract class `AttachmentAction` is defined within `AttachmentCommand`. There are 4 classes that extend `AttachmentAction` in order to implement the various actions of the attachment feature. The command line arguments for the attachment command is parsed by `AttachmentCommandParser`.
@@ -494,7 +494,7 @@ Step 2. The `AttachmentCommandParser` receives the command with the arguments gi
 
 Step 3. The `AttachmentCommandParser` interprets the arguments and constructs either a `AddAttachmentAction` for `add`, `ListAttachmentAction` for `list`, `DeleteAttachmentAction` for `delete` or `GetAttachmentAction` for `get`. The relevant arguments will also be passed as parameters to the constructors of these classes. Do note that these classes all extends from the abstract class `AttachmentAction`.
 
-Step 4. A `AttachmentCommand` is constructed and initialized with the `AttachmentAction` constructed in Step 3.
+Step 4. An `AttachmentCommand` is constructed and initialized with the `AttachmentAction` constructed in Step 3.
 
 Given below is another sequence of steps, illustrating the interaction between `AttachmentCommand` and classes that implement `AttachmentAction` when the `AttachmentCommand#execute` method is invoked by the `LogicManager`.
 
