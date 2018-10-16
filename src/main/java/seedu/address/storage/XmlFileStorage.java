@@ -9,12 +9,12 @@ import seedu.address.commons.exceptions.DataConversionException;
 import seedu.address.commons.util.XmlUtil;
 
 /**
- * Stores addressbook data in an XML file
+ * Stores deadline manager data in an XML file
  */
 public class XmlFileStorage {
 
     /**
-     * Saves the given addressbook data to the specified file.
+     * Saves the given deadline manager data to the specified file.
      */
     public static void saveDataToFile(Path file, XmlSerializableTaskCollection addressBook)
         throws FileNotFoundException {
