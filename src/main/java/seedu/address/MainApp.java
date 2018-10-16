@@ -85,14 +85,14 @@ public class MainApp extends Application {
      * occur when reading {@code storage}'s deadline manager.
      */
     private Model initModelManager(Storage storage, UserPrefs userPrefs) {
-        Optional<ReadOnlyTaskCollection> addressBookOptional;
+        Optional<ReadOnlyTaskCollection> taskCollectionOptional;
         ReadOnlyTaskCollection initialData;
         try {
-            addressBookOptional = storage.readTaskCollection();
-            if (!addressBookOptional.isPresent()) {
+            taskCollectionOptional = storage.readTaskCollection();
+            if (!taskCollectionOptional.isPresent()) {
                 logger.info("Data file not found. Will be starting with a sample TaskCollection");
             }
-            initialData = addressBookOptional.orElseGet(SampleDataUtil::getSampleAddressBook);
+            initialData = taskCollectionOptional.orElseGet(SampleDataUtil::getSampleAddressBook);
         } catch (DataConversionException e) {
             logger.warning(
                 "Data file not in the correct format. Will be starting with an empty TaskCollection");
@@ -184,7 +184,7 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        logger.info("Starting TaskCollection " + MainApp.VERSION);
+        logger.info("Starting DeadlineManager " + MainApp.VERSION);
         ui.start(primaryStage);
     }
 
