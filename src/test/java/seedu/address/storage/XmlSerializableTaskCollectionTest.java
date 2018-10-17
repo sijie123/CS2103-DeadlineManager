@@ -27,16 +27,16 @@ public class XmlSerializableTaskCollectionTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void toModelType_typicalPersonsFile_success() throws Exception {
+    public void toModelType_typicalTasksFile_success() throws Exception {
         XmlSerializableTaskCollection dataFromFile = XmlUtil.getDataFromFile(TYPICAL_TASKS_FILE,
             XmlSerializableTaskCollection.class);
         TaskCollection taskCollectionFromFile = dataFromFile.toModelType();
-        TaskCollection typicalPersonsTaskCollection = TypicalTasks.getTypicalTaskCollections();
-        assertEquals(taskCollectionFromFile, typicalPersonsTaskCollection);
+        TaskCollection typicalTasksTaskCollection = TypicalTasks.getTypicalTaskCollections();
+        assertEquals(taskCollectionFromFile, typicalTasksTaskCollection);
     }
 
     @Test
-    public void toModelType_invalidPersonFile_throwsIllegalValueException() throws Exception {
+    public void toModelType_invalidTaskFile_throwsIllegalValueException() throws Exception {
         XmlSerializableTaskCollection dataFromFile = XmlUtil.getDataFromFile(INVALID_TASK_FILE,
             XmlSerializableTaskCollection.class);
         thrown.expect(IllegalValueException.class);

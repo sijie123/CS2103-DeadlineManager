@@ -143,7 +143,7 @@ public abstract class TaskCollectionSystemTest {
     /**
      * Displays all persons in the deadline manager.
      */
-    protected void showAllPersons() {
+    protected void showAllTasks() {
         executeCommand(ListCommand.COMMAND_WORD);
         assertEquals(getModel().getTaskCollection().getTaskList().size(),
             getModel().getFilteredTaskList().size());
@@ -153,7 +153,7 @@ public abstract class TaskCollectionSystemTest {
      * Displays all persons with any parts of their names matching {@code keyword}
      * (case-insensitive).
      */
-    protected void showPersonsWithName(String keyword) {
+    protected void showTasksWithName(String keyword) {
         executeCommand(FindCommand.COMMAND_WORD + " " + keyword);
         assertTrue(getModel().getFilteredTaskList().size() < getModel().getTaskCollection()
             .getTaskList().size());
@@ -162,7 +162,7 @@ public abstract class TaskCollectionSystemTest {
     /**
      * Selects the task at {@code index} of the displayed list.
      */
-    protected void selectPerson(Index index) {
+    protected void selectTask(Index index) {
         executeCommand(SelectCommand.COMMAND_WORD + " " + index.getOneBased());
         assertEquals(index.getZeroBased(), getPersonListPanel().getSelectedCardIndex());
     }

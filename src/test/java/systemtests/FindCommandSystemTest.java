@@ -119,8 +119,8 @@ public class FindCommandSystemTest extends TaskCollectionSystemTest {
         assertSelectedCardUnchanged();
 
         /* Case: find while a task is selected -> selected card deselected */
-        showAllPersons();
-        selectPerson(Index.fromOneBased(1));
+        showAllTasks();
+        selectTask(Index.fromOneBased(1));
         assertFalse(getPersonListPanel().getHandleToSelectedCard().getName()
             .equals(DANIEL.getName().value));
         command = FindCommand.COMMAND_WORD + " Daniel";

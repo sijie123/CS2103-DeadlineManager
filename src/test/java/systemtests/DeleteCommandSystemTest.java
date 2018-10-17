@@ -61,7 +61,7 @@ public class DeleteCommandSystemTest extends TaskCollectionSystemTest {
         /* ------------------ Performing delete operation while a filtered list is being shown ---------------------- */
 
         /* Case: filtered task list, delete index within bounds of deadline manager and task list -> deleted */
-        showPersonsWithName(KEYWORD_MATCHING_MEIER);
+        showTasksWithName(KEYWORD_MATCHING_MEIER);
         Index index = INDEX_FIRST_TASK;
         assertTrue(index.getZeroBased() < getModel().getFilteredTaskList().size());
         assertCommandSuccess(index);
@@ -69,7 +69,7 @@ public class DeleteCommandSystemTest extends TaskCollectionSystemTest {
         /* Case: filtered task list, delete index within bounds of deadline manager but out of bounds of task list
          * -> rejected
          */
-        showPersonsWithName(KEYWORD_MATCHING_MEIER);
+        showTasksWithName(KEYWORD_MATCHING_MEIER);
         int invalidIndex = getModel().getTaskCollection().getTaskList().size();
         command = DeleteCommand.COMMAND_WORD + " " + invalidIndex;
         assertCommandFailure(command, MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
@@ -77,11 +77,11 @@ public class DeleteCommandSystemTest extends TaskCollectionSystemTest {
         /* --------------------- Performing delete operation while a task card is selected ------------------------ */
 
         /* Case: delete the selected task -> task list panel selects the task before the deleted task */
-        showAllPersons();
+        showAllTasks();
         expectedModel = getModel();
         Index selectedIndex = getLastIndex(expectedModel);
         Index expectedIndex = Index.fromZeroBased(selectedIndex.getZeroBased() - 1);
-        selectPerson(selectedIndex);
+        selectTask(selectedIndex);
         command = DeleteCommand.COMMAND_WORD + " " + selectedIndex.getOneBased();
         deletedTask = removePerson(expectedModel, selectedIndex);
         expectedResultMessage = String.format(MESSAGE_DELETE_TASK_SUCCESS, deletedTask);

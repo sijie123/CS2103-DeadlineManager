@@ -34,12 +34,12 @@ public class UniqueTaskListTest {
     }
 
     @Test
-    public void contains_TaskNotInList_returnsFalse() {
+    public void contains_taskNotInList_returnsFalse() {
         assertFalse(uniqueTaskList.contains(ALICE));
     }
 
     @Test
-    public void contains_TaskInList_returnsTrue() {
+    public void contains_taskInList_returnsTrue() {
         uniqueTaskList.add(ALICE);
         assertTrue(uniqueTaskList.contains(ALICE));
     }
@@ -120,7 +120,7 @@ public class UniqueTaskListTest {
     }
 
     @Test
-    public void remove_TaskDoesNotExist_throwsTaskNotFoundException() {
+    public void remove_taskDoesNotExist_throwsTaskNotFoundException() {
         thrown.expect(TaskNotFoundException.class);
         uniqueTaskList.remove(ALICE);
     }

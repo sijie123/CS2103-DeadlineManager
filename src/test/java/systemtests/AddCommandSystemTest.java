@@ -100,13 +100,13 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
         /* -------------------------- Perform add operation on the shown filtered list ------------------------------ */
 
         /* Case: filters the task list before adding -> added */
-        showPersonsWithName(KEYWORD_MATCHING_MEIER);
+        showTasksWithName(KEYWORD_MATCHING_MEIER);
         assertCommandSuccess(IDA);
 
         /* ------------------------ Perform add operation while a task card is selected --------------------------- */
 
         /* Case: selects first card in the task list, add a task -> added, card selection remains unchanged */
-        selectPerson(Index.fromOneBased(1));
+        selectTask(Index.fromOneBased(1));
         assertCommandSuccess(CARL);
 
         /* ---------------------- Perform add operation with duplicate task (should succeed) ----------------------- */

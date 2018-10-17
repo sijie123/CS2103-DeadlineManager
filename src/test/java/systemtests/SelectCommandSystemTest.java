@@ -59,7 +59,7 @@ public class SelectCommandSystemTest extends TaskCollectionSystemTest {
         /* Case: filtered task list, select index within bounds of deadline manager but out of bounds of task list
          * -> rejected
          */
-        showPersonsWithName(KEYWORD_MATCHING_MEIER);
+        showTasksWithName(KEYWORD_MATCHING_MEIER);
         int invalidIndex = getModel().getTaskCollection().getTaskList().size();
         assertCommandFailure(SelectCommand.COMMAND_WORD + " " + invalidIndex,
             MESSAGE_INVALID_TASK_DISPLAYED_INDEX);

@@ -113,7 +113,7 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
         /* ------------------ Performing edit operation while a filtered list is being shown ------------------------ */
 
         /* Case: filtered task list, edit index within bounds of deadline manager and task list -> edited */
-        showPersonsWithName(KEYWORD_MATCHING_MEIER);
+        showTasksWithName(KEYWORD_MATCHING_MEIER);
         index = INDEX_FIRST_TASK;
         assertTrue(index.getZeroBased() < getModel().getFilteredTaskList().size());
         command = EditCommand.COMMAND_WORD + " " + index.getOneBased() + " " + NAME_DESC_BOB;
@@ -124,7 +124,7 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
         /* Case: filtered task list, edit index within bounds of deadline manager but out of bounds of task list
          * -> rejected
          */
-        showPersonsWithName(KEYWORD_MATCHING_MEIER);
+        showTasksWithName(KEYWORD_MATCHING_MEIER);
         int invalidIndex = getModel().getTaskCollection().getTaskList().size();
         assertCommandFailure(EditCommand.COMMAND_WORD + " " + invalidIndex + NAME_DESC_BOB,
             Messages.MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
@@ -134,9 +134,9 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
         /* Case: selects first card in the task list, edit a task -> edited, card selection remains unchanged but
          * browser url changes
          */
-        showAllPersons();
+        showAllTasks();
         index = INDEX_FIRST_TASK;
-        selectPerson(index);
+        selectTask(index);
         command = EditCommand.COMMAND_WORD + " " + index.getOneBased() + NAME_DESC_AMY
             + PRIORITY_DESC_AMY + DEADLINE_DESC_AMY + TAG_DESC_FRIEND;
         // this can be misleading: card selection actually remains unchanged but the
