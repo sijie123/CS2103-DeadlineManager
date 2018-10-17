@@ -30,7 +30,7 @@ import seedu.address.logic.commands.UndoCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.task.NameContainsKeywordsPredicate;
 import seedu.address.model.task.Task;
-import seedu.address.testutil.EditPersonDescriptorBuilder;
+import seedu.address.testutil.EditTaskDescriptorBuilder;
 import seedu.address.testutil.TaskBuilder;
 import seedu.address.testutil.PersonUtil;
 
@@ -64,7 +64,7 @@ public class TaskCollectionParserTest {
     @Test
     public void parseCommand_edit() throws Exception {
         Task task = new TaskBuilder().build();
-        EditTaskDescriptor descriptor = new EditPersonDescriptorBuilder(task).build();
+        EditTaskDescriptor descriptor = new EditTaskDescriptorBuilder(task).build();
         EditCommand command = (EditCommand) parser.parseCommand(EditCommand.COMMAND_WORD + " "
             + INDEX_FIRST_TASK.getOneBased() + " " + PersonUtil
             .getEditPersonDescriptorDetails(descriptor));
