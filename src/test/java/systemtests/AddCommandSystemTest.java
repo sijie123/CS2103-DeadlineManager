@@ -39,7 +39,7 @@ import seedu.address.model.task.Name;
 import seedu.address.model.task.Priority;
 import seedu.address.model.task.Task;
 import seedu.address.testutil.TaskBuilder;
-import seedu.address.testutil.PersonUtil;
+import seedu.address.testutil.TaskUtil;
 
 public class AddCommandSystemTest extends TaskCollectionSystemTest {
 
@@ -81,7 +81,7 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
          */
         toAdd = new TaskBuilder(AMY).withPriority(VALID_PRIORITY_BOB)
             .build();
-        command = PersonUtil.getAddCommand(toAdd);
+        command = TaskUtil.getAddCommand(toAdd);
         assertCommandSuccess(command, toAdd);
 
         /* Case: add to empty deadline manager -> added */
@@ -113,18 +113,18 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
 
         /* Case: add a duplicate task except with different priority -> added normally */
         toAdd = new TaskBuilder(HOON).withPriority(VALID_PRIORITY_BOB).build();
-        command = PersonUtil.getAddCommand(toAdd);
+        command = TaskUtil.getAddCommand(toAdd);
         assertCommandSuccess(command, toAdd);
 
         /* Case: add a duplicate task except with different tags -> added normally */
-        command = PersonUtil.getAddCommand(HOON) + " " + PREFIX_TAG.getPrefix() + "friends";
+        command = TaskUtil.getAddCommand(HOON) + " " + PREFIX_TAG.getPrefix() + "friends";
         toAdd = new TaskBuilder(HOON).withTags("friends").build();
         assertCommandSuccess(command, toAdd);
 
         /* ----------------------------------- Perform invalid add operations --------------------------------------- */
 
         /* Case: add a duplicate task -> rejected */
-        command = PersonUtil.getAddCommand(HOON);
+        command = TaskUtil.getAddCommand(HOON);
         assertCommandFailure(command, AddCommand.MESSAGE_DUPLICATE_TASK);
 
         /* Case: missing name -> rejected */
@@ -138,7 +138,7 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE));
 
         /* Case: invalid keyword -> rejected */
-        command = "adds " + PersonUtil.getPersonDetails(toAdd);
+        command = "adds " + TaskUtil.getTaskDetails(toAdd);
         assertCommandFailure(command, Messages.MESSAGE_UNKNOWN_COMMAND);
 
         /* Case: invalid name -> rejected */
@@ -183,7 +183,7 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
         Task toAddWithoutAttachment = new TaskBuilder(toAdd)
             .withAttachments()
             .build();
-        assertCommandSuccess(PersonUtil.getAddCommand(toAddWithoutAttachment), toAddWithoutAttachment);
+        assertCommandSuccess(TaskUtil.getAddCommand(toAddWithoutAttachment), toAddWithoutAttachment);
     }
 
     /**
