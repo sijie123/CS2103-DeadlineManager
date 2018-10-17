@@ -5,7 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
-import static seedu.address.logic.commands.CommandTestUtil.showPersonAtIndex;
+import static seedu.address.logic.commands.CommandTestUtil.showTaskAtIndex;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_TASK;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_TASK;
 import static seedu.address.testutil.TypicalIndexes.INDEX_THIRD_TASK;
@@ -53,16 +53,16 @@ public class SelectCommandTest {
 
     @Test
     public void execute_validIndexFilteredList_success() {
-        showPersonAtIndex(model, INDEX_FIRST_TASK);
-        showPersonAtIndex(expectedModel, INDEX_FIRST_TASK);
+        showTaskAtIndex(model, INDEX_FIRST_TASK);
+        showTaskAtIndex(expectedModel, INDEX_FIRST_TASK);
 
         assertExecutionSuccess(INDEX_FIRST_TASK);
     }
 
     @Test
     public void execute_invalidIndexFilteredList_failure() {
-        showPersonAtIndex(model, INDEX_FIRST_TASK);
-        showPersonAtIndex(expectedModel, INDEX_FIRST_TASK);
+        showTaskAtIndex(model, INDEX_FIRST_TASK);
+        showTaskAtIndex(expectedModel, INDEX_FIRST_TASK);
 
         Index outOfBoundsIndex = INDEX_SECOND_TASK;
         // ensures that outOfBoundIndex is still in bounds of deadline manager list
