@@ -65,7 +65,7 @@ public class TaskListPanelTest extends GuiUnitTest {
     }
 
     /**
-     * Verifies that creating and deleting large number of persons in {@code TaskListPanel}
+     * Verifies that creating and deleting large number of tasks in {@code TaskListPanel}
      * requires lesser than {@code CARD_CREATION_AND_DELETION_TIMEOUT} milliseconds to execute.
      */
     @Test
@@ -79,18 +79,18 @@ public class TaskListPanelTest extends GuiUnitTest {
     }
 
     /**
-     * Returns a list of persons containing {@code personCount} persons that is used to populate the
+     * Returns a list of tasks containing {@code taskCount} tasks that is used to populate the
      * {@code TaskListPanel}.
      */
-    private ObservableList<Task> createBackingList(int personCount) throws Exception {
-        Path xmlFile = createXmlFileWithTasks(personCount);
+    private ObservableList<Task> createBackingList(int taskCount) throws Exception {
+        Path xmlFile = createXmlFileWithTasks(taskCount);
         XmlSerializableTaskCollection xmlDeadlineManager =
             XmlUtil.getDataFromFile(xmlFile, XmlSerializableTaskCollection.class);
         return FXCollections.observableArrayList(xmlDeadlineManager.toModelType().getTaskList());
     }
 
     /**
-     * Returns a .xml file containing {@code taskCount} persons. This file will be deleted when
+     * Returns a .xml file containing {@code taskCount} tasks. This file will be deleted when
      * the JVM terminates.
      */
     private Path createXmlFileWithTasks(int taskCount) throws Exception {
@@ -106,7 +106,7 @@ public class TaskListPanelTest extends GuiUnitTest {
         }
         builder.append("</taskcollection>\n");
 
-        Path manyTasksFile = Paths.get(TEST_DATA_FOLDER + "manyPersons.xml");
+        Path manyTasksFile = Paths.get(TEST_DATA_FOLDER + "manyTasks.xml");
         FileUtil.createFile(manyTasksFile);
         FileUtil.writeToFile(manyTasksFile, builder.toString());
         manyTasksFile.toFile().deleteOnExit();

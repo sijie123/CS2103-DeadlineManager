@@ -48,7 +48,7 @@ public class TaskCollectionTest {
     }
 
     @Test
-    public void resetData_withDuplicatePersons_doesNotThrow() {
+    public void resetData_withDuplicateTasks_doesNotThrow() {
         // Two tasks with the same identity fields
         Task editedAlice = new TaskBuilder(ALICE).withPriority(VALID_PRIORITY_BOB)
             .withTags(VALID_TAG_HUSBAND)

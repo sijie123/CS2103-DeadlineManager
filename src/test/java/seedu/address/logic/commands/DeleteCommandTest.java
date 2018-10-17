@@ -96,7 +96,7 @@ public class DeleteCommandTest {
         // delete -> first task deleted
         deleteCommand.execute(model, commandHistory);
 
-        // undo -> reverts addressbook back to previous state and filtered task list to show all persons
+        // undo -> reverts addressbook back to previous state and filtered task list to show all tasks
         expectedModel.undoTaskCollection();
         assertCommandSuccess(new UndoCommand(), model, commandHistory, UndoCommand.MESSAGE_SUCCESS,
             expectedModel);
@@ -140,7 +140,7 @@ public class DeleteCommandTest {
         // delete -> deletes second task in unfiltered task list / first task in filtered task list
         deleteCommand.execute(model, commandHistory);
 
-        // undo -> reverts addressbook back to previous state and filtered task list to show all persons
+        // undo -> reverts addressbook back to previous state and filtered task list to show all tasks
         expectedModel.undoTaskCollection();
         assertCommandSuccess(new UndoCommand(), model, commandHistory, UndoCommand.MESSAGE_SUCCESS,
             expectedModel);
