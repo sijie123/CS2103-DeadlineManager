@@ -14,7 +14,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import seedu.address.model.task.NameContainsKeywordsPredicate;
-import seedu.address.testutil.AddressBookBuilder;
+import seedu.address.testutil.TaskManagerBuilder;
 
 public class ModelManagerTest {
 
@@ -48,7 +48,7 @@ public class ModelManagerTest {
 
     @Test
     public void equals() {
-        TaskCollection taskCollection = new AddressBookBuilder().withPerson(ALICE).withPerson(BENSON)
+        TaskCollection taskCollection = new TaskManagerBuilder().withPerson(ALICE).withPerson(BENSON)
             .build();
         TaskCollection differentTaskCollection = new TaskCollection();
         UserPrefs userPrefs = new UserPrefs();

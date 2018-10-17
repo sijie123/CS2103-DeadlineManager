@@ -20,7 +20,7 @@ import seedu.address.storage.XmlAdaptedAttachment;
 import seedu.address.storage.XmlAdaptedTag;
 import seedu.address.storage.XmlAdaptedTask;
 import seedu.address.storage.XmlSerializableTaskCollection;
-import seedu.address.testutil.AddressBookBuilder;
+import seedu.address.testutil.TaskManagerBuilder;
 import seedu.address.testutil.TaskBuilder;
 import seedu.address.testutil.TestUtil;
 
@@ -136,7 +136,7 @@ public class XmlUtilTest {
             .getDataFromFile(TEMP_FILE, XmlSerializableTaskCollection.class);
         assertEquals(dataToWrite, dataFromFile);
 
-        AddressBookBuilder builder = new AddressBookBuilder(new TaskCollection());
+        TaskManagerBuilder builder = new TaskManagerBuilder(new TaskCollection());
         dataToWrite = new XmlSerializableTaskCollection(
             builder.withPerson(new TaskBuilder().build()).build());
 

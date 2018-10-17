@@ -177,7 +177,7 @@ public class EditCommandTest {
         // edit -> first task edited
         editCommand.execute(model, commandHistory);
 
-        // undo -> reverts addressbook back to previous state and filtered task list to show all tasks
+        // undo -> reverts taskcollection back to previous state and filtered task list to show all tasks
         expectedModel.undoTaskCollection();
         assertCommandSuccess(new UndoCommand(), model, commandHistory, UndoCommand.MESSAGE_SUCCESS,
             expectedModel);
@@ -228,7 +228,7 @@ public class EditCommandTest {
         // edit -> edits second task in unfiltered task list / first task in filtered task list
         editCommand.execute(model, commandHistory);
 
-        // undo -> reverts addressbook back to previous state and filtered task list to show all tasks
+        // undo -> reverts taskcollection back to previous state and filtered task list to show all tasks
         expectedModel.undoTaskCollection();
         assertCommandSuccess(new UndoCommand(), model, commandHistory, UndoCommand.MESSAGE_SUCCESS,
             expectedModel);

@@ -14,17 +14,17 @@ import java.util.List;
 
 import org.junit.Test;
 
-import seedu.address.testutil.AddressBookBuilder;
+import seedu.address.testutil.TaskManagerBuilder;
 
 public class VersionedTaskCollectionTest {
 
-    private final ReadOnlyTaskCollection addressBookWithAmy = new AddressBookBuilder().withPerson(AMY)
+    private final ReadOnlyTaskCollection taskCollectionsWithAmy = new TaskManagerBuilder().withPerson(AMY)
         .build();
-    private final ReadOnlyTaskCollection addressBookWithBob = new AddressBookBuilder().withPerson(BOB)
+    private final ReadOnlyTaskCollection addressBookWithBob = new TaskManagerBuilder().withPerson(BOB)
         .build();
-    private final ReadOnlyTaskCollection addressBookWithCarl = new AddressBookBuilder()
+    private final ReadOnlyTaskCollection addressBookWithCarl = new TaskManagerBuilder()
         .withPerson(CARL).build();
-    private final ReadOnlyTaskCollection emptyAddressBook = new AddressBookBuilder().build();
+    private final ReadOnlyTaskCollection emptyAddressBook = new TaskManagerBuilder().build();
 
     @Test
     public void commit_singleAddressBook_noStatesRemovedCurrentStateSaved() {
@@ -40,11 +40,11 @@ public class VersionedTaskCollectionTest {
     @Test
     public void commit_multipleAddressBookPointerAtEndOfStateList_noStatesRemovedCurrentStateSaved() {
         VersionedTaskCollection versionedAddressBook = prepareAddressBookList(
-            emptyAddressBook, addressBookWithAmy, addressBookWithBob);
+            emptyAddressBook, taskCollectionsWithAmy, addressBookWithBob);
 
         versionedAddressBook.commit();
         assertAddressBookListStatus(versionedAddressBook,
-            Arrays.asList(emptyAddressBook, addressBookWithAmy, addressBookWithBob),
+            Arrays.asList(emptyAddressBook, taskCollectionsWithAmy, addressBookWithBob),
             addressBookWithBob,
             Collections.emptyList());
     }
@@ -52,7 +52,7 @@ public class VersionedTaskCollectionTest {
     @Test
     public void commit_multipleAddressBookPointerNotAtEndOfStateList_statesAfterPointerRemovedCurrentStateSaved() {
         VersionedTaskCollection versionedAddressBook = prepareAddressBookList(
-            emptyAddressBook, addressBookWithAmy, addressBookWithBob);
+            emptyAddressBook, taskCollectionsWithAmy, addressBookWithBob);
         shiftCurrentStatePointerLeftwards(versionedAddressBook, 2);
 
         versionedAddressBook.commit();
@@ -65,7 +65,7 @@ public class VersionedTaskCollectionTest {
     @Test
     public void canUndo_multipleAddressBookPointerAtEndOfStateList_returnsTrue() {
         VersionedTaskCollection versionedAddressBook = prepareAddressBookList(
-            emptyAddressBook, addressBookWithAmy, addressBookWithBob);
+            emptyAddressBook, taskCollectionsWithAmy, addressBookWithBob);
 
         assertTrue(versionedAddressBook.canUndo());
     }
@@ -73,7 +73,7 @@ public class VersionedTaskCollectionTest {
     @Test
     public void canUndo_multipleAddressBookPointerAtStartOfStateList_returnsTrue() {
         VersionedTaskCollection versionedAddressBook = prepareAddressBookList(
-            emptyAddressBook, addressBookWithAmy, addressBookWithBob);
+            emptyAddressBook, taskCollectionsWithAmy, addressBookWithBob);
         shiftCurrentStatePointerLeftwards(versionedAddressBook, 1);
 
         assertTrue(versionedAddressBook.canUndo());
@@ -89,7 +89,7 @@ public class VersionedTaskCollectionTest {
     @Test
     public void canUndo_multipleAddressBookPointerAtStartOfStateList_returnsFalse() {
         VersionedTaskCollection versionedAddressBook = prepareAddressBookList(
-            emptyAddressBook, addressBookWithAmy, addressBookWithBob);
+            emptyAddressBook, taskCollectionsWithAmy, addressBookWithBob);
         shiftCurrentStatePointerLeftwards(versionedAddressBook, 2);
 
         assertFalse(versionedAddressBook.canUndo());
@@ -98,7 +98,7 @@ public class VersionedTaskCollectionTest {
     @Test
     public void canRedo_multipleAddressBookPointerNotAtEndOfStateList_returnsTrue() {
         VersionedTaskCollection versionedAddressBook = prepareAddressBookList(
-            emptyAddressBook, addressBookWithAmy, addressBookWithBob);
+            emptyAddressBook, taskCollectionsWithAmy, addressBookWithBob);
         shiftCurrentStatePointerLeftwards(versionedAddressBook, 1);
 
         assertTrue(versionedAddressBook.canRedo());
@@ -107,7 +107,7 @@ public class VersionedTaskCollectionTest {
     @Test
     public void canRedo_multipleAddressBookPointerAtStartOfStateList_returnsTrue() {
         VersionedTaskCollection versionedAddressBook = prepareAddressBookList(
-            emptyAddressBook, addressBookWithAmy, addressBookWithBob);
+            emptyAddressBook, taskCollectionsWithAmy, addressBookWithBob);
         shiftCurrentStatePointerLeftwards(versionedAddressBook, 2);
 
         assertTrue(versionedAddressBook.canRedo());
@@ -123,7 +123,7 @@ public class VersionedTaskCollectionTest {
     @Test
     public void canRedo_multipleAddressBookPointerAtEndOfStateList_returnsFalse() {
         VersionedTaskCollection versionedAddressBook = prepareAddressBookList(
-            emptyAddressBook, addressBookWithAmy, addressBookWithBob);
+            emptyAddressBook, taskCollectionsWithAmy, addressBookWithBob);
 
         assertFalse(versionedAddressBook.canRedo());
     }
@@ -131,26 +131,26 @@ public class VersionedTaskCollectionTest {
     @Test
     public void undo_multipleAddressBookPointerAtEndOfStateList_success() {
         VersionedTaskCollection versionedAddressBook = prepareAddressBookList(
-            emptyAddressBook, addressBookWithAmy, addressBookWithBob);
+            emptyAddressBook, taskCollectionsWithAmy, addressBookWithBob);
 
         versionedAddressBook.undo();
         assertAddressBookListStatus(versionedAddressBook,
             Collections.singletonList(emptyAddressBook),
-            addressBookWithAmy,
+            taskCollectionsWithAmy,
             Collections.singletonList(addressBookWithBob));
     }
 
     @Test
     public void undo_multipleAddressBookPointerNotAtStartOfStateList_success() {
         VersionedTaskCollection versionedAddressBook = prepareAddressBookList(
-            emptyAddressBook, addressBookWithAmy, addressBookWithBob);
+            emptyAddressBook, taskCollectionsWithAmy, addressBookWithBob);
         shiftCurrentStatePointerLeftwards(versionedAddressBook, 1);
 
         versionedAddressBook.undo();
         assertAddressBookListStatus(versionedAddressBook,
             Collections.emptyList(),
             emptyAddressBook,
-            Arrays.asList(addressBookWithAmy, addressBookWithBob));
+            Arrays.asList(taskCollectionsWithAmy, addressBookWithBob));
     }
 
     @Test
@@ -164,7 +164,7 @@ public class VersionedTaskCollectionTest {
     @Test
     public void undo_multipleAddressBookPointerAtStartOfStateList_throwsNoUndoableStateException() {
         VersionedTaskCollection versionedAddressBook = prepareAddressBookList(
-            emptyAddressBook, addressBookWithAmy, addressBookWithBob);
+            emptyAddressBook, taskCollectionsWithAmy, addressBookWithBob);
         shiftCurrentStatePointerLeftwards(versionedAddressBook, 2);
 
         assertThrows(VersionedTaskCollection.NoUndoableStateException.class,
@@ -174,12 +174,12 @@ public class VersionedTaskCollectionTest {
     @Test
     public void redo_multipleAddressBookPointerNotAtEndOfStateList_success() {
         VersionedTaskCollection versionedAddressBook = prepareAddressBookList(
-            emptyAddressBook, addressBookWithAmy, addressBookWithBob);
+            emptyAddressBook, taskCollectionsWithAmy, addressBookWithBob);
         shiftCurrentStatePointerLeftwards(versionedAddressBook, 1);
 
         versionedAddressBook.redo();
         assertAddressBookListStatus(versionedAddressBook,
-            Arrays.asList(emptyAddressBook, addressBookWithAmy),
+            Arrays.asList(emptyAddressBook, taskCollectionsWithAmy),
             addressBookWithBob,
             Collections.emptyList());
     }
@@ -187,13 +187,13 @@ public class VersionedTaskCollectionTest {
     @Test
     public void redo_multipleAddressBookPointerAtStartOfStateList_success() {
         VersionedTaskCollection versionedAddressBook = prepareAddressBookList(
-            emptyAddressBook, addressBookWithAmy, addressBookWithBob);
+            emptyAddressBook, taskCollectionsWithAmy, addressBookWithBob);
         shiftCurrentStatePointerLeftwards(versionedAddressBook, 2);
 
         versionedAddressBook.redo();
         assertAddressBookListStatus(versionedAddressBook,
             Collections.singletonList(emptyAddressBook),
-            addressBookWithAmy,
+            taskCollectionsWithAmy,
             Collections.singletonList(addressBookWithBob));
     }
 
@@ -208,7 +208,7 @@ public class VersionedTaskCollectionTest {
     @Test
     public void redo_multipleAddressBookPointerAtEndOfStateList_throwsNoRedoableStateException() {
         VersionedTaskCollection versionedAddressBook = prepareAddressBookList(
-            emptyAddressBook, addressBookWithAmy, addressBookWithBob);
+            emptyAddressBook, taskCollectionsWithAmy, addressBookWithBob);
 
         assertThrows(VersionedTaskCollection.NoRedoableStateException.class,
             versionedAddressBook::redo);
@@ -216,11 +216,11 @@ public class VersionedTaskCollectionTest {
 
     @Test
     public void equals() {
-        VersionedTaskCollection versionedAddressBook = prepareAddressBookList(addressBookWithAmy,
+        VersionedTaskCollection versionedAddressBook = prepareAddressBookList(taskCollectionsWithAmy,
             addressBookWithBob);
 
         // same values -> returns true
-        VersionedTaskCollection copy = prepareAddressBookList(addressBookWithAmy, addressBookWithBob);
+        VersionedTaskCollection copy = prepareAddressBookList(taskCollectionsWithAmy, addressBookWithBob);
         assertTrue(versionedAddressBook.equals(copy));
 
         // same object -> returns true
@@ -239,7 +239,7 @@ public class VersionedTaskCollectionTest {
 
         // different current pointer index -> returns false
         VersionedTaskCollection differentCurrentStatePointer = prepareAddressBookList(
-            addressBookWithAmy, addressBookWithBob);
+            taskCollectionsWithAmy, addressBookWithBob);
         shiftCurrentStatePointerLeftwards(versionedAddressBook, 1);
         assertFalse(versionedAddressBook.equals(differentCurrentStatePointer));
     }

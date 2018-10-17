@@ -41,7 +41,7 @@ public class TaskCollectionTest {
     }
 
     @Test
-    public void resetData_withValidReadOnlyAddressBook_replacesData() {
+    public void resetData_withValidReadOnlyTaskCollections_replacesData() {
         TaskCollection newData = getTypicalTaskCollections();
         taskCollection.resetData(newData);
         assertEquals(newData, taskCollection);
@@ -67,12 +67,12 @@ public class TaskCollectionTest {
     }
 
     @Test
-    public void hasPerson_personNotInAddressBook_returnsFalse() {
+    public void hasPerson_personNotInTaskCollections_returnsFalse() {
         assertFalse(taskCollection.hasTask(ALICE));
     }
 
     @Test
-    public void hasPerson_personInAddressBook_returnsTrue() {
+    public void hasPerson_personInTaskCollections_returnsTrue() {
         taskCollection.addTask(ALICE);
         assertTrue(taskCollection.hasTask(ALICE));
     }
