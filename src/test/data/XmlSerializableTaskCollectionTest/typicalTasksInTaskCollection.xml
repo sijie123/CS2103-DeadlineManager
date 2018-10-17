@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<!-- TaskCollection save file which contains the same Task values as in TypicalPersons#getTypicaltaskcollection() -->
+<!-- TaskCollection save file which contains the same Task values as in TypicalTasks#getTypicaltaskcollection() -->
 <taskcollection>
     <tasks>
         <name>Alice Pauline</name>

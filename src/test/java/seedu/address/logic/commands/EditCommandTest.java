@@ -26,7 +26,7 @@ import seedu.address.model.TaskCollection;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.task.Task;
 import seedu.address.testutil.EditPersonDescriptorBuilder;
-import seedu.address.testutil.PersonBuilder;
+import seedu.address.testutil.TaskBuilder;
 
 /**
  * Contains integration tests (interaction with the Model, UndoCommand and RedoCommand) and unit
@@ -40,7 +40,7 @@ public class EditCommandTest {
     @Test
     public void execute_allFieldsSpecifiedUnfilteredList_success() {
         // Preserve attachments as editedTask should have the same attachment
-        Task editedTask = new PersonBuilder()
+        Task editedTask = new TaskBuilder()
             .withAttachments(model.getFilteredTaskList().get(0).getAttachments())
             .build();
 
@@ -62,7 +62,7 @@ public class EditCommandTest {
         Index indexLastPerson = Index.fromOneBased(model.getFilteredTaskList().size());
         Task lastTask = model.getFilteredTaskList().get(indexLastPerson.getZeroBased());
 
-        PersonBuilder personInList = new PersonBuilder(lastTask);
+        TaskBuilder personInList = new TaskBuilder(lastTask);
         Task editedTask = personInList.withName(VALID_NAME_BOB)
             .withTags(VALID_TAG_HUSBAND).build();
 
@@ -100,7 +100,7 @@ public class EditCommandTest {
 
         Task taskInFilteredList = model.getFilteredTaskList()
             .get(INDEX_FIRST_TASK.getZeroBased());
-        Task editedTask = new PersonBuilder(taskInFilteredList).withName(VALID_NAME_BOB).build();
+        Task editedTask = new TaskBuilder(taskInFilteredList).withName(VALID_NAME_BOB).build();
         EditCommand editCommand = new EditCommand(INDEX_FIRST_TASK,
             new EditPersonDescriptorBuilder().withName(VALID_NAME_BOB).build());
 
@@ -164,7 +164,7 @@ public class EditCommandTest {
     @Test
     public void executeUndoRedo_validIndexUnfilteredList_success() throws Exception {
         Task taskToEdit = model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased());
-        Task editedTask = new PersonBuilder()
+        Task editedTask = new TaskBuilder()
             .withAttachments(taskToEdit.getAttachments())
             .build();
         EditTaskDescriptor descriptor = new EditPersonDescriptorBuilder(editedTask).build();
@@ -214,7 +214,7 @@ public class EditCommandTest {
     public void executeUndoRedo_validIndexFilteredList_samePersonEdited() throws Exception {
         showPersonAtIndex(model, INDEX_SECOND_TASK);
         Task taskToEdit = model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased());
-        Task editedTask = new PersonBuilder()
+        Task editedTask = new TaskBuilder()
             .withAttachments(taskToEdit.getAttachments())
             .build();
         EditCommand.EditTaskDescriptor descriptor = new EditPersonDescriptorBuilder(editedTask).build();

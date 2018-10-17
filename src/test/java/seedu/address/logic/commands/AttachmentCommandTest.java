@@ -22,7 +22,7 @@ import seedu.address.model.TaskCollection;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.attachment.Attachment;
 import seedu.address.model.task.Task;
-import seedu.address.testutil.PersonBuilder;
+import seedu.address.testutil.TaskBuilder;
 
 /**
  * Contains unit tests for AttachmentCommand.
@@ -62,7 +62,7 @@ public class AttachmentCommandTest {
         Set<Attachment> attachmentSet = new HashSet<>(task.getAttachments());
         List<Attachment> newAttachments = Arrays.asList(attachments);
         attachmentSet.addAll(new HashSet<>(newAttachments));
-        Task modifiedTask = new PersonBuilder(task).withAttachments(attachmentSet).build();
+        Task modifiedTask = new TaskBuilder(task).withAttachments(attachmentSet).build();
         return modifiedTask;
     }
 

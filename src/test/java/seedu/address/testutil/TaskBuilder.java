@@ -14,7 +14,7 @@ import seedu.address.model.util.SampleDataUtil;
 /**
  * A utility class to help with building Task objects.
  */
-public class PersonBuilder {
+public class TaskBuilder {
 
     public static final String DEFAULT_NAME = "Alice Pauline";
     public static final String DEFAULT_DEADLINE = "1/10/2018";
@@ -26,7 +26,7 @@ public class PersonBuilder {
     private Set<Tag> tags;
     private Set<Attachment> attachments;
 
-    public PersonBuilder() {
+    public TaskBuilder() {
         name = new Name(DEFAULT_NAME);
         priority = new Priority(DEFAULT_PRIORITY);
         deadline = new Deadline(DEFAULT_DEADLINE);
@@ -35,9 +35,9 @@ public class PersonBuilder {
     }
 
     /**
-     * Initializes the PersonBuilder with the data of {@code taskToCopy}.
+     * Initializes the TaskBuilder with the data of {@code taskToCopy}.
      */
-    public PersonBuilder(Task taskToCopy) {
+    public TaskBuilder(Task taskToCopy) {
         name = taskToCopy.getName();
         priority = taskToCopy.getPriority();
         deadline = taskToCopy.getDeadline();
@@ -48,7 +48,7 @@ public class PersonBuilder {
     /**
      * Sets the {@code Name} of the {@code Task} that we are building.
      */
-    public PersonBuilder withName(String name) {
+    public TaskBuilder withName(String name) {
         this.name = new Name(name);
         return this;
     }
@@ -57,7 +57,7 @@ public class PersonBuilder {
      * Parses the {@code tags} into a {@code Set<Tag>} and set it to the {@code Task} that we are
      * building.
      */
-    public PersonBuilder withTags(String... tags) {
+    public TaskBuilder withTags(String... tags) {
         this.tags = SampleDataUtil.getTagSet(tags);
         return this;
     }
@@ -65,7 +65,7 @@ public class PersonBuilder {
     /**
      * Sets the {@code Deadline} of the {@code Task} that we are building.
      */
-    public PersonBuilder withDeadline(String deadline) {
+    public TaskBuilder withDeadline(String deadline) {
         this.deadline = new Deadline(deadline);
         return this;
     }
@@ -73,7 +73,7 @@ public class PersonBuilder {
     /**
      * Sets the {@code Priority} of the {@code Task} that we are building.
      */
-    public PersonBuilder withPriority(String priority) {
+    public TaskBuilder withPriority(String priority) {
         this.priority = new Priority(priority);
         return this;
     }
@@ -82,7 +82,7 @@ public class PersonBuilder {
      * Parses the {@code attachments} into a {@code Set<Attachment>} and set it to the {@code Task} that we are
      * building.
      */
-    public PersonBuilder withAttachments(Set<Attachment> attachments) {
+    public TaskBuilder withAttachments(Set<Attachment> attachments) {
         this.attachments = attachments;
         return this;
     }
@@ -91,7 +91,7 @@ public class PersonBuilder {
      * Parses the {@code attachments} into a {@code Set<Attachment>} and set it to the {@code Task} that we are
      * building.
      */
-    public PersonBuilder withAttachments(String... attachments) {
+    public TaskBuilder withAttachments(String... attachments) {
         this.attachments = SampleDataUtil.getAttachmentSet(attachments);
         return this;
     }

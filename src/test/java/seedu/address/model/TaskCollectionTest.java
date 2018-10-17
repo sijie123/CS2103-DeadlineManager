@@ -20,7 +20,7 @@ import org.junit.rules.ExpectedException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seedu.address.model.task.Task;
-import seedu.address.testutil.PersonBuilder;
+import seedu.address.testutil.TaskBuilder;
 
 public class TaskCollectionTest {
 
@@ -50,7 +50,7 @@ public class TaskCollectionTest {
     @Test
     public void resetData_withDuplicatePersons_doesNotThrow() {
         // Two tasks with the same identity fields
-        Task editedAlice = new PersonBuilder(ALICE).withPriority(VALID_PRIORITY_BOB)
+        Task editedAlice = new TaskBuilder(ALICE).withPriority(VALID_PRIORITY_BOB)
             .withTags(VALID_TAG_HUSBAND)
             .build();
         List<Task> newTasks = Arrays.asList(ALICE, editedAlice);

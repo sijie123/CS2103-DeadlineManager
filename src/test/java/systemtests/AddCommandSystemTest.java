@@ -38,7 +38,7 @@ import seedu.address.model.task.Deadline;
 import seedu.address.model.task.Name;
 import seedu.address.model.task.Priority;
 import seedu.address.model.task.Task;
-import seedu.address.testutil.PersonBuilder;
+import seedu.address.testutil.TaskBuilder;
 import seedu.address.testutil.PersonUtil;
 
 public class AddCommandSystemTest extends TaskCollectionSystemTest {
@@ -71,7 +71,7 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
         assertCommandSuccess(command, model, expectedResultMessage);
 
         /* Case: add a task with all fields same as another task in the deadline manager except name -> added */
-        toAdd = new PersonBuilder(AMY).withName(VALID_NAME_BOB).build();
+        toAdd = new TaskBuilder(AMY).withName(VALID_NAME_BOB).build();
         command = AddCommand.COMMAND_WORD + NAME_DESC_BOB + PRIORITY_DESC_AMY + DEADLINE_DESC_AMY
             + TAG_DESC_FRIEND;
         assertCommandSuccess(command, toAdd);
@@ -79,7 +79,7 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
         /* Case: add a task with all fields same as another task in the deadline manager except priority
          * -> added
          */
-        toAdd = new PersonBuilder(AMY).withPriority(VALID_PRIORITY_BOB)
+        toAdd = new TaskBuilder(AMY).withPriority(VALID_PRIORITY_BOB)
             .build();
         command = PersonUtil.getAddCommand(toAdd);
         assertCommandSuccess(command, toAdd);
@@ -112,13 +112,13 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
         /* ---------------------- Perform add operation with duplicate task (should succeed) ----------------------- */
 
         /* Case: add a duplicate task except with different priority -> added normally */
-        toAdd = new PersonBuilder(HOON).withPriority(VALID_PRIORITY_BOB).build();
+        toAdd = new TaskBuilder(HOON).withPriority(VALID_PRIORITY_BOB).build();
         command = PersonUtil.getAddCommand(toAdd);
         assertCommandSuccess(command, toAdd);
 
         /* Case: add a duplicate task except with different tags -> added normally */
         command = PersonUtil.getAddCommand(HOON) + " " + PREFIX_TAG.getPrefix() + "friends";
-        toAdd = new PersonBuilder(HOON).withTags("friends").build();
+        toAdd = new TaskBuilder(HOON).withTags("friends").build();
         assertCommandSuccess(command, toAdd);
 
         /* ----------------------------------- Perform invalid add operations --------------------------------------- */
@@ -161,7 +161,7 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
 
         /* Case: missing priority -> success */
         command = AddCommand.COMMAND_WORD + NAME_DESC_AMY + DEADLINE_DESC_AMY + TAG_DESC_FRIEND;
-        toAdd = new PersonBuilder(AMY).withPriority(NO_PRIORITY).build();
+        toAdd = new TaskBuilder(AMY).withPriority(NO_PRIORITY).build();
         assertCommandSuccess(command, toAdd);
 
     }
@@ -180,7 +180,7 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
      * @see TaskCollectionSystemTest#assertApplicationDisplaysExpected(String, String, Model)
      */
     private void assertCommandSuccess(Task toAdd) {
-        Task toAddWithoutAttachment = new PersonBuilder(toAdd)
+        Task toAddWithoutAttachment = new TaskBuilder(toAdd)
             .withAttachments()
             .build();
         assertCommandSuccess(PersonUtil.getAddCommand(toAddWithoutAttachment), toAddWithoutAttachment);
@@ -194,7 +194,7 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
      */
     private void assertCommandSuccess(String command, Task toAdd) {
         Model expectedModel = getModel();
-        Task toAddWithoutAttachments = new PersonBuilder(toAdd)
+        Task toAddWithoutAttachments = new TaskBuilder(toAdd)
             .withAttachments()
             .build();
         expectedModel.addTask(toAddWithoutAttachments);

@@ -39,7 +39,7 @@ import seedu.address.model.task.Deadline;
 import seedu.address.model.task.Name;
 import seedu.address.model.task.Priority;
 import seedu.address.model.task.Task;
-import seedu.address.testutil.PersonBuilder;
+import seedu.address.testutil.TaskBuilder;
 
 public class EditCommandSystemTest extends TaskCollectionSystemTest {
 
@@ -57,10 +57,10 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
             " " + EditCommand.COMMAND_WORD + "  " + index.getOneBased() + "   " + NAME_DESC_BOB
                 + "  " + PRIORITY_DESC_BOB + "  " + DEADLINE_DESC_BOB + " " + TAG_DESC_HUSBAND + " ";
         Task uneditedTask = getModel().getFilteredTaskList().get(index.getZeroBased());
-        Task bobWithOriginalAttachments = new PersonBuilder(BOB)
+        Task bobWithOriginalAttachments = new TaskBuilder(BOB)
             .withAttachments(uneditedTask.getAttachments())
             .build();
-        Task editedTask = new PersonBuilder(bobWithOriginalAttachments)
+        Task editedTask = new TaskBuilder(bobWithOriginalAttachments)
             .withTags(VALID_TAG_HUSBAND)
             .build();
         assertCommandSuccess(command, index, editedTask);
@@ -89,7 +89,7 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
         assertNotEquals(getModel().getFilteredTaskList().get(index.getZeroBased()), editedTask);
         command = EditCommand.COMMAND_WORD + " " + index.getOneBased() + NAME_DESC_AMY
             + PRIORITY_DESC_BOB + DEADLINE_DESC_BOB + TAG_DESC_FRIEND + TAG_DESC_HUSBAND;
-        editedTask = new PersonBuilder(bobWithOriginalAttachments).withName(VALID_NAME_AMY).build();
+        editedTask = new TaskBuilder(bobWithOriginalAttachments).withName(VALID_NAME_AMY).build();
         assertCommandSuccess(command, index, editedTask);
 
         /* Case: edit a task with new values same as another task's values
@@ -99,7 +99,7 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
         command = EditCommand.COMMAND_WORD + " " + index.getOneBased() + NAME_DESC_BOB
             + PRIORITY_DESC_AMY + TAG_DESC_FRIEND + TAG_DESC_HUSBAND;
         editedTask =
-            new PersonBuilder(bobWithOriginalAttachments).withPriority(VALID_PRIORITY_AMY).build();
+            new TaskBuilder(bobWithOriginalAttachments).withPriority(VALID_PRIORITY_AMY).build();
         assertCommandSuccess(command, index, editedTask);
 
         /* Case: clear tags -> cleared */
@@ -107,7 +107,7 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
         command =
             EditCommand.COMMAND_WORD + " " + index.getOneBased() + " " + PREFIX_TAG.getPrefix();
         Task taskToEdit = getModel().getFilteredTaskList().get(index.getZeroBased());
-        editedTask = new PersonBuilder(taskToEdit).withTags().build();
+        editedTask = new TaskBuilder(taskToEdit).withTags().build();
         assertCommandSuccess(command, index, editedTask);
 
         /* ------------------ Performing edit operation while a filtered list is being shown ------------------------ */
@@ -118,7 +118,7 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
         assertTrue(index.getZeroBased() < getModel().getFilteredTaskList().size());
         command = EditCommand.COMMAND_WORD + " " + index.getOneBased() + " " + NAME_DESC_BOB;
         taskToEdit = getModel().getFilteredTaskList().get(index.getZeroBased());
-        editedTask = new PersonBuilder(taskToEdit).withName(VALID_NAME_BOB).build();
+        editedTask = new TaskBuilder(taskToEdit).withName(VALID_NAME_BOB).build();
         assertCommandSuccess(command, index, editedTask);
 
         /* Case: filtered task list, edit index within bounds of deadline manager but out of bounds of task list
@@ -141,7 +141,7 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
             + PRIORITY_DESC_AMY + DEADLINE_DESC_AMY + TAG_DESC_FRIEND;
         // this can be misleading: card selection actually remains unchanged but the
         // browser's url is updated to reflect the new task's name
-        Task amyWithAttachments = new PersonBuilder(AMY)
+        Task amyWithAttachments = new TaskBuilder(AMY)
             .withAttachments(getModel().getFilteredTaskList().get(index.getZeroBased()).getAttachments())
             .build();
         assertCommandSuccess(command, index, amyWithAttachments, index);
