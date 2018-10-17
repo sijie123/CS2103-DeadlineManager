@@ -141,7 +141,7 @@ public abstract class TaskCollectionSystemTest {
     }
 
     /**
-     * Displays all persons in the deadline manager.
+     * Displays all tasks in the deadline manager.
      */
     protected void showAllTasks() {
         executeCommand(ListCommand.COMMAND_WORD);
@@ -150,7 +150,7 @@ public abstract class TaskCollectionSystemTest {
     }
 
     /**
-     * Displays all persons with any parts of their names matching {@code keyword}
+     * Displays all tasks with any parts of their names matching {@code keyword}
      * (case-insensitive).
      */
     protected void showTasksWithName(String keyword) {
@@ -168,9 +168,9 @@ public abstract class TaskCollectionSystemTest {
     }
 
     /**
-     * Deletes all persons in the deadline manager.
+     * Deletes all tasks in the deadline manager.
      */
-    protected void deleteAllPersons() {
+    protected void deleteAllTests() {
         executeCommand(ClearCommand.COMMAND_WORD);
         assertEquals(0, getModel().getTaskCollection().getTaskList().size());
     }
@@ -178,7 +178,7 @@ public abstract class TaskCollectionSystemTest {
     /**
      * Asserts that the {@code CommandBox} displays {@code expectedCommandInput}, the {@code
      * ResultDisplay} displays {@code expectedResultMessage}, the storage contains the same task
-     * objects as {@code expectedModel} and the task list panel displays the persons in the model
+     * objects as {@code expectedModel} and the task list panel displays the tasks in the model
      * correctly.
      */
     protected void assertApplicationDisplaysExpected(String expectedCommandInput,

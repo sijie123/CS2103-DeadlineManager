@@ -85,7 +85,7 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
         assertCommandSuccess(command, toAdd);
 
         /* Case: add to empty deadline manager -> added */
-        deleteAllPersons();
+        deleteAllTests();
         assertCommandSuccess(ALICE);
 
         /* Case: add a task with tags, command with parameters in random order -> added */

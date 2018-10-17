@@ -97,7 +97,7 @@ public class SelectCommandSystemTest extends TaskCollectionSystemTest {
         assertCommandFailure("SeLeCt 1", MESSAGE_UNKNOWN_COMMAND);
 
         /* Case: select from empty deadline manager -> rejected */
-        deleteAllPersons();
+        deleteAllTests();
         assertCommandFailure(SelectCommand.COMMAND_WORD + " " + INDEX_FIRST_TASK.getOneBased(),
             MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
     }
