@@ -37,11 +37,11 @@ public class SelectCommandTest {
 
     @Test
     public void execute_validIndexUnfilteredList_success() {
-        Index lastPersonIndex = Index.fromOneBased(model.getFilteredTaskList().size());
+        Index lastTaskIndex = Index.fromOneBased(model.getFilteredTaskList().size());
 
         assertExecutionSuccess(INDEX_FIRST_TASK);
         assertExecutionSuccess(INDEX_THIRD_TASK);
-        assertExecutionSuccess(lastPersonIndex);
+        assertExecutionSuccess(lastTaskIndex);
     }
 
     @Test
