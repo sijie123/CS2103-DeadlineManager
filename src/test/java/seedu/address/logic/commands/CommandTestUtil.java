@@ -18,7 +18,7 @@ import seedu.address.model.Model;
 import seedu.address.model.TaskCollection;
 import seedu.address.model.task.NameContainsKeywordsPredicate;
 import seedu.address.model.task.Task;
-import seedu.address.testutil.EditPersonDescriptorBuilder;
+import seedu.address.testutil.EditTaskDescriptorBuilder;
 
 /**
  * Contains helper methods for testing commands.
@@ -55,14 +55,14 @@ public class CommandTestUtil {
     public static final String PREAMBLE_WHITESPACE = "\t  \r  \n";
     public static final String PREAMBLE_NON_EMPTY = "NonEmptyPreamble";
 
-    public static final EditCommand.EditPersonDescriptor DESC_AMY;
-    public static final EditCommand.EditPersonDescriptor DESC_BOB;
+    public static final EditCommand.EditTaskDescriptor DESC_AMY;
+    public static final EditCommand.EditTaskDescriptor DESC_BOB;
 
     static {
-        DESC_AMY = new EditPersonDescriptorBuilder().withName(VALID_NAME_AMY)
+        DESC_AMY = new EditTaskDescriptorBuilder().withName(VALID_NAME_AMY)
             .withPriority(VALID_PRIORITY_AMY)
             .withTags(VALID_TAG_FRIEND).build();
-        DESC_BOB = new EditPersonDescriptorBuilder().withName(VALID_NAME_BOB)
+        DESC_BOB = new EditTaskDescriptorBuilder().withName(VALID_NAME_BOB)
             .withPriority(VALID_PRIORITY_BOB)
             .withTags(VALID_TAG_HUSBAND, VALID_TAG_FRIEND).build();
     }
@@ -117,7 +117,7 @@ public class CommandTestUtil {
      * Updates {@code model}'s filtered list to show only the task at the given {@code targetIndex}
      * in the {@code model}'s deadline manager.
      */
-    public static void showPersonAtIndex(Model model, Index targetIndex) {
+    public static void showTaskAtIndex(Model model, Index targetIndex) {
         assertTrue(targetIndex.getZeroBased() < model.getFilteredTaskList().size());
 
         Task task = model.getFilteredTaskList().get(targetIndex.getZeroBased());
@@ -131,10 +131,10 @@ public class CommandTestUtil {
     /**
      * Deletes the first task in {@code model}'s filtered list from {@code model}'s deadline manager.
      */
-    public static void deleteFirstPerson(Model model) {
+    public static void deleteFirstTask(Model model) {
         Task firstTask = model.getFilteredTaskList().get(0);
         model.deleteTask(firstTask);
-        model.commitAddressBook();
+        model.commitTaskCollection();
     }
 
 }

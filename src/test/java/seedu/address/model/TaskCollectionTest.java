@@ -5,8 +5,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PRIORITY_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_HUSBAND;
-import static seedu.address.testutil.TypicalPersons.ALICE;
-import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
+import static seedu.address.testutil.TypicalTasks.ALICE;
+import static seedu.address.testutil.TypicalTasks.getTypicalTaskCollections;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -20,7 +20,7 @@ import org.junit.rules.ExpectedException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seedu.address.model.task.Task;
-import seedu.address.testutil.PersonBuilder;
+import seedu.address.testutil.TaskBuilder;
 
 public class TaskCollectionTest {
 
@@ -41,16 +41,16 @@ public class TaskCollectionTest {
     }
 
     @Test
-    public void resetData_withValidReadOnlyAddressBook_replacesData() {
-        TaskCollection newData = getTypicalAddressBook();
+    public void resetData_withValidReadOnlyTaskCollections_replacesData() {
+        TaskCollection newData = getTypicalTaskCollections();
         taskCollection.resetData(newData);
         assertEquals(newData, taskCollection);
     }
 
     @Test
-    public void resetData_withDuplicatePersons_doesNotThrow() {
+    public void resetData_withDuplicateTasks_doesNotThrow() {
         // Two tasks with the same identity fields
-        Task editedAlice = new PersonBuilder(ALICE).withPriority(VALID_PRIORITY_BOB)
+        Task editedAlice = new TaskBuilder(ALICE).withPriority(VALID_PRIORITY_BOB)
             .withTags(VALID_TAG_HUSBAND)
             .build();
         List<Task> newTasks = Arrays.asList(ALICE, editedAlice);
@@ -67,12 +67,12 @@ public class TaskCollectionTest {
     }
 
     @Test
-    public void hasPerson_personNotInAddressBook_returnsFalse() {
+    public void hasPerson_personNotInTaskCollections_returnsFalse() {
         assertFalse(taskCollection.hasTask(ALICE));
     }
 
     @Test
-    public void hasPerson_personInAddressBook_returnsTrue() {
+    public void hasPerson_personInTaskCollections_returnsTrue() {
         taskCollection.addTask(ALICE);
         assertTrue(taskCollection.hasTask(ALICE));
     }

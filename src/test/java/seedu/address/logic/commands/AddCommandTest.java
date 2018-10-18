@@ -17,7 +17,7 @@ import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.ReadOnlyTaskCollection;
 import seedu.address.model.TaskCollection;
 import seedu.address.model.task.Task;
-import seedu.address.testutil.PersonBuilder;
+import seedu.address.testutil.TaskBuilder;
 
 public class AddCommandTest {
 
@@ -37,31 +37,31 @@ public class AddCommandTest {
     @Test
     public void execute_personAcceptedByModel_addSuccessful() throws Exception {
         ModelStubAcceptingPersonAdded modelStub = new ModelStubAcceptingPersonAdded();
-        Task validTask = new PersonBuilder().build();
+        Task validTask = new TaskBuilder().build();
 
         CommandResult commandResult = new AddCommand(validTask).execute(modelStub, commandHistory);
 
         assertEquals(String.format(AddCommand.MESSAGE_SUCCESS, validTask),
             commandResult.feedbackToUser);
-        assertEquals(Arrays.asList(validTask), modelStub.personsAdded);
+        assertEquals(Arrays.asList(validTask), modelStub.tasksAdded);
         assertEquals(EMPTY_COMMAND_HISTORY, commandHistory);
     }
 
     @Test
     public void execute_duplicatePerson_throwsCommandException() throws Exception {
-        Task validTask = new PersonBuilder().build();
+        Task validTask = new TaskBuilder().build();
         AddCommand addCommand = new AddCommand(validTask);
         ModelStub modelStub = new ModelStubWithPerson(validTask);
 
         thrown.expect(CommandException.class);
-        thrown.expectMessage(AddCommand.MESSAGE_DUPLICATE_PERSON);
+        thrown.expectMessage(AddCommand.MESSAGE_DUPLICATE_TASK);
         addCommand.execute(modelStub, commandHistory);
     }
 
     @Test
     public void equals() {
-        Task alice = new PersonBuilder().withName("Alice").build();
-        Task bob = new PersonBuilder().withName("Bob").build();
+        Task alice = new TaskBuilder().withName("Alice").build();
+        Task bob = new TaskBuilder().withName("Bob").build();
         AddCommand addAliceCommand = new AddCommand(alice);
         AddCommand addBobCommand = new AddCommand(bob);
 
@@ -108,22 +108,22 @@ public class AddCommandTest {
      */
     private class ModelStubAcceptingPersonAdded extends ModelStub {
 
-        final ArrayList<Task> personsAdded = new ArrayList<>();
+        final ArrayList<Task> tasksAdded = new ArrayList<>();
 
         @Override
         public boolean hasTask(Task task) {
             requireNonNull(task);
-            return personsAdded.contains(task);
+            return tasksAdded.contains(task);
         }
 
         @Override
         public void addTask(Task task) {
             requireNonNull(task);
-            personsAdded.add(task);
+            tasksAdded.add(task);
         }
 
         @Override
-        public void commitAddressBook() {
+        public void commitTaskCollection() {
             // called by {@code AddCommand#execute()}
         }
 

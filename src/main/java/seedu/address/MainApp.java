@@ -64,7 +64,7 @@ public class MainApp extends Application {
         UserPrefsStorage userPrefsStorage = new JsonUserPrefsStorage(config.getUserPrefsFilePath());
         userPrefs = initPrefs(userPrefsStorage);
         TaskCollectionStorage taskCollectionStorage = new XmlTaskCollectionStorage(
-            userPrefs.getAddressBookFilePath());
+            userPrefs.getDeadlineManagerFilePath());
         storage = new StorageManager(taskCollectionStorage, userPrefsStorage);
 
         initLogging(config);
@@ -85,21 +85,21 @@ public class MainApp extends Application {
      * occur when reading {@code storage}'s deadline manager.
      */
     private Model initModelManager(Storage storage, UserPrefs userPrefs) {
-        Optional<ReadOnlyTaskCollection> addressBookOptional;
+        Optional<ReadOnlyTaskCollection> taskCollectionOptional;
         ReadOnlyTaskCollection initialData;
         try {
-            addressBookOptional = storage.readTaskCollection();
-            if (!addressBookOptional.isPresent()) {
-                logger.info("Data file not found. Will be starting with a sample TaskCollection");
+            taskCollectionOptional = storage.readTaskCollection();
+            if (!taskCollectionOptional.isPresent()) {
+                logger.info("Data file not found. Will be starting with a sample deadline manager");
             }
-            initialData = addressBookOptional.orElseGet(SampleDataUtil::getSampleAddressBook);
+            initialData = taskCollectionOptional.orElseGet(SampleDataUtil::getSampleTaskCollection);
         } catch (DataConversionException e) {
             logger.warning(
-                "Data file not in the correct format. Will be starting with an empty TaskCollection");
+                "Data file not in the correct format. Will be starting with an empty deadline manager");
             initialData = new TaskCollection();
         } catch (IOException e) {
             logger.warning(
-                "Problem while reading from the file. Will be starting with an empty TaskCollection");
+                "Problem while reading from the file. Will be starting with an empty deadline manager");
             initialData = new TaskCollection();
         }
 
@@ -184,7 +184,7 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        logger.info("Starting TaskCollection " + MainApp.VERSION);
+        logger.info("Starting DeadlineManager " + MainApp.VERSION);
         ui.start(primaryStage);
     }
 

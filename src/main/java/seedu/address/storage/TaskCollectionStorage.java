@@ -44,6 +44,6 @@ public interface TaskCollectionStorage {
     /**
      * @see #saveTaskCollection(ReadOnlyTaskCollection)
      */
-    void saveTaskCollection(ReadOnlyTaskCollection addressBook, Path filePath) throws IOException;
+    void saveTaskCollection(ReadOnlyTaskCollection taskCollection, Path filePath) throws IOException;
 
 }

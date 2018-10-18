@@ -2,9 +2,9 @@ package seedu.address.model;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
-import static seedu.address.testutil.TypicalPersons.ALICE;
-import static seedu.address.testutil.TypicalPersons.BENSON;
+import static seedu.address.model.Model.PREDICATE_SHOW_ALL_TASKS;
+import static seedu.address.testutil.TypicalTasks.ALICE;
+import static seedu.address.testutil.TypicalTasks.BENSON;
 
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -14,7 +14,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import seedu.address.model.task.NameContainsKeywordsPredicate;
-import seedu.address.testutil.AddressBookBuilder;
+import seedu.address.testutil.TaskManagerBuilder;
 
 public class ModelManagerTest {
 
@@ -48,7 +48,7 @@ public class ModelManagerTest {
 
     @Test
     public void equals() {
-        TaskCollection taskCollection = new AddressBookBuilder().withPerson(ALICE).withPerson(BENSON)
+        TaskCollection taskCollection = new TaskManagerBuilder().withPerson(ALICE).withPerson(BENSON)
             .build();
         TaskCollection differentTaskCollection = new TaskCollection();
         UserPrefs userPrefs = new UserPrefs();
@@ -77,11 +77,11 @@ public class ModelManagerTest {
         assertFalse(modelManager.equals(new ModelManager(taskCollection, userPrefs)));
 
         // resets modelManager to initial state for upcoming tests
-        modelManager.updateFilteredTaskList(PREDICATE_SHOW_ALL_PERSONS);
+        modelManager.updateFilteredTaskList(PREDICATE_SHOW_ALL_TASKS);
 
         // different userPrefs -> returns true
         UserPrefs differentUserPrefs = new UserPrefs();
-        differentUserPrefs.setAddressBookFilePath(Paths.get("differentFilePath"));
+        differentUserPrefs.setDeadlineManagerFilePath(Paths.get("differentFilePath"));
         assertTrue(modelManager.equals(new ModelManager(taskCollection, differentUserPrefs)));
     }
 }

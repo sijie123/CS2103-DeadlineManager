@@ -18,7 +18,7 @@ import seedu.address.logic.commands.AddCommand;
 import seedu.address.logic.commands.ClearCommand;
 import seedu.address.logic.commands.DeleteCommand;
 import seedu.address.logic.commands.EditCommand;
-import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
+import seedu.address.logic.commands.EditCommand.EditTaskDescriptor;
 import seedu.address.logic.commands.ExitCommand;
 import seedu.address.logic.commands.FindCommand;
 import seedu.address.logic.commands.HelpCommand;
@@ -30,21 +30,21 @@ import seedu.address.logic.commands.UndoCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.task.NameContainsKeywordsPredicate;
 import seedu.address.model.task.Task;
-import seedu.address.testutil.EditPersonDescriptorBuilder;
-import seedu.address.testutil.PersonBuilder;
-import seedu.address.testutil.PersonUtil;
+import seedu.address.testutil.EditTaskDescriptorBuilder;
+import seedu.address.testutil.TaskBuilder;
+import seedu.address.testutil.TaskUtil;
 
 public class TaskCollectionParserTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    private final AddressBookParser parser = new AddressBookParser();
+    private final TaskCollectionParser parser = new TaskCollectionParser();
 
     @Test
     public void parseCommand_add() throws Exception {
-        Task task = new PersonBuilder().build();
-        AddCommand command = (AddCommand) parser.parseCommand(PersonUtil.getAddCommand(task));
+        Task task = new TaskBuilder().build();
+        AddCommand command = (AddCommand) parser.parseCommand(TaskUtil.getAddCommand(task));
         assertEquals(new AddCommand(task), command);
     }
 
@@ -63,11 +63,11 @@ public class TaskCollectionParserTest {
 
     @Test
     public void parseCommand_edit() throws Exception {
-        Task task = new PersonBuilder().build();
-        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(task).build();
+        Task task = new TaskBuilder().build();
+        EditTaskDescriptor descriptor = new EditTaskDescriptorBuilder(task).build();
         EditCommand command = (EditCommand) parser.parseCommand(EditCommand.COMMAND_WORD + " "
-            + INDEX_FIRST_TASK.getOneBased() + " " + PersonUtil
-            .getEditPersonDescriptorDetails(descriptor));
+            + INDEX_FIRST_TASK.getOneBased() + " " + TaskUtil
+            .getEditTaskDescriptorDetails(descriptor));
         assertEquals(new EditCommand(INDEX_FIRST_TASK, descriptor), command);
     }
 

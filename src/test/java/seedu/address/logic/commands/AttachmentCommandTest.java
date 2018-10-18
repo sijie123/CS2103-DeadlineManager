@@ -4,7 +4,7 @@ import static org.junit.Assert.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_TASK;
-import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
+import static seedu.address.testutil.TypicalTasks.getTypicalTaskCollections;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +22,7 @@ import seedu.address.model.TaskCollection;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.attachment.Attachment;
 import seedu.address.model.task.Task;
-import seedu.address.testutil.PersonBuilder;
+import seedu.address.testutil.TaskBuilder;
 
 /**
  * Contains unit tests for AttachmentCommand.
@@ -30,7 +30,7 @@ import seedu.address.testutil.PersonBuilder;
 public class AttachmentCommandTest {
     private static File nonExistentFile = new File("blabla/not-here1827364.txt");
 
-    private Model model = new ModelManager(getTypicalAddressBook(), new UserPrefs());
+    private Model model = new ModelManager(getTypicalTaskCollections(), new UserPrefs());
     private CommandHistory commandHistory = new CommandHistory();
 
     /**
@@ -62,7 +62,7 @@ public class AttachmentCommandTest {
         Set<Attachment> attachmentSet = new HashSet<>(task.getAttachments());
         List<Attachment> newAttachments = Arrays.asList(attachments);
         attachmentSet.addAll(new HashSet<>(newAttachments));
-        Task modifiedTask = new PersonBuilder(task).withAttachments(attachmentSet).build();
+        Task modifiedTask = new TaskBuilder(task).withAttachments(attachmentSet).build();
         return modifiedTask;
     }
 
@@ -104,7 +104,7 @@ public class AttachmentCommandTest {
         Model expectedModel = new ModelManager(new TaskCollection(model.getTaskCollection()),
             new UserPrefs());
         expectedModel.updateTask(model.getFilteredTaskList().get(0), expectedTask);
-        expectedModel.commitAddressBook();
+        expectedModel.commitTaskCollection();
 
         assertCommandSuccess(attachmentCommand, model, commandHistory, expectedMessage, expectedModel);
 
@@ -121,7 +121,7 @@ public class AttachmentCommandTest {
         Model modelStub = new ModelManager(new TaskCollection(model.getTaskCollection()),
             new UserPrefs());
         modelStub.updateTask(model.getFilteredTaskList().get(0), task);
-        modelStub.commitAddressBook();
+        modelStub.commitTaskCollection();
 
         //Attempt to add it again using absolute path -> should fail
         String filePath = tempFile.getAbsolutePath();
@@ -166,7 +166,7 @@ public class AttachmentCommandTest {
                 AttachmentCommand.AddAttachmentAction.MESSAGE_SUCCESS, tempFiles[i].getName());
             Task expectedTask = addAttachmentToTask(task, new Attachment(tempFiles[i]));
             expectedModel.updateTask(task, expectedTask);
-            expectedModel.commitAddressBook();
+            expectedModel.commitTaskCollection();
             assertCommandSuccess(attachmentCommand, model, commandHistory, expectedMessage, expectedModel);
             task = expectedTask;
         }
@@ -199,7 +199,7 @@ public class AttachmentCommandTest {
         Model modelStub = new ModelManager(new TaskCollection(model.getTaskCollection()),
             new UserPrefs());
         modelStub.updateTask(originalTask, taskWithAttachment);
-        modelStub.commitAddressBook();
+        modelStub.commitTaskCollection();
 
         Model baseModel = new ModelManager(new TaskCollection(modelStub.getTaskCollection()),
             new UserPrefs());
@@ -215,7 +215,7 @@ public class AttachmentCommandTest {
         Model expectedModel = new ModelManager(new TaskCollection(modelStub.getTaskCollection()),
             new UserPrefs());
         expectedModel.updateTask(taskWithAttachment, originalTask);
-        expectedModel.commitAddressBook();
+        expectedModel.commitTaskCollection();
 
         assertCommandSuccess(attachmentCommand, baseModel, commandHistory, expectedMessage, expectedModel);
 
@@ -268,7 +268,7 @@ public class AttachmentCommandTest {
         Model modelStub = new ModelManager(new TaskCollection(model.getTaskCollection()),
             new UserPrefs());
         modelStub.updateTask(originalTask, taskWithAttachment);
-        modelStub.commitAddressBook();
+        modelStub.commitTaskCollection();
 
 
         File outputFile = createTestFile();

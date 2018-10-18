@@ -1,7 +1,7 @@
 package systemtests;
 
 import static seedu.address.commons.core.Messages.MESSAGE_UNKNOWN_COMMAND;
-import static seedu.address.testutil.TypicalPersons.KEYWORD_MATCHING_MEIER;
+import static seedu.address.testutil.TypicalTasks.KEYWORD_MATCHING_MEIER;
 
 import org.junit.Test;
 
@@ -38,13 +38,13 @@ public class ClearCommandSystemTest extends TaskCollectionSystemTest {
 
         /* Case: selects first card in task list and clears deadline manager -> cleared and no card selected */
         executeCommand(UndoCommand.COMMAND_WORD); // restores the original deadline manager
-        selectPerson(Index.fromOneBased(1));
+        selectTask(Index.fromOneBased(1));
         assertCommandSuccess(ClearCommand.COMMAND_WORD);
         assertSelectedCardDeselected();
 
         /* Case: filters the task list before clearing -> entire deadline manager cleared */
         executeCommand(UndoCommand.COMMAND_WORD); // restores the original deadline manager
-        showPersonsWithName(KEYWORD_MATCHING_MEIER);
+        showTasksWithName(KEYWORD_MATCHING_MEIER);
         assertCommandSuccess(ClearCommand.COMMAND_WORD);
         assertSelectedCardUnchanged();
 

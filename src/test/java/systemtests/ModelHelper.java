@@ -13,7 +13,7 @@ import seedu.address.model.task.Task;
  */
 public class ModelHelper {
 
-    private static final Predicate<Task> PREDICATE_MATCHING_NO_PERSONS = unused -> false;
+    private static final Predicate<Task> PREDICATE_MATCHING_NO_TASKS = unused -> false;
 
     /**
      * Updates {@code model}'s filtered list to display only {@code toDisplay}.
@@ -21,7 +21,7 @@ public class ModelHelper {
     public static void setFilteredList(Model model, List<Task> toDisplay) {
         Optional<Predicate<Task>> predicate =
             toDisplay.stream().map(ModelHelper::getPredicateMatching).reduce(Predicate::or);
-        model.updateFilteredTaskList(predicate.orElse(PREDICATE_MATCHING_NO_PERSONS));
+        model.updateFilteredTaskList(predicate.orElse(PREDICATE_MATCHING_NO_TASKS));
     }
 
     /**

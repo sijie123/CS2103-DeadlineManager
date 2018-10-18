@@ -12,14 +12,14 @@ import seedu.address.model.TaskCollection;
 public class ClearCommand extends Command {
 
     public static final String COMMAND_WORD = "clear";
-    public static final String MESSAGE_SUCCESS = "deadline manager has been cleared!";
+    public static final String MESSAGE_SUCCESS = "Deadline manager has been cleared!";
 
 
     @Override
     public CommandResult execute(Model model, CommandHistory history) {
         requireNonNull(model);
         model.resetData(new TaskCollection());
-        model.commitAddressBook();
+        model.commitTaskCollection();
         return new CommandResult(MESSAGE_SUCCESS);
     }
 }
