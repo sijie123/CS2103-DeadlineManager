@@ -17,9 +17,34 @@ endif::[]
 
 By: `Team W17-4`      Since: `Sep 2018`      Licence: `MIT`
 
+The Deadline Manager is an app to help users keep track of upcoming deadlines. It is targeted for students in NUS School of Computing, and has features dedicated to improve their workflow.
+This *Developer Guide* help you get started with contributing to this open source project.
+
+== Introduction
+
+This guide is written with the intention of providing relevant and useful information for new developers to quickly familiarise themselves with the structure of the project.
+
+If you already have some experience developing this project, this guide should serve as a handy reference for specific implementations of features.
+
+=== Structure of this Developer Guide
+
+In <<Setting up, Section 2>>, this guide will first provide instructions on setting up your programming environment.
+
+<<Design, Section 3>> and <<Implementation, Section 4>> will then describe the structure of the project.
+
+Finally, <<Documentation, Section 5>>, <<Testing, Section 6>> and <<Dev Ops, Section 7>> will detail documentation, testing and post-development procedures.
+
+=== Development Team
+
+This project is developed by Team W17-4 based on the https://se-edu.github.io/index.html[original SE-EDU AddressBook Project]. For more information, please refer to our https://cs2103-ay1819s1-w17-4.github.io/main/AboutUs.html[About Us] guide.
+
 == Setting up
 
+This section of the developer guide will help you set up your programming environment to begin contributing to this project.
+
 === Prerequisites
+
+The following software is required for building Deadline Manager.
 
 . *JDK `9`* or later
 +
@@ -34,7 +59,7 @@ IntelliJ by default has Gradle and JavaFx plugins installed. +
 Do not disable them. If you have disabled them, go to `File` > `Settings` > `Plugins` to re-enable them.
 
 
-=== Setting up the project in your computer
+=== Setting up the project on your computer
 
 . Fork this repo, and clone the fork to your computer
 . Open IntelliJ (if you are not in the welcome screen, click `File` > `Close Project` to close the existing project dialog first)
@@ -52,12 +77,27 @@ This will generate all resources required by the application and tests.
 .. To resolve this, place your cursor over any of the code section highlighted in red. Press kbd:[ALT + ENTER], and select `Add '--add-modules=...' to module compiler options` for each error
 . Repeat this for the test folder as well (e.g. check link:{repoURL}/src/test/java/seedu/address/commons/util/XmlUtilTest.java[`XmlUtilTest.java`] and link:{repoURL}/src/test/java/seedu/address/ui/HelpWindowTest.java[`HelpWindowTest.java`] for code errors, and if so, resolve it the same way)
 
+=== Building and running the project
+
+. Press the green `build` button on the top right corner of `IntelliJ` to build the project.
+. Press F10, then select `MainApp` to run the project.
+[NOTE]
+After you build for the first time, subsequently, the project can be run by pressing the green `play` button instead.
+
 === Verifying the setup
 
-. Run the `seedu.address.MainApp` and try a few commands
-. <<Testing,Run the tests>> to ensure they all pass.
+To test that you have correctly imported the project,
+
+
+. <<Building and running the project, Run>> the `seedu.address.MainApp` and ensure that the program launches successfully.
+. Run some sample commands and check that they do not cause any errors:
+.. `help`
+.. `list`
+. <<Testing,Run the tests>> to ensure that they all pass.
 
 === Configurations to do before writing code
+
+Before you start contributing to this project, ensure that you have configured your `IntelliJ` as follows to conform with our coding standards and project structure.
 
 ==== Configuring the coding style
 
@@ -105,35 +145,37 @@ When you are ready to start coding,
 
 == Design
 
+This section aims to provide an overview of the structure behind Deadline Manager. For detailed implementation details on specific features, please refer to <<Implementation, Section 4>> instead.
+
 [[Design-Architecture]]
 === Architecture
+
+This section (3.1) will give a brief overview on the components in Deadline Manager, as well as overview of design principles of the Deadline Manager. Sections <<Main, 3.2>> through <<Storage, 3.7>> below will give more details of each component.
 
 .Architecture Diagram
 image::Architecture.png[width="600"]
 
-The *_Architecture Diagram_* given above explains the high-level design of the App. Given below is a quick overview of each component.
+The *_Architecture Diagram_* given above shows the high-level design of the Deadline Manager.
 
-[TIP]
-The `.pptx` files used to create diagrams in this document can be found in the link:{repoURL}/docs/diagrams/[diagrams] folder. To update a diagram, modify the diagram in the pptx file, select the objects of the diagram, and choose `Save as picture`.
+==== Components
 
-`Main` has only one class called link:{repoURL}/src/main/java/seedu/address/MainApp.java[`MainApp`]. It is responsible for,
+The Deadline Manager consists of two shared components and four core components.
 
-* At app launch: Initializes the components in the correct sequence, and connects them up with each other.
-* At shut down: Shuts down the components and invokes cleanup method where necessary.
+[Discrete]
+==== Shared components:
 
-<<Design-Commons,*`Commons`*>> represents a collection of classes used by multiple other components. Two of those classes play important roles at the architecture level.
+* `Main`: The entry point of the App.
+* `Commons`: A collection of classes used by the other components in the App.
 
-* `EventsCenter` : This class (written using https://github.com/google/guava/wiki/EventBusExplained[Google's Event Bus library]) is used by components to communicate with other components using events (i.e. a form of _Event Driven_ design)
-* `LogsCenter` : Used by many classes to write log messages to the App's log file.
-
-The rest of the App consists of four components.
+[Discrete]
+==== Core components:
 
 * <<Design-Ui,*`UI`*>>: The UI of the App.
 * <<Design-Logic,*`Logic`*>>: The command executor.
 * <<Design-Model,*`Model`*>>: Holds the data of the App in-memory.
 * <<Design-Storage,*`Storage`*>>: Reads data from, and writes data to, the hard disk.
 
-Each of the four components
+Each of the four core components
 
 * Defines its _API_ in an `interface` with the same name as the Component.
 * Exposes its functionality using a `{Component Name}Manager` class.
@@ -143,8 +185,7 @@ For example, the `Logic` component (see the class diagram given below) defines i
 .Class Diagram of the Logic Component
 image::LogicClassDiagram.png[width="800"]
 
-[discrete]
-==== Events-Driven nature of the design
+==== Events-Driven Design
 
 The _Sequence Diagram_ below shows how the components interact for the scenario where the user issues the command `delete 1`.
 
@@ -152,7 +193,7 @@ The _Sequence Diagram_ below shows how the components interact for the scenario 
 image::SDforDeletePerson.png[width="800"]
 
 [NOTE]
-Note how the `Model` simply raises a `AddressBookChangedEvent` when the deadline manager data are changed, instead of asking the `Storage` to save the updates to the hard disk.
+Note how the `Model` simply raises a `TaskCollectionChangedEvent` when the deadline manager data is changed, instead of asking the `Storage` to save the updates to the hard disk.
 
 The diagram below shows how the `EventsCenter` reacts to that event, which eventually results in the updates being saved to the hard disk and the status bar of the UI being updated to reflect the 'Last Updated' time.
 
@@ -162,7 +203,24 @@ image::SDforDeletePersonEventHandling.png[width="800"]
 [NOTE]
 Note how the event is propagated through the `EventsCenter` to the `Storage` and `UI` without `Model` having to be coupled to either of them. This is an example of how this Event Driven approach helps us reduce direct coupling between components.
 
-The sections below give more details of each component.
+
+[TIP]
+The `.pptx` files used to create diagrams in this document can be found in the link:{repoURL}/docs/diagrams/[diagrams] folder. To update a diagram, modify the diagram in the pptx file, select the objects of the diagram, and choose `Save as picture`.
+
+=== Main
+
+`Main` has only one class called link:{repoURL}/src/main/java/seedu/address/MainApp.java[`MainApp`]. It is responsible for:
+
+* At app launch: initializing the components in the correct sequence, and connecting them up with each other.
+* At shut down: detaching the components and invoking cleanup methods where necessary.
+
+=== Commons
+
+Classes used by multiple components are placed in the `seedu.address.commons` package.
+<<Design-Commons,*`Commons`*>> represents a collection of classes used by multiple other components. Two of those classes play important roles at the architecture level.
+
+* `EventsCenter` : This class (written using https://github.com/google/guava/wiki/EventBusExplained[Google's Event Bus library]) is used by components to communicate with other components using events (i.e. a form of _Event Driven_ design)
+* `LogsCenter` : This class is used by components to write log messages to the App's log file.
 
 [[Design-Ui]]
 === UI component
@@ -172,14 +230,16 @@ image::UiClassDiagram.png[width="800"]
 
 *API* : link:{repoURL}/src/main/java/seedu/address/ui/Ui.java[`Ui.java`]
 
-The UI consists of a `MainWindow` that is made up of parts e.g.`CommandBox`, `ResultDisplay`, `TaskListPanel`, `StatusBarFooter`, `BrowserPanel` etc. All these, including the `MainWindow`, inherit from the abstract `UiPart` class.
+Figure 5 shows the class diagram of `UI`.
+
+The `UI` consists of a `MainWindow` that is made up of parts e.g.`CommandBox`, `ResultDisplay`, `TaskListPanel`, `StatusBarFooter`, `BrowserPanel` etc. All of these, including the `MainWindow`, inherit from the abstract `UiPart` class.
 
 The `UI` component uses JavaFx UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the link:{repoURL}/src/main/java/seedu/address/ui/MainWindow.java[`MainWindow`] is specified in link:{repoURL}/src/main/resources/view/MainWindow.fxml[`MainWindow.fxml`]
 
-The `UI` component,
+The `UI` component
 
 * Executes user commands using the `Logic` component.
-* Binds itself to some data in the `Model` so that the UI can auto-update when data in the `Model` change.
+* Binds itself to some data in the `Model` so that it can automatically update when data in the `Model` changes.
 * Responds to events raised from various parts of the App and updates the UI accordingly.
 
 [[Design-Logic]]
@@ -192,15 +252,22 @@ image::LogicClassDiagram.png[width="800"]
 *API* :
 link:{repoURL}/src/main/java/seedu/address/logic/Logic.java[`Logic.java`]
 
-.  `Logic` uses the `AddressBookParser` class to parse the user command.
+Figure 6 above shows the class diagram of `Logic`.
+
+.  `Logic` uses the `TaskCollectionParser` class to parse user commands.
 .  This results in a `Command` object which is executed by the `LogicManager`.
 .  The command execution can affect the `Model` (e.g. adding a task) and/or raise events.
-.  The result of the command execution is encapsulated as a `CommandResult` object which is passed back to the `Ui`.
+.  The result of the command execution is encapsulated as a `CommandResult` object which is passed back to the `UI`.
 
-Given below is the Sequence Diagram for interactions within the `Logic` component for the `execute("delete 1")` API call.
+As an example, given below is the Sequence Diagram for interactions within the `Logic` component for the `execute("delete 1")` API call.
 
 .Interactions Inside the Logic Component for the `delete 1` Command
 image::DeletePersonSdForLogic.png[width="800"]
+
+.  `Logic` uses the `TaskCollectionParser` class to parse the delete command.
+.  This results in a `DeleteCommand` object which is executed by the `LogicManager`.
+.  The command execution affects the `Model` by deleting a person.
+.  The result of the command execution is encapsulated as a `CommandResult` object which is passed back to the `UI`.
 
 [[Design-Model]]
 === Model component
@@ -210,7 +277,9 @@ image::ModelClassDiagram.png[width="800"]
 
 *API* : link:{repoURL}/src/main/java/seedu/address/model/Model.java[`Model.java`]
 
-The `Model`,
+Figure 8 shows the class diagram for `Model`.
+
+The `Model`
 
 * stores a `UserPref` object that represents the user's preferences.
 * stores the deadline manager data.
@@ -230,75 +299,75 @@ image::StorageClassDiagram.png[width="800"]
 
 *API* : link:{repoURL}/src/main/java/seedu/address/storage/Storage.java[`Storage.java`]
 
-The `Storage` component,
+
+Figure 9 illustrates the class diagram of Storage.
+
+
+The `Storage` component
 
 * can save `UserPref` objects in json format and read it back.
 * can save the deadline manager data in xml format and read it back.
 * can export the last view in xml format and import it back.
-* is event-based. Methods are executed by listening to events such as AddressBookChangedEvent.
-Return data and errors are also passed back through firing events.
+* is event-based. Methods are executed by listening to events such as TaskCollectionChangedEvent.
+Return data and errors are also passed back by firing events.
 
-[[Design-Commons]]
-=== Common classes
-
-Classes used by multiple components are in the `seedu.addressbook.commons` package.
 
 == Implementation
 
-This section describes some noteworthy details on how certain features are implemented.
+This section describes some noteworthy details on how major features are implemented.
 
 // tag::undoredo[]
 === Undo/Redo feature
 ==== Current Implementation
 
 The undo/redo mechanism is facilitated by `VersionedTaskCollection`.
-It extends `TaskCollection` with an undo/redo history, stored internally as an `addressBookStateList` and `currentStatePointer`.
+It extends `TaskCollection` with an undo/redo history, stored internally as an `taskCollectionStateList` and `currentStatePointer`.
 Additionally, it implements the following operations:
 
 * `VersionedTaskCollection#commit()` -- Saves the current deadline manager state in its history.
 * `VersionedTaskCollection#undo()` -- Restores the previous deadline manager state from its history.
 * `VersionedTaskCollection#redo()` -- Restores a previously undone deadline manager state from its history.
 
-These operations are exposed in the `Model` interface as `Model#commitAddressBook()`, `Model#undoAddressBook()` and `Model#redoAddressBook()` respectively.
+These operations are exposed in the `Model` interface as `Model#commitTaskCollection()`, `Model#undoTaskCollection()` and `Model#redoTaskCollection()` respectively.
 
 Given below is an example usage scenario and how the undo/redo mechanism behaves at each step.
 
-Step 1. The user launches the application for the first time. The `VersionedAddressBook` will be initialized with the initial deadline manager state, and the `currentStatePointer` pointing to that single deadline manager state.
+Step 1. The user launches the application for the first time. The `VersionedTaskCollection` will be initialized with the initial deadline manager state, and the `currentStatePointer` pointing to that single deadline manager state.
 
 image::UndoRedoStartingStateListDiagram.png[width="800"]
 
-Step 2. The user executes `delete 5` command to delete the 5th task in the deadline manager. The `delete` command calls `Model#commitAddressBook()`, causing the modified state of the deadline manager after the `delete 5` command executes to be saved in the `addressBookStateList`, and the `currentStatePointer` is shifted to the newly inserted deadline manager state.
+Step 2. The user executes `delete 5` command to delete the 5th task in the deadline manager. The `delete` command calls `Model#commitTaskCollection()`, causing the modified state of the deadline manager after the `delete 5` command executes to be saved in the `taskCollectionStateList`, and the `currentStatePointer` is shifted to the newly inserted deadline manager state.
 
 image::UndoRedoNewCommand1StateListDiagram.png[width="800"]
 
-Step 3. The user executes `add n/David ...` to add a new task. The `add` command also calls `Model#commitAddressBook()`, causing another modified deadline manager state to be saved into the `addressBookStateList`.
+Step 3. The user executes `add n/David ...` to add a new task. The `add` command also calls `Model#commitTaskCollection()`, causing another modified deadline manager state to be saved into the `taskCollectionStateList`.
 
 image::UndoRedoNewCommand2StateListDiagram.png[width="800"]
 
 [NOTE]
-If a command fails its execution, it will not call `Model#commitAddressBook()`, so the deadline manager state will not be saved into the `addressBookStateList`.
+If a command fails its execution, it will not call `Model#commitTaskCollection()`, so the deadline manager state will not be saved into the `taskCollectionStateList`.
 
-Step 4. The user now decides that adding the task was a mistake, and decides to undo that action by executing the `undo` command. The `undo` command will call `Model#undoAddressBook()`, which will shift the `currentStatePointer` once to the left, pointing it to the previous deadline manager state, and restores the deadline manager to that state.
+Step 4. The user now decides that adding the task was a mistake, and decides to undo that action by executing the `undo` command. The `undo` command will call `Model#undoTaskCollection()`, which will shift the `currentStatePointer` once to the left, pointing it to the previous deadline manager state, and restores the deadline manager to that state.
 
 image::UndoRedoExecuteUndoStateListDiagram.png[width="800"]
 
 [NOTE]
-If the `currentStatePointer` is at index 0, pointing to the initial deadline manager state, then there are no previous deadline manager states to restore. The `undo` command uses `Model#canUndoAddressBook()` to check if this is the case. If so, it will return an error to the user rather than attempting to perform the undo.
+If the `currentStatePointer` is at index 0, pointing to the initial deadline manager state, then there are no previous deadline manager states to restore. The `undo` command uses `Model#canUndoTaskCollection()` to check if this is the case. If so, it will return an error to the user rather than attempting to perform the undo.
 
 The following sequence diagram shows how the undo operation works:
 
 image::UndoRedoSequenceDiagram.png[width="800"]
 
-The `redo` command does the opposite -- it calls `Model#redoAddressBook()`, which shifts the `currentStatePointer` once to the right, pointing to the previously undone state, and restores the deadline manager to that state.
+The `redo` command does the opposite -- it calls `Model#redoTaskCollection()`, which shifts the `currentStatePointer` once to the right, pointing to the previously undone state, and restores the deadline manager to that state.
 
 [NOTE]
-If the `currentStatePointer` is at index `addressBookStateList.size() - 1`, pointing to the latest deadline manager state, then there are no undone deadline manager states to restore. The `redo` command uses `Model#canRedoAddressBook()` to check if this is the case. If so, it will return an error to the user rather than attempting to perform the redo.
+If the `currentStatePointer` is at index `taskCollectionStateList.size() - 1`, pointing to the latest deadline manager state, then there are no undone deadline manager states to restore. The `redo` command uses `Model#canRedoTaskCollection()` to check if this is the case. If so, it will return an error to the user rather than attempting to perform the redo.
 
-Step 5. The user then decides to execute the command `list`. Commands that do not modify the deadline manager, such as `list`, will usually not call `Model#commitAddressBook()`, `Model#undoAddressBook()` or `Model#redoAddressBook()`. Thus, the `addressBookStateList` remains unchanged.
+Step 5. The user then decides to execute the command `list`. Commands that do not modify the deadline manager, such as `list`, will usually not call `Model#commitTaskCollection()`, `Model#undoTaskCollection()` or `Model#redoTaskCollection()`. Thus, the `taskCollectionStateList` remains unchanged.
 
 image::UndoRedoNewCommand3StateListDiagram.png[width="800"]
 
-Step 6. The user executes `clear`, which calls `Model#commitAddressBook()`. Since the `currentStatePointer` is not pointing at the end of the `addressBookStateList`, all deadline manager states after the `currentStatePointer` will be purged. We designed it this way because it no longer makes sense to redo the `add n/David ...` command. This is the behavior that most modern desktop applications follow.
+Step 6. The user executes `clear`, which calls `Model#commitTaskCollection()`. Since the `currentStatePointer` is not pointing at the end of the `taskCollectionStateList`, all deadline manager states after the `currentStatePointer` will be purged. We designed it this way because it no longer makes sense to redo the `add n/David ...` command. This is the behavior that most modern desktop applications follow.
 
 image::UndoRedoNewCommand4StateListDiagram.png[width="800"]
 
@@ -321,7 +390,7 @@ image::UndoRedoActivityDiagram.png[width="650"]
 
 * **Alternative 1 (current choice):** Use a list to store the history of deadline manager states.
 ** Pros: Easy for new Computer Science student undergraduates to understand, who are likely to be the new incoming developers of our project.
-** Cons: Logic is duplicated twice. For example, when a new command is executed, we must remember to update both `HistoryManager` and `VersionedAddressBook`.
+** Cons: Logic is duplicated twice. For example, when a new command is executed, we must remember to update both `HistoryManager` and `VersionedTaskCollection`.
 * **Alternative 2:** Use `HistoryManager` for undo/redo
 ** Pros: We do not need to maintain a separate list, and just reuse what is already in the codebase.
 ** Cons: Requires dealing with commands that have already been undone: We must remember to skip these commands. Violates Single Responsibility Principle and Separation of Concerns as `HistoryManager` now needs to do two different things.
@@ -339,7 +408,7 @@ Internally, `StorageManager` implements the following APIs from `ImportExportSto
 * `importTaskCollection`:  Imports and returns a `TaskCollection` given a filename
 * `exportTaskCollection`: Exports and writes to a file given a `TaskCollection`.
 
-Internally, it uses the same API as reading and saving the working addressbook file.
+Internally, it uses the same API as reading and saving the working taskCollection file.
 However, additional checks are performed to ensure that the user does not inadvertently overwrite the current working file, or import and corrupt the current working file.
 `StorageManager` only handles the I/O from file, and the data read and written is handled by `Model`.
 
@@ -413,7 +482,7 @@ Step 5. The `EventsCenter` will dispatch the `ImportDataAvailableEvent` back to 
 Step 6. `ModelManager` will take the imported data and de-conflict the merged entries.
 
 ==== Merge Deconflict
-An imported task can be deemed conflicting with an existing task if the two tasks compare `equal` with the internal implementation of Task's `equal` method.
+An imported task is deemed conflicting with an existing task if the two tasks compare `equal` with the internal implementation of Task's `equal` method.
 If the user attempts to import a new task that conflicts with an existing task, the task can be de-conflicted with one of the following algorithms:
 
 * `IgnoreResolver`: Discards the incoming task in favour of the existing task.
@@ -474,6 +543,8 @@ Step 5. The method `updateSortedTaskList` sorts the `versionTaskCollection` usin
 The extended filter feature aims to make filtering tasks flexible as well as intuitive.
 // [TODO]
 
+==== [Work-in-progress]
+This section will be updated in due time.
 // end::extendedfilter[]
 
 
@@ -564,15 +635,15 @@ Step 4. The `resultMessage` method of `AttachmentAction` is invoked. The returne
 // end::eattachments[]
 
 // tag::dataencryption[]
-=== [Proposed] Data Encryption
+=== [Proposed] Snooze tasks
 
-_{Explain here how the data encryption feature will be implemented}_
+_{This section is a work-in-progress. Snooze will only be implemented in v2.0 and this section will be updated in due time.}_
 
 // end::dataencryption[]
 
 === Logging
 
-We are using `java.util.logging` package for logging. The `LogsCenter` class is used to manage the logging levels and logging destinations.
+The Deadline Manager uses `java.util.logging` for logging. The `LogsCenter` class is used to manage the logging levels and logging destinations.
 
 * The logging level can be controlled using the `logLevel` setting in the configuration file (See <<Implementation-Configuration>>)
 * The `Logger` for a class can be obtained using `LogsCenter.getLogger(Class)` which will log messages according to the specified logging level
@@ -592,7 +663,7 @@ Certain properties of the application can be controlled (e.g App name, logging l
 
 == Documentation
 
-We use asciidoc for writing documentation.
+Asciidoc is used to write documentation. It is imperative that the documentation is updated as new features are implemented so that developers are aware of the changes made.
 
 [NOTE]
 We chose asciidoc over Markdown because asciidoc, although a bit more complex than Markdown, provides more flexibility in formatting.
@@ -726,10 +797,10 @@ To run tests in headless mode, open a console and run the command `gradlew clean
 
 We have two types of tests:
 
-.  *GUI Tests* - These are tests involving the GUI. They include,
+.  *GUI Tests* - These are tests involving the GUI. They include
 .. _System Tests_ that test the entire App by simulating user actions on the GUI. These are in the `systemtests` package.
 .. _Unit tests_ that test the individual components. These are in `seedu.address.ui` package.
-.  *Non-GUI Tests* - These are tests not involving the GUI. They include,
+.  *Non-GUI Tests* - These are tests not involving the GUI. They include
 ..  _Unit tests_ targeting the lowest level methods/classes. +
 e.g. `seedu.address.commons.StringUtilTest`
 ..  _Integration tests_ that are checking the integration of multiple code units (those code units are assumed to be working). +
@@ -739,6 +810,10 @@ e.g. `seedu.address.logic.LogicManagerTest`
 
 
 === Troubleshooting Testing
+
+Sometimes, you would encounter problems with testing, and certain tests may fail with unexpected exceptions.
+An example is illustrated below:
+
 **Problem: `HelpWindowTest` fails with a `NullPointerException`.**
 
 * Reason: One of its dependencies, `HelpWindow.html` in `src/main/resources/docs` is missing.
@@ -804,9 +879,9 @@ Do take a look at <<Design-Logic>> before attempting to modify the `Logic` compo
 ****
 * Hints
 ** Just like we store each individual command word constant `COMMAND_WORD` inside `*Command.java` (e.g.  link:{repoURL}/src/main/java/seedu/address/logic/commands/FindCommand.java[`FindCommand#COMMAND_WORD`], link:{repoURL}/src/main/java/seedu/address/logic/commands/DeleteCommand.java[`DeleteCommand#COMMAND_WORD`]), you need a new constant for aliases as well (e.g. `FindCommand#COMMAND_ALIAS`).
-** link:{repoURL}/src/main/java/seedu/address/logic/parser/AddressBookParser.java[`AddressBookParser`] is responsible for analyzing command words.
+** link:{repoURL}/src/main/java/seedu/address/logic/parser/TaskCollectionParser.java[`TaskCollectionParser`] is responsible for analyzing command words.
 * Solution
-** Modify the switch statement in link:{repoURL}/src/main/java/seedu/address/logic/parser/AddressBookParser.java[`AddressBookParser#parseCommand(String)`] such that both the proper command word and alias can be used to execute the same intended command.
+** Modify the switch statement in link:{repoURL}/src/main/java/seedu/address/logic/parser/TaskCollectionParser.java[`TaskCollectionParser#parseCommand(String)`] such that both the proper command word and alias can be used to execute the same intended command.
 ** Add new tests for each of the aliases that you have added.
 ** Update the user guide to document the new aliases.
 ** See this https://github.com/se-edu/addressbook-level4/pull/785[PR] for the full solution.
@@ -824,12 +899,12 @@ Do take a look at <<Design-Model>> before attempting to modify the `Model` compo
 +
 ****
 * Hints
-** The link:{repoURL}/src/main/java/seedu/address/model/Model.java[`Model`] and the link:{repoURL}/src/main/java/seedu/address/model/AddressBook.java[`AddressBook`] API need to be updated.
+** The link:{repoURL}/src/main/java/seedu/address/model/Model.java[`Model`] and the link:{repoURL}/src/main/java/seedu/address/model/TaskCollection.java[`TaskCollection`] API need to be updated.
 ** Think about how you can use SLAP to design the method. Where should we place the main logic of deleting tags?
-**  Find out which of the existing API methods in  link:{repoURL}/src/main/java/seedu/address/model/AddressBook.java[`AddressBook`] and link:{repoURL}/src/main/java/seedu/address/model/task/Task.java[`Task`] classes can be used to implement the tag removal logic. link:{repoURL}/src/main/java/seedu/address/model/AddressBook.java[`AddressBook`] allows you to update a task, and link:{repoURL}/src/main/java/seedu/address/model/task/Task.java[`Task`] allows you to update the tags.
+**  Find out which of the existing API methods in  link:{repoURL}/src/main/java/seedu/address/model/TaskCollection.java[`TaskCollection`] and link:{repoURL}/src/main/java/seedu/address/model/task/Task.java[`Task`] classes can be used to implement the tag removal logic. link:{repoURL}/src/main/java/seedu/address/model/TaskCollection.java[`TaskCollection`] allows you to update a task, and link:{repoURL}/src/main/java/seedu/address/model/task/Task.java[`Task`] allows you to update the tags.
 * Solution
-** Implement a `removeTag(Tag)` method in link:{repoURL}/src/main/java/seedu/address/model/AddressBook.java[`AddressBook`]. Loop through each task, and remove the `tag` from each task.
-** Add a new API method `deleteTag(Tag)` in link:{repoURL}/src/main/java/seedu/address/model/ModelManager.java[`ModelManager`]. Your link:{repoURL}/src/main/java/seedu/address/model/ModelManager.java[`ModelManager`] should call `AddressBook#removeTag(Tag)`.
+** Implement a `removeTag(Tag)` method in link:{repoURL}/src/main/java/seedu/address/model/TaskCollection.java[`TaskCollection`]. Loop through each task, and remove the `tag` from each task.
+** Add a new API method `deleteTag(Tag)` in link:{repoURL}/src/main/java/seedu/address/model/ModelManager.java[`ModelManager`]. Your link:{repoURL}/src/main/java/seedu/address/model/ModelManager.java[`ModelManager`] should call `TaskCollection#removeTag(Tag)`.
 ** Add new tests for each of the new public methods that you have added.
 ** See this https://github.com/se-edu/addressbook-level4/pull/790[PR] for the full solution.
 ****
@@ -882,7 +957,7 @@ image::getting-started-ui-result-after.png[width="200"]
 ** Modify link:{repoURL}/src/main/java/seedu/address/ui/ResultDisplay.java[`ResultDisplay#handleNewResultAvailableEvent(NewResultAvailableEvent)`] to react to this event appropriately.
 ** You can write two different kinds of tests to ensure that the functionality works:
 *** The unit tests for `ResultDisplay` can be modified to include verification of the color.
-*** The system tests link:{repoURL}/src/test/java/systemtests/AddressBookSystemTest.java[`AddressBookSystemTest#assertCommandBoxShowsDefaultStyle() and AddressBookSystemTest#assertCommandBoxShowsErrorStyle()`] to include verification for `ResultDisplay` as well.
+*** The system tests link:{repoURL}/src/test/java/systemtests/TaskCollectionSystemTest.java[`TaskCollectionSystemTest#assertCommandBoxShowsDefaultStyle() and TaskCollectionSystemTest#assertCommandBoxShowsErrorStyle()`] to include verification for `ResultDisplay` as well.
 ** See this https://github.com/se-edu/addressbook-level4/pull/799[PR] for the full solution.
 *** Do read the commits one at a time if you feel overwhelmed.
 ****
@@ -903,9 +978,9 @@ image::getting-started-ui-status-after.png[width="500"]
 ** link:{repoURL}/src/main/java/seedu/address/ui/StatusBarFooter.java[`StatusBarFooter`] needs to initialize the status bar on application start, and to update it accordingly whenever the deadline manager is updated.
 * Solution
 ** Modify the constructor of link:{repoURL}/src/main/java/seedu/address/ui/StatusBarFooter.java[`StatusBarFooter`] to take in the number of tasks when the application just started.
-** Use link:{repoURL}/src/main/java/seedu/address/ui/StatusBarFooter.java[`StatusBarFooter#handleAddressBookChangedEvent(AddressBookChangedEvent)`] to update the number of tasks whenever there are new changes to the addressbook.
+** Use link:{repoURL}/src/main/java/seedu/address/ui/StatusBarFooter.java[`StatusBarFooter#handleTaskCollectionChangedEvent(TaskCollectionChangedEvent)`] to update the number of tasks whenever there are new changes to the taskCollection.
 ** For tests, modify link:{repoURL}/src/test/java/guitests/guihandles/StatusBarFooterHandle.java[`StatusBarFooterHandle`] by adding a state-saving functionality for the total number of people status, just like what we did for save location and sync status.
-** For system tests, modify link:{repoURL}/src/test/java/systemtests/AddressBookSystemTest.java[`AddressBookSystemTest`] to also verify the new total number of tasks status bar.
+** For system tests, modify link:{repoURL}/src/test/java/systemtests/TaskCollectionSystemTest.java[`TaskCollectionSystemTest`] to also verify the new total number of tasks status bar.
 ** See this https://github.com/se-edu/addressbook-level4/pull/803[PR] for the full solution.
 ****
 
@@ -917,12 +992,12 @@ image::getting-started-ui-status-after.png[width="500"]
 [TIP]
 Do take a look at <<Design-Storage>> before attempting to modify the `Storage` component.
 
-. Add a new method `backupAddressBook(ReadOnlyAddressBook)`, so that the deadline manager can be saved in a fixed temporary location.
+. Add a new method `backupTaskCollection(ReadOnlyTaskCollection)`, so that the deadline manager can be saved in a fixed temporary location.
 +
 ****
 * Hint
-** Add the API method in link:{repoURL}/src/main/java/seedu/address/storage/AddressBookStorage.java[`AddressBookStorage`] interface.
-** Implement the logic in link:{repoURL}/src/main/java/seedu/address/storage/StorageManager.java[`StorageManager`] and link:{repoURL}/src/main/java/seedu/address/storage/XmlAddressBookStorage.java[`XmlAddressBookStorage`] class.
+** Add the API method in link:{repoURL}/src/main/java/seedu/address/storage/TaskCollectionStorage.java[`TaskCollectionStorage`] interface.
+** Implement the logic in link:{repoURL}/src/main/java/seedu/address/storage/StorageManager.java[`StorageManager`] and link:{repoURL}/src/main/java/seedu/address/storage/XmlTaskCollectionStorage.java[`XmlTaskCollectionStorage`] class.
 * Solution
 ** See this https://github.com/se-edu/addressbook-level4/pull/594[PR] for the full solution.
 ****
@@ -932,7 +1007,7 @@ Do take a look at <<Design-Storage>> before attempting to modify the `Storage` c
 
 By creating this command, you will get a chance to learn how to implement a feature end-to-end, touching all major components of the app.
 
-*Scenario:* You are a software maintainer for `addressbook`, as the former developer team has moved on to new projects. The current users of your application have a list of new feature requests that they hope the software will eventually have. The most popular request is to allow adding additional comments/notes about a particular contact, by providing a flexible `remark` field for each contact, rather than relying on tags alone. After designing the specification for the `remark` command, you are convinced that this feature is worth implementing. Your job is to implement the `remark` command.
+*Scenario:* You are a software maintainer for `taskCollection`, as the former developer team has moved on to new projects. The current users of your application have a list of new feature requests that they hope the software will eventually have. The most popular request is to allow adding additional comments/notes about a particular contact, by providing a flexible `remark` field for each contact, rather than relying on tags alone. After designing the specification for the `remark` command, you are convinced that this feature is worth implementing. Your job is to implement the `remark` command.
 
 ==== Description
 Edits the remark for a task specified in the `INDEX`. +
@@ -953,12 +1028,12 @@ Let's start by teaching the application how to parse a `remark` command. We will
 **Main:**
 
 . Add a `RemarkCommand` that extends link:{repoURL}/src/main/java/seedu/address/logic/commands/Command.java[`Command`]. Upon execution, it should just throw an `Exception`.
-. Modify link:{repoURL}/src/main/java/seedu/address/logic/parser/AddressBookParser.java[`AddressBookParser`] to accept a `RemarkCommand`.
+. Modify link:{repoURL}/src/main/java/seedu/address/logic/parser/TaskCollectionParser.java[`TaskCollectionParser`] to accept a `RemarkCommand`.
 
 **Tests:**
 
 . Add `RemarkCommandTest` that tests that `execute()` throws an Exception.
-. Add new test method to link:{repoURL}/src/test/java/seedu/address/logic/parser/AddressBookParserTest.java[`AddressBookParserTest`], which tests that typing "remark" returns an instance of `RemarkCommand`.
+. Add new test method to link:{repoURL}/src/test/java/seedu/address/logic/parser/TaskCollectionParserTest.java[`TaskCollectionParserTest`], which tests that typing "remark" returns an instance of `RemarkCommand`.
 
 ===== [Step 2] Logic: Teach the app to accept 'remark' arguments
 Let's teach the application to parse arguments that our `remark` command will accept. E.g. `1 r/Likes to drink coffee.`
@@ -967,14 +1042,14 @@ Let's teach the application to parse arguments that our `remark` command will ac
 
 . Modify `RemarkCommand` to take in an `Index` and `String` and print those two parameters as the error message.
 . Add `RemarkCommandParser` that knows how to parse two arguments, one index and one with prefix 'r/'.
-. Modify link:{repoURL}/src/main/java/seedu/address/logic/parser/AddressBookParser.java[`AddressBookParser`] to use the newly implemented `RemarkCommandParser`.
+. Modify link:{repoURL}/src/main/java/seedu/address/logic/parser/TaskCollectionParser.java[`TaskCollectionParser`] to use the newly implemented `RemarkCommandParser`.
 
 **Tests:**
 
 . Modify `RemarkCommandTest` to test the `RemarkCommand#equals()` method.
 . Add `RemarkCommandParserTest` that tests different boundary values
 for `RemarkCommandParser`.
-. Modify link:{repoURL}/src/test/java/seedu/address/logic/parser/AddressBookParserTest.java[`AddressBookParserTest`] to test that the correct command is generated according to the user input.
+. Modify link:{repoURL}/src/test/java/seedu/address/logic/parser/TaskCollectionParserTest.java[`TaskCollectionParserTest`] to test that the correct command is generated according to the user input.
 
 ===== [Step 3] Ui: Add a placeholder for remark in `TaskCard`
 Let's add a placeholder on all our link:{repoURL}/src/main/java/seedu/address/ui/TaskCard.java[`TaskCard`] s to display a remark for each task later.
@@ -1018,7 +1093,7 @@ We now have `Remark` s for `Task` s, but they will be gone when we exit the appl
 
 **Tests:**
 
-. Fix `invalidAndValidTaskAddressBook.xml`, `typicalTaskCollection.xml`, `validAddressBook.xml` etc., such that the XML tests will not fail due to a missing `<remark>` element.
+. Fix `invalidAndValidTaskTaskCollection.xml`, `typicalTaskCollection.xml`, `validTaskCollection.xml` etc., such that the XML tests will not fail due to a missing `<remark>` element.
 
 ===== [Step 6b] Test: Add withRemark() for `TaskBuilder`
 Since `Task` can now have a `Remark`, we should add a helper method to link:{repoURL}/src/test/java/seedu/address/testutil/TaskBuilder.java[`TaskBuilder`], so that users are able to create remarks when building a link:{repoURL}/src/main/java/seedu/address/model/task/Task.java[`Task`].
@@ -1093,7 +1168,7 @@ _{More to be added}_
 [appendix]
 == Use Cases
 
-(For all use cases below, the *System* is the `AddressBook` and the *Actor* is the `user`, unless specified otherwise)
+(For all use cases below, the *System* is the `TaskCollection` and the *Actor* is the `user`, unless specified otherwise)
 
 [discrete]
 === Use case: Delete task
@@ -1101,9 +1176,9 @@ _{More to be added}_
 *MSS*
 
 1.  User requests to list tasks
-2.  AddressBook shows a list of tasks
+2.  TaskCollection shows a list of tasks
 3.  User requests to delete a specific task in the list
-4.  AddressBook deletes the task
+4.  TaskCollection deletes the task
 +
 Use case ends.
 
@@ -1117,7 +1192,7 @@ Use case ends.
 * 3a. The given index is invalid.
 +
 [none]
-** 3a1. AddressBook shows an error message.
+** 3a1. TaskCollection shows an error message.
 +
 Use case resumes at step 2.
 
