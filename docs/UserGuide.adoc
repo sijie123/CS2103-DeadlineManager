@@ -160,14 +160,16 @@ The format for `FILTER_EXPRESSION` is defined recursively in the following parag
 `FILTER_EXPRESSION` is a string in the following format:
 
 * `FILTER_PREDICATE` -- This filter expression contains a single filter predicate
-* `FILTER_EXPRESSION` & `FILTER_EXPRESSION` -- This filter expression is a logical conjunction (i.e. AND) of two other filter expressions.  The operator "&" may be substituted with "&&".
-* `FILTER_EXPRESSION` | `FILTER_EXPRESSION` -- This filter expression is a logical disjunction (i.e. OR) of two other filter expressions.  The operator "|" may be substituted with "||".
-* ! `FILTER_EXPRESSION` -- This filter expression is a logical negation (i.e. NOT) of two other filter expressions.
-* (`FILTER_EXPRESSION`) -- This filter expression is surrounded by parentheses.
+* `FILTER_EXPRESSION & FILTER_EXPRESSION` -- This filter expression is a logical conjunction (i.e. AND) of two other filter expressions.  The operator `&` may be substituted with `&&`.
+* `FILTER_EXPRESSION | FILTER_EXPRESSION` -- This filter expression is a logical disjunction (i.e. OR) of two other filter expressions.  The operator `|` may be substituted with `||`.
+* `! FILTER_EXPRESSION` -- This filter expression is a logical negation (i.e. NOT) of two other filter expressions.
+* `( FILTER_EXPRESSION )` -- This filter expression is surrounded by parentheses.
 
 ****
 
-Parentheses are used for finer control the order that filter expressions are combined.  By default, "!" has highest precedence (i.e. "!" is applied first), followed by "&", then followed by "|".
+Parentheses are used for finer control the order that filter expressions are combined.  By default, `!` has highest precedence (i.e. `!` is applied first), followed by `&`, then followed by `|`.
+
+When it is unambiguous, whitespace between the operators and filter expressions may be omitted.
 
 ****
 
