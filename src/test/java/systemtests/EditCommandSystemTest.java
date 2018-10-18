@@ -19,12 +19,12 @@ import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PRIORITY_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_HUSBAND;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
-import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
+import static seedu.address.model.Model.PREDICATE_SHOW_ALL_TASKS;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_TASK;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_TASK;
-import static seedu.address.testutil.TypicalPersons.AMY;
-import static seedu.address.testutil.TypicalPersons.BOB;
-import static seedu.address.testutil.TypicalPersons.KEYWORD_MATCHING_MEIER;
+import static seedu.address.testutil.TypicalTasks.AMY;
+import static seedu.address.testutil.TypicalTasks.BOB;
+import static seedu.address.testutil.TypicalTasks.KEYWORD_MATCHING_MEIER;
 
 import org.junit.Test;
 
@@ -39,7 +39,7 @@ import seedu.address.model.task.Deadline;
 import seedu.address.model.task.Name;
 import seedu.address.model.task.Priority;
 import seedu.address.model.task.Task;
-import seedu.address.testutil.PersonBuilder;
+import seedu.address.testutil.TaskBuilder;
 
 public class EditCommandSystemTest extends TaskCollectionSystemTest {
 
@@ -57,10 +57,10 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
             " " + EditCommand.COMMAND_WORD + "  " + index.getOneBased() + "   " + NAME_DESC_BOB
                 + "  " + PRIORITY_DESC_BOB + "  " + DEADLINE_DESC_BOB + " " + TAG_DESC_HUSBAND + " ";
         Task uneditedTask = getModel().getFilteredTaskList().get(index.getZeroBased());
-        Task bobWithOriginalAttachments = new PersonBuilder(BOB)
+        Task bobWithOriginalAttachments = new TaskBuilder(BOB)
             .withAttachments(uneditedTask.getAttachments())
             .build();
-        Task editedTask = new PersonBuilder(bobWithOriginalAttachments)
+        Task editedTask = new TaskBuilder(bobWithOriginalAttachments)
             .withTags(VALID_TAG_HUSBAND)
             .build();
         assertCommandSuccess(command, index, editedTask);
@@ -89,7 +89,7 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
         assertNotEquals(getModel().getFilteredTaskList().get(index.getZeroBased()), editedTask);
         command = EditCommand.COMMAND_WORD + " " + index.getOneBased() + NAME_DESC_AMY
             + PRIORITY_DESC_BOB + DEADLINE_DESC_BOB + TAG_DESC_FRIEND + TAG_DESC_HUSBAND;
-        editedTask = new PersonBuilder(bobWithOriginalAttachments).withName(VALID_NAME_AMY).build();
+        editedTask = new TaskBuilder(bobWithOriginalAttachments).withName(VALID_NAME_AMY).build();
         assertCommandSuccess(command, index, editedTask);
 
         /* Case: edit a task with new values same as another task's values
@@ -99,7 +99,7 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
         command = EditCommand.COMMAND_WORD + " " + index.getOneBased() + NAME_DESC_BOB
             + PRIORITY_DESC_AMY + TAG_DESC_FRIEND + TAG_DESC_HUSBAND;
         editedTask =
-            new PersonBuilder(bobWithOriginalAttachments).withPriority(VALID_PRIORITY_AMY).build();
+            new TaskBuilder(bobWithOriginalAttachments).withPriority(VALID_PRIORITY_AMY).build();
         assertCommandSuccess(command, index, editedTask);
 
         /* Case: clear tags -> cleared */
@@ -107,41 +107,41 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
         command =
             EditCommand.COMMAND_WORD + " " + index.getOneBased() + " " + PREFIX_TAG.getPrefix();
         Task taskToEdit = getModel().getFilteredTaskList().get(index.getZeroBased());
-        editedTask = new PersonBuilder(taskToEdit).withTags().build();
+        editedTask = new TaskBuilder(taskToEdit).withTags().build();
         assertCommandSuccess(command, index, editedTask);
 
         /* ------------------ Performing edit operation while a filtered list is being shown ------------------------ */
 
         /* Case: filtered task list, edit index within bounds of deadline manager and task list -> edited */
-        showPersonsWithName(KEYWORD_MATCHING_MEIER);
+        showTasksWithName(KEYWORD_MATCHING_MEIER);
         index = INDEX_FIRST_TASK;
         assertTrue(index.getZeroBased() < getModel().getFilteredTaskList().size());
         command = EditCommand.COMMAND_WORD + " " + index.getOneBased() + " " + NAME_DESC_BOB;
         taskToEdit = getModel().getFilteredTaskList().get(index.getZeroBased());
-        editedTask = new PersonBuilder(taskToEdit).withName(VALID_NAME_BOB).build();
+        editedTask = new TaskBuilder(taskToEdit).withName(VALID_NAME_BOB).build();
         assertCommandSuccess(command, index, editedTask);
 
         /* Case: filtered task list, edit index within bounds of deadline manager but out of bounds of task list
          * -> rejected
          */
-        showPersonsWithName(KEYWORD_MATCHING_MEIER);
+        showTasksWithName(KEYWORD_MATCHING_MEIER);
         int invalidIndex = getModel().getTaskCollection().getTaskList().size();
         assertCommandFailure(EditCommand.COMMAND_WORD + " " + invalidIndex + NAME_DESC_BOB,
-            Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+            Messages.MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
 
         /* --------------------- Performing edit operation while a task card is selected -------------------------- */
 
         /* Case: selects first card in the task list, edit a task -> edited, card selection remains unchanged but
          * browser url changes
          */
-        showAllPersons();
+        showAllTasks();
         index = INDEX_FIRST_TASK;
-        selectPerson(index);
+        selectTask(index);
         command = EditCommand.COMMAND_WORD + " " + index.getOneBased() + NAME_DESC_AMY
             + PRIORITY_DESC_AMY + DEADLINE_DESC_AMY + TAG_DESC_FRIEND;
         // this can be misleading: card selection actually remains unchanged but the
         // browser's url is updated to reflect the new task's name
-        Task amyWithAttachments = new PersonBuilder(AMY)
+        Task amyWithAttachments = new TaskBuilder(AMY)
             .withAttachments(getModel().getFilteredTaskList().get(index.getZeroBased()).getAttachments())
             .build();
         assertCommandSuccess(command, index, amyWithAttachments, index);
@@ -159,7 +159,7 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
         /* Case: invalid index (size + 1) -> rejected */
         invalidIndex = getModel().getFilteredTaskList().size() + 1;
         assertCommandFailure(EditCommand.COMMAND_WORD + " " + invalidIndex + NAME_DESC_BOB,
-            Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+            Messages.MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
 
         /* Case: missing index -> rejected */
         assertCommandFailure(EditCommand.COMMAND_WORD + NAME_DESC_BOB,
@@ -216,10 +216,10 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
         Model expectedModel = getModel();
         expectedModel.updateTask(expectedModel.getFilteredTaskList().get(toEdit.getZeroBased()),
             editedTask);
-        expectedModel.updateFilteredTaskList(PREDICATE_SHOW_ALL_PERSONS);
+        expectedModel.updateFilteredTaskList(PREDICATE_SHOW_ALL_TASKS);
 
         assertCommandSuccess(command, expectedModel,
-            String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, editedTask),
+            String.format(EditCommand.MESSAGE_EDIT_TASK_SUCCESS, editedTask),
             expectedSelectedCardIndex);
     }
 
@@ -251,7 +251,7 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
                                       String expectedResultMessage,
                                       Index expectedSelectedCardIndex) {
         executeCommand(command);
-        expectedModel.updateFilteredTaskList(PREDICATE_SHOW_ALL_PERSONS);
+        expectedModel.updateFilteredTaskList(PREDICATE_SHOW_ALL_TASKS);
         assertApplicationDisplaysExpected("", expectedResultMessage, expectedModel);
         assertCommandBoxShowsDefaultStyle();
         if (expectedSelectedCardIndex != null) {

@@ -40,7 +40,7 @@ import seedu.address.logic.commands.ListCommand;
 import seedu.address.logic.commands.SelectCommand;
 import seedu.address.model.Model;
 import seedu.address.model.TaskCollection;
-import seedu.address.testutil.TypicalPersons;
+import seedu.address.testutil.TypicalTasks;
 import seedu.address.ui.BrowserPanel;
 import seedu.address.ui.CommandBox;
 
@@ -87,7 +87,7 @@ public abstract class TaskCollectionSystemTest {
      * Returns the data to be loaded into the file in {@link #getDataFileLocation()}.
      */
     protected TaskCollection getInitialData() {
-        return TypicalPersons.getTypicalAddressBook();
+        return TypicalTasks.getTypicalTaskCollections();
     }
 
     /**
@@ -141,19 +141,19 @@ public abstract class TaskCollectionSystemTest {
     }
 
     /**
-     * Displays all persons in the deadline manager.
+     * Displays all tasks in the deadline manager.
      */
-    protected void showAllPersons() {
+    protected void showAllTasks() {
         executeCommand(ListCommand.COMMAND_WORD);
         assertEquals(getModel().getTaskCollection().getTaskList().size(),
             getModel().getFilteredTaskList().size());
     }
 
     /**
-     * Displays all persons with any parts of their names matching {@code keyword}
+     * Displays all tasks with any parts of their names matching {@code keyword}
      * (case-insensitive).
      */
-    protected void showPersonsWithName(String keyword) {
+    protected void showTasksWithName(String keyword) {
         executeCommand(FindCommand.COMMAND_WORD + " " + keyword);
         assertTrue(getModel().getFilteredTaskList().size() < getModel().getTaskCollection()
             .getTaskList().size());
@@ -162,15 +162,15 @@ public abstract class TaskCollectionSystemTest {
     /**
      * Selects the task at {@code index} of the displayed list.
      */
-    protected void selectPerson(Index index) {
+    protected void selectTask(Index index) {
         executeCommand(SelectCommand.COMMAND_WORD + " " + index.getOneBased());
         assertEquals(index.getZeroBased(), getPersonListPanel().getSelectedCardIndex());
     }
 
     /**
-     * Deletes all persons in the deadline manager.
+     * Deletes all tasks in the deadline manager.
      */
-    protected void deleteAllPersons() {
+    protected void deleteAllTests() {
         executeCommand(ClearCommand.COMMAND_WORD);
         assertEquals(0, getModel().getTaskCollection().getTaskList().size());
     }
@@ -178,7 +178,7 @@ public abstract class TaskCollectionSystemTest {
     /**
      * Asserts that the {@code CommandBox} displays {@code expectedCommandInput}, the {@code
      * ResultDisplay} displays {@code expectedResultMessage}, the storage contains the same task
-     * objects as {@code expectedModel} and the task list panel displays the persons in the model
+     * objects as {@code expectedModel} and the task list panel displays the tasks in the model
      * correctly.
      */
     protected void assertApplicationDisplaysExpected(String expectedCommandInput,
@@ -187,7 +187,7 @@ public abstract class TaskCollectionSystemTest {
         assertEquals(expectedCommandInput, getCommandBox().getInput());
         assertEquals(expectedResultMessage, getResultDisplay().getText());
         assertEquals(new TaskCollection(expectedModel.getTaskCollection()),
-            testApp.readStorageAddressBook());
+            testApp.readStorageTaskCollection());
         assertListMatching(getPersonListPanel(), expectedModel.getFilteredTaskList());
     }
 

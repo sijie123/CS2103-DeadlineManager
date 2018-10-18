@@ -12,7 +12,7 @@ import seedu.address.commons.core.GuiSettings;
 public class UserPrefs {
 
     private GuiSettings guiSettings;
-    private Path addressBookFilePath = Paths.get("data", "addressbook.xml");
+    private Path deadlineManagerFilePath = Paths.get("data", "deadlinemanager.xml");
 
     public UserPrefs() {
         setGuiSettings(500, 500, 0, 0);
@@ -30,12 +30,12 @@ public class UserPrefs {
         guiSettings = new GuiSettings(width, height, x, y);
     }
 
-    public Path getAddressBookFilePath() {
-        return addressBookFilePath;
+    public Path getDeadlineManagerFilePath() {
+        return deadlineManagerFilePath;
     }
 
-    public void setAddressBookFilePath(Path addressBookFilePath) {
-        this.addressBookFilePath = addressBookFilePath;
+    public void setDeadlineManagerFilePath(Path deadlineManagerFilePath) {
+        this.deadlineManagerFilePath = deadlineManagerFilePath;
     }
 
     @Override
@@ -50,19 +50,19 @@ public class UserPrefs {
         UserPrefs o = (UserPrefs) other;
 
         return Objects.equals(guiSettings, o.guiSettings)
-            && Objects.equals(addressBookFilePath, o.addressBookFilePath);
+            && Objects.equals(deadlineManagerFilePath, o.deadlineManagerFilePath);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(guiSettings, addressBookFilePath);
+        return Objects.hash(guiSettings, deadlineManagerFilePath);
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Gui Settings : " + guiSettings.toString());
-        sb.append("\nLocal data file location : " + addressBookFilePath);
+        sb.append("\nLocal data file location : " + deadlineManagerFilePath);
         return sb.toString();
     }
 

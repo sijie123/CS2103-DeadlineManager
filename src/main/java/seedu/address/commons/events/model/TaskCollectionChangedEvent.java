@@ -16,6 +16,6 @@ public class TaskCollectionChangedEvent extends BaseEvent {
 
     @Override
     public String toString() {
-        return "number of persons " + data.getTaskList().size();
+        return "number of tasks " + data.getTaskList().size();
     }
 }

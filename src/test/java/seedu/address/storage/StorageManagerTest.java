@@ -3,7 +3,7 @@ package seedu.address.storage;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
+import static seedu.address.testutil.TypicalTasks.getTypicalTaskCollections;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -65,7 +65,7 @@ public class StorageManagerTest {
          * {@link XmlTaskCollectionStorage} class.
          * More extensive testing of UserPref saving/reading is done in {@link XmlTaskCollectionStorageTest} class.
          */
-        TaskCollection original = getTypicalAddressBook();
+        TaskCollection original = getTypicalTaskCollections();
         storageManager.saveTaskCollection(original);
         ReadOnlyTaskCollection retrieved = storageManager.readTaskCollection().get();
         assertEquals(original, new TaskCollection(retrieved));
@@ -90,7 +90,7 @@ public class StorageManagerTest {
     @Test
     public void exportOnWorkingFile_exceptionThrown() throws IOException {
         // Exporting with file name equal to the working file should throw IllegalValueException.
-        TaskCollection original = getTypicalAddressBook();
+        TaskCollection original = getTypicalTaskCollections();
         storageManager.saveTaskCollection(original);
         Assert.assertThrows(IOException.class, Storage.MESSAGE_WRITE_FILE_EXISTS_ERROR, () ->
                 storageManager.exportTaskCollection(original, storageManager.getTaskCollectionFilePath()));
@@ -98,7 +98,7 @@ public class StorageManagerTest {
 
     @Test
     public void exportNewFile_success() {
-        TaskCollection original = getTypicalAddressBook();
+        TaskCollection original = getTypicalTaskCollections();
         try {
             storageManager.exportTaskCollection(original, getTempFilePath("exportNewNonExistent"));
         } catch (IOException ioe) {
@@ -114,7 +114,7 @@ public class StorageManagerTest {
 
     @Test
     public void importExistingFile_success() throws DataConversionException {
-        TaskCollection original = getTypicalAddressBook();
+        TaskCollection original = getTypicalTaskCollections();
         try {
             storageManager.saveTaskCollection(original);
             ReadOnlyTaskCollection read = storageManager
@@ -131,7 +131,7 @@ public class StorageManagerTest {
          * {@link XmlTaskCollectionStorage} class.
          * More extensive testing of importing exporting is done in {@link XmlTaskCollectionStorageTest} class.
          */
-        TaskCollection original = getTypicalAddressBook();
+        TaskCollection original = getTypicalTaskCollections();
         storageManager.exportTaskCollection(original, getTempFilePath("dummyExport"));
         ReadOnlyTaskCollection retrieved = storageManager.importTaskCollection(getTempFilePath("dummyExport"))
                                                          .get();
@@ -149,7 +149,7 @@ public class StorageManagerTest {
         }
 
         @Override
-        public void saveTaskCollection(ReadOnlyTaskCollection addressBook, Path filePath)
+        public void saveTaskCollection(ReadOnlyTaskCollection taskCollection, Path filePath)
             throws IOException {
             throw new IOException("dummy exception");
         }

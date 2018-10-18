@@ -2,10 +2,10 @@ package seedu.address.storage;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static seedu.address.testutil.TypicalPersons.ALICE;
-import static seedu.address.testutil.TypicalPersons.HOON;
-import static seedu.address.testutil.TypicalPersons.IDA;
-import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
+import static seedu.address.testutil.TypicalTasks.ALICE;
+import static seedu.address.testutil.TypicalTasks.HOON;
+import static seedu.address.testutil.TypicalTasks.IDA;
+import static seedu.address.testutil.TypicalTasks.getTypicalTaskCollections;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -82,7 +82,7 @@ public class XmlTaskCollectionStorageTest {
     @Test
     public void readAndSaveAddressBook_allInOrder_success() throws Exception {
         Path filePath = testFolder.getRoot().toPath().resolve("TempAddressBook.xml");
-        TaskCollection original = getTypicalAddressBook();
+        TaskCollection original = getTypicalTaskCollections();
         XmlTaskCollectionStorage xmlAddressBookStorage = new XmlTaskCollectionStorage(filePath);
 
         //Save in new file and read back

@@ -25,11 +25,11 @@ import org.junit.Test;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.EditCommand;
-import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
+import seedu.address.logic.commands.EditCommand.EditTaskDescriptor;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.task.Name;
 import seedu.address.model.task.Priority;
-import seedu.address.testutil.EditPersonDescriptorBuilder;
+import seedu.address.testutil.EditTaskDescriptorBuilder;
 
 public class EditCommandParserTest {
 
@@ -101,7 +101,7 @@ public class EditCommandParserTest {
         String userInput = targetIndex.getOneBased() + PRIORITY_DESC_BOB + TAG_DESC_HUSBAND
             + NAME_DESC_AMY + TAG_DESC_FRIEND;
 
-        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withName(VALID_NAME_AMY)
+        EditTaskDescriptor descriptor = new EditTaskDescriptorBuilder().withName(VALID_NAME_AMY)
             .withPriority(VALID_PRIORITY_BOB).withTags(VALID_TAG_HUSBAND, VALID_TAG_FRIEND).build();
         EditCommand expectedCommand = new EditCommand(targetIndex, descriptor);
 
@@ -113,7 +113,7 @@ public class EditCommandParserTest {
         Index targetIndex = INDEX_FIRST_TASK;
         String userInput = targetIndex.getOneBased() + PRIORITY_DESC_BOB;
 
-        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder()
+        EditTaskDescriptor descriptor = new EditTaskDescriptorBuilder()
             .withPriority(VALID_PRIORITY_BOB).build();
         EditCommand expectedCommand = new EditCommand(targetIndex, descriptor);
 
@@ -125,20 +125,20 @@ public class EditCommandParserTest {
         // name
         Index targetIndex = INDEX_THIRD_TASK;
         String userInput = targetIndex.getOneBased() + NAME_DESC_AMY;
-        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withName(VALID_NAME_AMY)
+        EditTaskDescriptor descriptor = new EditTaskDescriptorBuilder().withName(VALID_NAME_AMY)
             .build();
         EditCommand expectedCommand = new EditCommand(targetIndex, descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
 
         // priority
         userInput = targetIndex.getOneBased() + PRIORITY_DESC_AMY;
-        descriptor = new EditPersonDescriptorBuilder().withPriority(VALID_PRIORITY_AMY).build();
+        descriptor = new EditTaskDescriptorBuilder().withPriority(VALID_PRIORITY_AMY).build();
         expectedCommand = new EditCommand(targetIndex, descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
 
         // tags
         userInput = targetIndex.getOneBased() + TAG_DESC_FRIEND;
-        descriptor = new EditPersonDescriptorBuilder().withTags(VALID_TAG_FRIEND).build();
+        descriptor = new EditTaskDescriptorBuilder().withTags(VALID_TAG_FRIEND).build();
         expectedCommand = new EditCommand(targetIndex, descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
     }
@@ -150,7 +150,7 @@ public class EditCommandParserTest {
             targetIndex.getOneBased() + PRIORITY_DESC_AMY + TAG_DESC_FRIEND + PRIORITY_DESC_AMY
                 + TAG_DESC_FRIEND + PRIORITY_DESC_BOB + TAG_DESC_HUSBAND;
 
-        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder()
+        EditCommand.EditTaskDescriptor descriptor = new EditTaskDescriptorBuilder()
             .withPriority(VALID_PRIORITY_BOB)
             .withTags(VALID_TAG_FRIEND, VALID_TAG_HUSBAND)
             .build();
@@ -164,7 +164,7 @@ public class EditCommandParserTest {
         // no other valid values specified
         Index targetIndex = INDEX_FIRST_TASK;
         String userInput = targetIndex.getOneBased() + INVALID_PRIORITY_DESC + PRIORITY_DESC_BOB;
-        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder()
+        EditCommand.EditTaskDescriptor descriptor = new EditTaskDescriptorBuilder()
             .withPriority(VALID_PRIORITY_BOB).build();
         EditCommand expectedCommand = new EditCommand(targetIndex, descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
@@ -173,7 +173,7 @@ public class EditCommandParserTest {
         userInput =
             targetIndex.getOneBased() + INVALID_PRIORITY_DESC + PRIORITY_DESC_BOB
                 + PRIORITY_DESC_BOB;
-        descriptor = new EditPersonDescriptorBuilder().withPriority(VALID_PRIORITY_BOB).build();
+        descriptor = new EditTaskDescriptorBuilder().withPriority(VALID_PRIORITY_BOB).build();
         expectedCommand = new EditCommand(targetIndex, descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
     }
@@ -183,7 +183,7 @@ public class EditCommandParserTest {
         Index targetIndex = INDEX_THIRD_TASK;
         String userInput = targetIndex.getOneBased() + TAG_EMPTY;
 
-        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withTags().build();
+        EditCommand.EditTaskDescriptor descriptor = new EditTaskDescriptorBuilder().withTags().build();
         EditCommand expectedCommand = new EditCommand(targetIndex, descriptor);
 
         assertParseSuccess(parser, userInput, expectedCommand);

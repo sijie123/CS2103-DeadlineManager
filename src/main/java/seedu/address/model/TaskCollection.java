@@ -22,7 +22,7 @@ public class TaskCollection implements ReadOnlyTaskCollection {
     }
 
     /**
-     * Creates an TaskCollection using the Persons in the {@code toBeCopied}
+     * Creates an TaskCollection using the Tasks in the {@code toBeCopied}
      */
     public TaskCollection(ReadOnlyTaskCollection toBeCopied) {
         this(); // delegating construction to non-parameterized constructor

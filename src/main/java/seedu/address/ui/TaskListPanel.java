@@ -12,11 +12,11 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.Region;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.events.ui.JumpToListRequestEvent;
-import seedu.address.commons.events.ui.PersonPanelSelectionChangedEvent;
+import seedu.address.commons.events.ui.TaskPanelSelectionChangedEvent;
 import seedu.address.model.task.Task;
 
 /**
- * Panel containing the list of persons.
+ * Panel containing the list of tasks.
  */
 public class TaskListPanel extends UiPart<Region> {
 
@@ -34,7 +34,7 @@ public class TaskListPanel extends UiPart<Region> {
 
     private void setConnections(ObservableList<Task> taskList) {
         taskListView.setItems(taskList);
-        taskListView.setCellFactory(listView -> new PersonListViewCell());
+        taskListView.setCellFactory(listView -> new TaskListViewCell());
         setEventHandlerForSelectionChangeEvent();
     }
 
@@ -43,7 +43,7 @@ public class TaskListPanel extends UiPart<Region> {
             .addListener((observable, oldValue, newValue) -> {
                 if (newValue != null) {
                     logger.fine("Selection in task list panel changed to : '" + newValue + "'");
-                    raise(new PersonPanelSelectionChangedEvent(newValue));
+                    raise(new TaskPanelSelectionChangedEvent(newValue));
                 }
             });
     }
@@ -68,7 +68,7 @@ public class TaskListPanel extends UiPart<Region> {
      * Custom {@code ListCell} that displays the graphics of a {@code Task} using a {@code
      * TaskCard}.
      */
-    class PersonListViewCell extends ListCell<Task> {
+    class TaskListViewCell extends ListCell<Task> {
 
         @Override
         protected void updateItem(Task task, boolean empty) {

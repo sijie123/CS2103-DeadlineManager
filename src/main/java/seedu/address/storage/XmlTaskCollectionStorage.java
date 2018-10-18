@@ -54,9 +54,9 @@ public class XmlTaskCollectionStorage implements TaskCollectionStorage {
             return Optional.empty();
         }
 
-        XmlSerializableTaskCollection xmlAddressBook = XmlFileStorage.loadDataFromSaveFile(filePath);
+        XmlSerializableTaskCollection xmlDeadlineManager = XmlFileStorage.loadDataFromSaveFile(filePath);
         try {
-            return Optional.of(xmlAddressBook.toModelType());
+            return Optional.of(xmlDeadlineManager.toModelType());
         } catch (IllegalValueException ive) {
             logger.info("Illegal values found in " + filePath + ": " + ive.getMessage());
             throw new DataConversionException(ive);
@@ -73,12 +73,12 @@ public class XmlTaskCollectionStorage implements TaskCollectionStorage {
      *
      * @param filePath location of the data. Cannot be null
      */
-    public void saveTaskCollection(ReadOnlyTaskCollection addressBook, Path filePath) throws IOException {
-        requireNonNull(addressBook);
+    public void saveTaskCollection(ReadOnlyTaskCollection taskCollection, Path filePath) throws IOException {
+        requireNonNull(taskCollection);
         requireNonNull(filePath);
 
         FileUtil.createIfMissing(filePath);
-        XmlFileStorage.saveDataToFile(filePath, new XmlSerializableTaskCollection(addressBook));
+        XmlFileStorage.saveDataToFile(filePath, new XmlSerializableTaskCollection(taskCollection));
     }
 
 }

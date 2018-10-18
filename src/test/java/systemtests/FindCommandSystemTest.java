@@ -1,12 +1,12 @@
 package systemtests;
 
 import static org.junit.Assert.assertFalse;
-import static seedu.address.commons.core.Messages.MESSAGE_PERSONS_LISTED_OVERVIEW;
+import static seedu.address.commons.core.Messages.MESSAGE_TASKS_LISTED_OVERVIEW;
 import static seedu.address.commons.core.Messages.MESSAGE_UNKNOWN_COMMAND;
-import static seedu.address.testutil.TypicalPersons.BENSON;
-import static seedu.address.testutil.TypicalPersons.CARL;
-import static seedu.address.testutil.TypicalPersons.DANIEL;
-import static seedu.address.testutil.TypicalPersons.KEYWORD_MATCHING_MEIER;
+import static seedu.address.testutil.TypicalTasks.BENSON;
+import static seedu.address.testutil.TypicalTasks.CARL;
+import static seedu.address.testutil.TypicalTasks.DANIEL;
+import static seedu.address.testutil.TypicalTasks.KEYWORD_MATCHING_MEIER;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +25,8 @@ public class FindCommandSystemTest extends TaskCollectionSystemTest {
 
     @Test
     public void find() {
-        /* Case: find multiple persons in deadline manager, command with leading spaces and trailing spaces
-         * -> 2 persons found
+        /* Case: find multiple tasks in deadline manager, command with leading spaces and trailing spaces
+         * -> 2 tasks found
          */
         String command = "   " + FindCommand.COMMAND_WORD + " " + KEYWORD_MATCHING_MEIER + "   ";
         Model expectedModel = getModel();
@@ -35,8 +35,8 @@ public class FindCommandSystemTest extends TaskCollectionSystemTest {
         assertCommandSuccess(command, expectedModel);
         assertSelectedCardUnchanged();
 
-        /* Case: repeat previous find command where task list is displaying the persons we are finding
-         * -> 2 persons found
+        /* Case: repeat previous find command where task list is displaying the tasks we are finding
+         * -> 2 tasks found
          */
         command = FindCommand.COMMAND_WORD + " " + KEYWORD_MATCHING_MEIER;
         assertCommandSuccess(command, expectedModel);
@@ -48,24 +48,24 @@ public class FindCommandSystemTest extends TaskCollectionSystemTest {
         assertCommandSuccess(command, expectedModel);
         assertSelectedCardUnchanged();
 
-        /* Case: find multiple persons in deadline manager, 2 keywords -> 2 persons found */
+        /* Case: find multiple tasks in deadline manager, 2 keywords -> 2 tasks found */
         command = FindCommand.COMMAND_WORD + " Benson Daniel";
         ModelHelper.setFilteredList(expectedModel, BENSON, DANIEL);
         assertCommandSuccess(command, expectedModel);
         assertSelectedCardUnchanged();
 
-        /* Case: find multiple persons in deadline manager, 2 keywords in reversed order -> 2 persons found */
+        /* Case: find multiple tasks in deadline manager, 2 keywords in reversed order -> 2 tasks found */
         command = FindCommand.COMMAND_WORD + " Daniel Benson";
         assertCommandSuccess(command, expectedModel);
         assertSelectedCardUnchanged();
 
-        /* Case: find multiple persons in deadline manager, 2 keywords with 1 repeat -> 2 persons found */
+        /* Case: find multiple tasks in deadline manager, 2 keywords with 1 repeat -> 2 tasks found */
         command = FindCommand.COMMAND_WORD + " Daniel Benson Daniel";
         assertCommandSuccess(command, expectedModel);
         assertSelectedCardUnchanged();
 
-        /* Case: find multiple persons in deadline manager, 2 matching keywords and 1 non-matching keyword
-         * -> 2 persons found
+        /* Case: find multiple tasks in deadline manager, 2 matching keywords and 1 non-matching keyword
+         * -> 2 tasks found
          */
         command = FindCommand.COMMAND_WORD + " Daniel Benson NonMatchingKeyWord";
         assertCommandSuccess(command, expectedModel);
@@ -81,7 +81,7 @@ public class FindCommandSystemTest extends TaskCollectionSystemTest {
         expectedResultMessage = RedoCommand.MESSAGE_FAILURE;
         assertCommandFailure(command, expectedResultMessage);
 
-        /* Case: find same persons in deadline manager after deleting 1 of them -> 1 task found */
+        /* Case: find same tasks in deadline manager after deleting 1 of them -> 1 task found */
         executeCommand(DeleteCommand.COMMAND_WORD + " 1");
         assertFalse(getModel().getTaskCollection().getTaskList().contains(BENSON));
         command = FindCommand.COMMAND_WORD + " " + KEYWORD_MATCHING_MEIER;
@@ -95,32 +95,32 @@ public class FindCommandSystemTest extends TaskCollectionSystemTest {
         assertCommandSuccess(command, expectedModel);
         assertSelectedCardUnchanged();
 
-        /* Case: find task in deadline manager, keyword is substring of name -> 0 persons found */
+        /* Case: find task in deadline manager, keyword is substring of name -> 0 tasks found */
         command = FindCommand.COMMAND_WORD + " Mei";
         ModelHelper.setFilteredList(expectedModel);
         assertCommandSuccess(command, expectedModel);
         assertSelectedCardUnchanged();
 
-        /* Case: find task in deadline manager, name is substring of keyword -> 0 persons found */
+        /* Case: find task in deadline manager, name is substring of keyword -> 0 tasks found */
         command = FindCommand.COMMAND_WORD + " Meiers";
         ModelHelper.setFilteredList(expectedModel);
         assertCommandSuccess(command, expectedModel);
         assertSelectedCardUnchanged();
 
-        /* Case: find task not in deadline manager -> 0 persons found */
+        /* Case: find task not in deadline manager -> 0 tasks found */
         command = FindCommand.COMMAND_WORD + " Mark";
         assertCommandSuccess(command, expectedModel);
         assertSelectedCardUnchanged();
 
-        /* Case: find tags of task in deadline manager -> 0 persons found */
+        /* Case: find tags of task in deadline manager -> 0 tasks found */
         List<Tag> tags = new ArrayList<>(DANIEL.getTags());
         command = FindCommand.COMMAND_WORD + " " + tags.get(0).tagName;
         assertCommandSuccess(command, expectedModel);
         assertSelectedCardUnchanged();
 
         /* Case: find while a task is selected -> selected card deselected */
-        showAllPersons();
-        selectPerson(Index.fromOneBased(1));
+        showAllTasks();
+        selectTask(Index.fromOneBased(1));
         assertFalse(getPersonListPanel().getHandleToSelectedCard().getName()
             .equals(DANIEL.getName().value));
         command = FindCommand.COMMAND_WORD + " Daniel";
@@ -128,8 +128,8 @@ public class FindCommandSystemTest extends TaskCollectionSystemTest {
         assertCommandSuccess(command, expectedModel);
         assertSelectedCardDeselected();
 
-        /* Case: find task in empty deadline manager -> 0 persons found */
-        deleteAllPersons();
+        /* Case: find task in empty deadline manager -> 0 tasks found */
+        deleteAllTests();
         command = FindCommand.COMMAND_WORD + " " + KEYWORD_MATCHING_MEIER;
         expectedModel = getModel();
         ModelHelper.setFilteredList(expectedModel, DANIEL);
@@ -143,7 +143,7 @@ public class FindCommandSystemTest extends TaskCollectionSystemTest {
 
     /**
      * Executes {@code command} and verifies that the command box displays an empty string, the
-     * result display box displays {@code Messages#MESSAGE_PERSONS_LISTED_OVERVIEW} with the number
+     * result display box displays {@code Messages#MESSAGE_TASKS_LISTED_OVERVIEW} with the number
      * of people in the filtered list, and the model related components equal to {@code
      * expectedModel}. These verifications are done by {@code TaskCollectionSystemTest#assertApplicationDisplaysExpected
      * (String,
@@ -155,7 +155,7 @@ public class FindCommandSystemTest extends TaskCollectionSystemTest {
      */
     private void assertCommandSuccess(String command, Model expectedModel) {
         String expectedResultMessage = String.format(
-            MESSAGE_PERSONS_LISTED_OVERVIEW, expectedModel.getFilteredTaskList().size());
+            MESSAGE_TASKS_LISTED_OVERVIEW, expectedModel.getFilteredTaskList().size());
 
         executeCommand(command);
         assertApplicationDisplaysExpected("", expectedResultMessage, expectedModel);

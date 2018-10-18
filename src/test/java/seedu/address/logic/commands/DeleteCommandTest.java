@@ -5,10 +5,10 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
-import static seedu.address.logic.commands.CommandTestUtil.showPersonAtIndex;
+import static seedu.address.logic.commands.CommandTestUtil.showTaskAtIndex;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_TASK;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_TASK;
-import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
+import static seedu.address.testutil.TypicalTasks.getTypicalTaskCollections;
 
 import org.junit.Test;
 
@@ -26,7 +26,7 @@ import seedu.address.model.task.Task;
  */
 public class DeleteCommandTest {
 
-    private Model model = new ModelManager(getTypicalAddressBook(), new UserPrefs());
+    private Model model = new ModelManager(getTypicalTaskCollections(), new UserPrefs());
     private CommandHistory commandHistory = new CommandHistory();
 
     @Test
@@ -35,11 +35,11 @@ public class DeleteCommandTest {
         DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_TASK);
 
         String expectedMessage = String
-            .format(DeleteCommand.MESSAGE_DELETE_PERSON_SUCCESS, taskToDelete);
+            .format(DeleteCommand.MESSAGE_DELETE_TASK_SUCCESS, taskToDelete);
 
         ModelManager expectedModel = new ModelManager(model.getTaskCollection(), new UserPrefs());
         expectedModel.deleteTask(taskToDelete);
-        expectedModel.commitAddressBook();
+        expectedModel.commitTaskCollection();
 
         assertCommandSuccess(deleteCommand, model, commandHistory, expectedMessage, expectedModel);
     }
@@ -50,22 +50,22 @@ public class DeleteCommandTest {
         DeleteCommand deleteCommand = new DeleteCommand(outOfBoundIndex);
 
         assertCommandFailure(deleteCommand, model, commandHistory,
-            Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+            Messages.MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
     }
 
     @Test
     public void execute_validIndexFilteredList_success() {
-        showPersonAtIndex(model, INDEX_FIRST_TASK);
+        showTaskAtIndex(model, INDEX_FIRST_TASK);
 
         Task taskToDelete = model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased());
         DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_TASK);
 
         String expectedMessage = String
-            .format(DeleteCommand.MESSAGE_DELETE_PERSON_SUCCESS, taskToDelete);
+            .format(DeleteCommand.MESSAGE_DELETE_TASK_SUCCESS, taskToDelete);
 
         Model expectedModel = new ModelManager(model.getTaskCollection(), new UserPrefs());
         expectedModel.deleteTask(taskToDelete);
-        expectedModel.commitAddressBook();
+        expectedModel.commitTaskCollection();
         showNoPerson(expectedModel);
 
         assertCommandSuccess(deleteCommand, model, commandHistory, expectedMessage, expectedModel);
@@ -73,7 +73,7 @@ public class DeleteCommandTest {
 
     @Test
     public void execute_invalidIndexFilteredList_throwsCommandException() {
-        showPersonAtIndex(model, INDEX_FIRST_TASK);
+        showTaskAtIndex(model, INDEX_FIRST_TASK);
 
         Index outOfBoundIndex = INDEX_SECOND_TASK;
         // ensures that outOfBoundIndex is still in bounds of deadline manager list
@@ -82,7 +82,7 @@ public class DeleteCommandTest {
         DeleteCommand deleteCommand = new DeleteCommand(outOfBoundIndex);
 
         assertCommandFailure(deleteCommand, model, commandHistory,
-            Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+            Messages.MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
     }
 
     @Test
@@ -91,18 +91,18 @@ public class DeleteCommandTest {
         DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_TASK);
         Model expectedModel = new ModelManager(model.getTaskCollection(), new UserPrefs());
         expectedModel.deleteTask(taskToDelete);
-        expectedModel.commitAddressBook();
+        expectedModel.commitTaskCollection();
 
         // delete -> first task deleted
         deleteCommand.execute(model, commandHistory);
 
-        // undo -> reverts addressbook back to previous state and filtered task list to show all persons
-        expectedModel.undoAddressBook();
+        // undo -> reverts taskcollection back to previous state and filtered task list to show all tasks
+        expectedModel.undoTaskCollection();
         assertCommandSuccess(new UndoCommand(), model, commandHistory, UndoCommand.MESSAGE_SUCCESS,
             expectedModel);
 
         // redo -> same first task deleted again
-        expectedModel.redoAddressBook();
+        expectedModel.redoTaskCollection();
         assertCommandSuccess(new RedoCommand(), model, commandHistory, RedoCommand.MESSAGE_SUCCESS,
             expectedModel);
     }
@@ -114,7 +114,7 @@ public class DeleteCommandTest {
 
         // execution failed -> deadline manager state not added into model
         assertCommandFailure(deleteCommand, model, commandHistory,
-            Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+            Messages.MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
 
         // single deadline manager state in model -> undoCommand and redoCommand fail
         assertCommandFailure(new UndoCommand(), model, commandHistory, UndoCommand.MESSAGE_FAILURE);
@@ -132,23 +132,23 @@ public class DeleteCommandTest {
         DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_TASK);
         Model expectedModel = new ModelManager(model.getTaskCollection(), new UserPrefs());
 
-        showPersonAtIndex(model, INDEX_SECOND_TASK);
+        showTaskAtIndex(model, INDEX_SECOND_TASK);
         Task taskToDelete = model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased());
         expectedModel.deleteTask(taskToDelete);
-        expectedModel.commitAddressBook();
+        expectedModel.commitTaskCollection();
 
         // delete -> deletes second task in unfiltered task list / first task in filtered task list
         deleteCommand.execute(model, commandHistory);
 
-        // undo -> reverts addressbook back to previous state and filtered task list to show all persons
-        expectedModel.undoAddressBook();
+        // undo -> reverts taskcollection back to previous state and filtered task list to show all tasks
+        expectedModel.undoTaskCollection();
         assertCommandSuccess(new UndoCommand(), model, commandHistory, UndoCommand.MESSAGE_SUCCESS,
             expectedModel);
 
         assertNotEquals(taskToDelete,
             model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased()));
         // redo -> deletes same second task in unfiltered task list
-        expectedModel.redoAddressBook();
+        expectedModel.redoTaskCollection();
         assertCommandSuccess(new RedoCommand(), model, commandHistory, RedoCommand.MESSAGE_SUCCESS,
             expectedModel);
     }

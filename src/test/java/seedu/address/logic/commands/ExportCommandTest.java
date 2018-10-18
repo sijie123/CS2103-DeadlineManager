@@ -56,7 +56,7 @@ public class ExportCommandTest {
         }
 
         @Override
-        public void exportAddressBook(String filename) {
+        public void exportTaskCollection(String filename) {
             if (filename.equals(this.filename)) {
                 lastError = new IOException(Storage.MESSAGE_WRITE_FILE_EXISTS_ERROR).toString();
             }

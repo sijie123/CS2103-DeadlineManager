@@ -4,7 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PRIORITY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
-import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
+import static seedu.address.model.Model.PREDICATE_SHOW_ALL_TASKS;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -43,23 +43,23 @@ public class EditCommand extends Command {
             + "Example: " + COMMAND_WORD + " 1 "
             + PREFIX_PRIORITY + "1";
 
-    public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited Task: %1$s";
+    public static final String MESSAGE_EDIT_TASK_SUCCESS = "Edited Task: %1$s";
     public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.";
-    public static final String MESSAGE_DUPLICATE_PERSON = "This task already exists in the deadline manager.";
+    public static final String MESSAGE_DUPLICATE_TASK = "This task already exists in the deadline manager.";
 
     private final Index index;
-    private final EditPersonDescriptor editPersonDescriptor;
+    private final EditTaskDescriptor editTaskDescriptor;
 
     /**
      * @param index                of the task in the filtered task list to edit
-     * @param editPersonDescriptor details to edit the task with
+     * @param editTaskDescriptor details to edit the task with
      */
-    public EditCommand(Index index, EditPersonDescriptor editPersonDescriptor) {
+    public EditCommand(Index index, EditTaskDescriptor editTaskDescriptor) {
         requireNonNull(index);
-        requireNonNull(editPersonDescriptor);
+        requireNonNull(editTaskDescriptor);
 
         this.index = index;
-        this.editPersonDescriptor = new EditPersonDescriptor(editPersonDescriptor);
+        this.editTaskDescriptor = new EditTaskDescriptor(editTaskDescriptor);
     }
 
     @Override
@@ -68,30 +68,30 @@ public class EditCommand extends Command {
         List<Task> lastShownList = model.getFilteredTaskList();
 
         if (index.getZeroBased() >= lastShownList.size()) {
-            throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+            throw new CommandException(Messages.MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
         }
 
         Task taskToEdit = lastShownList.get(index.getZeroBased());
-        Task editedTask = createEditedPerson(taskToEdit, editPersonDescriptor);
+        Task editedTask = createEditedTask(taskToEdit, editTaskDescriptor);
 
         model.updateTask(taskToEdit, editedTask);
-        model.updateFilteredTaskList(PREDICATE_SHOW_ALL_PERSONS);
-        model.commitAddressBook();
-        return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS, editedTask));
+        model.updateFilteredTaskList(PREDICATE_SHOW_ALL_TASKS);
+        model.commitTaskCollection();
+        return new CommandResult(String.format(MESSAGE_EDIT_TASK_SUCCESS, editedTask));
     }
 
     /**
      * Creates and returns a {@code Task} with the details of {@code taskToEdit} edited with {@code
-     * editPersonDescriptor}.
+     * editTaskDescriptor}.
      */
-    private static Task createEditedPerson(Task taskToEdit,
-                                           EditPersonDescriptor editPersonDescriptor) {
+    private static Task createEditedTask(Task taskToEdit,
+                                         EditTaskDescriptor editTaskDescriptor) {
         assert taskToEdit != null;
 
-        Name updatedName = editPersonDescriptor.getName().orElse(taskToEdit.getName());
-        Priority updatedPriority = editPersonDescriptor.getPriority().orElse(taskToEdit.getPriority());
-        Deadline updatedDeadline = editPersonDescriptor.getDeadline().orElse(taskToEdit.getDeadline());
-        Set<Tag> updatedTags = editPersonDescriptor.getTags().orElse(taskToEdit.getTags());
+        Name updatedName = editTaskDescriptor.getName().orElse(taskToEdit.getName());
+        Priority updatedPriority = editTaskDescriptor.getPriority().orElse(taskToEdit.getPriority());
+        Deadline updatedDeadline = editTaskDescriptor.getDeadline().orElse(taskToEdit.getDeadline());
+        Set<Tag> updatedTags = editTaskDescriptor.getTags().orElse(taskToEdit.getTags());
 
         // Attachments are not modifiable via 'EditCommand'
         Set<Attachment> updatedAttachments = taskToEdit.getAttachments();
@@ -114,28 +114,28 @@ public class EditCommand extends Command {
         // state check
         EditCommand e = (EditCommand) other;
         return index.equals(e.index)
-            && editPersonDescriptor.equals(e.editPersonDescriptor);
+            && editTaskDescriptor.equals(e.editTaskDescriptor);
     }
 
     /**
      * Stores the details to edit the task with. Each non-empty field value will replace the
      * corresponding field value of the task.
      */
-    public static class EditPersonDescriptor {
+    public static class EditTaskDescriptor {
 
         private Name name;
         private Priority priority;
         private Deadline deadline;
         private Set<Tag> tags;
 
-        public EditPersonDescriptor() {
+        public EditTaskDescriptor() {
 
         }
 
         /**
          * Copy constructor. A defensive copy of {@code tags} is used internally.
          */
-        public EditPersonDescriptor(EditPersonDescriptor toCopy) {
+        public EditTaskDescriptor(EditTaskDescriptor toCopy) {
             setName(toCopy.name);
             setPriority(toCopy.priority);
             setDeadline(toCopy.deadline);
@@ -198,12 +198,12 @@ public class EditCommand extends Command {
             }
 
             // instanceof handles nulls
-            if (!(other instanceof EditPersonDescriptor)) {
+            if (!(other instanceof EditTaskDescriptor)) {
                 return false;
             }
 
             // state check
-            EditPersonDescriptor e = (EditPersonDescriptor) other;
+            EditTaskDescriptor e = (EditTaskDescriptor) other;
 
             return getName().equals(e.getName())
                 && getPriority().equals(e.getPriority())

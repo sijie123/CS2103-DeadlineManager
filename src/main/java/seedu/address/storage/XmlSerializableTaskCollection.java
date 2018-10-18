@@ -41,7 +41,7 @@ public class XmlSerializableTaskCollection {
     }
 
     /**
-     * Converts this addressbook into the model's {@code TaskCollection} object.
+     * Converts this Task Collection into the model's {@code TaskCollection} object.
      *
      * @throws IllegalValueException if there were any data constraints violated or duplicates in
      *                               the {@code XmlAdaptedTask}.

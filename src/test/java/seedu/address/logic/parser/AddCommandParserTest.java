@@ -23,8 +23,8 @@ import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_HUSBAND;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
 import static seedu.address.model.task.Priority.NO_PRIORITY;
-import static seedu.address.testutil.TypicalPersons.AMY;
-import static seedu.address.testutil.TypicalPersons.BOB;
+import static seedu.address.testutil.TypicalTasks.AMY;
+import static seedu.address.testutil.TypicalTasks.BOB;
 
 import org.junit.Test;
 
@@ -34,7 +34,7 @@ import seedu.address.model.task.Deadline;
 import seedu.address.model.task.Name;
 import seedu.address.model.task.Priority;
 import seedu.address.model.task.Task;
-import seedu.address.testutil.PersonBuilder;
+import seedu.address.testutil.TaskBuilder;
 
 public class AddCommandParserTest {
 
@@ -42,7 +42,7 @@ public class AddCommandParserTest {
 
     @Test
     public void parse_allFieldsPresent_success() {
-        Task expectedTask = new PersonBuilder(BOB).withTags(VALID_TAG_FRIEND).build();
+        Task expectedTask = new TaskBuilder(BOB).withTags(VALID_TAG_FRIEND).build();
 
         // whitespace only preamble
         assertParseSuccess(parser,
@@ -62,7 +62,7 @@ public class AddCommandParserTest {
             + DEADLINE_DESC_AMY + DEADLINE_DESC_BOB + TAG_DESC_FRIEND, new AddCommand(expectedTask));
 
         // multiple tags - all accepted
-        Task expectedTaskMultipleTags = new PersonBuilder(BOB)
+        Task expectedTaskMultipleTags = new TaskBuilder(BOB)
             .withTags(VALID_TAG_FRIEND, VALID_TAG_HUSBAND)
             .build();
         assertParseSuccess(parser,
@@ -73,7 +73,7 @@ public class AddCommandParserTest {
     @Test
     public void parse_optionalFieldsMissing_success() {
         // zero tags, no priority
-        Task expectedTask = new PersonBuilder(AMY).withTags().withPriority(NO_PRIORITY).build();
+        Task expectedTask = new TaskBuilder(AMY).withTags().withPriority(NO_PRIORITY).build();
         assertParseSuccess(parser,
             NAME_DESC_AMY + DEADLINE_DESC_AMY,
             new AddCommand(expectedTask));

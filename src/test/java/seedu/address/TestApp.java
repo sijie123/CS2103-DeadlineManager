@@ -64,14 +64,14 @@ public class TestApp extends MainApp {
         double x = Screen.getPrimary().getVisualBounds().getMinX();
         double y = Screen.getPrimary().getVisualBounds().getMinY();
         userPrefs.updateLastUsedGuiSetting(new GuiSettings(600.0, 600.0, (int) x, (int) y));
-        userPrefs.setAddressBookFilePath(saveFileLocation);
+        userPrefs.setDeadlineManagerFilePath(saveFileLocation);
         return userPrefs;
     }
 
     /**
      * Returns a defensive copy of the deadline manager data stored inside the storage file.
      */
-    public TaskCollection readStorageAddressBook() {
+    public TaskCollection readStorageTaskCollection() {
         try {
             return new TaskCollection(storage.readTaskCollection().get());
         } catch (DataConversionException dce) {

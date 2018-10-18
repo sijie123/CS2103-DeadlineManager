@@ -24,7 +24,7 @@ public class ExportCommand extends Command {
     @Override
     public CommandResult execute(Model model, CommandHistory history) throws CommandException {
         requireNonNull(model);
-        model.exportAddressBook(pathName);
+        model.exportTaskCollection(pathName);
         if (model.importExportFailed()) {
             String errorMessage = model.getLastError();
             throw new CommandException(String.format(MESSAGE_EXPORT_ERROR, errorMessage));
