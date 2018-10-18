@@ -597,7 +597,7 @@ The following is the required syntax for each filterable field:
 * Tag set: Any comma-separated list of tags, where each tag can be any text string (e.g. `CS2101,CS2103T`)
 
 [NOTE]
-The rules for quoted strings for the string tokenizer applies here as well, because the same string tokenizer is used here.  
+The rules for quoted strings for the string tokenizer applies here as well, because the same string tokenizer is used here.
 
 Tags that contain spaces may be specified by placing quotes around those tags.  This means that the whole test phrase must also be quoted with a different type of quote (e.g. `t:"CS2101,CS2103T,'Oral Presentation'"`).
 
