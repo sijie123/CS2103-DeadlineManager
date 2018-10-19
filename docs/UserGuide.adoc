@@ -24,7 +24,9 @@ Deadline Manager (DLM) is for those who *prefer to use a desktop app for keeping
 
 == Quick Start
 
-.  Ensure you have Java version `9` or later installed in your Computer.
+The steps to quickly get started with the project are as follows -
+
+.  Install Java version `9` or later on your Computer.
 .  Download the latest `addressbook.jar` link:{repoURL}/releases[here].
 .  Copy the file to the folder you want to use as the home folder for your deadline manager.
 .  Double-click the file to start the app. The GUI should appear in a few seconds.
@@ -154,6 +156,7 @@ Format: `filter FILTER_EXPRESSION`
 
 When this command is used, Deadline Manager will display only those tasks which satisfies the given filter expression. +
 Filter predicates are the core of the `filter` command.  Each filter predicate specifies a particular attribute (e.g. deadline, priority) and a value to test this attribute against (e.g. deadline being earlier than 1/10/2018).  Filter predicates are regarded as "indivisible". +
+// TODO: What does it mean by indivisible ?
 Filter expressions are composed from some number of filter predicates, and the `filter` command is designed to accept arbitrarily complex filter expressions that can be composed from any number of filter predicates. +
 The format for `FILTER_EXPRESSION` is defined recursively in the following paragraphs.
 
@@ -175,7 +178,7 @@ When it is unambiguous, whitespace between the operators and filter expressions 
 
 `FILTER_PREDICATE` is a string in the following format-: `<key><operator><phrase>`:
 
-* where `key` is an alphanumeric string that describes the attribute being compared
+* where `key` is an alphanumeric string that describes the attribute being compared. Example - `priority`, `tag` and `name`
 * where `operator` is one of `:`, `=`, `<`, `>`
 * where `phrase` is a string that describes what to search (this is called the search phrase)
 
@@ -201,6 +204,7 @@ Examples:
 
 * `filter due<1/10/2018`
 Returns a subset of the current list of tasks that have deadlines on or before 1st October 2018.
+// TODO: define a subset in glossary
 
 * `filter d=1/10/2018`
 Returns a subset of the current list of tasks that have deadlines equal to 1st October 2018.
@@ -233,30 +237,29 @@ Filters the current list of tasks with a specified filter predicate.
 This is an alias for `filter`.  They perform exactly the same function.  The alias is provided because it is sometimes more intuitive to think of certain filter operations as 'search' operations, e.g. searching for a task that has a particular name.
 
 //TODO: Sidhant
-=== Sorting the tasks in the current view : `sort`
+=== Sorting a list of tasks : `sort`
 
 Sorts the lists of all the tasks which the user is currently viewing. Generally meant to be used in combination with `filter`. +
 
-When this command is used, Deadline Manager will sort all the currently displayed tasks according to the user specified comparison method +
-Sort comparators are the core of the `sort` command.  Each sort comparator specifies a particular attribute (e.g. deadline, priority) and a comparison direction, i.e ascending or descending.
+When this command is used, Deadline Manager will sort all the currently displayed tasks according to the user specified comparison method. +
+Sort comparators are the core of the `sort` command.  Each sort comparator specifies a particular attribute (Example - `name`, `priority`) and a comparison direction, i.e ascending or descending.
 
-The entire sorting command is composed of a chain of sort comparators which would be useful to determine which task to show earlier and latter +
+The entire sorting command is composed of a chain of sort comparators. This chain helps the user to define which tasks to show earlier and which ones to show latter. +
 
 ****
 
-What this means is that in case two tasks are in tie according to the first comparator, +
-then the decision to place which task first is determined by the next comparator, and so on.
+What this means is that in case two tasks are in tie according to the first comparator, then the decision to place which task first is determined by the next comparator, and so on.
 
 ****
 
 Format: `sort SORT_COMPARATOR [SORT_COMPARATORS]...` +
 ****
 * Format of `SORT_COMPARATOR`: `(n|name|d|due|p|priority)(<|>)` OR `(t|tag)(<|>){TAG1 TAG2 TAG3 ...}
-* Sorts the list by the 1st comparator, in case of ties, sorts by 2nd comparator and so on.
+* Sorts the list by the 1st comparator, in case of ties, it sorts by 2nd comparator and so on.
 * Meaning of the operators for each valid key:
 ** When `key` is `n` or `name`, the task name is compared. Comparision is case-insensitive.
 ** When `key` is `d` or `due`, the task's due date is compared.
-** When `key` is `p` or `priority`, the task's priority is compared.
+** When `key` is `p` or `priority`, the task's priority is compared. Note that 1 is the highest priority and 4 is the lowest priority.
 ** When `key` is `t` or `tag`, the task's tags are compared.
 [NOTE]
 For sorting by tags the user has to specify which tags are more important and which are less important.
@@ -266,18 +269,18 @@ For sorting by tags the user has to specify which tags are more important and wh
 Examples:
 
 * `sort n>` +
-Sorts the current list of tasks in view in descending order by name, where sorting is done in alphabetical manner.
+Sorts the current list of tasks in view in descending order by name, where sorting is done in alphabetical order.
 * `sort due< name>` +
 Sorts the current list of tasks in view in ascending order by due date, where ties are broken by descending order of names.
 * `sort priority<` +
 Sorts the current list of tasks in view in ascending order by priority.
 * `sort tag<{cs2100 family cs2103t}` +
 Sorts the current list of tasks in view in ascending order by tags. In this case all the tasks with the tag `cs2100` will be placed
-earlier as compared to tasks with the tag `family`, finally followed by those tasks with the tag `cs2103t`
+before those tasks with the tag `family`, finally followed by those tasks with the tag `cs2103t`.
 
 ****
 * In case a task does not belong to any of the tags mentioned it will be placed at the bottom of the sorted list.
-* In case a task contains more than one tag specified by the user, then it will be attempted to be sorted according to those tags first which place it former in the sorted list.
+* In case a task contains more than one tag specified in the comparator, then it will be attempted to be sorted according to those tags first which place it former in the sorted list.
 ****
 
 //TODO: Sidhant
@@ -292,7 +295,8 @@ Format: `resolve INDEX`
 
 Examples:
 
-* `resolve 1` + The 1st task displayed by the deadline manager will be deleted.
+* `resolve 1` +
+The 1st task displayed by the deadline manager will be deleted.
 
 
 //TODO: Sidhant
@@ -339,6 +343,9 @@ Saves an attachment named "Assignment.zip" of the 2nd task in the deadline manag
 Lists all attachments currently associated with the 1st task in the deadline manager.
 * Delete: `attachment 1 delete n/HelloWorld.docx`
 Removes the association of the attachment named "HelloWorld.docx" with the 1st task in the deadline manager.
+
+[NOTE]
+The `import`, `export` commands described below do *NOT* support backing up attachments. However they will keep a link to the attachments path if any.
 
 
 //TODO: Si Jie
@@ -390,7 +397,7 @@ Examples:
 * `list` +
 `delete 2` +
 Deletes the 2nd task in the deadline manager.
-* `find Betsy` +
+* `find `OP1 Assignment` +
 `delete 1` +
 Deletes the 1st task in the results of the `find` command.
 
@@ -491,6 +498,7 @@ Format: `exit`
 Deadline manager data are saved in the hard disk automatically after any command that changes the data. +
 There is no need to save manually.
 
+[NOTE]
 Attachments are merely linked in the deadline manager. A separate copy of the file will not be stored. If the original attachment file has been deleted, deadline manager will fail to retrieve it.
 
 // tag::dataencryption[]
@@ -565,3 +573,8 @@ e.g.`select 2`
 * *Redo* : `redo`
 
 * *Exit* : `exit`
+
+== Glossary
+
+Subset: a part of a larger group of related things.
+
