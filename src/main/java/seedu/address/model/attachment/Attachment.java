@@ -3,6 +3,12 @@ package seedu.address.model.attachment;
 import static java.util.Objects.requireNonNull;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.logging.Logger;
+
+import seedu.address.commons.core.LogsCenter;
 
 /**
  * Represents a Attachment in the deadline manager. Guarantees: immutable;
@@ -10,11 +16,28 @@ import java.io.File;
 public class Attachment {
     public static final String MESSAGE_DUPLICATE_ATTACHMENT_NAME = "There cannot be more than one attachment"
         + "with the same file name. Please rename one of them.";
+    private static final Logger logger = LogsCenter.getLogger(Attachment.class);
+
     public final File file;
+
 
     public Attachment(File file) {
         requireNonNull(file);
         this.file = file;
+    }
+
+    /**
+     * Copies the file from file to a specified location, overwriting the file at destination if a file exists
+     * @param savePath path to save the attachment to
+     */
+    public File saveTo(String savePath) throws IOException {
+        File destination = new File(savePath);
+        if (destination.exists()) {
+            logger.warning(
+                String.format("Attachment destination %s will be overwritten.", destination.getAbsolutePath()));
+        }
+        File copiedFile = Files.copy(file.toPath(), destination.toPath(), StandardCopyOption.REPLACE_EXISTING).toFile();
+        return copiedFile;
     }
 
     /**

@@ -113,6 +113,8 @@ public class UiManager extends ComponentManager implements Ui {
         System.exit(1);
     }
 
+
+
     //==================== Event Handling Code ===============================================================
 
     @Subscribe
