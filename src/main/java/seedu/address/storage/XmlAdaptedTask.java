@@ -13,6 +13,7 @@ import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.attachment.Attachment;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.task.Deadline;
+import seedu.address.model.task.Frequency;
 import seedu.address.model.task.Name;
 import seedu.address.model.task.Priority;
 import seedu.address.model.task.Task;
@@ -28,6 +29,8 @@ public class XmlAdaptedTask {
     private String name;
     @XmlElement(required = true)
     private String priority;
+    @XmlElement(required = true)
+    private String frequency;
     @XmlElement(required = true)
     private String deadline;
 
@@ -45,10 +48,11 @@ public class XmlAdaptedTask {
     /**
      * Constructs an {@code XmlAdaptedTask} with the given task details.
      */
-    public XmlAdaptedTask(String name, String priority, String deadline,
+    public XmlAdaptedTask(String name, String priority, String frequency, String deadline,
                           List<XmlAdaptedTag> tagged, List<XmlAdaptedAttachment> attachments) {
         this.name = name;
         this.priority = priority;
+        this.frequency = frequency;
         this.deadline = deadline;
         if (tagged != null) {
             this.tagged = new ArrayList<>(tagged);
@@ -66,6 +70,7 @@ public class XmlAdaptedTask {
     public XmlAdaptedTask(Task source) {
         name = source.getName().value;
         priority = source.getPriority().toString();
+        frequency = source.getFrequency().toString();
         deadline = source.getDeadline().toString();
         tagged = source.getTags().stream()
             .map(XmlAdaptedTag::new)
@@ -102,6 +107,15 @@ public class XmlAdaptedTask {
         }
         final Priority modelPriority = new Priority(priority);
 
+        if (frequency == null) {
+            throw new IllegalValueException(
+                String.format(MISSING_FIELD_MESSAGE_FORMAT, Frequency.class.getSimpleName()));
+        }
+        if (!Frequency.isValidFrequency(frequency)) {
+            throw new IllegalValueException(Frequency.MESSAGE_FREQUENCY_CONSTRAINTS);
+        }
+        final Frequency modelFrequency = new Frequency(frequency);
+
         if (deadline == null) {
             throw new IllegalValueException(
                 String.format(MISSING_FIELD_MESSAGE_FORMAT, Deadline.class.getSimpleName()));
@@ -134,7 +148,7 @@ public class XmlAdaptedTask {
             }
         }
 
-        return new Task(modelName, modelPriority,
+        return new Task(modelName, modelPriority, modelFrequency,
             modelDeadline, modelTags, modelAttachments);
     }
 
@@ -151,6 +165,7 @@ public class XmlAdaptedTask {
         XmlAdaptedTask otherPerson = (XmlAdaptedTask) other;
         return Objects.equals(name, otherPerson.name)
             && Objects.equals(priority, otherPerson.priority)
+            && Objects.equals(frequency, otherPerson.frequency)
             && tagged.equals(otherPerson.tagged)
             && attachments.equals(otherPerson.attachments);
     }

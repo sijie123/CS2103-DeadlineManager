@@ -2,6 +2,7 @@ package seedu.address.model.task;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_FREQUENCY_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PRIORITY_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_HUSBAND;
@@ -41,6 +42,7 @@ public class TaskTest {
         // same name, different attributes -> returns false
         editedAlice = new TaskBuilder(ALICE)
             .withPriority(VALID_PRIORITY_BOB)
+            .withFrequency(VALID_FREQUENCY_BOB)
             .withTags(VALID_TAG_HUSBAND).build();
         assertFalse(ALICE.equals(editedAlice));
     }
@@ -69,6 +71,10 @@ public class TaskTest {
 
         // different priority -> returns false
         editedAlice = new TaskBuilder(ALICE).withPriority(VALID_PRIORITY_BOB).build();
+        assertFalse(ALICE.equals(editedAlice));
+
+        // different frequency -> returns false
+        editedAlice = new TaskBuilder(ALICE).withFrequency(VALID_FREQUENCY_BOB).build();
         assertFalse(ALICE.equals(editedAlice));
 
         // different tags -> returns false

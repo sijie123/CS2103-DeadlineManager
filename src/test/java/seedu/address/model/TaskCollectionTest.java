@@ -3,6 +3,7 @@ package seedu.address.model;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_FREQUENCY_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PRIORITY_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_HUSBAND;
 import static seedu.address.testutil.TypicalTasks.ALICE;
@@ -50,7 +51,9 @@ public class TaskCollectionTest {
     @Test
     public void resetData_withDuplicateTasks_doesNotThrow() {
         // Two tasks with the same identity fields
-        Task editedAlice = new TaskBuilder(ALICE).withPriority(VALID_PRIORITY_BOB)
+        Task editedAlice = new TaskBuilder(ALICE)
+            .withPriority(VALID_PRIORITY_BOB)
+            .withFrequency(VALID_FREQUENCY_BOB)
             .withTags(VALID_TAG_HUSBAND)
             .build();
         List<Task> newTasks = Arrays.asList(ALICE, editedAlice);

@@ -14,6 +14,7 @@ public class TaskCard extends UiPart<Region> {
 
     public static final String DEADLINE_FORMAT = "Due %s";
     public static final String PRIORITY_FORMAT = "Priority %s";
+    public static final String FREQUENCY_FORMAT = "Frequency %s";
 
     private static final String FXML = "TaskListCard.fxml";
 
@@ -39,6 +40,8 @@ public class TaskCard extends UiPart<Region> {
     @FXML
     private Label priority;
     @FXML
+    private Label frequency;
+    @FXML
     private FlowPane tags;
     @FXML
     private FlowPane attachments;
@@ -49,6 +52,7 @@ public class TaskCard extends UiPart<Region> {
         id.setText(displayedIndex + ". ");
         name.setText(task.getName().value);
         priority.setText(String.format(PRIORITY_FORMAT, task.getPriority().value));
+        frequency.setText(String.format(FREQUENCY_FORMAT, task.getFrequency().value));
         deadline.setText(String.format(DEADLINE_FORMAT, task.getDeadline().toString()));
         task.getTags().forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
         task.getAttachments().forEach(attachment -> attachments.getChildren().add(new Label(attachment.getName())));

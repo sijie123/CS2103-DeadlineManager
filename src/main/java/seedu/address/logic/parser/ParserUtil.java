@@ -11,6 +11,7 @@ import seedu.address.commons.util.StringUtil;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.task.Deadline;
+import seedu.address.model.task.Frequency;
 import seedu.address.model.task.Name;
 import seedu.address.model.task.Priority;
 
@@ -63,6 +64,21 @@ public class ParserUtil {
             throw new ParseException(Priority.MESSAGE_PRIORITY_CONSTRAINTS);
         }
         return new Priority(trimmedPriority);
+    }
+
+    /**
+     * Parses a {@code String frequency} into a {@code Frequency}. Leading and trailing whitespaces will be
+     * trimmed.
+     *
+     * @throws ParseException if the given {@code frequency} is invalid.
+     */
+    public static Frequency parseFrequency(String frequency) throws ParseException {
+        requireNonNull(frequency);
+        String trimmedFrequency = frequency.trim();
+        if (!Frequency.isValidFrequency(trimmedFrequency)) {
+            throw new ParseException(Frequency.MESSAGE_FREQUENCY_CONSTRAINTS);
+        }
+        return new Frequency(trimmedFrequency);
     }
 
     /**
