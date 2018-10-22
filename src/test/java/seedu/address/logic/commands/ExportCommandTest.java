@@ -11,7 +11,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seedu.address.commons.events.storage.ImportExportExceptionEvent;
 import seedu.address.logic.CommandHistory;
-import seedu.address.model.ModelManager;
 import seedu.address.model.TaskCollection;
 import seedu.address.model.task.Task;
 import seedu.address.storage.Storage;

@@ -7,7 +7,6 @@ import com.google.common.eventbus.Subscribe;
 
 import javafx.collections.ObservableList;
 import seedu.address.commons.events.storage.ImportDataAvailableEvent;
-import seedu.address.commons.events.storage.ImportExportExceptionEvent;
 import seedu.address.model.task.Task;
 
 /**
