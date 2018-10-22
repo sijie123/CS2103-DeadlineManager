@@ -96,19 +96,14 @@ public interface Model {
      */
     void commitTaskCollection();
 
-    boolean importExportFailed();
+    /*boolean importExportFailed();
 
-    String getLastError();
+    String getLastError();*/
 
     /**
      * Exports current deadline manager to file.
      */
     void exportTaskCollection(String filename);
-
-    /**
-     * Imports tasks from file to the current deadline manager.
-     */
-    void importTaskCollection(String filename);
 
     /**
      * Imports tasks from file to the current deadline manager.
@@ -122,6 +117,4 @@ public interface Model {
     @Subscribe
     void handleImportDataAvailableEvent(ImportDataAvailableEvent event);
 
-    @Subscribe
-    void handleImportExportExceptionEvent(ImportExportExceptionEvent event);
 }

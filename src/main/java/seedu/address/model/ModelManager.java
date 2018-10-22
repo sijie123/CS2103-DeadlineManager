@@ -19,7 +19,6 @@ import seedu.address.commons.events.model.ExportRequestEvent;
 import seedu.address.commons.events.model.ImportRequestEvent;
 import seedu.address.commons.events.model.TaskCollectionChangedEvent;
 import seedu.address.commons.events.storage.ImportDataAvailableEvent;
-import seedu.address.commons.events.storage.ImportExportExceptionEvent;
 import seedu.address.model.task.Task;
 
 
@@ -178,14 +177,6 @@ public class ModelManager extends ComponentManager implements Model {
 
     //==========Import/Export===================================================================
 
-    public boolean importExportFailed() {
-        return lastError != null;
-    }
-    public String getLastError() {
-        String err = lastError;
-        lastError = null;
-        return err;
-    }
     @Override
     public void exportTaskCollection(String filename) {
         requireNonNull(filename);
@@ -193,11 +184,6 @@ public class ModelManager extends ComponentManager implements Model {
         TaskCollection exportCollection = new TaskCollection();
         exportCollection.setTasks(lastShownList);
         raise(new ExportRequestEvent(exportCollection, filename));
-    }
-
-    @Override
-    public void importTaskCollection(String filename) {
-        importTaskCollection(filename, ImportConflictMode.IGNORE);
     }
 
     @Override
@@ -218,11 +204,6 @@ public class ModelManager extends ComponentManager implements Model {
         updateFilteredTaskList(PREDICATE_SHOW_ALL_TASKS);
     }
 
-    @Override
-    @Subscribe
-    public void handleImportExportExceptionEvent(ImportExportExceptionEvent event) {
-        lastError = event.toString();
-    }
 
     /**
      * Use the appropriate import conflict handler to resolve a conflict.

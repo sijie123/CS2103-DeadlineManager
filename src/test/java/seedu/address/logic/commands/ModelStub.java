@@ -4,8 +4,8 @@ import java.util.Comparator;
 import java.util.function.Predicate;
 
 import javafx.collections.ObservableList;
+import seedu.address.commons.core.ComponentManager;
 import seedu.address.commons.events.storage.ImportDataAvailableEvent;
-import seedu.address.commons.events.storage.ImportExportExceptionEvent;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager.ImportConflictMode;
 import seedu.address.model.ReadOnlyTaskCollection;
@@ -14,7 +14,7 @@ import seedu.address.model.task.Task;
 /**
  * A default model stub that have all of the methods failing.
  */
-public class ModelStub implements Model {
+public class ModelStub extends ComponentManager implements Model {
 
     @Override
     public void addTask(Task task) {
@@ -87,24 +87,10 @@ public class ModelStub implements Model {
     }
 
     @Override
-    public boolean importExportFailed() {
-        throw new AssertionError("This method should not be called.");
-    }
-
-    @Override
-    public String getLastError() {
-        throw new AssertionError("This method should not be called.");
-    }
-
-    @Override
     public void exportTaskCollection(String filename) {
         throw new AssertionError("This method should not be called.");
     }
 
-    @Override
-    public void importTaskCollection(String filename) {
-        throw new AssertionError("This method should not be called.");
-    }
 
     @Override
     public void importTaskCollection(String filename, ImportConflictMode conflictMode) {
@@ -116,8 +102,4 @@ public class ModelStub implements Model {
         throw new AssertionError("This method should not be called.");
     }
 
-    @Override
-    public void handleImportExportExceptionEvent(ImportExportExceptionEvent event) {
-        throw new AssertionError("This method should not be called.");
-    }
 }
