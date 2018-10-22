@@ -1,8 +1,5 @@
 package seedu.address.commons.events.ui;
 
-import java.io.File;
-import java.util.function.Consumer;
-
 import seedu.address.commons.events.BaseEvent;
 
 /**
