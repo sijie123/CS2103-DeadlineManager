@@ -58,13 +58,15 @@ public class TaskCard extends UiPart<Region> {
         priority.setText(String.format(PRIORITY_FORMAT, task.getPriority().value));
         deadline.setText(String.format(DEADLINE_FORMAT, task.getDeadline().toString()));
         task.getTags().forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
-        task.getAttachments().forEach(attachment -> attachments.getChildren().add(buildAttachmentLabel(attachment, displayedIndex)));
+        task.getAttachments().forEach(attachment ->
+            attachments.getChildren().add(buildAttachmentLabel(attachment, displayedIndex)));
     }
 
     /**
      * Helper method to construct a label for each attachment.
      * Adds a mouse click handler to invoke the attachment get command when the label is clicked
-     * @param attachment attachment
+     * @param attachment the attachment
+     * @param index index of the attachmentin the current list/UI
      * @return label with mouse click handler
      */
     private Label buildAttachmentLabel(Attachment attachment, int index) {
