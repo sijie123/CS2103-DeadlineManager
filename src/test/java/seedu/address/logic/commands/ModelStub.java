@@ -6,8 +6,8 @@ import java.util.function.Predicate;
 import javafx.collections.ObservableList;
 import seedu.address.commons.core.ComponentManager;
 import seedu.address.commons.events.storage.ImportDataAvailableEvent;
+import seedu.address.model.ImportConflictResolver;
 import seedu.address.model.Model;
-import seedu.address.model.ModelManager.ImportConflictMode;
 import seedu.address.model.ReadOnlyTaskCollection;
 import seedu.address.model.task.Task;
 
@@ -91,9 +91,8 @@ public class ModelStub extends ComponentManager implements Model {
         throw new AssertionError("This method should not be called.");
     }
 
-
     @Override
-    public void importTaskCollection(String filename, ImportConflictMode conflictMode) {
+    public void importTaskCollection(String filename, ImportConflictResolver conflictMode) {
         throw new AssertionError("This method should not be called.");
     }
 

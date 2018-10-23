@@ -14,4 +14,7 @@ public class CliSyntax {
     /* Prefix definitions for attachments */
     public static final Prefix PREFIX_FILEPATH = new Prefix("p/");
     public static final Prefix PREFIX_FILENAME = new Prefix("n/");
+
+    /* Prefix definitions for import command */
+    public static final Prefix PREFIX_RESOLVER = new Prefix("r/");
 }

@@ -11,7 +11,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seedu.address.commons.events.storage.ImportExportExceptionEvent;
 import seedu.address.logic.CommandHistory;
-import seedu.address.model.ModelManager.ImportConflictMode;
+import seedu.address.model.ImportConflictResolver;
 import seedu.address.model.TaskCollection;
 import seedu.address.model.task.Task;
 import seedu.address.storage.Storage;
@@ -66,7 +66,7 @@ public class ImportCommandTest {
         }
 
         @Override
-        public void importTaskCollection(String filename, ImportConflictMode conflictMode) {
+        public void importTaskCollection(String filename, ImportConflictResolver conflictMode) {
             if (filename.equals(temporaryFilePath)) {
                 //No error.
                 return;

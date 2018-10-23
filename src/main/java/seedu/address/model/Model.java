@@ -107,7 +107,7 @@ public interface Model {
     /**
      * Imports tasks from file to the current deadline manager.
      */
-    void importTaskCollection(String filename, ModelManager.ImportConflictMode mode);
+    void importTaskCollection(String filename, ImportConflictResolver mode);
 
     /**
      * Handler for the return result from Storage, when import data has been read.

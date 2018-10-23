@@ -30,16 +30,13 @@ public class ModelManager extends ComponentManager implements Model {
     /**
      * An enum representing the possible conflict resolvers.
      */
-    public enum ImportConflictMode {
-        OVERWRITE, DUPLICATE, IGNORE
-    };
     private static final Logger logger = LogsCenter.getLogger(ModelManager.class);
 
     private final VersionedTaskCollection versionedTaskCollection;
     private final FilteredList<Task> filteredTasks;
 
     private String lastError;
-    private ImportConflictMode conflictResolver;
+    private ImportConflictResolver conflictResolver;
 
     /**
      * Initializes a ModelManager with the given taskCollection and userPrefs.
@@ -187,7 +184,7 @@ public class ModelManager extends ComponentManager implements Model {
     }
 
     @Override
-    public void importTaskCollection(String filename, ImportConflictMode mode) {
+    public void importTaskCollection(String filename, ImportConflictResolver mode) {
         requireNonNull(filename);
         conflictResolver = mode;
         raise(new ImportRequestEvent(filename));
@@ -218,15 +215,6 @@ public class ModelManager extends ComponentManager implements Model {
         if (conflictResolver == null) {
             return;
         }
-        if (conflictResolver.equals(ImportConflictMode.IGNORE)) {
-            //Ignore duplicates
-        } else if (conflictResolver.equals(ImportConflictMode.DUPLICATE)) {
-            //Add anyway.
-            addTask(task);
-        } else if (conflictResolver.equals(ImportConflictMode.OVERWRITE)) {
-            //Replace existing task.
-            deleteTask(task);
-            addTask(task);
-        }
+        conflictResolver.resolve(this::addTask, this::deleteTask, task);
     }
 }
