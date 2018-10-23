@@ -4,6 +4,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.DESC_BOB;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_FREQUENCY_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PRIORITY_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_HUSBAND;
@@ -34,11 +35,15 @@ public class EditTaskDescriptorTest {
 
         // different name -> returns false
         EditCommand.EditTaskDescriptor editedAmy = new EditTaskDescriptorBuilder(DESC_AMY)
-            .withName(VALID_NAME_BOB).build();
+                .withName(VALID_NAME_BOB).build();
         assertFalse(DESC_AMY.equals(editedAmy));
 
         // different priority -> returns false
         editedAmy = new EditTaskDescriptorBuilder(DESC_AMY).withPriority(VALID_PRIORITY_BOB).build();
+        assertFalse(DESC_AMY.equals(editedAmy));
+
+        // different frequency -> returns false
+        editedAmy = new EditTaskDescriptorBuilder(DESC_AMY).withFrequency(VALID_FREQUENCY_BOB).build();
         assertFalse(DESC_AMY.equals(editedAmy));
 
         // different tags -> returns false

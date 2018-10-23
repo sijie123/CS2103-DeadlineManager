@@ -102,6 +102,15 @@ public class SortCommandParser implements Parser<SortCommand> {
                 }
                 break;
             }
+            case "f": // fallthrough
+            case "frequency": {
+                if (comparisonCharacter == '<') {
+                    comparator = comparator.thenComparing(Task::getFrequency);
+                } else {
+                    comparator = comparator.thenComparing(Task::getFrequency, Comparator.reverseOrder());
+                }
+                break;
+            }
             case "t": // fallthrough
             case "tag": {
                 String tags = splittedComparator[1];

@@ -74,6 +74,20 @@ public class SortCommandTest {
     }
 
     @Test
+    public void execute_frequencyAscendingNameAscending_success() {
+        SortCommand command = ensureParseSuccess("frequency< n<");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(GEORGE, FIONA, ELLE, DANIEL, CARL, BENSON, ALICE), model.getFilteredTaskList());
+    }
+
+    @Test
+    public void execute_frequencyDescendingNameAscending_success() {
+        SortCommand command = ensureParseSuccess("f>  name<");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(ALICE, BENSON, CARL, DANIEL, ELLE, FIONA, GEORGE), model.getFilteredTaskList());
+    }
+
+    @Test
     public void execute_tagAscendingNameDescending_success() {
         SortCommand command = ensureParseSuccess("tag<{owesMoney friend} n>");
         command.execute(model, null);
