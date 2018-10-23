@@ -9,8 +9,9 @@ import org.junit.Test;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import seedu.address.commons.events.storage.ImportExportExceptionEvent;
 import seedu.address.logic.CommandHistory;
-import seedu.address.model.ModelManager.ImportConflictMode;
+import seedu.address.model.ImportConflictResolver;
 import seedu.address.model.TaskCollection;
 import seedu.address.model.task.Task;
 import seedu.address.storage.Storage;
@@ -25,26 +26,33 @@ public class ImportCommandTest {
     public final String doesNotExistPath = "doesNotExist";
     private CommandHistory commandHistory = new CommandHistory();
     private String defaultFile = "fakeDefaultPath";
-    private ModelStubWithImportAddressBook modelStub = new ModelStubWithImportAddressBook(defaultFile);
 
     @Test
     public void execute_importMissingFile_exceptionThrown() {
         IOException expectedException = new IOException(StorageManager.MESSAGE_READ_FILE_MISSING_ERROR);
-        assertCommandFailure(new ImportCommand(doesNotExistPath), modelStub, commandHistory,
+        ImportCommand testCommand = new ImportCommand(doesNotExistPath);
+        ModelStubWithImportAddressBook modelStub = new ModelStubWithImportAddressBook(defaultFile, testCommand);
+        assertCommandFailure(testCommand, modelStub, commandHistory,
                 String.format(ImportCommand.MESSAGE_IMPORT_ERROR, expectedException.toString()));
     }
 
     @Test
     public void execute_importExistingFile_importSuccessful() {
-        assertCommandSuccess(new ImportCommand(temporaryFilePath), modelStub,
-                commandHistory, String.format(ImportCommand.MESSAGE_SUCCESS, temporaryFilePath), modelStub);
+        ImportCommand testCommand = new ImportCommand(temporaryFilePath);
+        ModelStubWithImportAddressBook modelStub = new ModelStubWithImportAddressBook(defaultFile, testCommand);
+        assertCommandSuccess(testCommand, modelStub, commandHistory,
+                String.format(ImportCommand.MESSAGE_SUCCESS, temporaryFilePath), modelStub);
     }
 
     private class ModelStubWithImportAddressBook extends ModelStub {
         private String filename = "";
-        private String lastError = null;
+        private ImportCommand testCommand = null;
         public ModelStubWithImportAddressBook(String defaultFile) {
             filename = defaultFile;
+        }
+        public ModelStubWithImportAddressBook(String defaultFile, ImportCommand importCommand) {
+            this(defaultFile);
+            testCommand = importCommand;
         }
 
         @Override
@@ -58,36 +66,23 @@ public class ImportCommandTest {
         }
 
         @Override
-        public void importTaskCollection(String filename) {
-            importTaskCollection(filename, ImportConflictMode.IGNORE);
-        }
-
-        @Override
-        public void importTaskCollection(String filename, ImportConflictMode conflictMode) {
+        public void importTaskCollection(String filename, ImportConflictResolver conflictMode) {
             if (filename.equals(temporaryFilePath)) {
                 //No error.
                 return;
             }
             if (filename.equals(this.filename)) {
-                lastError = new IOException(Storage.MESSAGE_READ_FILE_SAME_ERROR).toString();
+                Exception fileRepeatException = new IOException(Storage.MESSAGE_READ_FILE_SAME_ERROR);
+                testCommand.handleImportExportExceptionEvent(new ImportExportExceptionEvent(fileRepeatException));
                 return;
             }
             if (filename.equals(doesNotExistPath)) {
-                lastError = new IOException(Storage.MESSAGE_READ_FILE_MISSING_ERROR).toString();
+                Exception fileMissingException = new IOException(Storage.MESSAGE_READ_FILE_MISSING_ERROR);
+                testCommand.handleImportExportExceptionEvent(new ImportExportExceptionEvent(fileMissingException));
                 return;
             }
-            lastError = new AssertionError("Should not use this filename").toString();
+            throw new AssertionError("Should not use this filename");
 
-        }
-
-        @Override
-        public boolean importExportFailed() {
-            return lastError != null;
-        }
-
-        @Override
-        public String getLastError() {
-            return lastError;
         }
     }
 }

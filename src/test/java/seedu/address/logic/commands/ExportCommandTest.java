@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import seedu.address.commons.events.storage.ImportExportExceptionEvent;
 import seedu.address.logic.CommandHistory;
 import seedu.address.model.TaskCollection;
 import seedu.address.model.task.Task;
@@ -23,26 +24,33 @@ public class ExportCommandTest {
     public final String temporaryFilePath = "dummySaveFile";
     private CommandHistory commandHistory = new CommandHistory();
     private String defaultFile = "fakeDefaultPath";
-    private ModelStubWithExportAddressBook modelStub = new ModelStubWithExportAddressBook(defaultFile);
 
     @Test
     public void execute_exportOnWorkingFile_exceptionThrown() {
         IOException expectedException = new IOException(StorageManager.MESSAGE_WRITE_FILE_EXISTS_ERROR);
-        assertCommandFailure(new ExportCommand(defaultFile), modelStub, commandHistory,
+        ExportCommand testCommand = new ExportCommand(defaultFile);
+        ModelStubWithExportAddressBook modelStub = new ModelStubWithExportAddressBook(defaultFile, testCommand);
+        assertCommandFailure(testCommand, modelStub, commandHistory,
                 String.format(ExportCommand.MESSAGE_EXPORT_ERROR, expectedException.toString()));
     }
 
     @Test
     public void execute_exportNewFile_exportSuccessful() {
-        assertCommandSuccess(new ExportCommand(temporaryFilePath), modelStub,
-                commandHistory, String.format(ExportCommand.MESSAGE_SUCCESS, temporaryFilePath), modelStub);
+        ExportCommand testCommand = new ExportCommand(temporaryFilePath);
+        ModelStubWithExportAddressBook modelStub = new ModelStubWithExportAddressBook(defaultFile, testCommand);
+        assertCommandSuccess(testCommand, modelStub, commandHistory,
+                 String.format(ExportCommand.MESSAGE_SUCCESS, temporaryFilePath), modelStub);
     }
 
     private class ModelStubWithExportAddressBook extends ModelStub {
         private String filename = "";
-        private String lastError = null;
+        private ExportCommand testCommand = null;
         public ModelStubWithExportAddressBook(String defaultFile) {
             filename = defaultFile;
+        }
+        public ModelStubWithExportAddressBook(String defaultFile, ExportCommand importCommand) {
+            this(defaultFile);
+            testCommand = importCommand;
         }
 
         @Override
@@ -58,18 +66,11 @@ public class ExportCommandTest {
         @Override
         public void exportTaskCollection(String filename) {
             if (filename.equals(this.filename)) {
-                lastError = new IOException(Storage.MESSAGE_WRITE_FILE_EXISTS_ERROR).toString();
+                Exception fileExistException = new IOException(Storage.MESSAGE_WRITE_FILE_EXISTS_ERROR);
+                testCommand.handleImportExportExceptionEvent(new ImportExportExceptionEvent(fileExistException));
+                return;
             }
-        }
-
-        @Override
-        public boolean importExportFailed() {
-            return lastError != null;
-        }
-
-        @Override
-        public String getLastError() {
-            return lastError;
+            //No error otherwise.
         }
     }
 }

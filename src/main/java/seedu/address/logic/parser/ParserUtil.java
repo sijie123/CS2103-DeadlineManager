@@ -21,6 +21,8 @@ import seedu.address.model.task.Priority;
 public class ParserUtil {
 
     public static final String MESSAGE_INVALID_INDEX = "Index is not a non-zero unsigned integer.";
+    public static final String MESSAGE_INVALID_FILENAME = "Invalid filename! File name can only contain alphanumeric"
+        + " characters, full stop and the underscore [_] characters";
 
     /**
      * Parses {@code oneBasedIndex} into an {@code Index} and returns it. Leading and trailing
@@ -122,5 +124,19 @@ public class ParserUtil {
             tagSet.add(parseTag(tagName));
         }
         return tagSet;
+    }
+
+    /**
+     * Parses and determines if a filename is legal.
+     * A filename is legal if it uses only alphanumeric characters, the underscore, or fullstop characters.
+     * @param filename the filename to be checked
+     * @return the fileName if it is legal
+     * @throws ParseException if filename is illegal
+     */
+    public static String parseFileName(String filename) throws ParseException {
+        if (!filename.matches("^[a-zA-Z0-9_.]+$")) {
+            throw new ParseException(MESSAGE_INVALID_FILENAME);
+        }
+        return filename;
     }
 }
