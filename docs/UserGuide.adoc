@@ -85,7 +85,7 @@ Adds a task with name `Assignment 2` with a deadline on 1st January 2018 with pr
 Adds a task with name `v1.1 milestone` with a deadline on 9th October 2018 with priority 2 (second highest priority). It is additionally tagged with 2 tags: `CS2103T` and `Project`.
 
 //TODO: Kien
-=== Add a recurring task : `addr`
+=== Adding a recurring task : `addr`
 Adds a recurring task to the deadline manager. +
 Format: `addr n/NAME d/DEADLINE p/PRIORITY f/FREQUENCY [t/TAG]...`
 
@@ -285,7 +285,7 @@ before those tasks with the tag `family`, finally followed by those tasks with t
 
 //TODO: Sidhant
 //Not sure if this is implemented
-===  Resolve tasks : `resolve` (coming in v2.0)
+===  Resolving tasks : `resolve` (coming in v2.0)
 Deletes a specified task from the deadline manager. The index refers to the entries of a previous call to list or search. +
 Format: `resolve INDEX`
 
@@ -300,7 +300,7 @@ The 1st task displayed by the deadline manager will be deleted.
 
 
 //TODO: Sidhant
-=== Snooze tasks : `snooze` (coming in v2.0)
+=== Snoozing tasks : `snooze` (coming in v2.0)
 Hides a specified task from the deadline manager until the time specified in the parameter has elapsed. The index refers to the entries of a previous call to list or search. +
 Format: `snooze INDEX d/DEADLINE`
 
@@ -316,7 +316,7 @@ A task is 'snoozed' as its deadline is now shifted backwards to 20th September 2
 
 
 //TODO: Ranald
-=== Manage attachments of a task : `attachment`
+=== Managing attachments of a task : `attachment`
 Allows the user to add, list, delete and retrieve files associated with a specific task. +
 Deadline manager does not make a copy or backup the files added. Only the location of the files are stored and it can be modified, renamed, moved or deleted without Deadline manager's knowledge. As such, there is no guarantee for a file associated with a specific task to always exist. +
 Format: `INDEX COMMAND [p/FILEPATH] [n/FILENAME]`
@@ -365,7 +365,7 @@ Imports tasks from the file `cs2103.txt` in the same folder as Deadline Manager.
 Import tasks from the file `cs2103.txt` that is defined by the absolute path provided.
 
 //TODO: Si Jie
-=== Export a set of tasks: `export`
+=== Exporting a set of tasks: `export`
 Export the set of tasks that is currently displayed by the Deadline Manager. The exported file will be saved as a file at the provided `FILEPATH`.  +
 Format: `export FILEPATH`
 
@@ -520,6 +520,15 @@ e.g. `add n/CS2103 Assignment d/11/10/2018 P/2 t/java t/hard`
 * *Add Recurring*: `addr n/NAME d/DEADLINE f/FREQUENCY [P/PRIORITY] [t/TAG]...`
 e.g. `add n/CS2103 Tutorial d/1/10/2018 f/7 P/4 t/easy`
 
+* *Attachment (Add)* : `attachment INDEX add p\FILEPATH`
+
+* *Attachment (Delete)* : `attachment INDEX delete n/FILENAME`
+
+* *Attachment (List)* : `attachment INDEX list`
+
+* *Attachment (Retrieve)* : `attachment INDEX get n/FILENAME p/FILEPATH`
+e.g. `attachment 2 get p/C:\Documents\TaskAttachments.zip n/Assignment.zip`
+
 * *Clear* : `clear`
 
 * *Delete* : `delete INDEX` +
@@ -528,53 +537,45 @@ e.g. `delete 3`
 * *Edit* : `edit INDEX [n/NAME] [d/DEADLINE] [t/TAG]...` +
 e.g. `edit 2 n/CS2103 Assignment 2 t/easy`
 
+* *Exit* : `exit`
+
+* *Export* : `export FILEPATH`
+
 * *Find* : `find KEYWORD [MORE_KEYWORDS]` +
 e.g. `find CS2103 CS2102`
 
 * *Filter* : `filter FILTER_EXPRESSION`
 e.g. `filter due<1/10/2018`
 
-* *Search* : `search FILTER_EXPRESSION`
-e.g. `search due<1/10/2018`
+* *Help* : `help`
 
-* *Sort* : `sort SORT_COMPARATOR [SORT_COMPARATORS]` +
-e.g. `sort due< name>`
+* *History* : `history`
+
+* *Import* : `import FILEPATH`
 
 * *List* : `list`
+
+* *Redo* : `redo`
 
 * *Resolve* : `resolve INDEX` +
 e.g. `resolve 1`
 
-* *Snooze* : `snooze INDEX d/DEADLINE` +
-e.g.  `snooze 1 d/31/06/2018`
-
-* *Add Attachment* : `attachment INDEX add p\FILEPATH`
-
-* *List Attachments* : `attachment INDEX list`
-
-* *Delete Attachment* : `attachment INDEX delete n/FILENAME`
-
-* *Retrieve Attachment* : `attachment INDEX get n/FILENAME p/FILEPATH`
-e.g. `attachment 2 get p/C:\Documents\TaskAttachments.zip n/Assignment.zip`
-
-* *Import* : `import FILEPATH`
-
-* *Export* : `export FILEPATH`
-
-* *Help* : `help`
+* *Search* : `search FILTER_EXPRESSION`
+e.g. `search due<1/10/2018`
 
 * *Select* : `select INDEX` +
 e.g.`select 2`
 
-* *History* : `history`
+* *Snooze* : `snooze INDEX d/DEADLINE` +
+e.g.  `snooze 1 d/31/06/2018`
+
+* *Sort* : `sort SORT_COMPARATOR [SORT_COMPARATORS]` +
+e.g. `sort due< name>`
 
 * *Undo* : `undo`
 
-* *Redo* : `redo`
-
-* *Exit* : `exit`
 
 == Glossary
-
-Subset: a part of a larger group of related things.
+* File Path: a string that defines the unique location of a file in the file system.
+* Subset: a part of a larger group of related things.
 
