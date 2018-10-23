@@ -8,9 +8,6 @@ import static seedu.address.model.Model.PREDICATE_SHOW_ALL_TASKS;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -337,26 +334,19 @@ public class AttachmentCommand extends Command {
 
 
         /**
-         * Copies the file from file to saveFile, overwriting the destination if a file exists.
+         * Saves the attachment to savePath, overwriting the destination if a file exists.
          *
-         * @param sourceFile source file
-         * @param destFile   destination file
+         * @param attachment attachment to save
+         * @param savePath   path to save the attachment to
          */
-        private File copyFileToDestination(File sourceFile, File destFile) throws CommandException {
-            checkAttachmentStatus(MESSAGE_GET_NOT_A_FILE, sourceFile);
-            Path sourcePath = sourceFile.toPath();
-            Path savePath = destFile.toPath();
+        private File copyFileToDestination(Attachment attachment, String savePath) throws CommandException {
+            checkAttachmentStatus(MESSAGE_GET_NOT_A_FILE, attachment.file);
             try {
-                if (destFile.exists()) {
-                    logger.warning(
-                        String.format("Attachment destination %s will be overwritten.", destFile.getAbsolutePath()));
-                }
-                File copiedFile = Files.copy(sourcePath, savePath, StandardCopyOption.REPLACE_EXISTING).toFile();
-                return copiedFile;
+                return attachment.saveTo(savePath);
             } catch (IOException ioe) {
                 logger.severe(String.format("Attachment copy from %s to %s failed due to: %s",
-                    sourceFile.getAbsolutePath(), destFile.getAbsolutePath(), ioe));
-                throw new CommandException(String.format(MESSAGE_GET_FAILED, destFile.getPath()));
+                    attachment.file.getAbsolutePath(), savePath, ioe));
+                throw new CommandException(String.format(MESSAGE_GET_FAILED, savePath));
             }
         }
 
@@ -367,9 +357,8 @@ public class AttachmentCommand extends Command {
             if (attachmentToGet == null) {
                 throw new CommandException(String.format(MESSAGE_NAME_NOT_FOUND, fileName));
             }
-            File saveFile = new File(savePath);
-            copyFileToDestination(attachmentToGet.file, saveFile);
-            resultMessage = String.format(MESSAGE_SUCCESS, attachmentToGet.getName(), saveFile.getPath());
+            copyFileToDestination(attachmentToGet, savePath);
+            resultMessage = String.format(MESSAGE_SUCCESS, attachmentToGet.getName(), savePath);
             return taskToEdit;
         }
 

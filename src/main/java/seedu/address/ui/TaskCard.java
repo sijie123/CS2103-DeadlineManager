@@ -1,10 +1,17 @@
 package seedu.address.ui;
 
+import static seedu.address.logic.parser.CliSyntax.PREFIX_FILENAME;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_FILEPATH;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+import seedu.address.commons.events.ui.ExecuteCommandEvent;
+import seedu.address.commons.events.ui.SelectFileSaveEvent;
+import seedu.address.logic.commands.AttachmentCommand;
+import seedu.address.model.attachment.Attachment;
 import seedu.address.model.task.Task;
 
 /**
@@ -55,7 +62,32 @@ public class TaskCard extends UiPart<Region> {
         frequency.setText(String.format(FREQUENCY_FORMAT, task.getFrequency().value));
         deadline.setText(String.format(DEADLINE_FORMAT, task.getDeadline().toString()));
         task.getTags().forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
-        task.getAttachments().forEach(attachment -> attachments.getChildren().add(new Label(attachment.getName())));
+        task.getAttachments().forEach(attachment ->
+            attachments.getChildren().add(buildAttachmentLabel(attachment, displayedIndex)));
+    }
+
+    /**
+     * Helper method to construct a label for each attachment.
+     * Adds a mouse click handler to invoke the attachment get command when the label is clicked
+     * @param attachment the attachment
+     * @param index index of the attachmentin the current list/UI
+     * @return label with mouse click handler
+     */
+    private Label buildAttachmentLabel(Attachment attachment, int index) {
+        Label label = new Label(attachment.getName());
+        label.setOnMouseClicked(event -> {
+            raise(new SelectFileSaveEvent(file -> {
+                String commandText = String.format("%s %d %s %s%s %s%s",
+                    AttachmentCommand.COMMAND_WORD, index,
+                    AttachmentCommand.COMMAND_GET_ACTION,
+                    PREFIX_FILENAME, attachment.getName(),
+                    PREFIX_FILEPATH, file.getPath()
+                );
+                raise(new ExecuteCommandEvent(commandText));
+            }));
+        });
+
+        return label;
     }
 
     @Override
