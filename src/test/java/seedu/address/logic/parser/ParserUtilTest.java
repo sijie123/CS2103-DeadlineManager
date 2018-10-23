@@ -16,6 +16,7 @@ import org.junit.rules.ExpectedException;
 
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.tag.Tag;
+import seedu.address.model.task.Frequency;
 import seedu.address.model.task.Name;
 import seedu.address.model.task.Priority;
 import seedu.address.testutil.Assert;
@@ -24,10 +25,12 @@ public class ParserUtilTest {
 
     private static final String INVALID_NAME = "R@chel";
     private static final String INVALID_PRIORITY = "c";
+    private static final String INVALID_FREQUENCY = "d";
     private static final String INVALID_TAG = "#friend";
 
     private static final String VALID_NAME = "Rachel Walker";
     private static final String VALID_PRIORITY = "2";
+    private static final String VALID_FREQUENCY = "10";
     private static final String VALID_TAG_1 = "friend";
     private static final String VALID_TAG_2 = "neighbour";
 
@@ -105,6 +108,29 @@ public class ParserUtilTest {
     }
 
     @Test
+    public void parseFrequency_null_throwsNullPointerException() {
+        Assert.assertThrows(NullPointerException.class, () -> ParserUtil.parseFrequency(null));
+    }
+
+    @Test
+    public void parseFrequency_invalidValue_throwsParseException() {
+        Assert.assertThrows(ParseException.class, () -> ParserUtil.parseFrequency(INVALID_FREQUENCY));
+    }
+
+    @Test
+    public void parseFrequency_validValueWithoutWhitespace_returnsFrequency() throws Exception {
+        Frequency expectedFrequency = new Frequency(VALID_FREQUENCY);
+        assertEquals(expectedFrequency, ParserUtil.parseFrequency(VALID_FREQUENCY));
+    }
+
+    @Test
+    public void parseFrequency_validValueWithWhitespace_returnsTrimmedFrequency() throws Exception {
+        String frequencyWithWhitespace = WHITESPACE + VALID_FREQUENCY + WHITESPACE;
+        Frequency expectedFrequency = new Frequency(VALID_FREQUENCY);
+        assertEquals(expectedFrequency, ParserUtil.parseFrequency(frequencyWithWhitespace));
+    }
+
+    @Test
     public void parseTag_null_throwsNullPointerException() throws Exception {
         thrown.expect(NullPointerException.class);
         ParserUtil.parseTag(null);
@@ -150,7 +176,7 @@ public class ParserUtilTest {
     public void parseTags_collectionWithValidTags_returnsTagSet() throws Exception {
         Set<Tag> actualTagSet = ParserUtil.parseTags(Arrays.asList(VALID_TAG_1, VALID_TAG_2));
         Set<Tag> expectedTagSet = new HashSet<Tag>(
-            Arrays.asList(new Tag(VALID_TAG_1), new Tag(VALID_TAG_2)));
+                Arrays.asList(new Tag(VALID_TAG_1), new Tag(VALID_TAG_2)));
 
         assertEquals(expectedTagSet, actualTagSet);
     }

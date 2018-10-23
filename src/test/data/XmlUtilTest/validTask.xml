@@ -2,6 +2,7 @@
 <task>
     <name>Hans Muster</name>
     <priority>1</priority>
+    <frequency>7</frequency>
     <deadline>1/12/2018</deadline>
     <tagged>friends</tagged>
     <attachments>hello.txt</attachments>

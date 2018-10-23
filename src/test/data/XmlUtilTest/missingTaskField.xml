@@ -2,6 +2,7 @@
 <!-- Task with missing name field -->
 <task>
     <priority>1</priority>
+    <frequency>7</frequency>
     <tagged>friends</tagged>
     <attachments>hello.txt</attachments>
 </task>

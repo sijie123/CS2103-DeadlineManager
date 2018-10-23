@@ -4,6 +4,7 @@
     <tasks>
         <name>Alice Pauline</name>
         <priority>1</priority>
+        <frequency>200</frequency>
         <deadline>1/10/2018</deadline>
         <tagged>friends</tagged>
         <attachments>hello.txt</attachments>
@@ -12,6 +13,7 @@
     <tasks>
         <name>Benson Meier</name>
         <priority>2</priority>
+        <frequency>205</frequency>
         <deadline>1/11/2018</deadline>
         <tagged>owesMoney</tagged>
         <tagged>friends</tagged>
@@ -21,23 +23,27 @@
     <tasks>
         <name>Carl Kurz</name>
         <priority>3</priority>
+        <frequency>210</frequency>
         <deadline>31/10/2018</deadline>
         <attachments>world.txt</attachments>
     </tasks>
     <tasks>
         <name>Daniel Meier</name>
         <priority>4</priority>
+        <frequency>215</frequency>
         <deadline>2/1/2019</deadline>
         <tagged>friends</tagged>
     </tasks>
     <tasks>
         <name>Elle Meyer</name>
         <priority>1</priority>
+        <frequency>220</frequency>
         <deadline>2/10/2018</deadline>
     </tasks>
     <tasks>
         <name>Fiona Kunz</name>
         <priority>2</priority>
+        <frequency>225</frequency>
         <deadline>2/10/2018</deadline>
         <attachments>hello.txt</attachments>
         <attachments>world.txt</attachments>
@@ -45,6 +51,7 @@
     <tasks>
         <name>George Best</name>
         <priority>3</priority>
+        <frequency>230</frequency>
         <deadline>2/10/2018</deadline>
         <attachments>hello.txt</attachments>
     </tasks>

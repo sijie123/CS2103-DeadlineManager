@@ -1,6 +1,7 @@
 package guitests.guihandles;
 
 import static seedu.address.ui.TaskCard.DEADLINE_FORMAT;
+import static seedu.address.ui.TaskCard.FREQUENCY_FORMAT;
 import static seedu.address.ui.TaskCard.PRIORITY_FORMAT;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class TaskCardHandle extends NodeHandle<Node> {
     private static final String ID_FIELD_ID = "#id";
     private static final String NAME_FIELD_ID = "#name";
     private static final String PRIORITY_FIELD_ID = "#priority";
+    private static final String FREQUENCY_FIELD_ID = "#frequency";
     private static final String DEADLINE_FIELD_ID = "#deadline";
     private static final String TAGS_FIELD_ID = "#tags";
     private static final String ATTACHMENTS_FIELD_ID = "#attachments";
@@ -28,6 +30,7 @@ public class TaskCardHandle extends NodeHandle<Node> {
     private final Label idLabel;
     private final Label nameLabel;
     private final Label priorityLabel;
+    private final Label frequencyLabel;
     private final Label deadlineLabel;
     private final List<Label> tagLabels;
     private final List<Label> attachmentLabels;
@@ -39,6 +42,7 @@ public class TaskCardHandle extends NodeHandle<Node> {
         nameLabel = getChildNode(NAME_FIELD_ID);
         deadlineLabel = getChildNode(DEADLINE_FIELD_ID);
         priorityLabel = getChildNode(PRIORITY_FIELD_ID);
+        frequencyLabel = getChildNode(FREQUENCY_FIELD_ID);
 
         Region tagsContainer = getChildNode(TAGS_FIELD_ID);
         tagLabels = tagsContainer
@@ -67,6 +71,10 @@ public class TaskCardHandle extends NodeHandle<Node> {
         return priorityLabel.getText();
     }
 
+    public String getFrequency() {
+        return frequencyLabel.getText();
+    }
+
     public String getDeadline() {
         return deadlineLabel.getText();
     }
@@ -91,6 +99,7 @@ public class TaskCardHandle extends NodeHandle<Node> {
     public boolean equals(Task task) {
         return getName().equals(task.getName().value)
             && getPriority().equals(String.format(PRIORITY_FORMAT, task.getPriority().value))
+            && getFrequency().equals(String.format(FREQUENCY_FORMAT, task.getFrequency().value))
             && getDeadline().equals(String.format(DEADLINE_FORMAT, task.getDeadline().toString()))
             && ImmutableMultiset.copyOf(getTags())
             .equals(ImmutableMultiset.copyOf(task.getTags().stream()

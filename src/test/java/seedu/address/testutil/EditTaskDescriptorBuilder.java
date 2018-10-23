@@ -7,6 +7,7 @@ import java.util.stream.Stream;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditCommand.EditTaskDescriptor;
 import seedu.address.model.tag.Tag;
+import seedu.address.model.task.Frequency;
 import seedu.address.model.task.Name;
 import seedu.address.model.task.Priority;
 import seedu.address.model.task.Task;
@@ -33,6 +34,7 @@ public class EditTaskDescriptorBuilder {
         descriptor = new EditCommand.EditTaskDescriptor();
         descriptor.setName(task.getName());
         descriptor.setPriority(task.getPriority());
+        descriptor.setFrequency(task.getFrequency());
         descriptor.setDeadline(task.getDeadline());
         descriptor.setTags(task.getTags());
     }
@@ -50,6 +52,14 @@ public class EditTaskDescriptorBuilder {
      */
     public EditTaskDescriptorBuilder withPriority(String priority) {
         descriptor.setPriority(new Priority(priority));
+        return this;
+    }
+
+    /**
+     * Sets the {@code Frequency} of the {@code EditTaskDescriptor} that we are building.
+     */
+    public EditTaskDescriptorBuilder withFrequency(String frequency) {
+        descriptor.setFrequency(new Frequency(frequency));
         return this;
     }
 

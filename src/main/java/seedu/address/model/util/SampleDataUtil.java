@@ -10,6 +10,7 @@ import seedu.address.model.TaskCollection;
 import seedu.address.model.attachment.Attachment;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.task.Deadline;
+import seedu.address.model.task.Frequency;
 import seedu.address.model.task.Name;
 import seedu.address.model.task.Priority;
 import seedu.address.model.task.Task;
@@ -23,25 +24,32 @@ public class SampleDataUtil {
         return new Task[] {
             new Task(new Name("CS2101 Oral Presentation"),
                 new Priority("1"),
+                new Frequency("5"),
                 new Deadline("12/10/2018"),
                 getTagSet("project", "cs2101")),
             new Task(new Name("CS2106 Lab 4"),
                 new Priority("2"),
+                new Frequency("10"),
                 new Deadline("25/10/2018"),
                 getTagSet("programming", "easy", "cs2106")),
-            new Task(new Name("CS2103T Tutorial"), new Priority("3"),
+            new Task(new Name("CS2103T Tutorial"),
+                new Priority("3"),
+                new Frequency("15"),
                 new Deadline("10/10/2018"),
                 getTagSet("cs2103t")),
             new Task(new Name("Dinner at MBS"),
                 new Priority("3"),
+                new Frequency("20"),
                 new Deadline("27/10/2018"),
                 getTagSet("family")),
             new Task(new Name("PS4"),
                 new Priority("2"),
+                new Frequency("25"),
                 new Deadline("12/10/2018"),
                 getTagSet("cs2040c")),
             new Task(new Name("Badminton"),
                 new Priority("3"),
+                new Frequency("30"),
                 new Deadline("12/10/2018"),
                 getTagSet("friends"))
         };

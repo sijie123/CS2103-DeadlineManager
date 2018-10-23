@@ -3,6 +3,7 @@
 <task>
     <name>Hans Muster</name>
     <priority>a</priority>
+    <frequency>b</frequency>
     <tagged>friends</tagged>
     <attachments>hello.txt</attachments>
 </task>
