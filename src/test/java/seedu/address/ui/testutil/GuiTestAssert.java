@@ -2,6 +2,7 @@ package seedu.address.ui.testutil;
 
 import static org.junit.Assert.assertEquals;
 import static seedu.address.ui.TaskCard.DEADLINE_FORMAT;
+import static seedu.address.ui.TaskCard.FREQUENCY_FORMAT;
 import static seedu.address.ui.TaskCard.PRIORITY_FORMAT;
 
 import java.util.List;
@@ -34,6 +35,8 @@ public class GuiTestAssert {
         assertEquals(expectedTask.getName().value, actualCard.getName());
         String expectedPriority = String.format(PRIORITY_FORMAT, expectedTask.getPriority().value);
         assertEquals(expectedPriority, actualCard.getPriority());
+        String expectedFrequency = String.format(FREQUENCY_FORMAT, expectedTask.getFrequency().value);
+        assertEquals(expectedFrequency, actualCard.getFrequency());
         String expectedDeadline = String.format(DEADLINE_FORMAT, expectedTask.getDeadline().toString());
         assertEquals(expectedDeadline, actualCard.getDeadline());
         assertEquals(expectedTask.getTags().stream().map(tag -> tag.tagName)

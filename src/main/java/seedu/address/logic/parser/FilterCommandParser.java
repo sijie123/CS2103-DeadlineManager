@@ -12,6 +12,7 @@ import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.task.Deadline;
 import seedu.address.model.task.FilterOperator;
+import seedu.address.model.task.Frequency;
 import seedu.address.model.task.Name;
 import seedu.address.model.task.Priority;
 import seedu.address.model.task.Task;
@@ -30,6 +31,56 @@ public class FilterCommandParser implements Parser<FilterCommand> {
     private static final String MESSAGE_INVALID_TESTPHRASE_FORMAT = "Invalid filter test value: %1$s";
     private static final String MESSAGE_INVALID_GENERAL_PREDICATE_FORMAT = "Invalid filter: %1$s";
 
+    /**
+     * Creates a predicate from the specified key, operator, and testphrase.
+     */
+    private static Predicate<Task> createPredicate(String key, FilterOperator operator, String testPhrase)
+        throws ParseException, InvalidPredicateException {
+        Predicate<Task> predicate;
+
+        try {
+            switch (key) {
+            case "n": // fallthrough
+            case "name": {
+                Predicate<Name> namePredicate = Name.makeFilter(operator, testPhrase);
+                predicate = task -> namePredicate.test(task.getName());
+                break;
+            }
+            case "d": // fallthrough
+            case "due": {
+                Predicate<Deadline> deadlinePredicate = Deadline.makeFilter(operator, testPhrase);
+                predicate = task -> deadlinePredicate.test(task.getDeadline());
+                break;
+            }
+            case "p": // fallthrough
+            case "priority": {
+                Predicate<Priority> priorityPredicate = Priority.makeFilter(operator, testPhrase);
+                predicate = task -> priorityPredicate.test(task.getPriority());
+                break;
+            }
+            case "f": // fallthrough
+            case "frequency": {
+                Predicate<Frequency> frequencyPredicate = Frequency.makeFilter(operator, testPhrase);
+                predicate = task -> frequencyPredicate.test(task.getFrequency());
+                break;
+            }
+            case "t": // fallthrough
+            case "tag": {
+                Predicate<Set<Tag>> tagsPredicate = SetUtil.makeFilter(Tag.class, operator, testPhrase);
+                predicate = task -> tagsPredicate.test(task.getTags());
+                break;
+            }
+            default:
+                throw new ParseException(String.format(MESSAGE_INVALID_KEY_FORMAT, key));
+            }
+        } catch (InvalidPredicateOperatorException e) {
+            throw new ParseException(String.format(MESSAGE_INVALID_OPERATOR_FORMAT, operator), e);
+        } catch (InvalidPredicateTestPhraseException e) {
+            throw new ParseException(String.format(MESSAGE_INVALID_TESTPHRASE_FORMAT, testPhrase), e);
+        }
+
+        return predicate;
+    }
 
     /**
      * Parses the given {@code String} of arguments in the context of the FindCommand and returns an
@@ -76,51 +127,6 @@ public class FilterCommandParser implements Parser<FilterCommand> {
             throw new ParseException("Invalid filter expression: " + e.getMessage(), e);
         }
 
-    }
-
-    /**
-     * Creates a predicate from the specified key, operator, and testphrase.
-     */
-    private static Predicate<Task> createPredicate(String key, FilterOperator operator, String testPhrase)
-        throws ParseException, InvalidPredicateException {
-        Predicate<Task> predicate;
-
-        try {
-            switch (key) {
-            case "n": // fallthrough
-            case "name": {
-                Predicate<Name> namePredicate = Name.makeFilter(operator, testPhrase);
-                predicate = task -> namePredicate.test(task.getName());
-                break;
-            }
-            case "d": // fallthrough
-            case "due": {
-                Predicate<Deadline> deadlinePredicate = Deadline.makeFilter(operator, testPhrase);
-                predicate = task -> deadlinePredicate.test(task.getDeadline());
-                break;
-            }
-            case "p": // fallthrough
-            case "priority": {
-                Predicate<Priority> priorityPredicate = Priority.makeFilter(operator, testPhrase);
-                predicate = task -> priorityPredicate.test(task.getPriority());
-                break;
-            }
-            case "t": // fallthrough
-            case "tag": {
-                Predicate<Set<Tag>> tagsPredicate = SetUtil.makeFilter(Tag.class, operator, testPhrase);
-                predicate = task -> tagsPredicate.test(task.getTags());
-                break;
-            }
-            default:
-                throw new ParseException(String.format(MESSAGE_INVALID_KEY_FORMAT, key));
-            }
-        } catch (InvalidPredicateOperatorException e) {
-            throw new ParseException(String.format(MESSAGE_INVALID_OPERATOR_FORMAT, operator), e);
-        } catch (InvalidPredicateTestPhraseException e) {
-            throw new ParseException(String.format(MESSAGE_INVALID_TESTPHRASE_FORMAT, testPhrase), e);
-        }
-
-        return predicate;
     }
 
 }

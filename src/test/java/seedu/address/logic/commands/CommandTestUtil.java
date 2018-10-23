@@ -3,6 +3,7 @@ package seedu.address.logic.commands;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DEADLINE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_FREQUENCY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PRIORITY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
@@ -29,6 +30,8 @@ public class CommandTestUtil {
     public static final String VALID_NAME_BOB = "Bob Choo";
     public static final String VALID_PRIORITY_AMY = "1";
     public static final String VALID_PRIORITY_BOB = "2";
+    public static final String VALID_FREQUENCY_AMY = "5";
+    public static final String VALID_FREQUENCY_BOB = "10";
     public static final String VALID_DEADLINE_AMY = "1/10/2018";
     public static final String VALID_DEADLINE_BOB = "1/11/2018";
     public static final String VALID_TAG_HUSBAND = "husband";
@@ -38,19 +41,23 @@ public class CommandTestUtil {
     public static final String NAME_DESC_BOB = " " + PREFIX_NAME + VALID_NAME_BOB;
     public static final String PRIORITY_DESC_AMY = " " + PREFIX_PRIORITY + VALID_PRIORITY_AMY;
     public static final String PRIORITY_DESC_BOB = " " + PREFIX_PRIORITY + VALID_PRIORITY_BOB;
+    public static final String FREQUENCY_DESC_AMY = " " + PREFIX_FREQUENCY + VALID_FREQUENCY_AMY;
+    public static final String FREQUENCY_DESC_BOB = " " + PREFIX_FREQUENCY + VALID_FREQUENCY_BOB;
     public static final String DEADLINE_DESC_AMY = " " + PREFIX_DEADLINE + VALID_DEADLINE_AMY;
     public static final String DEADLINE_DESC_BOB = " " + PREFIX_DEADLINE + VALID_DEADLINE_BOB;
     public static final String TAG_DESC_FRIEND = " " + PREFIX_TAG + VALID_TAG_FRIEND;
     public static final String TAG_DESC_HUSBAND = " " + PREFIX_TAG + VALID_TAG_HUSBAND;
 
     public static final String INVALID_NAME_DESC =
-        " " + PREFIX_NAME + "James&"; // '&' not allowed in names
+            " " + PREFIX_NAME + "James&"; // '&' not allowed in names
     public static final String INVALID_PRIORITY_DESC =
-        " " + PREFIX_PRIORITY + "a"; // 'a' not allowed in priorities
+            " " + PREFIX_PRIORITY + "a"; // 'a' not allowed in priorities
+    public static final String INVALID_FREQUENCY_DESC =
+            " " + PREFIX_FREQUENCY + "a"; // 'a' not allowed in priorities
     public static final String INVALID_DEADLINE_DESC =
-        " " + PREFIX_DEADLINE + "a"; // 'a' not allowed in deadlines
+            " " + PREFIX_DEADLINE + "a"; // 'a' not allowed in deadlines
     public static final String INVALID_TAG_DESC =
-        " " + PREFIX_TAG + "hubby*"; // '*' not allowed in tags
+            " " + PREFIX_TAG + "hubby*"; // '*' not allowed in tags
 
     public static final String PREAMBLE_WHITESPACE = "\t  \r  \n";
     public static final String PREAMBLE_NON_EMPTY = "NonEmptyPreamble";
@@ -60,11 +67,13 @@ public class CommandTestUtil {
 
     static {
         DESC_AMY = new EditTaskDescriptorBuilder().withName(VALID_NAME_AMY)
-            .withPriority(VALID_PRIORITY_AMY)
-            .withTags(VALID_TAG_FRIEND).build();
+                .withPriority(VALID_PRIORITY_AMY)
+                .withFrequency(VALID_FREQUENCY_AMY)
+                .withTags(VALID_TAG_FRIEND).build();
         DESC_BOB = new EditTaskDescriptorBuilder().withName(VALID_NAME_BOB)
-            .withPriority(VALID_PRIORITY_BOB)
-            .withTags(VALID_TAG_HUSBAND, VALID_TAG_FRIEND).build();
+                .withPriority(VALID_PRIORITY_BOB)
+                .withFrequency(VALID_FREQUENCY_BOB)
+                .withTags(VALID_TAG_HUSBAND, VALID_TAG_FRIEND).build();
     }
 
     /**
@@ -123,7 +132,7 @@ public class CommandTestUtil {
         Task task = model.getFilteredTaskList().get(targetIndex.getZeroBased());
         final String[] splitName = task.getName().value.split("\\s+");
         model.updateFilteredTaskList(
-            new NameContainsKeywordsPredicate(Arrays.asList(splitName[0])));
+                new NameContainsKeywordsPredicate(Arrays.asList(splitName[0])));
 
         assertEquals(1, model.getFilteredTaskList().size());
     }

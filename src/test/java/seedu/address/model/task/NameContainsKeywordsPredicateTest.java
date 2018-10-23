@@ -75,5 +75,9 @@ public class NameContainsKeywordsPredicateTest {
         // Keywords match priority, but does not match name
         predicate = new NameContainsKeywordsPredicate(Arrays.asList("1"));
         assertFalse(predicate.test(new TaskBuilder().withName("Alice").withPriority("1").build()));
+
+        // Keywords match frequency, but does not match name
+        predicate = new NameContainsKeywordsPredicate(Arrays.asList("5"));
+        assertFalse(predicate.test(new TaskBuilder().withName("Alice").withFrequency("5").build()));
     }
 }
