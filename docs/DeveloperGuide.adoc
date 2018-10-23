@@ -407,7 +407,9 @@ image::UndoRedoActivityDiagram.png[width="650"]
 
 The deadline supports import and export features. This feature uses 2 components: `Storage` and `Model`.
 
-==== Overview of components
+==== Current Implementation
+
+===== Overview of components
 Internally, `StorageManager` implements the following APIs from `ImportExportStorage` interface:
 
 * `importTaskCollection`:  Imports and returns a `TaskCollection` given a filename
@@ -427,7 +429,8 @@ ModelManager implements the following APIs necessary for Import and Export:
 
 The request events are posted to the `EventCenter`, which will dispatch to all subscribed methods.
 
-==== Inter-component communication
+===== Inter-component communication
+
 To facilitate communication between the two components, the deadline manager uses the event-driven model.
 An import or export request event is created by `ModelManager`, and a handler in `StorageManager` is invoked to handle the event.
 After data has been successfully read or written, the response is placed in another event for `ModelManager` to process.
@@ -456,7 +459,7 @@ Similarly, `StorageManager` returns the result of imports and errors with the fo
 * `handleImportRequestEvent`: Processes an import event and reads from file.
 * `handleExportRequestEvent`: Processes an export event and writes to file.
 
-==== Sequence Flow
+===== Sequence Flow
 
 Given below is a sequence diagram illustrating the interactions between `Model` and `Storage` when exporting.
 
@@ -486,15 +489,42 @@ Step 5. The `EventsCenter` will dispatch the `ImportDataAvailableEvent` back to 
 
 Step 6. `ModelManager` will take the imported data and de-conflict the merged entries.
 
-==== Merge Deconflict
+===== Import Conflict Resolver
+
 An imported task is deemed conflicting with an existing task if the two tasks compare `equal` with the internal implementation of Task's `equal` method.
-If the user attempts to import a new task that conflicts with an existing task, the task can be de-conflicted with one of the following algorithms:
+If the user attempts to import a new task that conflicts with an existing task, the task needs to be de-conflicted with one of the following resolver:
 
 * `IgnoreResolver`: Discards the incoming task in favour of the existing task.
 * `OverwriteResolver`: Updates the existing task to reflect the values of the incoming task.
 * `DuplicateResolver`: Keep both copies.
 
 The user can specify the deconflict algorithm with flags. By default, the `IgnoreResolver` is used.
+
+==== Design Considerations
+
+===== Aspect: Communication between `Model` and `Storage`
+
+Both the `Model` and the `Storage` components are required for import/export. However, they are separate components, and we need to establish a method of communication between the two components.
+
+* **Alternative 1 (current choice):** `Model` is maintained as being separate from `Storage`. The event-based style is used: an Import/Export event is created to signal a request, and another Import/Export event is created to signal that the data is ready.
+** Pros: `Storage` is decoupled from `Model`, i.e. changes to `Model` will not affect changes to `Storage`, and vice versa. This is a good OOP practice.
+** Cons: It is more difficult to implement and more overhead is incurred in passing data around. Calls are not immediate, and there is no way to immediately tell whether an execution succeeded or failed.
+* **Alternative 2:** Model executes an import/export method in Storage directly.
+** Pros: The data from the import/export request can be retrieved immediately and easily.
+** Cons: `Model` is more tightly coupled with `Storage`, i.e. `Model` and `Storage` will no longer be separate components, but will instead know the inner workings of each other.
+
+===== Aspect: How to resolve import conflicts
+
+As described in <<Import Deconflict, Import Deconflict>>, an import conflict arises when the user attempts to import tasks that already exist in Deadline Manager. We need an import conflict resolver to determine how to deal with these tasks.
+
+* **Alternative 1 (current choice):** An `ImportConflictResolver` class is implemented to resolve import conflicts. The user specifies which resolver algorithm to use, and the corresponding `{Method}ImportConflictResolver` object is created to resolve import conflicts.
+** Pros: This provides more flexibility for user to define how to resolve imports. Additionally, this is better Software Engineering practice as it follows the Single Responsibility Principle: the `ImportConflictResolver` object is responsible only for its own algorithm.
+** Cons: It is more difficult to implement an entirely separate `ImportConflictResolver` class, complete with separate sub-classes for different algorithms.
+* **Alternative 2:** Use an `enum` to implement ImportConflictResolver. The `ImportConflictResolver` enum provides a pre-defined selection of algorithms that the user can specify.
+** Pros: There is no need to implement separate classes. Since the `ImportConflictResolver` enum is only useful within Model, it reside within Model as a private variable.
+** Cons: If/else statements are required to determine which algorithm should be used. Additionally, an `ImportConflictResolver` implemented this way cannot be easily reused or extended.
+
+
 
 // end::importexport[]
 
