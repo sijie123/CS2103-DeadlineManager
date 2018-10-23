@@ -1,6 +1,7 @@
 package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_DEADLINE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PRIORITY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
@@ -39,6 +40,7 @@ public class EditCommand extends Command {
             + "Parameters: INDEX (must be a positive integer) "
             + "[" + PREFIX_NAME + "NAME] "
             + "[" + PREFIX_PRIORITY + "PRIORITY] "
+            + "[" + PREFIX_DEADLINE + "DEADLINE] "
             + "[" + PREFIX_TAG + "TAG]...\n"
             + "Example: " + COMMAND_WORD + " 1 "
             + PREFIX_PRIORITY + "1";
@@ -146,7 +148,7 @@ public class EditCommand extends Command {
          * Returns true if at least one field is edited.
          */
         public boolean isAnyFieldEdited() {
-            return CollectionUtil.isAnyNonNull(name, priority, tags); // TODO: @btzy deadline????
+            return CollectionUtil.isAnyNonNull(name, priority, deadline, tags);
         }
 
         public void setName(Name name) {
