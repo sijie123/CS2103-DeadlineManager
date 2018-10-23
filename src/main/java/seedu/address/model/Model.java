@@ -7,7 +7,6 @@ import com.google.common.eventbus.Subscribe;
 
 import javafx.collections.ObservableList;
 import seedu.address.commons.events.storage.ImportDataAvailableEvent;
-import seedu.address.commons.events.storage.ImportExportExceptionEvent;
 import seedu.address.model.task.Task;
 
 /**
@@ -96,9 +95,9 @@ public interface Model {
      */
     void commitTaskCollection();
 
-    boolean importExportFailed();
+    /*boolean importExportFailed();
 
-    String getLastError();
+    String getLastError();*/
 
     /**
      * Exports current deadline manager to file.
@@ -108,12 +107,7 @@ public interface Model {
     /**
      * Imports tasks from file to the current deadline manager.
      */
-    void importTaskCollection(String filename);
-
-    /**
-     * Imports tasks from file to the current deadline manager.
-     */
-    void importTaskCollection(String filename, ModelManager.ImportConflictMode mode);
+    void importTaskCollection(String filename, ImportConflictResolver mode);
 
     /**
      * Handler for the return result from Storage, when import data has been read.
@@ -122,6 +116,4 @@ public interface Model {
     @Subscribe
     void handleImportDataAvailableEvent(ImportDataAvailableEvent event);
 
-    @Subscribe
-    void handleImportExportExceptionEvent(ImportExportExceptionEvent event);
 }

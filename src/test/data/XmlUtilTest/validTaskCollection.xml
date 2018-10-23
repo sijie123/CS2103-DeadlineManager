@@ -3,47 +3,56 @@
     <tasks>
         <name>Hans Muster</name>
         <priority isPrivate="false">1</priority>
+        <frequency isPrivate="false">100</frequency>
         <deadline isPrivate="false">1/10/2018</deadline>
         <attachments>hello.txt</attachments>
     </tasks>
     <tasks>
         <name>Ruth Mueller</name>
         <priority isPrivate="false">2</priority>
+        <frequency isPrivate="false">105</frequency>
         <deadline isPrivate="false">1/11/2018</deadline>
     </tasks>
     <tasks>
         <name>Heinz Kurz</name>
         <priority isPrivate="false">3</priority>
+        <frequency isPrivate="false">110</frequency>
         <deadline isPrivate="false">10/10/2018</deadline>
     </tasks>
     <tasks>
         <name>Cornelia Meier</name>
         <priority isPrivate="false">4</priority>
+        <frequency isPrivate="false">115</frequency>
         <deadline isPrivate="false">1/5/2019</deadline>
     </tasks>
     <tasks>
         <name>Werner Meyer</name>
         <priority isPrivate="false">1</priority>
+        <frequency isPrivate="false">120</frequency>
         <deadline isPrivate="false">31/1/2019</deadline>
     </tasks>
     <tasks>
         <name>Lydia Kunz</name>
         <priority isPrivate="false">2</priority>
+        <frequency isPrivate="false">125</frequency>
         <deadline isPrivate="false">1/2/2019</deadline>
     </tasks>
     <tasks>
         <name>Anna Best</name>
         <priority isPrivate="false">3</priority>
+        <frequency isPrivate="false">130</frequency>
         <deadline isPrivate="false">30/11/2018</deadline>
     </tasks>
     <tasks>
         <name>Stefan Meier</name>
         <priority isPrivate="false">4</priority>
+        <frequency isPrivate="false">135</frequency>
         <deadline isPrivate="false">5/10/2018</deadline>
     </tasks>
     <tasks>
         <name>Martin Mueller</name>
         <priority isPrivate="false">1</priority>
+        <frequency isPrivate="false">140</frequency>
         <deadline isPrivate="false">15/5/2020</deadline>
     </tasks>
 </taskcollection>

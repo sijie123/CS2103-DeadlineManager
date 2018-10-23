@@ -15,12 +15,9 @@ import seedu.address.model.tag.Tag;
  * are validated, immutable.
  */
 public class Task {
-
-    // Identity fields
     private final Name name;
     private final Priority priority;
-
-    // Data fields
+    private final Frequency frequency;
     private final Deadline deadline;
     private final Set<Tag> tags = new HashSet<>();
     private final Set<Attachment> attachments = new HashSet<>();
@@ -28,11 +25,12 @@ public class Task {
     /**
      * Every field must be present and not null.
      */
-    public Task(Name name, Priority priority, Deadline deadline,
+    public Task(Name name, Priority priority, Frequency frequency, Deadline deadline,
                 Set<Tag> tags, Set<Attachment> attachments) {
         requireAllNonNull(name, priority, deadline, tags, attachments);
         this.name = name;
         this.priority = priority;
+        this.frequency = frequency;
         this.deadline = deadline;
         this.tags.addAll(tags);
         this.attachments.addAll(attachments);
@@ -41,15 +39,15 @@ public class Task {
     /**
      * Convenience constructor. Tasks are initialized without any attachments.
      */
-    public Task(Name name, Priority priority, Deadline deadline, Set<Tag> tags) {
-        this(name, priority, deadline, tags, new HashSet<>());
+    public Task(Name name, Priority priority, Frequency frequency, Deadline deadline, Set<Tag> tags) {
+        this(name, priority, frequency, deadline, tags, new HashSet<>());
     }
 
     /**
      * Convenience constructor, to be removed eventually
      */
-    public Task(Name name, Priority priority, Set<Tag> tags) {
-        this(name, priority, new Deadline("1/10/2018"), tags);
+    public Task(Name name, Priority priority, Frequency frequency, Set<Tag> tags) {
+        this(name, priority, frequency, new Deadline("1/10/2018"), tags);
     }
 
     public Name getName() {
@@ -58,6 +56,10 @@ public class Task {
 
     public Priority getPriority() {
         return priority;
+    }
+
+    public Frequency getFrequency() {
+        return frequency;
     }
 
     public Deadline getDeadline() {
@@ -97,6 +99,7 @@ public class Task {
         Task otherTask = (Task) other;
         return otherTask.getName().equals(getName())
             && otherTask.getPriority().equals(getPriority())
+            && otherTask.getFrequency().equals(getFrequency())
             && otherTask.getTags().equals(getTags())
             && otherTask.getDeadline().equals(getDeadline())
             && otherTask.getAttachments().equals(getAttachments());
@@ -105,7 +108,7 @@ public class Task {
     @Override
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own
-        return Objects.hash(name, priority, tags, deadline, attachments);
+        return Objects.hash(name, priority, frequency, tags, deadline, attachments);
     }
 
     @Override
@@ -114,6 +117,8 @@ public class Task {
         builder.append(getName())
             .append(" Priority: ")
             .append(getPriority())
+            .append(" Frequency: ")
+            .append(getFrequency())
             .append(" Deadline: ")
             .append(getDeadline())
             .append(" Tags: ");

@@ -101,6 +101,7 @@ public class TaskListPanelTest extends GuiUnitTest {
             builder.append("<tasks>\n");
             builder.append("<name>").append(i).append("a</name>\n");
             builder.append("<priority>1</priority>\n");
+            builder.append("<frequency>5</frequency>\n");
             builder.append("<deadline>1/10/2018</deadline>\n");
             builder.append("</tasks>\n");
         }

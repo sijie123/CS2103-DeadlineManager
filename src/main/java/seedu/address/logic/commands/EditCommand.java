@@ -1,6 +1,8 @@
 package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_DEADLINE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_FREQUENCY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PRIORITY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
@@ -21,6 +23,7 @@ import seedu.address.model.Model;
 import seedu.address.model.attachment.Attachment;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.task.Deadline;
+import seedu.address.model.task.Frequency;
 import seedu.address.model.task.Name;
 import seedu.address.model.task.Priority;
 import seedu.address.model.task.Task;
@@ -39,6 +42,8 @@ public class EditCommand extends Command {
             + "Parameters: INDEX (must be a positive integer) "
             + "[" + PREFIX_NAME + "NAME] "
             + "[" + PREFIX_PRIORITY + "PRIORITY] "
+            + "[" + PREFIX_FREQUENCY + "FREQUENCY] "
+            + "[" + PREFIX_DEADLINE + "DEADLINE] "
             + "[" + PREFIX_TAG + "TAG]...\n"
             + "Example: " + COMMAND_WORD + " 1 "
             + PREFIX_PRIORITY + "1";
@@ -51,7 +56,7 @@ public class EditCommand extends Command {
     private final EditTaskDescriptor editTaskDescriptor;
 
     /**
-     * @param index                of the task in the filtered task list to edit
+     * @param index              of the task in the filtered task list to edit
      * @param editTaskDescriptor details to edit the task with
      */
     public EditCommand(Index index, EditTaskDescriptor editTaskDescriptor) {
@@ -60,6 +65,27 @@ public class EditCommand extends Command {
 
         this.index = index;
         this.editTaskDescriptor = new EditTaskDescriptor(editTaskDescriptor);
+    }
+
+    /**
+     * Creates and returns a {@code Task} with the details of {@code taskToEdit} edited with {@code
+     * editTaskDescriptor}.
+     */
+    private static Task createEditedTask(Task taskToEdit,
+                                         EditTaskDescriptor editTaskDescriptor) {
+        assert taskToEdit != null;
+
+        Name updatedName = editTaskDescriptor.getName().orElse(taskToEdit.getName());
+        Priority updatedPriority = editTaskDescriptor.getPriority().orElse(taskToEdit.getPriority());
+        Frequency updatedFrequency = editTaskDescriptor.getFrequency().orElse(taskToEdit.getFrequency());
+        Deadline updatedDeadline = editTaskDescriptor.getDeadline().orElse(taskToEdit.getDeadline());
+        Set<Tag> updatedTags = editTaskDescriptor.getTags().orElse(taskToEdit.getTags());
+
+        // Attachments are not modifiable via 'EditCommand'
+        Set<Attachment> updatedAttachments = taskToEdit.getAttachments();
+
+        return new Task(updatedName, updatedPriority, updatedFrequency, updatedDeadline, updatedTags,
+            updatedAttachments);
     }
 
     @Override
@@ -80,25 +106,6 @@ public class EditCommand extends Command {
         return new CommandResult(String.format(MESSAGE_EDIT_TASK_SUCCESS, editedTask));
     }
 
-    /**
-     * Creates and returns a {@code Task} with the details of {@code taskToEdit} edited with {@code
-     * editTaskDescriptor}.
-     */
-    private static Task createEditedTask(Task taskToEdit,
-                                         EditTaskDescriptor editTaskDescriptor) {
-        assert taskToEdit != null;
-
-        Name updatedName = editTaskDescriptor.getName().orElse(taskToEdit.getName());
-        Priority updatedPriority = editTaskDescriptor.getPriority().orElse(taskToEdit.getPriority());
-        Deadline updatedDeadline = editTaskDescriptor.getDeadline().orElse(taskToEdit.getDeadline());
-        Set<Tag> updatedTags = editTaskDescriptor.getTags().orElse(taskToEdit.getTags());
-
-        // Attachments are not modifiable via 'EditCommand'
-        Set<Attachment> updatedAttachments = taskToEdit.getAttachments();
-
-        return new Task(updatedName, updatedPriority, updatedDeadline, updatedTags, updatedAttachments);
-    }
-
     @Override
     public boolean equals(Object other) {
         // short circuit if same object
@@ -117,6 +124,14 @@ public class EditCommand extends Command {
             && editTaskDescriptor.equals(e.editTaskDescriptor);
     }
 
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("index: ").append(index)
+            .append(" editTaskDescriptor: ").append(editTaskDescriptor);
+        return builder.toString();
+    }
+
     /**
      * Stores the details to edit the task with. Each non-empty field value will replace the
      * corresponding field value of the task.
@@ -125,6 +140,7 @@ public class EditCommand extends Command {
 
         private Name name;
         private Priority priority;
+        private Frequency frequency;
         private Deadline deadline;
         private Set<Tag> tags;
 
@@ -138,6 +154,7 @@ public class EditCommand extends Command {
         public EditTaskDescriptor(EditTaskDescriptor toCopy) {
             setName(toCopy.name);
             setPriority(toCopy.priority);
+            setFrequency(toCopy.frequency);
             setDeadline(toCopy.deadline);
             setTags(toCopy.tags);
         }
@@ -146,39 +163,39 @@ public class EditCommand extends Command {
          * Returns true if at least one field is edited.
          */
         public boolean isAnyFieldEdited() {
-            return CollectionUtil.isAnyNonNull(name, priority, tags); // TODO: @btzy deadline????
-        }
-
-        public void setName(Name name) {
-            this.name = name;
+            return CollectionUtil.isAnyNonNull(name, priority, frequency, deadline, tags);
         }
 
         public Optional<Name> getName() {
             return Optional.ofNullable(name);
         }
 
-        public void setPriority(Priority priority) {
-            this.priority = priority;
+        public void setName(Name name) {
+            this.name = name;
         }
 
         public Optional<Priority> getPriority() {
             return Optional.ofNullable(priority);
         }
 
-        public void setDeadline(Deadline deadline) {
-            this.deadline = deadline;
+        public void setPriority(Priority priority) {
+            this.priority = priority;
+        }
+
+        public Optional<Frequency> getFrequency() {
+            return Optional.ofNullable(frequency);
+        }
+
+        public void setFrequency(Frequency frequency) {
+            this.frequency = frequency;
         }
 
         public Optional<Deadline> getDeadline() {
             return Optional.ofNullable(deadline);
         }
 
-        /**
-         * Sets {@code tags} to this object's {@code tags}. A defensive copy of {@code tags} is used
-         * internally.
-         */
-        public void setTags(Set<Tag> tags) {
-            this.tags = (tags != null) ? new HashSet<>(tags) : null;
+        public void setDeadline(Deadline deadline) {
+            this.deadline = deadline;
         }
 
         /**
@@ -188,6 +205,14 @@ public class EditCommand extends Command {
         public Optional<Set<Tag>> getTags() {
             return (tags != null) ? Optional.of(Collections.unmodifiableSet(tags))
                 : Optional.empty();
+        }
+
+        /**
+         * Sets {@code tags} to this object's {@code tags}. A defensive copy of {@code tags} is used
+         * internally.
+         */
+        public void setTags(Set<Tag> tags) {
+            this.tags = (tags != null) ? new HashSet<>(tags) : null;
         }
 
         @Override
@@ -207,8 +232,22 @@ public class EditCommand extends Command {
 
             return getName().equals(e.getName())
                 && getPriority().equals(e.getPriority())
+                && getFrequency().equals(e.getFrequency())
                 && getDeadline().equals(e.getDeadline())
                 && getTags().equals(e.getTags());
+        }
+
+        @Override
+        public String toString() {
+            final StringBuilder builder = new StringBuilder();
+            builder.append(getName())
+                .append(" Priority: ")
+                .append(getPriority())
+                .append(" Frequency: ")
+                .append(getFrequency())
+                .append(" Deadline: ")
+                .append(getDeadline());
+            return builder.toString();
         }
     }
 }

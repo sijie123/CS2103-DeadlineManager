@@ -1,6 +1,7 @@
 package seedu.address.testutil;
 
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DEADLINE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_FREQUENCY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PRIORITY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
@@ -31,6 +32,7 @@ public class TaskUtil {
         StringBuilder sb = new StringBuilder();
         sb.append(PREFIX_NAME + task.getName().value + " ");
         sb.append(PREFIX_PRIORITY + task.getPriority().toString() + " ");
+        sb.append(PREFIX_FREQUENCY + task.getFrequency().toString() + " ");
         sb.append(PREFIX_DEADLINE + task.getDeadline().toString() + " ");
         task.getTags().stream().forEach(
             s -> sb.append(PREFIX_TAG + s.tagName + " ")
@@ -47,6 +49,8 @@ public class TaskUtil {
             .ifPresent(name -> sb.append(PREFIX_NAME).append(name.value).append(" "));
         descriptor.getPriority()
             .ifPresent(priority -> sb.append(PREFIX_PRIORITY).append(priority.toString()).append(" "));
+        descriptor.getFrequency()
+            .ifPresent(frequency -> sb.append(PREFIX_FREQUENCY).append(frequency.toString()).append(" "));
         descriptor.getDeadline()
             .ifPresent(deadline -> sb.append(PREFIX_DEADLINE).append(deadline.toString()).append(" "));
         if (descriptor.getTags().isPresent()) {
