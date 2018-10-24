@@ -16,10 +16,21 @@ import java.util.regex.Pattern;
  * Multiple consecutive delimiters are treated as a single delimiter.
  */
 public class StringTokenizer {
+
+    private static final Predicate<Character> WHITESPACE_PREDICATE = Character::isWhitespace;
+    private static final Predicate<Character> ANY_QUOTES_PREDICATE = ch -> ch == '\'' || ch == '\"';
+
     private final String str;
     private final Predicate<Character> delimPred;
     private final Predicate<Character> quotePred;
     private int nextIndex;
+
+    /**
+     * Constructs an instance of Stringtokenizer, using default predicates.
+     */
+    public StringTokenizer(String str) {
+        this(str, WHITESPACE_PREDICATE, ANY_QUOTES_PREDICATE);
+    }
 
     /**
      * Constructs an instance of Stringtokenizer.
@@ -59,6 +70,9 @@ public class StringTokenizer {
      * @param validPred A predicate that returns false if the given character is not allowed in this token.
      *                  If such a character is encountered, the token would be considered to have ended
      *                  just before that character.  It is only used for unquoted strings.
+     *
+     * @throws InputMismatchException if the next token is malformed as a standard text token.
+     * @throws NoSuchElementException if the string has reached the end.
      */
     public String nextString(Predicate<Character> validPred) {
         if (!hasNextToken()) {
@@ -118,8 +132,21 @@ public class StringTokenizer {
 
     /**
      * Consume the next token specified with the regex.
+     *
+     * @throws InputMismatchException if the string does not match the given pattern.
+     * @throws NoSuchElementException if the string has reached the end.
      */
     public String nextPattern(Pattern pattern) {
+        return nextMatcher(pattern).group();
+    }
+
+    /**
+     * Consume the next token specified with the regex.
+     *
+     * @throws InputMismatchException if the string does not match the given pattern.
+     * @throws NoSuchElementException if the string has reached the end.
+     */
+    public Matcher nextMatcher(Pattern pattern) {
         if (!hasNextToken()) {
             throw new NoSuchElementException("Reached end of string while reading delimiter!");
         }
@@ -133,17 +160,32 @@ public class StringTokenizer {
 
         nextIndex += matcher.end();
 
-        return matcher.group();
+        return matcher;
     }
 
     /**
      * Try to consume the next token specified with the regex.
      * Returns null if no token available.
+     *
      * @throws NoSuchElementException if the string has reached the end.
      */
     public String tryNextPattern(Pattern pattern) {
         try {
             return nextPattern(pattern);
+        } catch (InputMismatchException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Try to consume the next token specified with the regex.
+     * Returns null if no token available.
+     *
+     * @throws NoSuchElementException if the string has reached the end.
+     */
+    public Matcher tryNextMatcher(Pattern pattern) {
+        try {
+            return nextMatcher(pattern);
         } catch (InputMismatchException e) {
             return null;
         }

@@ -1,9 +1,8 @@
 package seedu.address.logic.parser;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.InputMismatchException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Tokenizes arguments string of the form: {@code preamble <prefix>value <prefix>value ...}<br> e.g.
@@ -25,132 +24,109 @@ public class ArgumentTokenizer {
      * @param prefixes   Prefixes to tokenize the arguments string with
      * @return ArgumentMultimap object that maps prefixes to their arguments
      */
-    public static ArgumentMultimap tokenize(String argsString, Prefix... prefixes) {
-        List<PrefixPosition> positions = findAllPrefixPositions(argsString, prefixes);
-        return extractArguments(argsString, positions);
-    }
-
-    /**
-     * Finds all zero-based prefix positions in the given arguments string.
-     *
-     * @param argsString Arguments string of the form: {@code preamble <prefix>value <prefix>value
-     *                   ...}
-     * @param prefixes   Prefixes to find in the arguments string
-     * @return List of zero-based prefix positions in the given arguments string
-     */
-    private static List<PrefixPosition> findAllPrefixPositions(String argsString,
-                                                               Prefix... prefixes) {
-        return Arrays.stream(prefixes)
-            .flatMap(prefix -> findPrefixPositions(argsString, prefix).stream())
-            .collect(Collectors.toList());
-    }
-
-    /**
-     * {@see findAllPrefixPositions}
-     */
-    private static List<PrefixPosition> findPrefixPositions(String argsString, Prefix prefix) {
-        List<PrefixPosition> positions = new ArrayList<>();
-
-        int prefixPosition = findPrefixPosition(argsString, prefix.getPrefix(), 0);
-        while (prefixPosition != -1) {
-            PrefixPosition extendedPrefix = new PrefixPosition(prefix, prefixPosition);
-            positions.add(extendedPrefix);
-            prefixPosition = findPrefixPosition(argsString, prefix.getPrefix(), prefixPosition);
+    public static ArgumentMultimap tokenize(String argsString, Prefix... prefixes) throws InputMismatchException {
+        StringTokenizer tokenizer = new StringTokenizer(argsString);
+        if (prefixes.length == 0) {
+            return tokenizeWithoutPrefix(tokenizer, argsString);
         }
-
-        return positions;
+        Pattern pattern = makePattern(prefixes);
+        return tokenize(tokenizer, pattern, prefixes);
     }
 
     /**
-     * Returns the index of the first occurrence of {@code prefix} in {@code argsString} starting
-     * from index {@code fromIndex}. An occurrence is valid if there is a whitespace before {@code
-     * prefix}. Returns -1 if no such occurrence can be found.
-     * <p>
-     * E.g if {@code argsString} = "e/hip/900", {@code prefix} = "p/" and {@code fromIndex} = 0,
-     * this method returns -1 as there are no valid occurrences of "p/" with whitespace before it.
-     * However, if {@code argsString} = "e/hi p/900", {@code prefix} = "p/" and {@code fromIndex} =
-     * 0, this method returns 5.
-     */
-    private static int findPrefixPosition(String argsString, String prefix, int fromIndex) {
-        int prefixIndex = argsString.indexOf(" " + prefix, fromIndex);
-        return prefixIndex == -1 ? -1
-            : prefixIndex + 1; // +1 as offset for whitespace
-    }
-
-    /**
-     * Extracts prefixes and their argument values, and returns an {@code ArgumentMultimap} object
-     * that maps the extracted prefixes to their respective arguments. Prefixes are extracted based
-     * on their zero-based positions in {@code argsString}.
+     * Extracts prefixes and their argument values based on the given pattern and input tokenizer,
+     * and returns an {@code ArgumentMultimap} object that maps the extracted prefixes to their respective arguments.
      *
-     * @param argsString      Arguments string of the form: {@code preamble <prefix>value <prefix>value
-     *                        ...}
-     * @param prefixPositions Zero-based positions of all prefixes in {@code argsString}
-     * @return ArgumentMultimap object that maps prefixes to their arguments
+     * @param tokenizer StringTokenizer that contains the input string
+     * @param pattern   Pattern that describes the combined prefix regex that matches all prefixes
+     * @param prefixes  List of valid prefixes
+     * @return Pattern object that represents the regular expression
      */
-    private static ArgumentMultimap extractArguments(String argsString,
-                                                     List<PrefixPosition> prefixPositions) {
-
-        // Sort by start position
-        prefixPositions.sort((prefix1, prefix2) -> prefix1.getStartPosition() - prefix2
-            .getStartPosition());
-
-        // Insert a PrefixPosition to represent the preamble
-        PrefixPosition preambleMarker = new PrefixPosition(new Prefix(""), 0);
-        prefixPositions.add(0, preambleMarker);
-
-        // Add a dummy PrefixPosition to represent the end of the string
-        PrefixPosition endPositionMarker = new PrefixPosition(new Prefix(""), argsString.length());
-        prefixPositions.add(endPositionMarker);
-
-        // Map prefixes to their argument values (if any)
+    private static ArgumentMultimap tokenize(StringTokenizer tokenizer, Pattern pattern, Prefix... prefixes)
+        throws InputMismatchException {
         ArgumentMultimap argMultimap = new ArgumentMultimap();
-        for (int i = 0; i < prefixPositions.size() - 1; i++) {
-            // Extract and store prefixes and their arguments
-            Prefix argPrefix = prefixPositions.get(i).getPrefix();
-            String argValue = extractArgumentValue(argsString, prefixPositions.get(i),
-                prefixPositions.get(i + 1));
-            argMultimap.put(argPrefix, argValue);
+        Prefix currPrefix = new Prefix("");
+        StringBuilder currArgumentValue = new StringBuilder();
+        boolean isEmpty = true;
+        while (tokenizer.hasNextToken()) {
+            Matcher prefixMatcher = tokenizer.tryNextMatcher(pattern);
+            if (prefixMatcher == null) {
+                String textToken = tokenizer.nextString();
+                if (!isEmpty) {
+                    currArgumentValue.append(' ');
+                } else {
+                    isEmpty = false;
+                }
+                currArgumentValue.append(textToken);
+            } else {
+                argMultimap.put(currPrefix, currArgumentValue.toString());
+                currPrefix = findGroupPrefix(prefixMatcher, prefixes);
+                currArgumentValue = new StringBuilder();
+                isEmpty = true;
+            }
         }
-
+        argMultimap.put(currPrefix, currArgumentValue.toString());
         return argMultimap;
     }
 
     /**
-     * Returns the trimmed value of the argument in the arguments string specified by {@code
-     * currentPrefixPosition}. The end position of the value is determined by {@code
-     * nextPrefixPosition}.
+     * Tokenizes an arguments string without any prefixes.
+     *
+     * @param argsString Arguments string
+     * @return ArgumentMultimap object which only contains a single string
      */
-    private static String extractArgumentValue(String argsString,
-                                               PrefixPosition currentPrefixPosition,
-                                               PrefixPosition nextPrefixPosition) {
-        Prefix prefix = currentPrefixPosition.getPrefix();
-
-        int valueStartPos = currentPrefixPosition.getStartPosition() + prefix.getPrefix().length();
-        String value = argsString.substring(valueStartPos, nextPrefixPosition.getStartPosition());
-
-        return value.trim();
+    public static ArgumentMultimap tokenizeWithoutPrefix(StringTokenizer tokenizer, String argsString) {
+        ArgumentMultimap argMultimap = new ArgumentMultimap();
+        StringBuilder currArgumentValue = new StringBuilder();
+        boolean isEmpty = true;
+        while (tokenizer.hasNextToken()) {
+            String textToken = tokenizer.nextString();
+            if (!isEmpty) {
+                currArgumentValue.append(' ');
+            } else {
+                isEmpty = false;
+            }
+            currArgumentValue.append(textToken);
+        }
+        argMultimap.put(new Prefix(""), currArgumentValue.toString());
+        return argMultimap;
     }
 
     /**
-     * Represents a prefix's position in an arguments string.
+     * Constructs a Pattern (for use with regular expressions) from the given list of valid prefixes.
+     *
+     * @param prefixes Prefixes to tokenize the arguments string with
+     * @return Pattern object that represents the regular expression
      */
-    private static class PrefixPosition {
-
-        private int startPosition;
-        private final Prefix prefix;
-
-        PrefixPosition(Prefix prefix, int startPosition) {
-            this.prefix = prefix;
-            this.startPosition = startPosition;
+    private static Pattern makePattern(Prefix... prefixes) {
+        StringBuilder patternBuilder = new StringBuilder();
+        boolean isEmpty = true;
+        for (int i = 0; i != prefixes.length; ++i) {
+            if (!isEmpty) {
+                patternBuilder.append('|');
+            }
+            // the following like makes a named capturing group
+            patternBuilder.append("(?<n" + Integer.toString(i) + ">" + Pattern.quote(prefixes[i].getPrefix()) + ")");
+            isEmpty = false;
         }
+        return Pattern.compile(patternBuilder.toString());
+    }
 
-        int getStartPosition() {
-            return startPosition;
+    /**
+     * Determines which prefix in the list of prefixes caused the given match to succeed.
+     *
+     * @param prefixMatcher Match that matches a prefix
+     * @param prefixes      List of valid prefixes
+     * @return Prefix that caused the match
+     */
+    private static Prefix findGroupPrefix(Matcher prefixMatcher, Prefix... prefixes) {
+        for (int i = 0; i != prefixes.length; ++i) {
+            if (prefixMatcher.group("n" + Integer.toString(i)) != null) {
+                return prefixes[i];
+            }
         }
-
-        Prefix getPrefix() {
-            return prefix;
-        }
+        assert false : "Cannot find group prefix";
+        throw new RuntimeException("Somehow, no prefix matches the given matcher.  This is a bug.");
     }
 
 }

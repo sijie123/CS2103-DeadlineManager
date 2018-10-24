@@ -191,7 +191,7 @@ public class BooleanExpressionParser<T> {
      * This method uses the shunting yard algorithm.
      */
     public Predicate<T> parse(String str) throws ParseException {
-        StringTokenizer tokenizer = new StringTokenizer(str, ch -> ch == ' ', ch -> ch == '\'' || ch == '\"');
+        StringTokenizer tokenizer = new StringTokenizer(str);
 
         ArrayDeque<BooleanOperator> operatorStack = new ArrayDeque<>();
         ArrayDeque<Predicate<T>> outputStack = new ArrayDeque<>();
