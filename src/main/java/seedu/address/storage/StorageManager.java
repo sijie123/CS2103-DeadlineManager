@@ -95,8 +95,9 @@ public class StorageManager extends ComponentManager implements Storage {
     }
 
     @Override
-    public void exportTaskCollection(ReadOnlyTaskCollection taskCollection, Path filePath) throws IOException {
-        if (fileExists(filePath)) {
+    public void exportTaskCollection(ReadOnlyTaskCollection taskCollection, Path filePath, boolean shouldOverwrite)
+        throws IOException {
+        if (!shouldOverwrite && fileExists(filePath)) {
             throw new IOException(MESSAGE_WRITE_FILE_EXISTS_ERROR);
         }
         TaskCollectionStorage importExportStorage = new XmlTaskCollectionStorage(filePath);
@@ -121,7 +122,7 @@ public class StorageManager extends ComponentManager implements Storage {
     public void handleExportRequestEvent(ExportRequestEvent event) {
         logger.info(LogsCenter.getEventHandlingLogMessage(event, "Exporting file"));
         try {
-            exportTaskCollection(event.data, getPathFromFileName(event.filename));
+            exportTaskCollection(event.data, getPathFromFileName(event.filename), event.overwrite);
         } catch (IOException e) {
             raise(new ImportExportExceptionEvent(e));
         }

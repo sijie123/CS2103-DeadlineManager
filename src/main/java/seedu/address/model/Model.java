@@ -95,14 +95,10 @@ public interface Model {
      */
     void commitTaskCollection();
 
-    /*boolean importExportFailed();
-
-    String getLastError();*/
-
     /**
      * Exports current deadline manager to file.
      */
-    void exportTaskCollection(String filename);
+    void exportTaskCollection(String filename, boolean shouldOverwrite);
 
     /**
      * Imports tasks from file to the current deadline manager.
