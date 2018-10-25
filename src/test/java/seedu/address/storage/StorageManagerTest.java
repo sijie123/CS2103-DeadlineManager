@@ -148,9 +148,8 @@ public class StorageManagerTest {
         ReadOnlyTaskCollection retrieved = storageManager.importTaskCollection(getTempFilePath("dummyExport"))
                                                          .get();
         assertEquals(original, new TaskCollection(retrieved));
-        storageManager.exportTaskCollection(original, getTempFilePath("dummyExport"), false);
         Assert.assertThrows(IOException.class, Storage.MESSAGE_WRITE_FILE_EXISTS_ERROR, () ->
-            storageManager.exportTaskCollection(original, storageManager.getTaskCollectionFilePath(), false));
+            storageManager.exportTaskCollection(original, getTempFilePath("dummyExport"), false));
 
         try {
             storageManager.exportTaskCollection(original, storageManager.getTaskCollectionFilePath(), true);
