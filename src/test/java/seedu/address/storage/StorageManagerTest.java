@@ -88,19 +88,31 @@ public class StorageManagerTest {
     }
 
     @Test
-    public void exportOnWorkingFile_exceptionThrown() throws IOException {
+    public void exportOnExistingFile_exceptionThrown() throws IOException {
         // Exporting with file name equal to the working file should throw IllegalValueException.
         TaskCollection original = getTypicalTaskCollections();
         storageManager.saveTaskCollection(original);
         Assert.assertThrows(IOException.class, Storage.MESSAGE_WRITE_FILE_EXISTS_ERROR, () ->
-                storageManager.exportTaskCollection(original, storageManager.getTaskCollectionFilePath()));
+                storageManager.exportTaskCollection(original, storageManager.getTaskCollectionFilePath(), false));
     }
 
     @Test
     public void exportNewFile_success() {
         TaskCollection original = getTypicalTaskCollections();
         try {
-            storageManager.exportTaskCollection(original, getTempFilePath("exportNewNonExistent"));
+            storageManager.exportTaskCollection(original, getTempFilePath("exportNewNonExistent"), false);
+        } catch (IOException ioe) {
+            throw new AssertionError("Export on non-existent file should not throw.");
+        }
+    }
+
+    @Test
+    public void overwriteExportOnExistingFile_success() throws IOException {
+        // Exporting with file name equal to the working file should throw IllegalValueException.
+        TaskCollection original = getTypicalTaskCollections();
+        storageManager.saveTaskCollection(original);
+        try {
+            storageManager.exportTaskCollection(original, storageManager.getTaskCollectionFilePath(), true);
         } catch (IOException ioe) {
             throw new AssertionError("Export on non-existent file should not throw.");
         }
@@ -132,10 +144,20 @@ public class StorageManagerTest {
          * More extensive testing of importing exporting is done in {@link XmlTaskCollectionStorageTest} class.
          */
         TaskCollection original = getTypicalTaskCollections();
-        storageManager.exportTaskCollection(original, getTempFilePath("dummyExport"));
+        storageManager.exportTaskCollection(original, getTempFilePath("dummyExport"), false);
         ReadOnlyTaskCollection retrieved = storageManager.importTaskCollection(getTempFilePath("dummyExport"))
                                                          .get();
         assertEquals(original, new TaskCollection(retrieved));
+        storageManager.exportTaskCollection(original, getTempFilePath("dummyExport"), false);
+        Assert.assertThrows(IOException.class, Storage.MESSAGE_WRITE_FILE_EXISTS_ERROR, () ->
+            storageManager.exportTaskCollection(original, storageManager.getTaskCollectionFilePath(), false));
+
+        try {
+            storageManager.exportTaskCollection(original, storageManager.getTaskCollectionFilePath(), true);
+        } catch (IOException ioe) {
+            throw new AssertionError("Export on non-existent file should not throw.");
+        }
+
     }
 
 

@@ -18,7 +18,7 @@ import seedu.address.model.UserPrefs;
 public interface Storage extends ImportExportStorage, TaskCollectionStorage, UserPrefsStorage {
 
     String MESSAGE_WRITE_FILE_EXISTS_ERROR = "Save file already exists."
-            + " Please rename to avoid losing data.";
+            + " Please rename or force export with the r/overwrite flag.";
     String MESSAGE_READ_FILE_MISSING_ERROR = "File does not exist."
             + " Double check your import file.";
     String MESSAGE_READ_FILE_SAME_ERROR = "Cannot import from the current working file.";
@@ -58,7 +58,8 @@ public interface Storage extends ImportExportStorage, TaskCollectionStorage, Use
      * @throws IOException
      */
     @Override
-    void exportTaskCollection(ReadOnlyTaskCollection taskCollection, Path filePath) throws IOException;
+    void exportTaskCollection(ReadOnlyTaskCollection taskCollection, Path filePath, boolean shouldOverwrite)
+        throws IOException;
 
 
     /**
