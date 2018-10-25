@@ -31,7 +31,7 @@ public class ImportCommandTest {
     public void execute_importMissingFile_exceptionThrown() {
         IOException expectedException = new IOException(StorageManager.MESSAGE_READ_FILE_MISSING_ERROR);
         ImportCommand testCommand = new ImportCommand(doesNotExistPath);
-        ModelStubWithImportAddressBook modelStub = new ModelStubWithImportAddressBook(defaultFile, testCommand);
+        ModelStubWithImportTaskCollection modelStub = new ModelStubWithImportTaskCollection(defaultFile, testCommand);
         assertCommandFailure(testCommand, modelStub, commandHistory,
                 String.format(ImportCommand.MESSAGE_IMPORT_ERROR, expectedException.toString()));
     }
@@ -39,18 +39,18 @@ public class ImportCommandTest {
     @Test
     public void execute_importExistingFile_importSuccessful() {
         ImportCommand testCommand = new ImportCommand(temporaryFilePath);
-        ModelStubWithImportAddressBook modelStub = new ModelStubWithImportAddressBook(defaultFile, testCommand);
+        ModelStubWithImportTaskCollection modelStub = new ModelStubWithImportTaskCollection(defaultFile, testCommand);
         assertCommandSuccess(testCommand, modelStub, commandHistory,
                 String.format(ImportCommand.MESSAGE_SUCCESS, temporaryFilePath), modelStub);
     }
 
-    private class ModelStubWithImportAddressBook extends ModelStub {
+    private class ModelStubWithImportTaskCollection extends ModelStub {
         private String filename = "";
         private ImportCommand testCommand = null;
-        public ModelStubWithImportAddressBook(String defaultFile) {
+        public ModelStubWithImportTaskCollection(String defaultFile) {
             filename = defaultFile;
         }
-        public ModelStubWithImportAddressBook(String defaultFile, ImportCommand importCommand) {
+        public ModelStubWithImportTaskCollection(String defaultFile, ImportCommand importCommand) {
             this(defaultFile);
             testCommand = importCommand;
         }

@@ -34,9 +34,9 @@ public class StorageManagerTest {
 
     @Before
     public void setUp() {
-        XmlTaskCollectionStorage addressBookStorage = new XmlTaskCollectionStorage(getTempFilePath("ab"));
+        XmlTaskCollectionStorage taskCollectionStorage = new XmlTaskCollectionStorage(getTempFilePath("ab"));
         JsonUserPrefsStorage userPrefsStorage = new JsonUserPrefsStorage(getTempFilePath("prefs"));
-        storageManager = new StorageManager(addressBookStorage, userPrefsStorage);
+        storageManager = new StorageManager(taskCollectionStorage, userPrefsStorage);
     }
 
     private Path getTempFilePath(String fileName) {
@@ -59,7 +59,7 @@ public class StorageManagerTest {
     }
 
     @Test
-    public void addressBookReadSave() throws Exception {
+    public void taskCollectionReadSave() throws Exception {
         /*
          * Note: This is an integration test that verifies the StorageManager is properly wired to the
          * {@link XmlTaskCollectionStorage} class.
@@ -72,12 +72,12 @@ public class StorageManagerTest {
     }
 
     @Test
-    public void getAddressBookFilePath() {
+    public void getTaskCollectionFilePath() {
         assertNotNull(storageManager.getTaskCollectionFilePath());
     }
 
     @Test
-    public void handleAddressBookChangedEvent_exceptionThrown_eventRaised() {
+    public void handleTaskCollectionChangedEvent_exceptionThrown_eventRaised() {
         // Create a StorageManager while injecting a stub that  throws an exception when the save method is called
         Storage storage = new StorageManager(
             new XmlTaskCollectionStorageExceptionThrowingStub(Paths.get("dummy")),
@@ -137,7 +137,7 @@ public class StorageManagerTest {
     }
 
     @Test
-    public void addressBookExportImport() throws Exception {
+    public void taskCollectionExportImport() throws Exception {
         /*
          * Note: This is an integration test that verifies the StorageManager is properly wired to the
          * {@link XmlTaskCollectionStorage} class.
