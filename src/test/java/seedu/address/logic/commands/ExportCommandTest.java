@@ -29,7 +29,7 @@ public class ExportCommandTest {
     public void execute_exportOnExistingFile_exceptionThrown() {
         IOException expectedException = new IOException(StorageManager.MESSAGE_WRITE_FILE_EXISTS_ERROR);
         ExportCommand testCommand = new ExportCommand(defaultFile, false);
-        ModelStubWithExportAddressBook modelStub = new ModelStubWithExportAddressBook(defaultFile, testCommand);
+        ModelStubWithExportTaskCollection modelStub = new ModelStubWithExportTaskCollection(defaultFile, testCommand);
         assertCommandFailure(testCommand, modelStub, commandHistory,
                 String.format(ExportCommand.MESSAGE_EXPORT_ERROR, expectedException.toString()));
     }
@@ -37,7 +37,7 @@ public class ExportCommandTest {
     @Test
     public void execute_exportNewFile_exportSuccessful() {
         ExportCommand testCommand = new ExportCommand(temporaryFilePath, false);
-        ModelStubWithExportAddressBook modelStub = new ModelStubWithExportAddressBook(defaultFile, testCommand);
+        ModelStubWithExportTaskCollection modelStub = new ModelStubWithExportTaskCollection(defaultFile, testCommand);
         assertCommandSuccess(testCommand, modelStub, commandHistory,
                  String.format(ExportCommand.MESSAGE_SUCCESS, temporaryFilePath), modelStub);
     }
@@ -45,18 +45,18 @@ public class ExportCommandTest {
     @Test
     public void execute_overwriteExportOnExistingFile_exceptionThrown() {
         ExportCommand testCommand = new ExportCommand(defaultFile, true);
-        ModelStubWithExportAddressBook modelStub = new ModelStubWithExportAddressBook(defaultFile, testCommand);
+        ModelStubWithExportTaskCollection modelStub = new ModelStubWithExportTaskCollection(defaultFile, testCommand);
         assertCommandSuccess(testCommand, modelStub, commandHistory,
             String.format(ExportCommand.MESSAGE_SUCCESS, defaultFile), modelStub);
     }
 
-    private class ModelStubWithExportAddressBook extends ModelStub {
+    private class ModelStubWithExportTaskCollection extends ModelStub {
         private String filename = "";
         private ExportCommand testCommand = null;
-        public ModelStubWithExportAddressBook(String defaultFile) {
+        public ModelStubWithExportTaskCollection(String defaultFile) {
             filename = defaultFile;
         }
-        public ModelStubWithExportAddressBook(String defaultFile, ExportCommand importCommand) {
+        public ModelStubWithExportTaskCollection(String defaultFile, ExportCommand importCommand) {
             this(defaultFile);
             testCommand = importCommand;
         }

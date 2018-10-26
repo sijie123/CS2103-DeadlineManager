@@ -32,12 +32,12 @@ public class XmlTaskCollectionStorageTest {
     public TemporaryFolder testFolder = new TemporaryFolder();
 
     @Test
-    public void readAddressBook_nullFilePath_throwsNullPointerException() throws Exception {
+    public void readTaskCollection_nullFilePath_throwsNullPointerException() throws Exception {
         thrown.expect(NullPointerException.class);
-        readAddressBook(null);
+        readTaskCollection(null);
     }
 
-    private java.util.Optional<ReadOnlyTaskCollection> readAddressBook(String filePath)
+    private java.util.Optional<ReadOnlyTaskCollection> readTaskCollection(String filePath)
         throws Exception {
         return new XmlTaskCollectionStorage(Paths.get(filePath))
             .readTaskCollection(addToTestDataPathIfNotNull(filePath));
@@ -51,14 +51,14 @@ public class XmlTaskCollectionStorageTest {
 
     @Test
     public void read_missingFile_emptyResult() throws Exception {
-        assertFalse(readAddressBook("NonExistentFile.xml").isPresent());
+        assertFalse(readTaskCollection("NonExistentFile.xml").isPresent());
     }
 
     @Test
     public void read_notXmlFormat_exceptionThrown() throws Exception {
 
         thrown.expect(DataConversionException.class);
-        readAddressBook("NotXmlFormatTaskCollection.xml");
+        readTaskCollection("NotXmlFormatTaskCollection.xml");
 
         /* IMPORTANT: Any code below an exception-throwing line (like the one above) will be ignored.
          * That means you should not have more than one exception test in one method
@@ -66,67 +66,67 @@ public class XmlTaskCollectionStorageTest {
     }
 
     @Test
-    public void readAddressBook_invalidPersonAddressBook_throwDataConversionException()
+    public void readTaskCollection_invalidPersonTaskCollection_throwDataConversionException()
         throws Exception {
         thrown.expect(DataConversionException.class);
-        readAddressBook("invalidTaskInTaskCollection.xml");
+        readTaskCollection("invalidTaskInTaskCollection.xml");
     }
 
     @Test
-    public void readAddressBook_invalidAndValidPersonAddressBook_throwDataConversionException()
+    public void readTaskCollection_invalidAndValidPersonTaskCollection_throwDataConversionException()
         throws Exception {
         thrown.expect(DataConversionException.class);
-        readAddressBook("invalidAndValidTaskInTaskCollection.xml");
+        readTaskCollection("invalidAndValidTaskInTaskCollection.xml");
     }
 
     @Test
-    public void readAndSaveAddressBook_allInOrder_success() throws Exception {
-        Path filePath = testFolder.getRoot().toPath().resolve("TempAddressBook.xml");
+    public void readAndSaveTaskCollection_allInOrder_success() throws Exception {
+        Path filePath = testFolder.getRoot().toPath().resolve("TempTaskCollection.xml");
         TaskCollection original = getTypicalTaskCollections();
-        XmlTaskCollectionStorage xmlAddressBookStorage = new XmlTaskCollectionStorage(filePath);
+        XmlTaskCollectionStorage xmlTaskCollectionStorage = new XmlTaskCollectionStorage(filePath);
 
         //Save in new file and read back
-        xmlAddressBookStorage.saveTaskCollection(original, filePath);
-        ReadOnlyTaskCollection readBack = xmlAddressBookStorage.readTaskCollection(filePath).get();
+        xmlTaskCollectionStorage.saveTaskCollection(original, filePath);
+        ReadOnlyTaskCollection readBack = xmlTaskCollectionStorage.readTaskCollection(filePath).get();
         assertEquals(original, new TaskCollection(readBack));
 
         //Modify data, overwrite exiting file, and read back
         original.addTask(HOON);
         original.removeTask(ALICE);
-        xmlAddressBookStorage.saveTaskCollection(original, filePath);
-        readBack = xmlAddressBookStorage.readTaskCollection(filePath).get();
+        xmlTaskCollectionStorage.saveTaskCollection(original, filePath);
+        readBack = xmlTaskCollectionStorage.readTaskCollection(filePath).get();
         assertEquals(original, new TaskCollection(readBack));
 
         //Save and read without specifying file path
         original.addTask(IDA);
-        xmlAddressBookStorage.saveTaskCollection(original); //file path not specified
-        readBack = xmlAddressBookStorage.readTaskCollection().get(); //file path not specified
+        xmlTaskCollectionStorage.saveTaskCollection(original); //file path not specified
+        readBack = xmlTaskCollectionStorage.readTaskCollection().get(); //file path not specified
         assertEquals(original, new TaskCollection(readBack));
 
     }
 
     @Test
-    public void saveAddressBook_nullAddressBook_throwsNullPointerException() {
+    public void saveTaskCollection_nullTaskCollection_throwsNullPointerException() {
         thrown.expect(NullPointerException.class);
-        saveAddressBook(null, "SomeFile.xml");
+        saveTaskCollection(null, "SomeFile.xml");
     }
 
     /**
-     * Saves {@code addressBook} at the specified {@code filePath}.
+     * Saves {@code taskCollection} at the specified {@code filePath}.
      */
-    private void saveAddressBook(ReadOnlyTaskCollection addressBook, String filePath) {
+    private void saveTaskCollection(ReadOnlyTaskCollection taskCollection, String filePath) {
         try {
             new XmlTaskCollectionStorage(Paths.get(filePath))
-                .saveTaskCollection(addressBook, addToTestDataPathIfNotNull(filePath));
+                .saveTaskCollection(taskCollection, addToTestDataPathIfNotNull(filePath));
         } catch (IOException ioe) {
             throw new AssertionError("There should not be an error writing to the file.", ioe);
         }
     }
 
     @Test
-    public void saveAddressBook_nullFilePath_throwsNullPointerException() {
+    public void saveTaskCollection_nullFilePath_throwsNullPointerException() {
         thrown.expect(NullPointerException.class);
-        saveAddressBook(new TaskCollection(), null);
+        saveTaskCollection(new TaskCollection(), null);
     }
 
 

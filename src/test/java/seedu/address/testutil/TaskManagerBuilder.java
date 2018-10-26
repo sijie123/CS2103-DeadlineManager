@@ -4,7 +4,7 @@ import seedu.address.model.TaskCollection;
 import seedu.address.model.task.Task;
 
 /**
- * A utility class to help with building Addressbook objects. Example usage: <br> {@code TaskCollection
+ * A utility class to help with building TaskCollection objects. Example usage: <br> {@code TaskCollection
  * ab = new TaskManagerBuilder().withPerson("John", "Doe").build();}
  */
 public class TaskManagerBuilder {

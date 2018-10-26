@@ -30,12 +30,12 @@ public class ModelManagerTest {
     }
 
     @Test
-    public void hasPerson_personNotInAddressBook_returnsFalse() {
+    public void hasPerson_personNotInTaskCollection_returnsFalse() {
         assertFalse(modelManager.hasTask(ALICE));
     }
 
     @Test
-    public void hasPerson_personInAddressBook_returnsTrue() {
+    public void hasPerson_personInTaskCollection_returnsTrue() {
         modelManager.addTask(ALICE);
         assertTrue(modelManager.hasTask(ALICE));
     }

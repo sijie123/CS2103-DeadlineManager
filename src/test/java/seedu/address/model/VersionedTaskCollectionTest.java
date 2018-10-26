@@ -282,15 +282,15 @@ public class VersionedTaskCollectionTest {
     }
 
     /**
-     * Creates and returns a {@code VersionedTaskCollection} with the {@code addressBookStates} added
+     * Creates and returns a {@code VersionedTaskCollection} with the {@code taskCollectionStates} added
      * into it, and the {@code VersionedTaskCollection#currentStatePointer} at the end of list.
      */
-    private VersionedTaskCollection prepareTaskCollectionList(ReadOnlyTaskCollection... addressBookStates) {
-        assertFalse(addressBookStates.length == 0);
+    private VersionedTaskCollection prepareTaskCollectionList(ReadOnlyTaskCollection... taskCollectionStates) {
+        assertFalse(taskCollectionStates.length == 0);
 
-        VersionedTaskCollection versionedTaskCollection = new VersionedTaskCollection(addressBookStates[0]);
-        for (int i = 1; i < addressBookStates.length; i++) {
-            versionedTaskCollection.resetData(addressBookStates[i]);
+        VersionedTaskCollection versionedTaskCollection = new VersionedTaskCollection(taskCollectionStates[0]);
+        for (int i = 1; i < taskCollectionStates.length; i++) {
+            versionedTaskCollection.resetData(taskCollectionStates[i]);
             versionedTaskCollection.commit();
         }
 
