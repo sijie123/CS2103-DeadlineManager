@@ -2,7 +2,6 @@ package seedu.address.logic.parser;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-import static seedu.address.commons.core.Messages.MESSAGE_UNKNOWN_COMMAND;
 import static seedu.address.logic.commands.AttachmentCommand.COMMAND_ADD_ACTION;
 import static seedu.address.logic.commands.AttachmentCommand.COMMAND_DELETE_ACTION;
 import static seedu.address.logic.commands.AttachmentCommand.COMMAND_GET_ACTION;
