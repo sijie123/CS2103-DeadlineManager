@@ -156,6 +156,37 @@ public class FilterCommandTest {
         assertEquals(Arrays.asList(ALICE, ELLE, FIONA, GEORGE), model.getFilteredTaskList());
     }
 
+    @Test
+    public void execute_andOperator_success() {
+        FilterCommand command;
+
+        command = ensureParseSuccess("due: 2/10/2018 && n:e");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(ALICE, ELLE, GEORGE), model.getFilteredTaskList());
+
+        command = ensureParseSuccess("due: 2/10/2018 && n:benson");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(), model.getFilteredTaskList());
+    }
+
+    @Test
+    public void execute_orOperator_success() {
+        FilterCommand command;
+
+        command = ensureParseSuccess("due: 2/10/2018 || n:e");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(ALICE, BENSON, DANIEL, ELLE, FIONA, GEORGE), model.getFilteredTaskList());
+    }
+
+    @Test
+    public void execute_notOperator_success() {
+        FilterCommand command;
+
+        command = ensureParseSuccess("due: 2/10/2018 || !n:e");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(ALICE, CARL, ELLE, FIONA, GEORGE), model.getFilteredTaskList());
+    }
+
     /**
      * Throws an assertion error if parsing fails, or else returns the successfully parsed FilterCommand.
      *
