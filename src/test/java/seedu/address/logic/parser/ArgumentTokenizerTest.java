@@ -140,6 +140,49 @@ public class ArgumentTokenizerTest {
     }
 
     @Test
+    public void tokenize_quotedArguments() {
+        String argsString = "\"Hello world\"";
+        ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(argsString);
+        assertPreamblePresent(argMultimap, "Hello world");
+
+        argsString = "\"Hello world\" 2";
+        argMultimap = ArgumentTokenizer.tokenize(argsString);
+        assertPreamblePresent(argMultimap, "Hello world 2");
+
+        argsString = "\'Hello world\'";
+        argMultimap = ArgumentTokenizer.tokenize(argsString);
+        assertPreamblePresent(argMultimap, "Hello world");
+
+        argsString = "\'Hello world\' p/test";
+        argMultimap = ArgumentTokenizer.tokenize(argsString, pSlash);
+        assertPreamblePresent(argMultimap, "Hello world");
+        assertArgumentPresent(argMultimap, pSlash, "test");
+
+        argsString = "\'Hello world\' p/\"test\"";
+        argMultimap = ArgumentTokenizer.tokenize(argsString, pSlash);
+        assertPreamblePresent(argMultimap, "Hello world");
+        assertArgumentPresent(argMultimap, pSlash, "test");
+
+        argsString = "\'Hello world\' p/\"test test test\"";
+        argMultimap = ArgumentTokenizer.tokenize(argsString, pSlash);
+        assertPreamblePresent(argMultimap, "Hello world");
+        assertArgumentPresent(argMultimap, pSlash, "test test test");
+
+        argsString = "\'Hello world\' p/\"  test test test   \"";
+        argMultimap = ArgumentTokenizer.tokenize(argsString, pSlash);
+        assertPreamblePresent(argMultimap, "Hello world");
+        assertArgumentPresent(argMultimap, pSlash, "  test test test   ");
+
+        argsString = "p/\"D:/Downloads/123 p/hello world.txt\"";
+        argMultimap = ArgumentTokenizer.tokenize(argsString, pSlash);
+        assertArgumentPresent(argMultimap, pSlash, "D:/Downloads/123 p/hello world.txt");
+
+        argsString = "p/\"p/p/p.docx\"";
+        argMultimap = ArgumentTokenizer.tokenize(argsString, pSlash);
+        assertArgumentPresent(argMultimap, pSlash, "p/p/p.docx");
+    }
+
+    @Test
     public void equalsMethod() {
         Prefix aaa = new Prefix("aaa");
 
