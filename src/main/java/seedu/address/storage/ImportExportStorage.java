@@ -35,6 +35,7 @@ public interface ImportExportStorage {
      * @param filePath location of export file.
      * @throws IOException if there was any problem writing to the file.
      */
-    void exportTaskCollection(ReadOnlyTaskCollection taskCollection, Path filePath) throws IOException;
+    void exportTaskCollection(ReadOnlyTaskCollection taskCollection, Path filePath, boolean shouldOverwrite)
+        throws IOException;
 
 }

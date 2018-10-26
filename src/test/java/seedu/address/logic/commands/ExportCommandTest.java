@@ -26,9 +26,9 @@ public class ExportCommandTest {
     private String defaultFile = "fakeDefaultPath";
 
     @Test
-    public void execute_exportOnWorkingFile_exceptionThrown() {
+    public void execute_exportOnExistingFile_exceptionThrown() {
         IOException expectedException = new IOException(StorageManager.MESSAGE_WRITE_FILE_EXISTS_ERROR);
-        ExportCommand testCommand = new ExportCommand(defaultFile);
+        ExportCommand testCommand = new ExportCommand(defaultFile, false);
         ModelStubWithExportAddressBook modelStub = new ModelStubWithExportAddressBook(defaultFile, testCommand);
         assertCommandFailure(testCommand, modelStub, commandHistory,
                 String.format(ExportCommand.MESSAGE_EXPORT_ERROR, expectedException.toString()));
@@ -36,10 +36,18 @@ public class ExportCommandTest {
 
     @Test
     public void execute_exportNewFile_exportSuccessful() {
-        ExportCommand testCommand = new ExportCommand(temporaryFilePath);
+        ExportCommand testCommand = new ExportCommand(temporaryFilePath, false);
         ModelStubWithExportAddressBook modelStub = new ModelStubWithExportAddressBook(defaultFile, testCommand);
         assertCommandSuccess(testCommand, modelStub, commandHistory,
                  String.format(ExportCommand.MESSAGE_SUCCESS, temporaryFilePath), modelStub);
+    }
+
+    @Test
+    public void execute_overwriteExportOnExistingFile_exceptionThrown() {
+        ExportCommand testCommand = new ExportCommand(defaultFile, true);
+        ModelStubWithExportAddressBook modelStub = new ModelStubWithExportAddressBook(defaultFile, testCommand);
+        assertCommandSuccess(testCommand, modelStub, commandHistory,
+            String.format(ExportCommand.MESSAGE_SUCCESS, defaultFile), modelStub);
     }
 
     private class ModelStubWithExportAddressBook extends ModelStub {
@@ -64,7 +72,11 @@ public class ExportCommandTest {
         }
 
         @Override
-        public void exportTaskCollection(String filename) {
+        public void exportTaskCollection(String filename, boolean shouldOverwrite) {
+            if (shouldOverwrite) {
+                //No error.
+                return;
+            }
             if (filename.equals(this.filename)) {
                 Exception fileExistException = new IOException(Storage.MESSAGE_WRITE_FILE_EXISTS_ERROR);
                 testCommand.handleImportExportExceptionEvent(new ImportExportExceptionEvent(fileExistException));

@@ -18,12 +18,14 @@ public class ExportCommand extends Command {
     public static final String COMMAND_WORD = "export";
     public static final String MESSAGE_EXPORT_ERROR = "Export failed. Error: %s";
     public static final String MESSAGE_SUCCESS = "Exported successfully to external file: %s";
-    public static final String MESSAGE_USAGE = "export filename";
+    public static final String MESSAGE_USAGE = "export n/FILENAME [r/overwrite]";
     private String pathName;
     private String exportError = "";
+    private boolean overwrite;
 
-    public ExportCommand(String filename) {
+    public ExportCommand(String filename, boolean overwrite) {
         this.pathName = filename;
+        this.overwrite = overwrite;
         //this.pathName = Paths.get(filename);
     }
 
@@ -31,13 +33,21 @@ public class ExportCommand extends Command {
     public CommandResult execute(Model model, CommandHistory history) throws CommandException {
         requireNonNull(model);
         EventsCenter.getInstance().registerHandler(this);
-        model.exportTaskCollection(pathName);
+        model.exportTaskCollection(pathName, overwrite);
         EventsCenter.getInstance().unregisterHandler(this);
         if (hasExportError()) {
             throw new CommandException(String.format(MESSAGE_EXPORT_ERROR, exportError));
         } else {
             return new CommandResult(String.format(MESSAGE_SUCCESS, pathName));
         }
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return other == this // short circuit if same object
+            || (other instanceof ExportCommand // instanceof handles nulls
+            && pathName.equals(((ExportCommand) other).pathName)
+            && overwrite == ((ExportCommand) other).overwrite); // state check
     }
 
     private boolean hasExportError() {
