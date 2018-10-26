@@ -21,13 +21,13 @@ import seedu.address.logic.commands.AttachmentCommand;
  * Tests for valid and invalid filenames.
  */
 public class AttachmentCommandParserTest {
+    private static final String ATTACHMENT_ADD_FORMAT = " %1$d " + COMMAND_ADD_ACTION + " p/%2$s";
+    private static final String ATTACHMENT_LIST_FORMAT = " %1$d " + COMMAND_LIST_ACTION;
+    private static final String ATTACHMENT_DELETE_FORMAT = " %1$d " + COMMAND_DELETE_ACTION + " n/%2$s";
+    private static final String ATTACHMENT_GET_WITH_PATH_NAME_FORMAT = " %1$d " + COMMAND_GET_ACTION + " p/%2$s n/%3$s";
+    private static final String ATTACHMENT_GET_WITH_NAME_PATH_FORMAT = " %1$d " + COMMAND_GET_ACTION + " n/%3$s p/%2$s";
 
     private AttachmentCommandParser parser = new AttachmentCommandParser();
-    private String ATTACHMENT_ADD_FORMAT = " %1$d " + COMMAND_ADD_ACTION + " p/%2$s";
-    private String ATTACHMENT_LIST_FORMAT = " %1$d " + COMMAND_LIST_ACTION;
-    private String ATTACHMENT_DELETE_FORMAT = " %1$d " + COMMAND_DELETE_ACTION + " n/%2$s";
-    private String ATTACHMENT_GET_WITH_PATH_NAME_FORMAT = " %1$d " + COMMAND_GET_ACTION + " p/%2$s n/%3$s";
-    private String ATTACHMENT_GET_WITH_NAME_PATH_FORMAT = " %1$d " + COMMAND_GET_ACTION + " n/%3$s p/%2$s";
 
     @Test
     public void parse_emptyString_throwsParseException() {
@@ -55,7 +55,7 @@ public class AttachmentCommandParserTest {
     }
 
     @Test
-    public void parse_addAction_unquotedFilePath_returnsAttachmentCommand() {
+    public void parse_addActionUnquotedFilePath_returnsAttachmentCommand() {
         Index targetIndex = INDEX_SECOND_TASK;
         String filePath = "helloworld.docx";
         AttachmentCommand expected = new AttachmentCommand(targetIndex,
@@ -65,7 +65,7 @@ public class AttachmentCommandParserTest {
     }
 
     @Test
-    public void parse_addAction_quotedFilePath_returnsAttachmentCommand() {
+    public void parse_addActionQuotedFilePath_returnsAttachmentCommand() {
         Index targetIndex = INDEX_SECOND_TASK;
         String filePath = "/123 p/";
         AttachmentCommand expected = new AttachmentCommand(targetIndex,
@@ -88,7 +88,7 @@ public class AttachmentCommandParserTest {
     }
 
     @Test
-    public void parse_deleteAction_unquotedFileName_returnsAttachmentCommand() {
+    public void parse_deleteActionUnquotedFileName_returnsAttachmentCommand() {
         Index targetIndex = INDEX_SECOND_TASK;
         String fileName = "123";
         AttachmentCommand expected = new AttachmentCommand(targetIndex,
@@ -98,7 +98,7 @@ public class AttachmentCommandParserTest {
     }
 
     @Test
-    public void parse_deleteAction_quotedFileName_returnsAttachmentCommand() {
+    public void parse_deleteActionQuotedFileName_returnsAttachmentCommand() {
         Index targetIndex = INDEX_SECOND_TASK;
         String fileName = "p  .docx";
         AttachmentCommand expected = new AttachmentCommand(targetIndex,
@@ -108,32 +108,36 @@ public class AttachmentCommandParserTest {
     }
 
     @Test
-    public void parse_getAction_unquotedFileNameFilePath_returnsAttachmentCommand() {
+    public void parse_getActionUnquotedFileNameFilePath_returnsAttachmentCommand() {
         Index targetIndex = INDEX_SECOND_TASK;
         String filePath = "../hello_world";
         String fileName = "hello_world...";
 
         AttachmentCommand expected = new AttachmentCommand(targetIndex,
             new AttachmentCommand.GetAttachmentAction(fileName, filePath));
-        String command = String.format(ATTACHMENT_GET_WITH_PATH_NAME_FORMAT, targetIndex.getOneBased(), filePath, fileName);
+        String command = String.format(ATTACHMENT_GET_WITH_PATH_NAME_FORMAT,
+            targetIndex.getOneBased(), filePath, fileName);
         assertParseSuccess(parser, command, expected);
 
-        command = String.format(ATTACHMENT_GET_WITH_NAME_PATH_FORMAT, targetIndex.getOneBased(), filePath, fileName);
+        command = String.format(ATTACHMENT_GET_WITH_NAME_PATH_FORMAT,
+            targetIndex.getOneBased(), filePath, fileName);
         assertParseSuccess(parser, command, expected);
     }
 
     @Test
-    public void parse_getAction_quotedFileNameFilePath_returnsAttachmentCommand() {
+    public void parse_getActionQuotedFileNameFilePath_returnsAttachmentCommand() {
         Index targetIndex = INDEX_SECOND_TASK;
         String filePath = "../hello p/hello world.txt";
         String fileName = "hello  world.in";
 
         AttachmentCommand expected = new AttachmentCommand(targetIndex,
             new AttachmentCommand.GetAttachmentAction(fileName, filePath));
-        String command = String.format(ATTACHMENT_GET_WITH_PATH_NAME_FORMAT, targetIndex.getOneBased(), "'" + filePath + "'", "'" + fileName + "'");
+        String command = String.format(ATTACHMENT_GET_WITH_PATH_NAME_FORMAT,
+            targetIndex.getOneBased(), "'" + filePath + "'", "'" + fileName + "'");
         assertParseSuccess(parser, command, expected);
 
-        command = String.format(ATTACHMENT_GET_WITH_NAME_PATH_FORMAT, targetIndex.getOneBased(), "\"" + filePath + "\"", "\"" + fileName + "\"");
+        command = String.format(ATTACHMENT_GET_WITH_NAME_PATH_FORMAT,
+            targetIndex.getOneBased(), "\"" + filePath + "\"", "\"" + fileName + "\"");
         assertParseSuccess(parser, command, expected);
     }
 }
