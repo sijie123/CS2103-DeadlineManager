@@ -50,6 +50,7 @@ public class AttachmentCommand extends Command {
 
 
     public static final String MESSAGE_MISSING_ARGUMENTS = "Missing argument %1$s for %2$s action";
+    public static final String MESSAGE_DUPLICATED_ARGUMENTS = "Only one argument of %1$s allowed";
 
     private static final Logger logger = LogsCenter.getLogger(Attachment.class);
     private final Index index;
@@ -114,6 +115,12 @@ public class AttachmentCommand extends Command {
         AttachmentCommand e = (AttachmentCommand) other;
         return index.equals(e.index)
             && attachmentAction.equals(e.attachmentAction);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("AttachmentCommand at index %d, with action: %s",
+            index.getOneBased(), attachmentAction.toString());
     }
 
     /**
@@ -248,6 +255,28 @@ public class AttachmentCommand extends Command {
         public String resultMessage() {
             return resultMessage;
         }
+
+        @Override
+        public boolean equals(Object other) {
+            // short circuit if same object
+            if (other == this) {
+                return true;
+            }
+
+            // instanceof handles nulls
+            if (!(other instanceof AddAttachmentAction)) {
+                return false;
+            }
+
+            // state check
+            AddAttachmentAction e = (AddAttachmentAction) other;
+            return filePath.equals(e.filePath);
+        }
+
+        @Override
+        public String toString() {
+            return String.format("Add attachment at path %s", filePath);
+        }
     }
 
     /**
@@ -275,6 +304,26 @@ public class AttachmentCommand extends Command {
 
         public String resultMessage() {
             return resultMessage;
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            // short circuit if same object
+            if (other == this) {
+                return true;
+            }
+
+            // instanceof handles nulls
+            if (!(other instanceof ListAttachmentAction)) {
+                return false;
+            }
+
+            // state check
+            return true;
+        }
+        @Override
+        public String toString() {
+            return "List attachments";
         }
     }
 
@@ -310,6 +359,30 @@ public class AttachmentCommand extends Command {
         public String resultMessage() {
             return resultMessage;
         }
+
+        @Override
+        public boolean equals(Object other) {
+            // short circuit if same object
+            if (other == this) {
+                return true;
+            }
+
+            // instanceof handles nulls
+            if (!(other instanceof DeleteAttachmentAction)) {
+                return false;
+            }
+
+            // state check
+            DeleteAttachmentAction e = (DeleteAttachmentAction) other;
+            return nameToDelete.equals(e.nameToDelete);
+        }
+
+        @Override
+        public String toString() {
+            return String.format("Delete attachment with name %s", nameToDelete);
+        }
+
+
     }
 
     /**
@@ -364,6 +437,29 @@ public class AttachmentCommand extends Command {
 
         public String resultMessage() {
             return resultMessage;
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            // short circuit if same object
+            if (other == this) {
+                return true;
+            }
+
+            // instanceof handles nulls
+            if (!(other instanceof GetAttachmentAction)) {
+                return false;
+            }
+
+            // state check
+            GetAttachmentAction e = (GetAttachmentAction) other;
+            return fileName.equals(e.fileName)
+                && savePath.equals(e.savePath);
+        }
+
+        @Override
+        public String toString() {
+            return String.format("Put attachment with name %s to %s", fileName, savePath);
         }
     }
 }
