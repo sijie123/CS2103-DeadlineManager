@@ -51,6 +51,7 @@ public class AttachmentCommand extends Command {
 
     public static final String MESSAGE_MISSING_ARGUMENTS = "Missing argument %1$s for %2$s action";
     public static final String MESSAGE_DUPLICATED_ARGUMENTS = "Only one argument of %1$s allowed";
+    public static final String MESSAGE_NAME_NOT_FOUND = "%1$s is not an attachment.";
 
     private static final Logger logger = LogsCenter.getLogger(Attachment.class);
     private final Index index;
@@ -78,25 +79,28 @@ public class AttachmentCommand extends Command {
         }
 
         Task taskToEdit = lastShownList.get(index.getZeroBased());
-        Task editedTask = attachmentAction.perform(taskToEdit);
+        ActionResult result = attachmentAction.perform(taskToEdit);
+        Task editedTask = result.getTask();
 
-        model.updateTask(taskToEdit, editedTask);
-        model.updateFilteredTaskList(PREDICATE_SHOW_ALL_TASKS);
-        model.commitTaskCollection();
-        return new CommandResult(attachmentAction.resultMessage());
+        updateModel(model, taskToEdit, editedTask);
+
+        return new CommandResult(result.getMessage());
     }
 
     /**
-     * Creates and returns a {@code Task} with the details of {@code taskToEdit} edited with {@code
-     * editPersonDescriptor}.
+     * Updates the model to reflect changes in the Task, commits a version history so it can be undone
+     *
+     * @param model        Current model in use
+     * @param originalTask Original Task to be replaced
+     * @param updatedTask  Updated Task to replace the original task
      */
-    private static Task createEditedTask(Task taskToEdit,
-                                         AttachmentAction attachmentAction) {
-        assert taskToEdit != null;
-
-
-        return new Task(taskToEdit.getName(), taskToEdit.getPriority(), taskToEdit.getFrequency(),
-            taskToEdit.getDeadline(), taskToEdit.getTags(), taskToEdit.getAttachments());
+    private void updateModel(Model model, Task originalTask, Task updatedTask) {
+        if (originalTask.equals(updatedTask)) {
+            return;
+        }
+        model.updateTask(originalTask, updatedTask);
+        model.updateFilteredTaskList(PREDICATE_SHOW_ALL_TASKS);
+        model.commitTaskCollection();
     }
 
     @Override
@@ -193,17 +197,76 @@ public class AttachmentCommand extends Command {
         return attachmentNameMap.get(name);
     }
 
+    /** Utility function to check whether a name can be added to the set of attachments of a task.
+     * Throws a (@code CommandException) is provided name is already in the set of attachments.
+     * @param task task to check from
+     * @param name name to be checked
+     * @throws CommandException
+     */
+    private static void checkAttachmentNameUnique(Task task, String name) throws CommandException {
+        assert task != null;
+        assert name != null;
+        if (isAttachmentName(task.getAttachments(), name)) {
+            logger.info(String.format("Task already contains an attachment with filename %s.",
+                name));
+            throw new CommandException(Attachment.MESSAGE_DUPLICATE_ATTACHMENT_NAME);
+        }
+    }
+
+    /** Utility function to check whether a name already exists in the set of attachments of a task.
+     * Throws a (@code CommandException) is provided name is not in the set of attachments.
+     * @param task task to check from
+     * @param name name to be checked
+     * @throws CommandException
+     */
+    private static void checkAttachmentNameExists(Task task, String name) throws CommandException {
+        assert task != null;
+        assert name != null;
+        if (!isAttachmentName(task.getAttachments(), name)) {
+            logger.info(String.format("Task does not contains an attachment with filename %s.",
+                name));
+            throw new CommandException(String.format(MESSAGE_NAME_NOT_FOUND, name));
+        }
+    }
+
+    /**
+     * Used to represent the information returned by the various AttachmentActions. Contains the updated task and
+     * result messages (if any).
+     */
+    private static class ActionResult {
+        public final String resultMessage;
+        public final Task updatedTask;
+
+
+        public ActionResult(Task updatedTask, String resultMessage) {
+            this.updatedTask = updatedTask;
+            this.resultMessage = resultMessage;
+        }
+
+        /**
+         * Returns the task
+         * @return stored task
+         */
+        public Task getTask() {
+            return updatedTask;
+        }
+
+        /**
+         * Returns the result message
+         * @return stored result message
+         */
+        public String getMessage() {
+            return resultMessage;
+        }
+    }
+
     /**
      * Stores the actions to perform on a task's attachment with.
      */
     public abstract static class AttachmentAction {
-        public static final String MESSAGE_ATTACHMENT_ACTION_COMPELTED = "Action Completed.";
 
-        public abstract Task perform(Task taskToEdit) throws CommandException;
+        public abstract ActionResult perform(Task taskToEdit) throws CommandException;
 
-        public String resultMessage() {
-            return MESSAGE_ATTACHMENT_ACTION_COMPELTED;
-        }
     }
 
 
@@ -214,7 +277,6 @@ public class AttachmentCommand extends Command {
         public static final String MESSAGE_ADD_NOT_A_FILE = "%1$s is not a valid file.";
         public static final String MESSAGE_SUCCESS = "%1$s added as attachment.";
 
-        private String resultMessage = "Action Not Performed";
         private final String filePath;
 
         public AddAttachmentAction(String filePath) {
@@ -224,18 +286,16 @@ public class AttachmentCommand extends Command {
 
 
         @Override
-        public Task perform(Task taskToEdit) throws CommandException {
+        public ActionResult perform(Task taskToEdit) throws CommandException {
             assert taskToEdit != null;
             Attachment newAttachment = buildAttachment();
-            if (isAttachmentName(taskToEdit.getAttachments(), newAttachment.getName())) {
-                logger.info(String.format("Task already contains an attachment with filename %s.",
-                    newAttachment.getName()));
-                throw new CommandException(Attachment.MESSAGE_DUPLICATE_ATTACHMENT_NAME);
-            }
+            checkAttachmentNameUnique(taskToEdit, newAttachment.getName());
             HashSet<Attachment> updatedAttachments = new HashSet<>(taskToEdit.getAttachments());
             updatedAttachments.add(newAttachment);
-            return new Task(taskToEdit.getName(), taskToEdit.getPriority(), taskToEdit.getFrequency(),
+            Task updatedTask = new Task(taskToEdit.getName(), taskToEdit.getPriority(), taskToEdit.getFrequency(),
                 taskToEdit.getDeadline(), taskToEdit.getTags(), updatedAttachments);
+            String resultMessage = String.format(MESSAGE_SUCCESS, newAttachment.getName());
+            return new ActionResult(updatedTask, resultMessage);
         }
 
         /**
@@ -248,12 +308,7 @@ public class AttachmentCommand extends Command {
         private Attachment buildAttachment() throws CommandException {
             File file = new File(filePath);
             checkAttachmentStatus(MESSAGE_ADD_NOT_A_FILE, file);
-            resultMessage = String.format(MESSAGE_SUCCESS, file.getName());
             return new Attachment(new File(filePath));
-        }
-
-        public String resultMessage() {
-            return resultMessage;
         }
 
         @Override
@@ -287,24 +342,21 @@ public class AttachmentCommand extends Command {
         public static final String MESSAGE_TOTAL_ATTACHMENTS = "%d attachments in total.\n";
         public static final String MESSAGE_LIST_ATTACHMENT_DETAILS = "%d) %s\n";
 
-        private String resultMessage = "Action Not Performed";
-
         @Override
-        public Task perform(Task taskToEdit) throws CommandException {
+        public ActionResult perform(Task taskToEdit) throws CommandException {
             assert taskToEdit != null;
             Set<Attachment> attachments = taskToEdit.getAttachments();
-            resultMessage = String.format(MESSAGE_TOTAL_ATTACHMENTS, attachments.size());
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(String.format(MESSAGE_TOTAL_ATTACHMENTS, attachments.size()));
             int indexCounter = 0;
             for (Attachment attachment : attachments) {
                 indexCounter++;
-                resultMessage += String.format(MESSAGE_LIST_ATTACHMENT_DETAILS, indexCounter, attachment.toString());
+                stringBuilder.append(
+                    String.format(MESSAGE_LIST_ATTACHMENT_DETAILS, indexCounter, attachment.toString()));
             }
-            return taskToEdit;
+            return new ActionResult(taskToEdit, stringBuilder.toString());
         }
 
-        public String resultMessage() {
-            return resultMessage;
-        }
 
         @Override
         public boolean equals(Object other) {
@@ -321,6 +373,7 @@ public class AttachmentCommand extends Command {
             // state check
             return true;
         }
+
         @Override
         public String toString() {
             return "List attachments";
@@ -331,10 +384,8 @@ public class AttachmentCommand extends Command {
      * Action to delete all attachment.
      */
     public static class DeleteAttachmentAction extends AttachmentAction {
-        public static final String MESSAGE_NAME_NOT_FOUND = "%1$s is not an attachment.";
         public static final String MESSAGE_SUCCESS = "%1$s deleted from attachments.";
 
-        private String resultMessage = "Action Not Performed";
         private final String nameToDelete;
 
         public DeleteAttachmentAction(String nameToDelete) {
@@ -343,21 +394,17 @@ public class AttachmentCommand extends Command {
         }
 
         @Override
-        public Task perform(Task taskToEdit) throws CommandException {
+        public ActionResult perform(Task taskToEdit) throws CommandException {
             assert taskToEdit != null;
+            checkAttachmentNameExists(taskToEdit, nameToDelete);
             Attachment attachmentToDelete = getAttachment(taskToEdit.getAttachments(), nameToDelete);
-            if (attachmentToDelete == null) {
-                throw new CommandException(String.format(MESSAGE_NAME_NOT_FOUND, nameToDelete));
-            }
             HashSet<Attachment> updatedAttachments = new HashSet<>(taskToEdit.getAttachments());
             updatedAttachments.remove(attachmentToDelete);
-            resultMessage = String.format(MESSAGE_SUCCESS, nameToDelete);
-            return new Task(taskToEdit.getName(), taskToEdit.getPriority(), taskToEdit.getFrequency(),
+            String resultMessage = String.format(MESSAGE_SUCCESS, nameToDelete);
+            Task updatedTask = new Task(taskToEdit.getName(), taskToEdit.getPriority(), taskToEdit.getFrequency(),
                 taskToEdit.getDeadline(), taskToEdit.getTags(), updatedAttachments);
-        }
 
-        public String resultMessage() {
-            return resultMessage;
+            return new ActionResult(updatedTask, resultMessage);
         }
 
         @Override
@@ -389,13 +436,11 @@ public class AttachmentCommand extends Command {
      * Action to get/retrieve attachment.
      */
     public static class GetAttachmentAction extends AttachmentAction {
-        public static final String MESSAGE_NAME_NOT_FOUND = "%1$s is not an attachment.";
         public static final String MESSAGE_GET_FAILED = "Failed to save to %1$s.";
         public static final String MESSAGE_SUCCESS = "%1$s is now saved to %2$s.";
         public static final String MESSAGE_GET_NOT_A_FILE = "%1$s is not a valid file."
             + "It might have been deleted or moved";
 
-        private String resultMessage = "Action Not Performed";
         private final String fileName;
         private final String savePath;
 
@@ -404,7 +449,6 @@ public class AttachmentCommand extends Command {
             this.fileName = fileName;
             this.savePath = savePath;
         }
-
 
         /**
          * Saves the attachment to savePath, overwriting the destination if a file exists.
@@ -424,19 +468,13 @@ public class AttachmentCommand extends Command {
         }
 
         @Override
-        public Task perform(Task taskToEdit) throws CommandException {
+        public ActionResult perform(Task taskToEdit) throws CommandException {
             assert taskToEdit != null;
+            checkAttachmentNameExists(taskToEdit, fileName);
             Attachment attachmentToGet = getAttachment(taskToEdit.getAttachments(), fileName);
-            if (attachmentToGet == null) {
-                throw new CommandException(String.format(MESSAGE_NAME_NOT_FOUND, fileName));
-            }
             copyFileToDestination(attachmentToGet, savePath);
-            resultMessage = String.format(MESSAGE_SUCCESS, attachmentToGet.getName(), savePath);
-            return taskToEdit;
-        }
-
-        public String resultMessage() {
-            return resultMessage;
+            String resultMessage = String.format(MESSAGE_SUCCESS, attachmentToGet.getName(), savePath);
+            return new ActionResult(taskToEdit, resultMessage);
         }
 
         @Override

@@ -183,10 +183,8 @@ public class AttachmentCommandTest {
         AttachmentCommand.AttachmentAction action =
             new AttachmentCommand.DeleteAttachmentAction(nonExistentFileName);
         AttachmentCommand attachmentCommand = new AttachmentCommand(INDEX_FIRST_TASK, action);
-
         String expectedMessage = String.format(
-            AttachmentCommand.DeleteAttachmentAction.MESSAGE_NAME_NOT_FOUND, nonExistentFileName);
-
+            AttachmentCommand.MESSAGE_NAME_NOT_FOUND, nonExistentFileName);
         assertCommandFailure(attachmentCommand, model, commandHistory, expectedMessage);
     }
 
@@ -253,7 +251,7 @@ public class AttachmentCommandTest {
         AttachmentCommand attachmentCommand = new AttachmentCommand(INDEX_FIRST_TASK, action);
 
         String expectedMessage = String.format(
-            AttachmentCommand.GetAttachmentAction.MESSAGE_NAME_NOT_FOUND, nonExistentFileName);
+            AttachmentCommand.MESSAGE_NAME_NOT_FOUND, nonExistentFileName);
 
         assertCommandFailure(attachmentCommand, model, commandHistory, expectedMessage);
     }
