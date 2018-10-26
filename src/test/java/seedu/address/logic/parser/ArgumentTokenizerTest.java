@@ -172,6 +172,14 @@ public class ArgumentTokenizerTest {
         argMultimap = ArgumentTokenizer.tokenize(argsString, pSlash);
         assertPreamblePresent(argMultimap, "Hello world");
         assertArgumentPresent(argMultimap, pSlash, "  test test test   ");
+
+        argsString = "p/\"D:/Downloads/123 p/hello world.txt\"";
+        argMultimap = ArgumentTokenizer.tokenize(argsString, pSlash);
+        assertArgumentPresent(argMultimap, pSlash, "D:/Downloads/123 p/hello world.txt");
+
+        argsString = "p/\"p/p/p.docx\"";
+        argMultimap = ArgumentTokenizer.tokenize(argsString, pSlash);
+        assertArgumentPresent(argMultimap, pSlash, "p/p/p.docx");
     }
 
     @Test
