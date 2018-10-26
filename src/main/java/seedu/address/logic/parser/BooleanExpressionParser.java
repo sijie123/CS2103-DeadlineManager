@@ -188,7 +188,8 @@ public class BooleanExpressionParser<T> {
 
     /**
      * Parses the given string as a filter expression.
-     * This method uses the shunting yard algorithm.
+     * This method uses the shunting yard algorithm, with the ability to parse binary and unary operators.
+     * This method is long because this algorithm cannot be easily broken into multiple methods.
      */
     public Predicate<T> parse(String str) throws ParseException {
         StringTokenizer tokenizer = new StringTokenizer(str);

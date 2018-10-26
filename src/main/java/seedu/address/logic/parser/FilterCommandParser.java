@@ -114,7 +114,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
                     final String value = tokenizer.nextString(reservedCharPredicate.negate());
                     try {
                         return createPredicate(key, operator, value);
-                    } catch (InvalidPredicateException e) {
+                    } catch (InvalidPredicateException e) { // note: this catch block never happens so is not testable
                         throw new ParseException(String.format(MESSAGE_INVALID_GENERAL_PREDICATE_FORMAT, key + ' '
                             + opString + ' ' + operator), e);
                     }
