@@ -540,7 +540,7 @@ e.g. `add n/CS2103 Assignment d/11/10/2018 P/2 t/java t/hard`
 * *Add Recurring*: `addr n/NAME d/DEADLINE f/FREQUENCY [P/PRIORITY] [t/TAG]...`
 e.g. `add n/CS2103 Tutorial d/1/10/2018 f/7 P/4 t/easy`
 
-* *Attachment (Add)* : `attachment INDEX add p\FILEPATH`
+* *Attachment (Add)* : `attachment INDEX add p/FILEPATH`
 
 * *Attachment (Delete)* : `attachment INDEX delete n/FILENAME`
 
