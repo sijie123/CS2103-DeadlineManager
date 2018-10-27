@@ -128,15 +128,18 @@ public class AttachmentCommand extends Command {
     }
 
     /**
-     * Checks and throws (@code CommandException) if there is nothing at the specified path or the item is not
-     * a file.
+     * Checks and throws (@code CommandException) if the attachment is not readable.
      *
-     * @param file The file to check
+     * @param attachment Attachment to check
+     * @param format     Format string to format the (@code CommandException) with
      * @throws CommandException
      */
-    private static void checkAttachmentStatus(String format, File file) throws CommandException {
-        checkAttachmentExists(format, file);
-        checkAttachmentIsFile(format, file);
+    private static void checkAttachmentReadability(Attachment attachment, String format) throws CommandException {
+        if (!attachment.isReadable()) {
+            logger.info(String.format("Attachment %s is not readable. Checked %s.",
+                attachment.getName(), attachment.file.getAbsolutePath()));
+            throw new CommandException(String.format(format, attachment.file));
+        }
     }
 
     /**
@@ -197,8 +200,10 @@ public class AttachmentCommand extends Command {
         return attachmentNameMap.get(name);
     }
 
-    /** Utility function to check whether a name can be added to the set of attachments of a task.
+    /**
+     * Utility function to check whether a name can be added to the set of attachments of a task.
      * Throws a (@code CommandException) is provided name is already in the set of attachments.
+     *
      * @param task task to check from
      * @param name name to be checked
      * @throws CommandException
@@ -213,8 +218,10 @@ public class AttachmentCommand extends Command {
         }
     }
 
-    /** Utility function to check whether a name already exists in the set of attachments of a task.
+    /**
+     * Utility function to check whether a name already exists in the set of attachments of a task.
      * Throws a (@code CommandException) is provided name is not in the set of attachments.
+     *
      * @param task task to check from
      * @param name name to be checked
      * @throws CommandException
@@ -245,6 +252,7 @@ public class AttachmentCommand extends Command {
 
         /**
          * Returns the task
+         *
          * @return stored task
          */
         public Task getTask() {
@@ -253,6 +261,7 @@ public class AttachmentCommand extends Command {
 
         /**
          * Returns the result message
+         *
          * @return stored result message
          */
         public String getMessage() {
@@ -302,13 +311,14 @@ public class AttachmentCommand extends Command {
          * Generates the Attachment Object from the file path.
          * Also performs checks to see if file exists.
          *
-         * @return Arrachment that is generated
+         * @return Attachment that is generated
          * @throws CommandException
          */
         private Attachment buildAttachment() throws CommandException {
             File file = new File(filePath);
-            checkAttachmentStatus(MESSAGE_ADD_NOT_A_FILE, file);
-            return new Attachment(new File(filePath));
+            Attachment attachment = new Attachment(new File(filePath));
+            checkAttachmentReadability(attachment, MESSAGE_ADD_NOT_A_FILE);
+            return attachment;
         }
 
         @Override
@@ -403,7 +413,6 @@ public class AttachmentCommand extends Command {
             String resultMessage = String.format(MESSAGE_SUCCESS, nameToDelete);
             Task updatedTask = new Task(taskToEdit.getName(), taskToEdit.getPriority(), taskToEdit.getFrequency(),
                 taskToEdit.getDeadline(), taskToEdit.getTags(), updatedAttachments);
-
             return new ActionResult(updatedTask, resultMessage);
         }
 
@@ -457,7 +466,7 @@ public class AttachmentCommand extends Command {
          * @param savePath   path to save the attachment to
          */
         private File copyFileToDestination(Attachment attachment, String savePath) throws CommandException {
-            checkAttachmentStatus(MESSAGE_GET_NOT_A_FILE, attachment.file);
+            checkAttachmentReadability(attachment, MESSAGE_GET_NOT_A_FILE);
             try {
                 return attachment.saveTo(savePath);
             } catch (IOException ioe) {
