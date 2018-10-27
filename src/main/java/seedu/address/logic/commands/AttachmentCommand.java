@@ -143,33 +143,16 @@ public class AttachmentCommand extends Command {
     }
 
     /**
-     * Ensures that a provided file object actually exists in the filesystem. Throws (@code CommandException)
-     * if otherwise.
+     * Utility function to obtain an attachment object from a set of attachments, based on name.
      *
-     * @param sourceFile file to check
-     * @throws CommandException
+     * @param attachments Set of attachments
+     * @param name        Name to search
+     * @return Null if there is no attachment with the provided name in the set.
      */
-    private static void checkAttachmentExists(String format, File sourceFile) throws CommandException {
-        if (!sourceFile.exists()) {
-            logger.info(String.format("Attachment %s does not exist. Checked %s.",
-                sourceFile.getName(), sourceFile.getAbsolutePath()));
-            throw new CommandException(String.format(format, sourceFile));
-        }
-    }
-
-    /**
-     * Ensures that a provided file object actually is a file in the filesystem. Throws (@code CommandException)
-     * if otherwise.
-     *
-     * @param sourceFile file to check
-     * @throws CommandException
-     */
-    private static void checkAttachmentIsFile(String format, File sourceFile) throws CommandException {
-        if (!sourceFile.isFile()) {
-            logger.info(String.format("Attachment %s is not a file. Checked %s.",
-                sourceFile.getName(), sourceFile.getAbsolutePath()));
-            throw new CommandException(String.format(format, sourceFile));
-        }
+    private static Attachment getAttachment(Set<Attachment> attachments, String name) {
+        Map<String, Attachment> attachmentNameMap = attachments.stream()
+            .collect(Collectors.toMap(x -> x.getName(), x -> x));
+        return attachmentNameMap.get(name);
     }
 
     /**
@@ -185,19 +168,6 @@ public class AttachmentCommand extends Command {
             .map(x -> x.getName())
             .collect(Collectors.toSet());
         return attachmentNames.contains(name);
-    }
-
-    /**
-     * Utility function to obtain an attachment object from a set of attachments, based on name.
-     *
-     * @param attachments Set of attachments
-     * @param name        Name to search
-     * @return Null if there is no attachment with the provided name in the set.
-     */
-    private static Attachment getAttachment(Set<Attachment> attachments, String name) {
-        Map<String, Attachment> attachmentNameMap = attachments.stream()
-            .collect(Collectors.toMap(x -> x.getName(), x -> x));
-        return attachmentNameMap.get(name);
     }
 
     /**
