@@ -84,7 +84,7 @@ public class TaskCard extends UiPart<Region> {
                     PREFIX_FILEPATH, file.getPath()
                 );
                 raise(new ExecuteCommandEvent(commandText));
-            }));
+            }, attachment.getName()));
         });
 
         return label;

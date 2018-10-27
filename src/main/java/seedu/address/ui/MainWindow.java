@@ -210,7 +210,12 @@ public class MainWindow extends UiPart<Stage> {
         logger.info(LogsCenter.getEventHandlingLogMessage(event));
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save File as ...");
+        fileChooser.setInitialFileName(event.initialFileName);
         File saveDestination = fileChooser.showSaveDialog(primaryStage);
-        event.fileReceiver.accept(saveDestination);
+        if (saveDestination != null) {
+            event.fileReceiver.accept(saveDestination);
+        } else {
+            logger.info("File selector cancelled");
+        }
     }
 }

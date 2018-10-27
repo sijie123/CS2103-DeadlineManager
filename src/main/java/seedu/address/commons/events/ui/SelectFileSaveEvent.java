@@ -11,9 +11,11 @@ import seedu.address.commons.events.BaseEvent;
 public class SelectFileSaveEvent extends BaseEvent {
 
     public final Consumer<File> fileReceiver;
+    public final String initialFileName;
 
-    public SelectFileSaveEvent(Consumer<File> fileReceiver) {
+    public SelectFileSaveEvent(Consumer<File> fileReceiver, String initialFileName) {
         this.fileReceiver = fileReceiver;
+        this.initialFileName = initialFileName;
     }
 
     @Override
