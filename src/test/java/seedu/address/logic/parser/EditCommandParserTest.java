@@ -84,15 +84,11 @@ public class EditCommandParserTest {
         assertParseFailure(parser, "1" + INVALID_TAG_DESC,
             Tag.MESSAGE_TAG_CONSTRAINTS); // invalid tag
 
-        // valid priority followed by invalid priority. The test case for invalid priority followed by valid priority
-        // is tested at {@code parse_invalidValueFollowedByValidValue_success()}
-        assertParseFailure(parser, "1" + PRIORITY_DESC_BOB + INVALID_PRIORITY_DESC,
-            Priority.MESSAGE_PRIORITY_CONSTRAINTS);
+        // valid priority followed by invalid priority. Fails because two priorities are specified.
+        assertParseFailure(parser, "1" + PRIORITY_DESC_BOB + INVALID_PRIORITY_DESC, MESSAGE_INVALID_FORMAT);
 
-        // valid frequency followed by invalid frequency. The test case for invalid frequency followed by valid
-        // frequency is tested at {@code parse_invalidValueFollowedByValidValue_success()}
-        assertParseFailure(parser, "1" + FREQUENCY_DESC_BOB + INVALID_FREQUENCY_DESC,
-            Frequency.MESSAGE_FREQUENCY_CONSTRAINTS);
+        // valid frequency followed by invalid frequency. Fails because two frequencies are specified.
+        assertParseFailure(parser, "1" + FREQUENCY_DESC_BOB + INVALID_FREQUENCY_DESC, MESSAGE_INVALID_FORMAT);
 
         // while parsing {@code PREFIX_TAG} alone will reset the tags of the {@code Task} being edited,
         // parsing it together with a valid tag results in error
@@ -168,51 +164,46 @@ public class EditCommandParserTest {
     }
 
     @Test
-    public void parse_multipleRepeatedFields_acceptsLast() {
+    public void parse_multipleRepeatedFields_failure() {
         //priority
         Index targetIndex = INDEX_FIRST_TASK;
         String userInput =
             targetIndex.getOneBased() + PRIORITY_DESC_AMY + TAG_DESC_FRIEND + PRIORITY_DESC_AMY
                 + TAG_DESC_FRIEND + PRIORITY_DESC_BOB + TAG_DESC_HUSBAND;
+        assertParseFailure(parser, userInput, MESSAGE_INVALID_FORMAT);
 
-        EditCommand.EditTaskDescriptor descriptor = new EditTaskDescriptorBuilder()
-            .withPriority(VALID_PRIORITY_BOB)
-            .withTags(VALID_TAG_FRIEND, VALID_TAG_HUSBAND)
-            .build();
-        EditCommand expectedCommand = new EditCommand(targetIndex, descriptor);
+        //garbage priority
+        targetIndex = INDEX_FIRST_TASK;
+        userInput =
+            targetIndex.getOneBased() + PRIORITY_DESC_AMY + PRIORITY_DESC_BOB;
 
-        // frequency
-        assertParseSuccess(parser, userInput, expectedCommand);
+        assertParseFailure(parser, userInput, MESSAGE_INVALID_FORMAT);
 
+        //frequency
         targetIndex = INDEX_FIRST_TASK;
         userInput =
             targetIndex.getOneBased() + FREQUENCY_DESC_AMY + TAG_DESC_FRIEND + FREQUENCY_DESC_AMY
                 + TAG_DESC_FRIEND + FREQUENCY_DESC_BOB + TAG_DESC_HUSBAND;
 
-        descriptor = new EditTaskDescriptorBuilder()
-            .withFrequency(VALID_FREQUENCY_BOB)
-            .withTags(VALID_TAG_FRIEND, VALID_TAG_HUSBAND)
-            .build();
-        expectedCommand = new EditCommand(targetIndex, descriptor);
-
-        assertParseSuccess(parser, userInput, expectedCommand);
+        assertParseFailure(parser, userInput, MESSAGE_INVALID_FORMAT);
     }
 
     @Test
-    public void parse_invalidValueFollowedByValidValue_success() {
-        // no other valid values specified
+    public void parse_multipleRepeatedTags_success() {
+        //Repeated tags are supposed to be OK.
         Index targetIndex = INDEX_FIRST_TASK;
-        String userInput = targetIndex.getOneBased() + INVALID_PRIORITY_DESC + PRIORITY_DESC_BOB;
+        String userInput = targetIndex.getOneBased() + TAG_DESC_HUSBAND + TAG_DESC_FRIEND;
         EditCommand.EditTaskDescriptor descriptor = new EditTaskDescriptorBuilder()
-            .withPriority(VALID_PRIORITY_BOB).build();
+            .withTags(VALID_TAG_HUSBAND, VALID_TAG_FRIEND).build();
         EditCommand expectedCommand = new EditCommand(targetIndex, descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
 
-        // other valid values specified
-        userInput =
-            targetIndex.getOneBased() + INVALID_PRIORITY_DESC + PRIORITY_DESC_BOB
-                + PRIORITY_DESC_BOB;
-        descriptor = new EditTaskDescriptorBuilder().withPriority(VALID_PRIORITY_BOB).build();
+        //Repeated tags are supposed to be ok even with other non-repeated, valid inputs.
+        targetIndex = INDEX_FIRST_TASK;
+        userInput = targetIndex.getOneBased() + PRIORITY_DESC_BOB + TAG_DESC_HUSBAND + TAG_DESC_FRIEND;
+        descriptor = new EditTaskDescriptorBuilder()
+            .withTags(VALID_TAG_HUSBAND, VALID_TAG_FRIEND)
+            .withPriority(VALID_PRIORITY_BOB).build();
         expectedCommand = new EditCommand(targetIndex, descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
     }

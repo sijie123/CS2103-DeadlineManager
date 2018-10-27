@@ -47,6 +47,28 @@ public class AddCommandParserTest {
     private AddCommandParser parser = new AddCommandParser();
 
     @Test
+    public void parse_allFieldsPresentSomeFieldsDuplicate_failure() {
+        String expectedMessage = String
+            .format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE);
+
+        // multiple names
+        assertParseFailure(parser, NAME_DESC_AMY + NAME_DESC_BOB
+                + PRIORITY_DESC_BOB + FREQUENCY_DESC_BOB + DEADLINE_DESC_BOB + TAG_DESC_FRIEND, expectedMessage);
+
+        // multiple priorities
+        assertParseFailure(parser, NAME_DESC_BOB + PRIORITY_DESC_AMY + PRIORITY_DESC_BOB
+            + FREQUENCY_DESC_BOB + DEADLINE_DESC_BOB + TAG_DESC_FRIEND, expectedMessage);
+
+        // multiple frequencies
+        assertParseFailure(parser, NAME_DESC_BOB + PRIORITY_DESC_BOB + FREQUENCY_DESC_AMY
+            + FREQUENCY_DESC_BOB + DEADLINE_DESC_BOB + TAG_DESC_FRIEND, expectedMessage);
+
+        // multiple deadlines
+        assertParseFailure(parser, NAME_DESC_BOB + PRIORITY_DESC_BOB + FREQUENCY_DESC_BOB
+            + DEADLINE_DESC_AMY + DEADLINE_DESC_BOB + TAG_DESC_FRIEND, expectedMessage);
+    }
+
+    @Test
     public void parse_allFieldsPresent_success() {
         Task expectedTask = new TaskBuilder(BOB).withTags(VALID_TAG_FRIEND).build();
 
@@ -55,24 +77,7 @@ public class AddCommandParserTest {
             PREAMBLE_WHITESPACE + NAME_DESC_BOB + PRIORITY_DESC_BOB + FREQUENCY_DESC_BOB
                 + DEADLINE_DESC_BOB + TAG_DESC_FRIEND, new AddCommand(expectedTask));
 
-        // multiple names - last name accepted
-        assertParseSuccess(parser, NAME_DESC_AMY + NAME_DESC_BOB
-            + PRIORITY_DESC_BOB + FREQUENCY_DESC_BOB + DEADLINE_DESC_BOB + TAG_DESC_FRIEND,
-            new AddCommand(expectedTask));
-
-        // multiple priorities - last priority accepted
-        assertParseSuccess(parser, NAME_DESC_BOB + PRIORITY_DESC_AMY + PRIORITY_DESC_BOB
-            + FREQUENCY_DESC_BOB + DEADLINE_DESC_BOB + TAG_DESC_FRIEND, new AddCommand(expectedTask));
-
-        // multiple frequencies - last frequency accepted
-        assertParseSuccess(parser, NAME_DESC_BOB + PRIORITY_DESC_BOB + FREQUENCY_DESC_AMY
-            + FREQUENCY_DESC_BOB + DEADLINE_DESC_BOB + TAG_DESC_FRIEND, new AddCommand(expectedTask));
-
-        // multiple deadlines - last deadline accepted
-        assertParseSuccess(parser, NAME_DESC_BOB + PRIORITY_DESC_BOB + FREQUENCY_DESC_BOB
-            + DEADLINE_DESC_AMY + DEADLINE_DESC_BOB + TAG_DESC_FRIEND, new AddCommand(expectedTask));
-
-        // multiple tags - all accepted
+        // multiple tags are ok - all accepted
         Task expectedTaskMultipleTags = new TaskBuilder(BOB)
             .withTags(VALID_TAG_FRIEND, VALID_TAG_HUSBAND)
             .build();

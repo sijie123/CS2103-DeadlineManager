@@ -5,6 +5,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_FILENAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_RESOLVER;
 import static seedu.address.logic.parser.ParserUtil.parseFileName;
 
+import java.util.InputMismatchException;
 import java.util.Optional;
 
 import seedu.address.logic.commands.ImportCommand;
@@ -26,11 +27,15 @@ public class ImportCommandParser implements Parser<ImportCommand> {
      * @throws ParseException if the user input does not conform to the expected format
      */
     public ImportCommand parse(String args) throws ParseException {
-
-        ArgumentMultimap argMultimap =
-            ArgumentTokenizer
-                .tokenize(args, PREFIX_FILENAME, PREFIX_RESOLVER);
-
+        ArgumentMultimap argMultimap = null;
+        try {
+            argMultimap =
+                ArgumentTokenizer
+                    .tokenize(args, PREFIX_FILENAME, PREFIX_RESOLVER);
+        } catch (InputMismatchException ime) {
+            new ParseException(
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, ImportCommand.MESSAGE_USAGE), ime);
+        }
         String filename = argMultimap.getValue(PREFIX_FILENAME).orElseThrow(() -> new ParseException(
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, ImportCommand.MESSAGE_USAGE)));
         String checkedFilename = parseFileName(filename);
