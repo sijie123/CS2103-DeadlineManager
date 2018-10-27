@@ -141,17 +141,14 @@ public class FilterCommandParserTest {
         assertParseThrowsException(parser, "d<");
         assertParseThrowsException(parser, "d=");
         assertParseThrowsException(parser, "d>");
-        assertParseThrowsException(parser, "d");
         assertParseThrowsException(parser, "p:5");
         assertParseThrowsException(parser, "p:b");
         assertParseThrowsException(parser, "=");
         assertParseThrowsException(parser, ":");
-        assertParseThrowsException(parser, "-");
         assertParseThrowsException(parser, "test=test");
         assertParseThrowsException(parser, "=test");
         assertParseThrowsException(parser, "name>");
         assertParseThrowsException(parser, "name<");
-        assertParseThrowsException(parser, "name~");
         assertParseThrowsException(parser, "name:");
         assertParseThrowsException(parser, "t:\"CS2101,CS2103");
         assertParseThrowsException(parser, "(t:\"CS2101,CS2103");
