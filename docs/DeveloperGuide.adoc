@@ -405,7 +405,7 @@ image::UndoRedoActivityDiagram.png[width="650"]
 === Import and Export feature
 //==== Current implementation
 
-The deadline supports import and export features. This feature uses 2 components: `Storage` and `Model`.
+The deadline manager supports import and export features. This feature uses 2 components: `Storage` and `Model`.
 
 ==== Current Implementation
 
