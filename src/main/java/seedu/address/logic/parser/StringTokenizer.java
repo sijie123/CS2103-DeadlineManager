@@ -195,6 +195,8 @@ public class StringTokenizer {
 
     /**
      * Gets all the tokens from this tokenizer.
+     *
+     * @throws InputMismatchException if there are invalid tokens.
      */
     public List<String> toList() {
         ArrayList<String> items = new ArrayList<>();
