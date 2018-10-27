@@ -64,7 +64,10 @@ public class FilterCommandParserTest {
         assertParseSuccess(parser, "t>\"CS2101,CS2103\"");
         assertParseSuccess(parser, "t>\"CS2101,\'CS2103\'\"");
         assertParseSuccess(parser, "t:\"CS2101,,CS2103\"");
+    }
 
+    @Test
+    public void parse_compositeFilters_doesNotThrow() {
         assertParseSuccess(parser, "n:Hello & n:World");
         assertParseSuccess(parser, "n:Hello && n:World");
         assertParseSuccess(parser, "n:Hello &&n:World");
@@ -103,6 +106,30 @@ public class FilterCommandParserTest {
     }
 
     @Test
+    public void parse_implicitOperator_doesNotThrow() {
+        assertParseSuccess(parser, "n:Hello n:World");
+        assertParseSuccess(parser, "n:Hello  n:World");
+        assertParseSuccess(parser, "n:Hello      n:World");
+        assertParseSuccess(parser, "n:Hello !n:World");
+        assertParseSuccess(parser, "n:Hello!n:World");
+        assertParseSuccess(parser, "(( (n:Hello    n:World)) )");
+        assertParseSuccess(parser, "(( (n:Hello   ! n:World)) )");
+        assertParseSuccess(parser, "(( (n:Hello    !n:World)) )");
+        assertParseSuccess(parser, "(( (n:Hello!    n:World)) )");
+        assertParseSuccess(parser, "(( (n:Hello!n:World)) )");
+        assertParseSuccess(parser, "(n:Hello || d:1/10/2018) t:CS2103");
+        assertParseSuccess(parser, "(n:Hello || d:1/10/2018)t:CS2103");
+        assertParseSuccess(parser, "(n:Hello || d:1/10/2018)!t:CS2103");
+        assertParseSuccess(parser, "t:CS2103(n:Hello || d:1/10/2018)");
+        assertParseSuccess(parser, "t:CS2103 (n:Hello || d:1/10/2018)");
+        assertParseSuccess(parser, "t:CS2103 !(n:Hello || d:1/10/2018)");
+        assertParseSuccess(parser, "(n:Hello d:1/10/2018)t:CS2103");
+        assertParseSuccess(parser, "t:CS2101((((n:Hello d:1/10/2018))))t:CS2103");
+        assertParseSuccess(parser, "t:CS2101(n:Hello d:1/10/2018)t:CS2103");
+        assertParseSuccess(parser, "t:CS2101 n:Hello d:1/10/2018 t:CS2103");
+    }
+
+    @Test
     public void parse_invalidArgs_throwsParseException() {
         assertParseThrowsException(parser, "d<\"1/10/2018");
         assertParseThrowsException(parser, "d<1/10/2018\"");
@@ -135,10 +162,11 @@ public class FilterCommandParserTest {
         assertParseThrowsException(parser, ")");
         assertParseThrowsException(parser, "&& n:Hello");
         assertParseThrowsException(parser, "|| n:Hello");
-        assertParseThrowsException(parser, "n:23 ! n:Hello");
-        assertParseThrowsException(parser, "t:CS2101( n:Hello)");
-        assertParseThrowsException(parser, "t:CS2101 (n:Hello)");
         assertParseThrowsException(parser, "t:CS2101 && (n:Hello");
+        assertParseThrowsException(parser, "(!n:Hello| |!n:World)");
+        assertParseThrowsException(parser, "(!n:Hello|| ||!n:World)");
+        assertParseThrowsException(parser, "(!n:Hello||||!n:World)");
+        assertParseThrowsException(parser, "(!n:Hello|||!n:World)");
     }
 
     /**
