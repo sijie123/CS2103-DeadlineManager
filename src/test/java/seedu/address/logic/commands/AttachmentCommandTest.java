@@ -6,7 +6,11 @@ import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_TASK;
 import static seedu.address.testutil.TypicalTasks.getTypicalTaskCollections;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -183,10 +187,8 @@ public class AttachmentCommandTest {
         AttachmentCommand.AttachmentAction action =
             new AttachmentCommand.DeleteAttachmentAction(nonExistentFileName);
         AttachmentCommand attachmentCommand = new AttachmentCommand(INDEX_FIRST_TASK, action);
-
         String expectedMessage = String.format(
-            AttachmentCommand.DeleteAttachmentAction.MESSAGE_NAME_NOT_FOUND, nonExistentFileName);
-
+            AttachmentCommand.MESSAGE_NAME_NOT_FOUND, nonExistentFileName);
         assertCommandFailure(attachmentCommand, model, commandHistory, expectedMessage);
     }
 
@@ -253,15 +255,21 @@ public class AttachmentCommandTest {
         AttachmentCommand attachmentCommand = new AttachmentCommand(INDEX_FIRST_TASK, action);
 
         String expectedMessage = String.format(
-            AttachmentCommand.GetAttachmentAction.MESSAGE_NAME_NOT_FOUND, nonExistentFileName);
+            AttachmentCommand.MESSAGE_NAME_NOT_FOUND, nonExistentFileName);
 
         assertCommandFailure(attachmentCommand, model, commandHistory, expectedMessage);
     }
 
 
     @Test
-    public void execute_getAttachment_success() {
+    public void execute_getAttachment_success() throws IOException {
         File tempFile = createTestFile();
+        // Initialize file with some content that can be verified later
+        String fileContent = "Hello Rar the Cat!\n";
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(tempFile.getPath()));
+        bufferedWriter.write(fileContent);
+        bufferedWriter.close();
+
         // Construct a file with one attachment
         Task originalTask = model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased());
         Task taskWithAttachment = addAttachmentToTask(originalTask, new Attachment(tempFile));
@@ -287,11 +295,62 @@ public class AttachmentCommandTest {
 
         assertCommandSuccess(attachmentCommand, modelStub, commandHistory, expectedMessage, expectedModel);
 
-        //TODO: Upgrade to check contents of the file
-        //assertTrue(Arrays.equals(Files.readAllBytes(tempFile.toPath()), Files.readAllBytes(outputFile.toPath())));
+        // Check if output file have the correct content
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(outputFile.getPath()));
+        assertTrue(bufferedReader.readLine().equals(fileContent.trim()));
+        bufferedReader.close();
+
+        bufferedReader = new BufferedReader(new FileReader(tempFile.getPath()));
+        assertTrue(bufferedReader.readLine().equals(fileContent.trim()));
+        bufferedReader.close();
 
         deleteTestFile(tempFile);
         deleteTestFile(outputFile);
+    }
+
+    @Test
+    public void execute_getAttachmentSameFile_success() throws IOException {
+        File tempFile = createTestFile();
+        // Initialize file with some content that can be verified later
+        String fileContent = "Hello Rar the Cat!\n";
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(tempFile.getPath()));
+        bufferedWriter.write(fileContent);
+        bufferedWriter.close();
+
+        // Construct a file with one attachment
+        Task originalTask = model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased());
+        Task taskWithAttachment = addAttachmentToTask(originalTask, new Attachment(tempFile));
+        Model modelStub = new ModelManager(new TaskCollection(model.getTaskCollection()),
+            new UserPrefs());
+        modelStub.updateTask(originalTask, taskWithAttachment);
+        modelStub.commitTaskCollection();
+
+        // Same output location as where the attachment is
+        File outputFile = tempFile;
+
+        //Attempt to get it from attachments
+        String fileName = tempFile.getName();
+        String outputPath = outputFile.getPath();
+        AttachmentCommand.AttachmentAction action =
+            new AttachmentCommand.GetAttachmentAction(fileName, outputPath);
+        AttachmentCommand attachmentCommand = new AttachmentCommand(INDEX_FIRST_TASK, action);
+        String expectedMessage = String.format(
+            AttachmentCommand.GetAttachmentAction.MESSAGE_SUCCESS, fileName, outputPath);
+
+        Model expectedModel = modelStub;
+
+        assertCommandSuccess(attachmentCommand, modelStub, commandHistory, expectedMessage, expectedModel);
+
+        // Check if output file have the correct content
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(outputFile.getPath()));
+        assertTrue(bufferedReader.readLine().equals(fileContent.trim()));
+        bufferedReader.close();
+
+        bufferedReader = new BufferedReader(new FileReader(tempFile.getPath()));
+        assertTrue(bufferedReader.readLine().equals(fileContent.trim()));
+        bufferedReader.close();
+
+        deleteTestFile(tempFile);
 
     }
 
