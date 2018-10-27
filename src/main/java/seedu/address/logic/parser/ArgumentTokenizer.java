@@ -45,7 +45,7 @@ public class ArgumentTokenizer {
     private static ArgumentMultimap tokenize(StringTokenizer tokenizer, Pattern pattern, Prefix... prefixes)
         throws InputMismatchException {
         ArgumentMultimap argMultimap = new ArgumentMultimap();
-        Prefix currPrefix = new Prefix("", false);
+        Prefix currPrefix = Prefix.EMPTY;
         StringBuilder currArgumentValue = new StringBuilder();
         boolean isEmpty = true;
         while (tokenizer.hasNextToken()) {
@@ -88,7 +88,7 @@ public class ArgumentTokenizer {
             }
             currArgumentValue.append(textToken);
         }
-        argMultimap.put(new Prefix("", false), currArgumentValue.toString());
+        argMultimap.put(Prefix.EMPTY, currArgumentValue.toString());
         return argMultimap;
     }
 

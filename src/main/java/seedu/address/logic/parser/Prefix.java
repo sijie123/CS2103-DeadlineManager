@@ -6,6 +6,8 @@ package seedu.address.logic.parser;
  */
 public class Prefix {
 
+    public static final Prefix EMPTY = new Prefix("", false);
+
     private final String prefix;
     private final boolean hasMultiple;
 
