@@ -182,6 +182,13 @@ public class ArgumentTokenizerTest {
         assertArgumentPresent(argMultimap, pSlash, "p/p/p.docx");
     }
 
+    @Test(expected=IllegalArgumentException.class)
+    public void tokenize_argumentsWithSamePrefixes() {
+        Prefix pSlashSingle = new Prefix("p/", false);
+        String argsString = "p/123 p/\"Hello World\"";
+        ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(argsString, pSlash, pSlashSingle);
+    }
+
     @Test
     public void equalsMethod() {
         Prefix aaa = new Prefix("aaa", true);
