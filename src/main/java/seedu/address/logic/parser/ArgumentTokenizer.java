@@ -1,5 +1,6 @@
 package seedu.address.logic.parser;
 
+import java.util.HashSet;
 import java.util.InputMismatchException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,8 +30,24 @@ public class ArgumentTokenizer {
         if (prefixes.length == 0) {
             return tokenizeWithoutPrefix(tokenizer, argsString);
         }
+        checkUniquePrefixes(prefixes);
         Pattern pattern = makePattern(prefixes);
         return tokenize(tokenizer, pattern, prefixes);
+    }
+
+    /**
+     * Ensures that the given list of prefixes are all unique in their prefix string.
+     * Throws a (@code IllegalArgumentException) if not all prefixes are unique.
+     */
+    public static void checkUniquePrefixes(Prefix... prefixes) {
+        HashSet<String> prefixStringSet = new HashSet<>();
+        for (int i = 0; i != prefixes.length; ++i) {
+            String prefixString = prefixes[i].getPrefix();
+            if (prefixStringSet.contains(prefixString)) {
+                throw new IllegalArgumentException("Prefixes for parsing is not unique");
+            }
+            prefixStringSet.add(prefixString);
+        }
     }
 
     /**
