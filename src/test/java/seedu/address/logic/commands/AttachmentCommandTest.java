@@ -1,9 +1,13 @@
 package seedu.address.logic.commands;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_TASK;
+import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_TASK;
+import static seedu.address.testutil.TypicalIndexes.INDEX_THIRD_TASK;
 import static seedu.address.testutil.TypicalTasks.getTypicalTaskCollections;
 
 import java.io.BufferedReader;
@@ -351,7 +355,36 @@ public class AttachmentCommandTest {
         bufferedReader.close();
 
         deleteTestFile(tempFile);
+    }
 
+    @Test
+    public void equals() {
+        AttachmentCommand.AttachmentAction add = new AttachmentCommand.AddAttachmentAction("helloworld.docx");
+        assertEquals(add, new AttachmentCommand.AddAttachmentAction("helloworld.docx"));
+        assertNotEquals(add, new AttachmentCommand.AddAttachmentAction("meow.txt"));
+        AttachmentCommand.AttachmentAction delete = new AttachmentCommand.DeleteAttachmentAction(
+            "delete please.docx");
+        assertEquals(delete, new AttachmentCommand.DeleteAttachmentAction("delete please.docx"));
+        assertNotEquals(delete, new AttachmentCommand.DeleteAttachmentAction("hello.txt"));
+        assertNotEquals(delete, add);
+
+        AttachmentCommand.AttachmentAction list = new AttachmentCommand.ListAttachmentAction();
+        assertEquals(list, new AttachmentCommand.ListAttachmentAction());
+        assertNotEquals(list, add);
+        assertNotEquals(list, delete);
+
+        AttachmentCommand.AttachmentAction get = new AttachmentCommand.GetAttachmentAction("helloworld.txt",
+            "hello/world/helloworld.txt");
+        assertEquals(get, new AttachmentCommand.GetAttachmentAction(
+            "helloworld.txt", "hello/world/helloworld.txt"));
+        assertNotEquals(get, new AttachmentCommand.GetAttachmentAction("hello/world/helloworld.txt",
+            "helloworld.txt"));
+        assertNotEquals(get, list);
+
+        AttachmentCommand attachment = new AttachmentCommand(INDEX_SECOND_TASK, list);
+        assertEquals(attachment, new AttachmentCommand(INDEX_SECOND_TASK, list));
+        assertNotEquals(attachment, new AttachmentCommand(INDEX_THIRD_TASK, list));
+        assertNotEquals(attachment, new AttachmentCommand(INDEX_SECOND_TASK, get));
     }
 
 }
