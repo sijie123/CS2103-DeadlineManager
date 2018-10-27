@@ -51,9 +51,7 @@ public class BooleanExpressionParser<T> {
     private abstract static class BinaryOperator extends PrecedableOperator {
         @Override
         public <E> void operate(Deque<Predicate<E>> outputStack) {
-            if (outputStack.size() < 2) {
-                throw new NoSuchElementException("Not enough elements on output stack for binary operator");
-            }
+            assert outputStack.size() >= 2 : "Not enough elements on output stack for binary operator";
             Predicate<E> o2 = outputStack.poll();
             Predicate<E> o1 = outputStack.poll();
             outputStack.push(operate(o1, o2));
@@ -90,9 +88,7 @@ public class BooleanExpressionParser<T> {
     private abstract static class PrefixUnaryOperator extends PrecedableOperator {
         @Override
         public <E> void operate(Deque<Predicate<E>> outputStack) {
-            if (outputStack.isEmpty()) {
-                throw new NoSuchElementException("Not enough elements on output stack for binary operator");
-            }
+            assert !outputStack.isEmpty() : "Not enough elements on output stack for binary operator";
             outputStack.push(operate(outputStack.poll()));
         }
         public abstract <E> Predicate<E> operate(Predicate<E> operand);
@@ -114,13 +110,13 @@ public class BooleanExpressionParser<T> {
      * Helper class for boolean operators.
      */
     private static class BooleanOperators {
-        public static final LeftBracket LEFT_BRACKET = new LeftBracket();
-        public static final RightBracket RIGHT_BRACKET = new RightBracket();
-        public static final AndOperator AND = new AndOperator();
-        public static final OrOperator OR = new OrOperator();
-        public static final NotOperator NOT = new NotOperator();
+        static final LeftBracket LEFT_BRACKET = new LeftBracket();
+        static final RightBracket RIGHT_BRACKET = new RightBracket();
+        static final AndOperator AND = new AndOperator();
+        static final OrOperator OR = new OrOperator();
+        static final NotOperator NOT = new NotOperator();
 
-        public static final Predicate<Character> OPERATOR_CHAR_PREDICATE = ch -> ch == '(' || ch == ')'
+        static final Predicate<Character> OPERATOR_CHAR_PREDICATE = ch -> ch == '(' || ch == ')'
             || ch == '&' || ch == '|' || ch == '!';
 
         /**
@@ -236,6 +232,13 @@ public class BooleanExpressionParser<T> {
         operatorStack.pop();
     }
 
+    /**
+     * Inserts a binary operator as per the shunting yard algorithm.
+     */
+    private static <T> void insertImplicitBinaryOperator(ArrayDeque<BooleanOperator> operatorStack,
+                                                         ArrayDeque<Predicate<T>> outputStack) {
+        insertBinaryOperator(operatorStack, outputStack, BooleanOperators.AND);
+    }
 
     /**
      * Inserts an operand to the output stack as per the shunting yard algorithm.
@@ -280,8 +283,10 @@ public class BooleanExpressionParser<T> {
                 // store operator
                 if (operator instanceof PrefixUnaryOperator) {
                     if (!isExpectingOperand) {
-                        throw new BooleanExpressionParseException("The " + operator.getClass().getSimpleName()
-                            + " operator cannot be preceded by an operand");
+                        // two operands are adjacent, so we insert the implicit operator (which is the AND operator)
+                        insertImplicitBinaryOperator(operatorStack, outputStack);
+                        // throw new BooleanExpressionParseException("The " + operator.getClass().getSimpleName()
+                        //     + " operator cannot be preceded by an operand");
                     }
                     insertPrefixUnaryOperator(operatorStack, outputStack, (PrefixUnaryOperator) operator);
                     isExpectingOperand = true;
@@ -294,8 +299,10 @@ public class BooleanExpressionParser<T> {
                     isExpectingOperand = true;
                 } else if (operator instanceof LeftBracket) {
                     if (!isExpectingOperand) {
-                        throw new BooleanExpressionParseException("The " + operator.getClass().getSimpleName()
-                            + " operator cannot be preceded by an operand");
+                        // two operands are adjacent, so we insert the implicit operator (which is the AND operator)
+                        insertImplicitBinaryOperator(operatorStack, outputStack);
+                        // throw new BooleanExpressionParseException("The " + operator.getClass().getSimpleName()
+                        //     + " operator cannot be preceded by an operand");
                     }
                     insertLeftBracket(operatorStack, outputStack, (LeftBracket) operator);
                     isExpectingOperand = true;
@@ -310,7 +317,9 @@ public class BooleanExpressionParser<T> {
             } else {
                 // read and store operand
                 if (!isExpectingOperand) {
-                    throw new BooleanExpressionParseException("Two operands cannot be adjacent");
+                    // two operands are adjacent, so we insert the implicit operator (which is the AND operator)
+                    insertImplicitBinaryOperator(operatorStack, outputStack);
+                    // throw new BooleanExpressionParseException("Two operands cannot be adjacent");
                 }
                 insertOperand(operatorStack, outputStack,
                     operandParser.parse(tokenizer, BooleanOperators.OPERATOR_CHAR_PREDICATE));
