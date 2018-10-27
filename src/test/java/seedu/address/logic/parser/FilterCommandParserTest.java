@@ -157,6 +157,7 @@ public class FilterCommandParserTest {
         assertParseThrowsException(parser, "t:CS2101,CS2103 && ");
         assertParseThrowsException(parser, "t:CS2101,CS2103 && )");
         assertParseThrowsException(parser, "t:CS2101,CS2103 && n:Hello)");
+        assertParseThrowsException(parser, "t:\"1/2/3\"");
         assertParseThrowsException(parser, "(");
         assertParseThrowsException(parser, ")");
         assertParseThrowsException(parser, "&& n:Hello");
