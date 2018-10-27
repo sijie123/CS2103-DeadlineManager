@@ -34,15 +34,19 @@ public class Attachment {
      */
     public boolean isReadable() {
         if (!file.exists()) {
+            logger.info(String.format("Attachment %s is not readable as file.exists() fails", file));
             return false;
         }
         if (!file.isFile()) {
+            logger.info(String.format("Attachment %s is not readable as file.isFile() fails", file));
             return false;
         }
         if (!file.canRead()) {
+            logger.info(String.format("Attachment %s is not readable as file.canRead() fails", file));
             return false;
         }
         if (!Files.isReadable(FileSystems.getDefault().getPath(file.getPath()))) {
+            logger.info(String.format("Attachment %s is not readable as isReadable fails", file));
             return false;
         }
         return true;
