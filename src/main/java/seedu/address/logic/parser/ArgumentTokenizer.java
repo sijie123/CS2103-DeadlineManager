@@ -36,21 +36,6 @@ public class ArgumentTokenizer {
     }
 
     /**
-     * Ensures that the given list of prefixes are all unique in their prefix string.
-     * Throws a (@code IllegalArgumentException) if not all prefixes are unique.
-     */
-    public static void checkUniquePrefixes(Prefix... prefixes) {
-        HashSet<String> prefixStringSet = new HashSet<>();
-        for (int i = 0; i != prefixes.length; ++i) {
-            String prefixString = prefixes[i].getPrefix();
-            if (prefixStringSet.contains(prefixString)) {
-                throw new IllegalArgumentException("Prefixes for parsing is not unique");
-            }
-            prefixStringSet.add(prefixString);
-        }
-    }
-
-    /**
      * Extracts prefixes and their argument values based on the given pattern and input tokenizer,
      * and returns an {@code ArgumentMultimap} object that maps the extracted prefixes to their respective arguments.
      *
@@ -84,6 +69,21 @@ public class ArgumentTokenizer {
         }
         argMultimap.put(currPrefix, currArgumentValue.toString());
         return argMultimap;
+    }
+
+    /**
+     * Ensures that the given list of prefixes are all unique in their prefix string.
+     * Throws a (@code IllegalArgumentException) if not all prefixes are unique.
+     */
+    public static void checkUniquePrefixes(Prefix... prefixes) {
+        HashSet<String> prefixStringSet = new HashSet<>();
+        for (int i = 0; i != prefixes.length; ++i) {
+            String prefixString = prefixes[i].getPrefix();
+            if (prefixStringSet.contains(prefixString)) {
+                throw new IllegalArgumentException("Prefixes for parsing is not unique");
+            }
+            prefixStringSet.add(prefixString);
+        }
     }
 
     /**

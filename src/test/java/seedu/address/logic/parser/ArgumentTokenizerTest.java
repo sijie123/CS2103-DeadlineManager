@@ -86,7 +86,7 @@ public class ArgumentTokenizerTest {
 
     }
 
-    @Test(expected=InputMismatchException.class)
+    @Test(expected = InputMismatchException.class)
     public void tokenize_oneArgumentWithNoRepeats() {
         // No repeated with preamble
         String argsString = "  Some preamble string p/ Argument value  p/ Second Arg p/ Third";
@@ -194,7 +194,7 @@ public class ArgumentTokenizerTest {
         assertArgumentPresent(argMultimap, pSlash, "p/p/p.docx");
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void tokenize_argumentsWithSamePrefixes() {
         String argsString = "p/123 p/\"Hello World\"";
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(argsString, pSlash, pSlashSingle);
