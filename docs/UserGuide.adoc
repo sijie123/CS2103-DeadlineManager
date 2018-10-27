@@ -222,7 +222,7 @@ Returns a subset of the current list of tasks that have a name that contains "Al
 Returns a subset of the current list of tasks that have priority = 1 (highest priority).
 
 * `filter p<3`
-Returns a subset of the current list of tasks that have priority < 3. (Highest priority or second highest priority.)
+Returns a subset of the current list of tasks that have priority = 1, 2, or 3. (Highest priority, second highest priority, or third highest priority.)
 
 * `filter t:CS2103T`
 Returns a subset of the current list of tasks that has the tag "CS2103T".
