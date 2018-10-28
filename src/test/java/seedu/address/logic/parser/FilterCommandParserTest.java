@@ -140,6 +140,33 @@ public class FilterCommandParserTest {
     }
 
     @Test
+    public void parse_anyField_doesNotThrow() {
+        assertParseSuccess(parser, "Testp");
+        assertParseSuccess(parser, "1/10/2018");
+        assertParseSuccess(parser, "1/10/2018 Testp");
+        assertParseSuccess(parser, "1/10/2018 Testp htrhrth");
+        assertParseSuccess(parser, "1/10/2018 \"Testp htrhrth\"");
+        assertParseSuccess(parser, "Testp htrhrth 1/10/2018");
+        assertParseSuccess(parser, "Testp 1/10/2018");
+        assertParseSuccess(parser, "Testp   1/10/2018");
+        assertParseSuccess(parser, "Testp && 1/10/2018");
+        assertParseSuccess(parser, "Testp&&1/10/2018");
+        assertParseSuccess(parser, "Testp!1/10/2018");
+        assertParseSuccess(parser, "Testp d:1/10/2018");
+        assertParseSuccess(parser, "n:Testp 1/10/2018");
+        assertParseSuccess(parser, "Testp|d:1/10/2018");
+        assertParseSuccess(parser, "Testp | d:1/10/2018");
+        assertParseSuccess(parser, "Testp | d : 1/10/2018");
+        assertParseSuccess(parser, "Testp || 1/10/2018");
+        assertParseSuccess(parser, "n:Testp | 1/10/2018");
+        assertParseSuccess(parser, "n:Testp|1/10/2018");
+        assertParseSuccess(parser, "Testp|(!n:Hello||!n:World)");
+        assertParseSuccess(parser, "Testp(!n:Hello||!n:World)");
+        assertParseSuccess(parser, "(!n:Hello||!n:World)|Testp");
+        assertParseSuccess(parser, "(!n:Hello||!n:World)Testp");
+    }
+
+    @Test
     public void parse_invalidArgs_throwsParseException() {
         assertParseThrowsException(parser, "d<\"1/10/2018");
         assertParseThrowsException(parser, "d<1/10/2018\"");
@@ -177,6 +204,7 @@ public class FilterCommandParserTest {
         assertParseThrowsException(parser, "(!n:Hello|| ||!n:World)");
         assertParseThrowsException(parser, "(!n:Hello||||!n:World)");
         assertParseThrowsException(parser, "(!n:Hello|||!n:World)");
+        assertParseThrowsException(parser, "n:Hello!");
     }
 
     /**
