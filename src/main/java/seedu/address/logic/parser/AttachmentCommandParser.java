@@ -6,7 +6,6 @@ import static seedu.address.logic.commands.AttachmentCommand.COMMAND_ADD_ACTION;
 import static seedu.address.logic.commands.AttachmentCommand.COMMAND_DELETE_ACTION;
 import static seedu.address.logic.commands.AttachmentCommand.COMMAND_GET_ACTION;
 import static seedu.address.logic.commands.AttachmentCommand.COMMAND_LIST_ACTION;
-import static seedu.address.logic.commands.AttachmentCommand.MESSAGE_DUPLICATED_ARGUMENTS;
 import static seedu.address.logic.commands.AttachmentCommand.MESSAGE_MISSING_ARGUMENTS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_FILENAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_FILEPATH;
