@@ -187,6 +187,95 @@ public class FilterCommandTest {
         assertEquals(Arrays.asList(ALICE, CARL, ELLE, FIONA, GEORGE), model.getFilteredTaskList());
     }
 
+    @Test
+    public void execute_parenthesesOr_success() {
+        FilterCommand command;
+
+        command = ensureParseSuccess("due: 2/10/2018 || (n:e && n:o)");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(ALICE, BENSON, ELLE, FIONA, GEORGE), model.getFilteredTaskList());
+    }
+
+    @Test
+    public void execute_paranthesesAnd_success() {
+        FilterCommand command;
+
+        command = ensureParseSuccess("due: 2/10/2018 && (n:e || n:o)");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(ALICE, ELLE, FIONA, GEORGE), model.getFilteredTaskList());
+
+        command = ensureParseSuccess("(due: 2/10/2018 || d>1/11/2018) && n:benson");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(BENSON), model.getFilteredTaskList());
+    }
+
+    @Test
+    public void execute_implicitAnd_success() {
+        FilterCommand command;
+
+        command = ensureParseSuccess("due: 2/10/2018 (n:e || n:o)");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(ALICE, ELLE, FIONA, GEORGE), model.getFilteredTaskList());
+
+        command = ensureParseSuccess("(due: 2/10/2018 || d>1/11/2018) n:benson");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(BENSON), model.getFilteredTaskList());
+
+        command = ensureParseSuccess("due: 2/10/2018 || (n:e n:o)");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(ALICE, BENSON, ELLE, FIONA, GEORGE), model.getFilteredTaskList());
+    }
+
+    @Test
+    public void execute_anyMatch_success() {
+        FilterCommand command;
+
+        command = ensureParseSuccess("2/10/2018 & (n:e || n:o)");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(ALICE, ELLE, FIONA, GEORGE), model.getFilteredTaskList());
+
+        command = ensureParseSuccess("2/10/2018 &(e | o)");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(ALICE, ELLE, FIONA, GEORGE), model.getFilteredTaskList());
+
+        command = ensureParseSuccess("d>1/11/2018 & benson");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(BENSON), model.getFilteredTaskList());
+
+        command = ensureParseSuccess("due: 2/10/2018 || (e && o)");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(ALICE, BENSON, ELLE, FIONA, GEORGE), model.getFilteredTaskList());
+
+        command = ensureParseSuccess("2/10/2018 || (e & o)");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(ALICE, BENSON, ELLE, FIONA, GEORGE), model.getFilteredTaskList());
+    }
+
+    @Test
+    public void execute_anyMatchWithImplicitAnd_success() {
+        FilterCommand command;
+
+        command = ensureParseSuccess("2/10/2018 (n:e || n:o)");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(ALICE, ELLE, FIONA, GEORGE), model.getFilteredTaskList());
+
+        command = ensureParseSuccess("2/10/2018 (e || o)");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(ALICE, ELLE, FIONA, GEORGE), model.getFilteredTaskList());
+
+        command = ensureParseSuccess("d>1/11/2018 benson");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(BENSON), model.getFilteredTaskList());
+
+        command = ensureParseSuccess("due: 2/10/2018 || (e o)");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(ALICE, BENSON, ELLE, FIONA, GEORGE), model.getFilteredTaskList());
+
+        command = ensureParseSuccess("2/10/2018 || (e o)");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(ALICE, BENSON, ELLE, FIONA, GEORGE), model.getFilteredTaskList());
+    }
+
     /**
      * Throws an assertion error if parsing fails, or else returns the successfully parsed FilterCommand.
      *
