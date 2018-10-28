@@ -8,6 +8,7 @@ import static seedu.address.testutil.Assert.assertThrows;
 
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.regex.Pattern;
 
 import org.junit.Test;
@@ -56,6 +57,8 @@ public class StringTokenizerTest {
         assertEquals(tokenizer.nextPattern(Pattern.compile("!")), "!");
         assertEquals(tokenizer.nextString(), "Test Test2");
         assertFalse(tokenizer.hasNextToken());
+        assertThrows(NoSuchElementException.class, () -> tokenizer.nextMatcher(Pattern.compile("[a-z&&[^w]]+")));
+        assertThrows(NoSuchElementException.class, () -> tokenizer.nextPattern(Pattern.compile("[a-z&&[^w]]+")));
     }
 
     @Test

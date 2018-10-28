@@ -37,8 +37,9 @@ public class SetUtil {
                 }
                 try {
                     return klass.getDeclaredConstructor(String.class).newInstance(token);
-                } catch (NoSuchMethodException | InstantiationException | IllegalAccessException
-                    | InvocationTargetException e) {
+                } catch (InvocationTargetException e) {
+                    throw new InvocationTargetWrapperException(e);
+                } catch (NoSuchMethodException | InstantiationException | IllegalAccessException e) {
                     throw new IllegalArgumentException("Class does not support construction from a single string", e);
                 }
             }).collect(Collectors.toSet());
@@ -55,6 +56,22 @@ public class SetUtil {
             }
         } catch (InputMismatchException e) {
             throw new InvalidPredicateTestPhraseException(e);
+        } catch (InvocationTargetWrapperException e) {
+            throw new InvalidPredicateTestPhraseException(e.getCause());
+        }
+    }
+
+    /**
+     * Wrapper class to wrapped the checked InvocationTargetException into an unchecked exception.
+     * It is used to throw the exception through the Stream machinery that is not declared to throw any exception.
+     */
+    private static class InvocationTargetWrapperException extends RuntimeException {
+        public InvocationTargetWrapperException(InvocationTargetException cause) {
+            super(cause);
+        }
+        @Override
+        public InvocationTargetException getCause() {
+            return (InvocationTargetException) super.getCause();
         }
     }
 }
