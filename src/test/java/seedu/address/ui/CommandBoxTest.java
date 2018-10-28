@@ -1,6 +1,7 @@
 package seedu.address.ui;
 
 import static org.junit.Assert.assertEquals;
+import static seedu.address.testutil.EventsUtil.postNow;
 
 import java.util.ArrayList;
 
@@ -9,6 +10,7 @@ import org.junit.Test;
 
 import guitests.guihandles.CommandBoxHandle;
 import javafx.scene.input.KeyCode;
+import seedu.address.commons.events.ui.ExecuteCommandEvent;
 import seedu.address.logic.Logic;
 import seedu.address.logic.LogicManager;
 import seedu.address.logic.commands.ListCommand;
@@ -19,6 +21,7 @@ public class CommandBoxTest extends GuiUnitTest {
 
     private static final String COMMAND_THAT_SUCCEEDS = ListCommand.COMMAND_WORD;
     private static final String COMMAND_THAT_FAILS = "invalid command";
+    private static final ExecuteCommandEvent COMMAND_EVENT_SUCCEEDS = new ExecuteCommandEvent(COMMAND_THAT_SUCCEEDS);
 
     private ArrayList<String> defaultStyleOfCommandBox;
     private ArrayList<String> errorStyleOfCommandBox;
@@ -125,6 +128,20 @@ public class CommandBoxTest extends GuiUnitTest {
         assertInputHistory(KeyCode.UP, thirdCommand);
     }
 
+    @Test
+    public void handleExecuteCommandEvent() {
+        // empty history
+        assertInputHistory(KeyCode.UP, "");
+        assertInputHistory(KeyCode.DOWN, "");
+
+        postNow(COMMAND_EVENT_SUCCEEDS);
+        assertEquals("", commandBoxHandle.getInput());
+        assertEquals(defaultStyleOfCommandBox, commandBoxHandle.getStyleClass());
+
+        // one item in history
+        assertInputHistory(KeyCode.UP, COMMAND_THAT_SUCCEEDS);
+        assertInputHistory(KeyCode.DOWN, "");
+    }
     /**
      * Runs a command that fails, then verifies that <br> - the text remains <br> - the command
      * box's style is the same as {@code errorStyleOfCommandBox}.
