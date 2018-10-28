@@ -18,8 +18,6 @@ import seedu.address.model.task.Task;
 @XmlRootElement(name = "taskcollection")
 public class XmlSerializableTaskCollection {
 
-    public static final String MESSAGE_DUPLICATE_TASK = "Task list contains duplicate task(s).";
-
     @XmlElement
     private List<XmlAdaptedTask> tasks;
 
@@ -50,9 +48,6 @@ public class XmlSerializableTaskCollection {
         TaskCollection taskCollection = new TaskCollection();
         for (XmlAdaptedTask p : tasks) {
             Task task = p.toModelType();
-            if (taskCollection.hasTask(task)) {
-                throw new IllegalValueException(MESSAGE_DUPLICATE_TASK);
-            }
             taskCollection.addTask(task);
         }
         return taskCollection;
