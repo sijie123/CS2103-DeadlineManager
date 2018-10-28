@@ -92,7 +92,8 @@ public class StorageManagerTest {
         // Exporting with file name equal to the working file should throw IllegalValueException.
         TaskCollection original = getTypicalTaskCollections();
         storageManager.saveTaskCollection(original);
-        Assert.assertThrows(IOException.class, Storage.MESSAGE_WRITE_FILE_EXISTS_ERROR, () ->
+        Assert.assertThrows(IOException.class,
+            String.format(Storage.MESSAGE_WRITE_FILE_EXISTS_ERROR, storageManager.getTaskCollectionFilePath()), () ->
             storageManager.exportTaskCollection(original, storageManager.getTaskCollectionFilePath(), false));
     }
 
@@ -158,7 +159,8 @@ public class StorageManagerTest {
         ReadOnlyTaskCollection retrieved = storageManager.importTaskCollection(getTempFilePath("dummyExport"))
                                                          .get();
         assertEquals(original, new TaskCollection(retrieved));
-        Assert.assertThrows(IOException.class, Storage.MESSAGE_WRITE_FILE_EXISTS_ERROR, () ->
+        Assert.assertThrows(IOException.class,
+            String.format(Storage.MESSAGE_WRITE_FILE_EXISTS_ERROR, getTempFilePath("dummyExport")), () ->
             storageManager.exportTaskCollection(original, getTempFilePath("dummyExport"), false));
 
         try {

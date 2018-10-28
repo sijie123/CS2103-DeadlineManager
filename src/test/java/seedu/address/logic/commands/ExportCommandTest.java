@@ -27,7 +27,8 @@ public class ExportCommandTest {
 
     @Test
     public void execute_exportOnExistingFile_exceptionThrown() {
-        IOException expectedException = new IOException(StorageManager.MESSAGE_WRITE_FILE_EXISTS_ERROR);
+        IOException expectedException = new IOException(
+            String.format(StorageManager.MESSAGE_WRITE_FILE_EXISTS_ERROR, defaultFile));
         ExportCommand testCommand = new ExportCommand(defaultFile, false);
         ModelStubWithExportTaskCollection modelStub = new ModelStubWithExportTaskCollection(defaultFile, testCommand);
         assertCommandFailure(testCommand, modelStub, commandHistory,
@@ -78,7 +79,8 @@ public class ExportCommandTest {
                 return;
             }
             if (filename.equals(this.filename)) {
-                Exception fileExistException = new IOException(Storage.MESSAGE_WRITE_FILE_EXISTS_ERROR);
+                Exception fileExistException = new IOException(
+                    String.format(Storage.MESSAGE_WRITE_FILE_EXISTS_ERROR, this.filename));
                 testCommand.handleImportExportExceptionEvent(new ImportExportExceptionEvent(fileExistException));
                 return;
             }

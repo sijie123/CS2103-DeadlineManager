@@ -71,11 +71,6 @@ public class ImportCommandTest {
                 //No error.
                 return;
             }
-            if (filename.equals(this.filename)) {
-                Exception fileRepeatException = new IOException(Storage.MESSAGE_READ_FILE_SAME_ERROR);
-                testCommand.handleImportExportExceptionEvent(new ImportExportExceptionEvent(fileRepeatException));
-                return;
-            }
             if (filename.equals(doesNotExistPath)) {
                 Exception fileMissingException = new IOException(Storage.MESSAGE_READ_FILE_MISSING_ERROR);
                 testCommand.handleImportExportExceptionEvent(new ImportExportExceptionEvent(fileMissingException));

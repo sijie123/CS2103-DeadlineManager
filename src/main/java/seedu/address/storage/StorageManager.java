@@ -85,20 +85,24 @@ public class StorageManager extends ComponentManager implements Storage {
 
     @Override
     public Optional<ReadOnlyTaskCollection> importTaskCollection(Path filePath)
-        throws DataConversionException, IOException {
+        throws IOException {
         if (!fileExists(filePath)) {
             throw new IOException(MESSAGE_READ_FILE_MISSING_ERROR);
         }
         TaskCollectionStorage importExportStorage = new XmlTaskCollectionStorage(filePath);
         logger.fine("Attempting to import from file: " + filePath);
-        return importExportStorage.readTaskCollection(filePath);
+        try {
+            return importExportStorage.readTaskCollection(filePath);
+        } catch (DataConversionException dce) {
+            throw new IOException(String.format(MESSAGE_READ_FILE_PARSE_ERROR, filePath));
+        }
     }
 
     @Override
     public void exportTaskCollection(ReadOnlyTaskCollection taskCollection, Path filePath, boolean shouldOverwrite)
         throws IOException {
         if (!shouldOverwrite && fileExists(filePath)) {
-            throw new IOException(MESSAGE_WRITE_FILE_EXISTS_ERROR);
+            throw new IOException(String.format(MESSAGE_WRITE_FILE_EXISTS_ERROR, filePath));
         }
         TaskCollectionStorage importExportStorage = new XmlTaskCollectionStorage(filePath);
         logger.fine("Attempting to export to file: " + filePath);
@@ -140,8 +144,8 @@ public class StorageManager extends ComponentManager implements Storage {
         try {
             ReadOnlyTaskCollection data = importTaskCollection(getPathFromFileName(event.filename)).get();
             raise(new ImportDataAvailableEvent(data));
-        } catch (IOException | DataConversionException e) {
-            raise(new ImportExportExceptionEvent(e));
+        } catch (IOException ioe) {
+            raise(new ImportExportExceptionEvent(ioe));
         }
     }
 
