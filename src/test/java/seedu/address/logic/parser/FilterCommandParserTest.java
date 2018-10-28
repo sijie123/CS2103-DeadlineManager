@@ -43,6 +43,16 @@ public class FilterCommandParserTest {
         assertParseSuccess(parser, "n<\"Hello World\"");
         assertParseSuccess(parser, "n:Test");
 
+        assertParseSuccess(parser, "p>1");
+        assertParseSuccess(parser, "p:1");
+        assertParseSuccess(parser, "p<1");
+        assertParseSuccess(parser, "p=1");
+        assertParseSuccess(parser, "p:0");
+        assertParseSuccess(parser, "p:2");
+        assertParseSuccess(parser, "p:3");
+        assertParseSuccess(parser, "p:4");
+        assertParseSuccess(parser, "p:\"3\"");
+
         assertParseSuccess(parser, "f>1");
         assertParseSuccess(parser, "f:1");
         assertParseSuccess(parser, "f<1");
