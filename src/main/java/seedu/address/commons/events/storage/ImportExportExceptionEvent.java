@@ -15,7 +15,7 @@ public class ImportExportExceptionEvent extends BaseEvent {
 
     @Override
     public String toString() {
-        return exception.toString();
+        return exception.getMessage();
     }
 
 }

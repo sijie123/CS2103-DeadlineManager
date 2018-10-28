@@ -1,9 +1,8 @@
 package seedu.address.logic.parser;
 
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_FILENAME;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_FILEPATH;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_RESOLVER;
-import static seedu.address.logic.parser.ParserUtil.parseFileName;
 
 import java.util.InputMismatchException;
 import java.util.Optional;
@@ -27,22 +26,21 @@ public class ExportCommandParser implements Parser<ExportCommand> {
         try {
             argMultimap =
                 ArgumentTokenizer
-                    .tokenize(args, PREFIX_FILENAME, PREFIX_RESOLVER);
+                    .tokenize(args, PREFIX_FILEPATH, PREFIX_RESOLVER);
         } catch (InputMismatchException ime) {
             throw new ParseException(
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE), ime);
         }
-        String filename = argMultimap.getValue(PREFIX_FILENAME).orElseThrow(() -> new ParseException(
+        String filename = argMultimap.getValue(PREFIX_FILEPATH).orElseThrow(() -> new ParseException(
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE)));
-        String checkedFilename = parseFileName(filename);
 
         Optional<String> shouldOverwriteCmd = argMultimap.getValue(PREFIX_RESOLVER);
         if (!shouldOverwriteCmd.isPresent()) {
-            return new ExportCommand(checkedFilename, false);
+            return new ExportCommand(filename, false);
         }
 
         if (shouldOverwriteCmd.get().equals("overwrite")) {
-            return new ExportCommand(checkedFilename, true);
+            return new ExportCommand(filename, true);
         } else {
             throw new ParseException(
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE));
