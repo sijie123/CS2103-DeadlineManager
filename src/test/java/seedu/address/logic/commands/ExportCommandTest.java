@@ -31,7 +31,7 @@ public class ExportCommandTest {
         ExportCommand testCommand = new ExportCommand(defaultFile, false);
         ModelStubWithExportTaskCollection modelStub = new ModelStubWithExportTaskCollection(defaultFile, testCommand);
         assertCommandFailure(testCommand, modelStub, commandHistory,
-                String.format(ExportCommand.MESSAGE_EXPORT_ERROR, expectedException.toString()));
+                String.format(ExportCommand.MESSAGE_EXPORT_ERROR, expectedException.getMessage()));
     }
 
     @Test

@@ -102,7 +102,12 @@ public class StorageManager extends ComponentManager implements Storage {
         }
         TaskCollectionStorage importExportStorage = new XmlTaskCollectionStorage(filePath);
         logger.fine("Attempting to export to file: " + filePath);
-        importExportStorage.saveTaskCollection(taskCollection);
+        try {
+            importExportStorage.saveTaskCollection(taskCollection);
+        } catch (IOException ioe) {
+            throw new IOException(String.format(MESSAGE_WRITE_FILE_NO_PERMISSION_ERROR, filePath), ioe);
+        }
+
     }
 
     @Override

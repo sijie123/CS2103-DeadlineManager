@@ -2,6 +2,7 @@ package seedu.address.logic.parser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -27,8 +28,11 @@ public class ArgumentMultimap {
      * @param prefix   Prefix key with which the specified argument value is to be associated
      * @param argValue Argument value to be associated with the specified prefix key
      */
-    public void put(Prefix prefix, String argValue) {
+    public void put(Prefix prefix, String argValue) throws InputMismatchException {
         List<String> argValues = getAllValues(prefix);
+        if (argValues.size() != 0 && !prefix.canOccurMultipleTimes()) {
+            throw new InputMismatchException("Multiple occurrences of prefix that should not repeat.");
+        }
         argValues.add(argValue);
         argMultimap.put(prefix, argValues);
     }
@@ -58,6 +62,6 @@ public class ArgumentMultimap {
      * spaces.
      */
     public String getPreamble() {
-        return getValue(new Prefix("")).orElse("");
+        return getValue(Prefix.EMPTY).orElse("");
     }
 }

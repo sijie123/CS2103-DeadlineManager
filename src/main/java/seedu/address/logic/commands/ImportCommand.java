@@ -20,9 +20,9 @@ public class ImportCommand extends Command {
     public static final String COMMAND_WORD = "import";
     public static final String MESSAGE_IMPORT_ERROR = "Import failed. Error: %s";
     public static final String MESSAGE_SUCCESS = "Imported successfully from file: %s";
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": imports a prevously saved file. "
-        + "Usage: import f/filename [r/all | r/overwrite | r/skip] \n"
-        + "Example: import f/saveFile.xml r/overwrite";
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": imports a previously saved file. "
+        + "Usage: import p/FILEPATH [r/all | r/overwrite | r/skip] \n"
+        + "Example: import p/saveFile.xml r/overwrite";
     private String fileName;
     private ImportConflictResolver conflictResolver;
     private String importError = "";
