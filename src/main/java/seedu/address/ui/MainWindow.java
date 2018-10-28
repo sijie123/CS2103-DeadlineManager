@@ -189,10 +189,6 @@ public class MainWindow extends UiPart<Stage> {
         return taskListPanel;
     }
 
-    void releaseResources() {
-
-    }
-
     @Subscribe
     private void handleShowHelpEvent(ShowHelpRequestEvent event) {
         logger.info(LogsCenter.getEventHandlingLogMessage(event));
