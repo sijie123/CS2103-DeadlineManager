@@ -40,29 +40,22 @@ public class ImportCommandParserTest {
     }
 
     @Test
-    public void parse_invalidFileName_throwsParseException() {
-        assertParseFailure(parser, " n/a/b", ParserUtil.MESSAGE_INVALID_FILENAME);
-        assertParseFailure(parser, " n//all", ParserUtil.MESSAGE_INVALID_FILENAME);
-        assertParseFailure(parser, " n/b/", ParserUtil.MESSAGE_INVALID_FILENAME);
-        assertParseFailure(parser, " n/a-b", ParserUtil.MESSAGE_INVALID_FILENAME);
-        assertParseFailure(parser, " n/ ", ParserUtil.MESSAGE_INVALID_FILENAME);
-        assertParseFailure(parser, " n/文件", ParserUtil.MESSAGE_INVALID_FILENAME);
-    }
-
-    @Test
     public void parse_validFileName_returnsImportCommand() {
         assertParseSuccess(parser, " n/ab", new ImportCommand("ab"));
         assertParseSuccess(parser, " n/a_b", new ImportCommand("a_b"));
         assertParseSuccess(parser, " n/veryverylongname", new ImportCommand("veryverylongname"));
         assertParseSuccess(parser, " n/fullstop.txt", new ImportCommand("fullstop.txt"));
         assertParseSuccess(parser, " n/filename_xml.txt", new ImportCommand("filename_xml.txt"));
+        assertParseSuccess(parser, " n/.", new ImportCommand("."));
+        assertParseSuccess(parser, " n/../folder/file", new ImportCommand("../folder/file"));
+        assertParseSuccess(parser, " n/华文", new ImportCommand("华文"));
+        //Filename is "
+        // ab c/what"
+        assertParseSuccess(parser, " n/ab c/what", new ImportCommand("ab c/what"));
     }
 
     @Test
-    public void parse_invalidFileNameParameters_throwsParseException() {
-        assertParseFailure(parser, " n/ab c/what", ParserUtil.MESSAGE_INVALID_FILENAME);
-        assertParseFailure(parser, " n/a*b r/all", ParserUtil.MESSAGE_INVALID_FILENAME);
-        assertParseFailure(parser, " n/   r/all", ParserUtil.MESSAGE_INVALID_FILENAME);
+    public void parse_invalidParameters_throwsParseException() {
         assertParseFailure(parser, " n/file r/override",
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, ImportCommand.MESSAGE_USAGE));
         assertParseFailure(parser, " n/file r/invalid",
@@ -73,6 +66,8 @@ public class ImportCommandParserTest {
 
     @Test
     public void parse_validFileNameParameters_returnsImportCommand() {
+        assertParseSuccess(parser, " n/   r/all",
+            new ImportCommand("", new DuplicateImportConflictResolver()));
         assertParseSuccess(parser, " n/ab r/all",
             new ImportCommand("ab", new DuplicateImportConflictResolver()));
         assertParseSuccess(parser, " n/a_b",

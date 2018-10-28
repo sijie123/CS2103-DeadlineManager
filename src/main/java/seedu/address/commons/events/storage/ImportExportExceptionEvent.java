@@ -13,6 +13,10 @@ public class ImportExportExceptionEvent extends BaseEvent {
         this.exception = exception;
     }
 
+    public String getExceptionMessage() {
+        return exception.getMessage();
+    }
+
     @Override
     public String toString() {
         return exception.toString();

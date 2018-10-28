@@ -21,8 +21,8 @@ public class ImportCommand extends Command {
     public static final String MESSAGE_IMPORT_ERROR = "Import failed. Error: %s";
     public static final String MESSAGE_SUCCESS = "Imported successfully from file: %s";
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": imports a prevously saved file. "
-        + "Usage: import f/filename [r/all | r/overwrite | r/skip] \n"
-        + "Example: import f/saveFile.xml r/overwrite";
+        + "Usage: import n/FILENAME [r/all | r/overwrite | r/skip] \n"
+        + "Example: import n/saveFile.xml r/overwrite";
     private String fileName;
     private ImportConflictResolver conflictResolver;
     private String importError = "";
@@ -64,7 +64,7 @@ public class ImportCommand extends Command {
 
     @Subscribe
     public void handleImportExportExceptionEvent(ImportExportExceptionEvent event) {
-        importError = event.toString();
+        importError = event.getExceptionMessage();
     }
 
 }

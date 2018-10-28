@@ -56,6 +56,6 @@ public class ExportCommand extends Command {
 
     @Subscribe
     public void handleImportExportExceptionEvent(ImportExportExceptionEvent event) {
-        exportError = event.toString();
+        exportError = event.getExceptionMessage();
     }
 }

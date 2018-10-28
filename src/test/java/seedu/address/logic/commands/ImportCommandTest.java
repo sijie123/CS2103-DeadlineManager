@@ -33,7 +33,7 @@ public class ImportCommandTest {
         ImportCommand testCommand = new ImportCommand(doesNotExistPath);
         ModelStubWithImportTaskCollection modelStub = new ModelStubWithImportTaskCollection(defaultFile, testCommand);
         assertCommandFailure(testCommand, modelStub, commandHistory,
-                String.format(ImportCommand.MESSAGE_IMPORT_ERROR, expectedException.toString()));
+                String.format(ImportCommand.MESSAGE_IMPORT_ERROR, expectedException.getMessage()));
     }
 
     @Test

@@ -36,15 +36,6 @@ public class ExportCommandParserTest {
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE));
     }
 
-    @Test
-    public void parse_invalidFileName_throwsParseException() {
-        assertParseFailure(parser, " n/a/b", ParserUtil.MESSAGE_INVALID_FILENAME);
-        assertParseFailure(parser, " n//all", ParserUtil.MESSAGE_INVALID_FILENAME);
-        assertParseFailure(parser, " n/b/", ParserUtil.MESSAGE_INVALID_FILENAME);
-        assertParseFailure(parser, " n/a-b", ParserUtil.MESSAGE_INVALID_FILENAME);
-        assertParseFailure(parser, " n/ ", ParserUtil.MESSAGE_INVALID_FILENAME);
-        assertParseFailure(parser, " n/文件", ParserUtil.MESSAGE_INVALID_FILENAME);
-    }
 
     @Test
     public void parse_validFileName_returnsExportCommand() {
@@ -53,13 +44,18 @@ public class ExportCommandParserTest {
         assertParseSuccess(parser, " n/veryverylongname", new ExportCommand("veryverylongname", false));
         assertParseSuccess(parser, " n/fullstop.txt", new ExportCommand("fullstop.txt", false));
         assertParseSuccess(parser, " n/filename_xml.txt", new ExportCommand("filename_xml.txt", false));
+        assertParseSuccess(parser, " n/.", new ExportCommand(".", false));
+        assertParseSuccess(parser, " n/./folder/file", new ExportCommand("./folder/file", false));
+        assertParseSuccess(parser, " n/../folder/file", new ExportCommand("../folder/file", false));
+        assertParseSuccess(parser, " n/华文", new ExportCommand("华文", false));
+        //Filename is "ab c/what"
+        assertParseSuccess(parser, " n/ab c/what", new ExportCommand("ab c/what", false));
+        //Filename is ""
+        assertParseSuccess(parser, " n/    ", new ExportCommand("", false));
     }
 
     @Test
-    public void parse_invalidFileNameParameters_throwsParseException() {
-        assertParseFailure(parser, " n/ab c/what", ParserUtil.MESSAGE_INVALID_FILENAME);
-        assertParseFailure(parser, " n/a*b r/all", ParserUtil.MESSAGE_INVALID_FILENAME);
-        assertParseFailure(parser, " n/   r/all", ParserUtil.MESSAGE_INVALID_FILENAME);
+    public void parse_invalidParameters_throwsParseException() {
         assertParseFailure(parser, " n/file r/override",
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE));
         assertParseFailure(parser, " n/file r/invalid",
