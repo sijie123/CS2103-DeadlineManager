@@ -219,6 +219,80 @@ public class FilterCommandTest {
     }
 
     @Test
+    public void execute_priorityInvalid_failure() {
+        ensureParseFailure("p:a");
+        ensureParseFailure("p:-1");
+        ensureParseFailure("p:5");
+        ensureParseFailure("p:-10");
+        ensureParseFailure("p:10");
+        ensureParseFailure("p:2.5");
+    }
+
+    @Test
+    public void execute_frequencyExact_success() {
+        FilterCommand command = ensureParseSuccess("f=225");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(FIONA), model.getFilteredTaskList());
+    }
+
+    @Test
+    public void execute_frequencyLower_success() {
+        FilterCommand command = ensureParseSuccess("f<200");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(ALICE, BENSON, CARL, DANIEL, ELLE, FIONA, GEORGE), model.getFilteredTaskList());
+    }
+
+    @Test
+    public void execute_frequencyHigher_success() {
+        FilterCommand command = ensureParseSuccess("f>200");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(ALICE), model.getFilteredTaskList());
+    }
+
+    @Test
+    public void execute_frequencyConvenience_success() {
+        FilterCommand command = ensureParseSuccess("f:200");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(ALICE), model.getFilteredTaskList());
+    }
+
+    @Test
+    public void execute_frequencyLongform_success() {
+        FilterCommand command = ensureParseSuccess("frequency:200");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(ALICE), model.getFilteredTaskList());
+    }
+
+    @Test
+    public void execute_frequencySpaced_success() {
+        FilterCommand command;
+
+        command = ensureParseSuccess("frequency: 200");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(ALICE), model.getFilteredTaskList());
+
+        command = ensureParseSuccess("frequency : 200");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(ALICE), model.getFilteredTaskList());
+
+        command = ensureParseSuccess("frequency :200");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(ALICE), model.getFilteredTaskList());
+
+        command = ensureParseSuccess("frequency  :   200");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(ALICE), model.getFilteredTaskList());
+    }
+
+    @Test
+    public void execute_frequencyInvalid_failure() {
+        ensureParseFailure("f:a");
+        ensureParseFailure("f:-1");
+        ensureParseFailure("f:-10");
+        ensureParseFailure("f:2.5");
+    }
+
+    @Test
     public void execute_andOperator_success() {
         FilterCommand command;
 
