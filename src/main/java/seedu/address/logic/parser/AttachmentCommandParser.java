@@ -11,6 +11,8 @@ import static seedu.address.logic.commands.AttachmentCommand.MESSAGE_MISSING_ARG
 import static seedu.address.logic.parser.CliSyntax.PREFIX_FILENAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_FILEPATH;
 
+import java.util.InputMismatchException;
+
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.AttachmentCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
@@ -28,9 +30,15 @@ public class AttachmentCommandParser implements Parser<AttachmentCommand> {
      */
     public AttachmentCommand parse(String args) throws ParseException {
         requireNonNull(args);
-        ArgumentMultimap argMultimap =
-            ArgumentTokenizer
-                .tokenize(args, PREFIX_FILEPATH, PREFIX_FILENAME);
+        ArgumentMultimap argMultimap;
+        try {
+            argMultimap =
+                ArgumentTokenizer
+                    .tokenize(args, PREFIX_FILEPATH, PREFIX_FILENAME);
+        } catch (InputMismatchException ime) {
+            throw new ParseException(
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, AttachmentCommand.MESSAGE_USAGE), ime);
+        }
 
         Index index;
         String actionWord;

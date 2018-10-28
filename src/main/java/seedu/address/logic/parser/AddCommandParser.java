@@ -9,6 +9,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 import static seedu.address.model.task.Frequency.NO_FREQUENCY;
 import static seedu.address.model.task.Priority.NO_PRIORITY;
 
+import java.util.InputMismatchException;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -43,9 +44,15 @@ public class AddCommandParser implements Parser<AddCommand> {
      * @throws ParseException if the user input does not conform the expected format
      */
     public AddCommand parse(String args) throws ParseException {
-        ArgumentMultimap argMultimap =
+        ArgumentMultimap argMultimap;
+        try {
+            argMultimap =
                 ArgumentTokenizer
-                        .tokenize(args, PREFIX_NAME, PREFIX_PRIORITY, PREFIX_FREQUENCY, PREFIX_DEADLINE, PREFIX_TAG);
+                    .tokenize(args, PREFIX_NAME, PREFIX_PRIORITY, PREFIX_FREQUENCY, PREFIX_DEADLINE, PREFIX_TAG);
+        } catch (InputMismatchException ime) {
+            throw new ParseException(
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE), ime);
+        }
 
         if (!arePrefixesPresent(argMultimap, PREFIX_NAME, PREFIX_DEADLINE)
                 || !argMultimap.getPreamble().isEmpty()) {
