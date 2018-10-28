@@ -10,6 +10,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.InputMismatchException;
 import java.util.Optional;
 import java.util.Set;
 
@@ -31,11 +32,16 @@ public class EditCommandParser implements Parser<EditCommand> {
      */
     public EditCommand parse(String args) throws ParseException {
         requireNonNull(args);
-        ArgumentMultimap argMultimap =
+        ArgumentMultimap argMultimap;
+        try {
+            argMultimap =
                 ArgumentTokenizer
-                        .tokenize(args, PREFIX_NAME, PREFIX_PRIORITY, PREFIX_FREQUENCY,
-                                PREFIX_DEADLINE, PREFIX_TAG);
-
+                    .tokenize(args, PREFIX_NAME, PREFIX_PRIORITY, PREFIX_FREQUENCY,
+                        PREFIX_DEADLINE, PREFIX_TAG);
+        } catch (InputMismatchException ime) {
+            throw new ParseException(
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE), ime);
+        }
         Index index;
 
         try {
