@@ -1,7 +1,7 @@
 package seedu.address.logic.parser;
 
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_FILENAME;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_FILEPATH;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_RESOLVER;
 
 import java.util.InputMismatchException;
@@ -30,12 +30,12 @@ public class ImportCommandParser implements Parser<ImportCommand> {
         try {
             argMultimap =
                 ArgumentTokenizer
-                    .tokenize(args, PREFIX_FILENAME, PREFIX_RESOLVER);
+                    .tokenize(args, PREFIX_FILEPATH, PREFIX_RESOLVER);
         } catch (InputMismatchException ime) {
             throw new ParseException(
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, ImportCommand.MESSAGE_USAGE), ime);
         }
-        String filename = argMultimap.getValue(PREFIX_FILENAME).orElseThrow(() -> new ParseException(
+        String filename = argMultimap.getValue(PREFIX_FILEPATH).orElseThrow(() -> new ParseException(
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, ImportCommand.MESSAGE_USAGE)));
 
         ImportConflictResolver resolver;

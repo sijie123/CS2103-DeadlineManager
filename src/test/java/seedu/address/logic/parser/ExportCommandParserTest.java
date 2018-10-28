@@ -30,7 +30,7 @@ public class ExportCommandParserTest {
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE));
         assertParseFailure(parser, " n",
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE));
-        assertParseFailure(parser, " n/all r/",
+        assertParseFailure(parser, " p/all r/",
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE));
         assertParseFailure(parser, " a*b",
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE));
@@ -39,38 +39,43 @@ public class ExportCommandParserTest {
 
     @Test
     public void parse_validFileName_returnsExportCommand() {
-        assertParseSuccess(parser, " n/ab", new ExportCommand("ab", false));
-        assertParseSuccess(parser, " n/a_b", new ExportCommand("a_b", false));
-        assertParseSuccess(parser, " n/veryverylongname", new ExportCommand("veryverylongname", false));
-        assertParseSuccess(parser, " n/fullstop.txt", new ExportCommand("fullstop.txt", false));
-        assertParseSuccess(parser, " n/filename_xml.txt", new ExportCommand("filename_xml.txt", false));
-        assertParseSuccess(parser, " n/.", new ExportCommand(".", false));
-        assertParseSuccess(parser, " n/./folder/file", new ExportCommand("./folder/file", false));
-        assertParseSuccess(parser, " n/../folder/file", new ExportCommand("../folder/file", false));
-        assertParseSuccess(parser, " n/华文", new ExportCommand("华文", false));
+        assertParseSuccess(parser, " p/ab", new ExportCommand("ab", false));
+        assertParseSuccess(parser, " p/a_b", new ExportCommand("a_b", false));
+        assertParseSuccess(parser, " p/veryverylongname", new ExportCommand("veryverylongname", false));
+        assertParseSuccess(parser, " p/fullstop.txt", new ExportCommand("fullstop.txt", false));
+        assertParseSuccess(parser, " p/filename_xml.txt", new ExportCommand("filename_xml.txt", false));
+        assertParseSuccess(parser, " p/.", new ExportCommand(".", false));
+        assertParseSuccess(parser, " p/./folder/file", new ExportCommand("./folder/file", false));
+        assertParseSuccess(parser, " p/../folder/file", new ExportCommand("../folder/file", false));
+        assertParseSuccess(parser, " p/华文", new ExportCommand("华文", false));
         //Filename is "ab c/what"
-        assertParseSuccess(parser, " n/ab c/what", new ExportCommand("ab c/what", false));
+        assertParseSuccess(parser, " p/ab c/what", new ExportCommand("ab c/what", false));
         //Filename is ""
-        assertParseSuccess(parser, " n/    ", new ExportCommand("", false));
+        assertParseSuccess(parser, " p/    ", new ExportCommand("", false));
     }
 
     @Test
     public void parse_invalidParameters_throwsParseException() {
-        assertParseFailure(parser, " n/file r/override",
+        assertParseFailure(parser, " p/file r/override",
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE));
-        assertParseFailure(parser, " n/file r/invalid",
+        assertParseFailure(parser, " p/file r/invalid",
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE));
-        assertParseFailure(parser, " n/wrongCommand r//all",
+        assertParseFailure(parser, " p/wrongCommand r//all",
+            String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE));
+        //The below should fail. If a directory is indeed file p/name, it should be in quotes.
+        assertParseFailure(parser, " p/file p/name",
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE));
     }
 
     @Test
     public void parse_validFileNameParameters_returnsExportCommand() {
-        assertParseSuccess(parser, " n/ab r/overwrite",
+        assertParseSuccess(parser, " p/ab r/overwrite",
             new ExportCommand("ab", true));
-        assertParseSuccess(parser, " n/a_b",
+        assertParseSuccess(parser, " p/a_b",
             new ExportCommand("a_b", false));
-        assertParseSuccess(parser, " n/filename_xml.txt r/overwrite",
+        assertParseSuccess(parser, " p/filename_xml.txt r/overwrite",
             new ExportCommand("filename_xml.txt", true));
+        assertParseSuccess(parser, " p/'file p/name'",
+            new ExportCommand("file p/name", false));
     }
 }

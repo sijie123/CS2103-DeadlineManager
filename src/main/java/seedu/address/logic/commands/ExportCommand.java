@@ -18,7 +18,7 @@ public class ExportCommand extends Command {
     public static final String COMMAND_WORD = "export";
     public static final String MESSAGE_EXPORT_ERROR = "Export failed. Error: %s";
     public static final String MESSAGE_SUCCESS = "Exported successfully to external file: %s";
-    public static final String MESSAGE_USAGE = "export n/FILENAME [r/overwrite]";
+    public static final String MESSAGE_USAGE = "export p/FILEPATH [r/overwrite]";
     private String pathName;
     private String exportError = "";
     private boolean overwrite;
@@ -56,6 +56,6 @@ public class ExportCommand extends Command {
 
     @Subscribe
     public void handleImportExportExceptionEvent(ImportExportExceptionEvent event) {
-        exportError = event.getExceptionMessage();
+        exportError = event.toString();
     }
 }

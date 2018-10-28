@@ -33,7 +33,7 @@ public class ImportCommandParserTest {
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, ImportCommand.MESSAGE_USAGE));
         assertParseFailure(parser, " n",
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, ImportCommand.MESSAGE_USAGE));
-        assertParseFailure(parser, " n/all r/",
+        assertParseFailure(parser, " p/all r/",
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, ImportCommand.MESSAGE_USAGE));
         assertParseFailure(parser, " a*b",
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, ImportCommand.MESSAGE_USAGE));
@@ -41,42 +41,46 @@ public class ImportCommandParserTest {
 
     @Test
     public void parse_validFileName_returnsImportCommand() {
-        assertParseSuccess(parser, " n/ab", new ImportCommand("ab"));
-        assertParseSuccess(parser, " n/a_b", new ImportCommand("a_b"));
-        assertParseSuccess(parser, " n/veryverylongname", new ImportCommand("veryverylongname"));
-        assertParseSuccess(parser, " n/fullstop.txt", new ImportCommand("fullstop.txt"));
-        assertParseSuccess(parser, " n/filename_xml.txt", new ImportCommand("filename_xml.txt"));
-        assertParseSuccess(parser, " n/.", new ImportCommand("."));
-        assertParseSuccess(parser, " n/../folder/file", new ImportCommand("../folder/file"));
-        assertParseSuccess(parser, " n/华文", new ImportCommand("华文"));
-        //Filename is "
-        // ab c/what"
-        assertParseSuccess(parser, " n/ab c/what", new ImportCommand("ab c/what"));
+        assertParseSuccess(parser, " p/ab", new ImportCommand("ab"));
+        assertParseSuccess(parser, " p/a_b", new ImportCommand("a_b"));
+        assertParseSuccess(parser, " p/veryverylongname", new ImportCommand("veryverylongname"));
+        assertParseSuccess(parser, " p/fullstop.txt", new ImportCommand("fullstop.txt"));
+        assertParseSuccess(parser, " p/filename_xml.txt", new ImportCommand("filename_xml.txt"));
+        assertParseSuccess(parser, " p/.", new ImportCommand("."));
+        assertParseSuccess(parser, " p/../folder/file", new ImportCommand("../folder/file"));
+        assertParseSuccess(parser, " p/华文", new ImportCommand("华文"));
+        //Filename is "ab c/what"
+        assertParseSuccess(parser, " p/ab c/what", new ImportCommand("ab c/what"));
     }
 
     @Test
     public void parse_invalidParameters_throwsParseException() {
-        assertParseFailure(parser, " n/file r/override",
+        assertParseFailure(parser, " p/file r/override",
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, ImportCommand.MESSAGE_USAGE));
-        assertParseFailure(parser, " n/file r/invalid",
+        assertParseFailure(parser, " p/file r/invalid",
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, ImportCommand.MESSAGE_USAGE));
-        assertParseFailure(parser, " n/wrongCommand r//all",
+        assertParseFailure(parser, " p/wrongCommand r//all",
+            String.format(MESSAGE_INVALID_COMMAND_FORMAT, ImportCommand.MESSAGE_USAGE));
+        //The below should fail. If a directory is indeed file p/name, it should be in quotes.
+        assertParseFailure(parser, " p/file p/name",
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, ImportCommand.MESSAGE_USAGE));
     }
 
     @Test
     public void parse_validFileNameParameters_returnsImportCommand() {
-        assertParseSuccess(parser, " n/   r/all",
+        assertParseSuccess(parser, " p/   r/all",
             new ImportCommand("", new DuplicateImportConflictResolver()));
-        assertParseSuccess(parser, " n/ab r/all",
+        assertParseSuccess(parser, " p/ab r/all",
             new ImportCommand("ab", new DuplicateImportConflictResolver()));
-        assertParseSuccess(parser, " n/a_b",
+        assertParseSuccess(parser, " p/a_b",
             new ImportCommand("a_b", new IgnoreImportConflictResolver()));
-        assertParseSuccess(parser, " n/veryverylongname r/overwrite",
+        assertParseSuccess(parser, " p/veryverylongname r/overwrite",
             new ImportCommand("veryverylongname", new OverwriteImportConflictResolver()));
-        assertParseSuccess(parser, " n/fullstop.txt r/all",
+        assertParseSuccess(parser, " p/fullstop.txt r/all",
             new ImportCommand("fullstop.txt", new DuplicateImportConflictResolver()));
-        assertParseSuccess(parser, " n/filename_xml.txt r/skip",
+        assertParseSuccess(parser, " p/filename_xml.txt r/skip",
             new ImportCommand("filename_xml.txt", new IgnoreImportConflictResolver()));
+        assertParseSuccess(parser, " p/'file p/name'",
+            new ImportCommand("file p/name", new IgnoreImportConflictResolver()));
     }
 }
