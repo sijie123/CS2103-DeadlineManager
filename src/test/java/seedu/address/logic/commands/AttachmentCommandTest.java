@@ -23,6 +23,8 @@ import java.util.Set;
 
 import org.junit.Test;
 
+import seedu.address.commons.core.Messages;
+import seedu.address.commons.core.index.Index;
 import seedu.address.logic.CommandHistory;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
@@ -73,14 +75,6 @@ public class AttachmentCommandTest {
         Task modifiedTask = new TaskBuilder(task).withAttachments(attachmentSet).build();
         return modifiedTask;
     }
-
-    /**
-     * TODO:
-     * - Add attachment
-     * - Delete attachment
-     * - List attachment
-     * - Get attachment
-     */
 
     @Test
     public void execute_addAttachmentFileNotFound_error() {
@@ -249,6 +243,15 @@ public class AttachmentCommandTest {
         assertCommandSuccess(attachmentCommand, model, commandHistory, expectedMessage, expectedModel);
     }
 
+    @Test
+    public void execute_listAttachment_error() {
+        AttachmentCommand.AttachmentAction action = new AttachmentCommand.ListAttachmentAction();
+        Index invalidIndex = Index.fromOneBased(model.getFilteredTaskList().size() + 5);
+        AttachmentCommand attachmentCommand = new AttachmentCommand(invalidIndex, action);
+        String expectedMessage = Messages.MESSAGE_INVALID_TASK_DISPLAYED_INDEX;
+        assertCommandFailure(attachmentCommand, model, commandHistory, expectedMessage);
+    }
+
 
     @Test
     public void execute_getAttachmentInvalid_error() {
@@ -362,6 +365,7 @@ public class AttachmentCommandTest {
         AttachmentCommand.AttachmentAction add = new AttachmentCommand.AddAttachmentAction("helloworld.docx");
         assertEquals(add, new AttachmentCommand.AddAttachmentAction("helloworld.docx"));
         assertNotEquals(add, new AttachmentCommand.AddAttachmentAction("meow.txt"));
+
         AttachmentCommand.AttachmentAction delete = new AttachmentCommand.DeleteAttachmentAction(
             "delete please.docx");
         assertEquals(delete, new AttachmentCommand.DeleteAttachmentAction("delete please.docx"));
@@ -381,10 +385,43 @@ public class AttachmentCommandTest {
             "helloworld.txt"));
         assertNotEquals(get, list);
 
-        AttachmentCommand attachment = new AttachmentCommand(INDEX_SECOND_TASK, list);
-        assertEquals(attachment, new AttachmentCommand(INDEX_SECOND_TASK, list));
-        assertNotEquals(attachment, new AttachmentCommand(INDEX_THIRD_TASK, list));
-        assertNotEquals(attachment, new AttachmentCommand(INDEX_SECOND_TASK, get));
+        AttachmentCommand attachmentCommand = new AttachmentCommand(INDEX_SECOND_TASK, list);
+        assertEquals(attachmentCommand, new AttachmentCommand(INDEX_SECOND_TASK, list));
+        assertNotEquals(attachmentCommand, new AttachmentCommand(INDEX_THIRD_TASK, list));
+        assertNotEquals(attachmentCommand, new AttachmentCommand(INDEX_SECOND_TASK, get));
+
+        assertNotEquals(add, attachmentCommand);
+        assertNotEquals(delete, attachmentCommand);
+        assertNotEquals(list, attachmentCommand);
+        assertNotEquals(get, attachmentCommand);
+
+        assertEquals(attachmentCommand, attachmentCommand);
+        assertEquals(add, add);
+        assertEquals(delete, delete);
+        assertEquals(list, list);
+        assertEquals(get, get);
+    }
+
+    @Test
+    public void toStringTest() {
+        AttachmentCommand.AttachmentAction add = new AttachmentCommand.AddAttachmentAction("helloworld.docx");
+        AttachmentCommand.AttachmentAction delete = new AttachmentCommand.DeleteAttachmentAction(
+            "delete please.docx");
+        AttachmentCommand.AttachmentAction list = new AttachmentCommand.ListAttachmentAction();
+        AttachmentCommand.AttachmentAction get = new AttachmentCommand.GetAttachmentAction("helloworld.txt",
+            "hello/world/helloworld.txt");
+        AttachmentCommand attachmentCommand = new AttachmentCommand(INDEX_SECOND_TASK, delete);
+
+        assertEquals(add.toString(), String.format("Add attachment at path %s", "helloworld.docx"));
+        assertEquals(delete.toString(), String.format("Delete attachment with name %s", "delete please.docx"));
+        assertEquals(list.toString(), "List attachments");
+        assertEquals(get.toString(),
+            String.format("Put attachment with name %s to %s", "helloworld.txt", "hello/world/helloworld.txt"));
+
+        String expected = String.format("AttachmentCommand at index %d, with action: %s",
+            INDEX_THIRD_TASK.getOneBased(), delete.toString());
+        assertEquals(new AttachmentCommand(INDEX_THIRD_TASK, delete).toString(), expected);
+
     }
 
 }
