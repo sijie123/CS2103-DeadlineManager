@@ -2,11 +2,11 @@ package seedu.address.logic.parser;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-import static seedu.address.commons.core.Messages.MESSAGE_UNKNOWN_COMMAND;
 import static seedu.address.logic.commands.AttachmentCommand.COMMAND_ADD_ACTION;
 import static seedu.address.logic.commands.AttachmentCommand.COMMAND_DELETE_ACTION;
 import static seedu.address.logic.commands.AttachmentCommand.COMMAND_GET_ACTION;
 import static seedu.address.logic.commands.AttachmentCommand.COMMAND_LIST_ACTION;
+import static seedu.address.logic.commands.AttachmentCommand.MESSAGE_DUPLICATED_ARGUMENTS;
 import static seedu.address.logic.commands.AttachmentCommand.MESSAGE_MISSING_ARGUMENTS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_FILENAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_FILEPATH;
@@ -65,7 +65,7 @@ public class AttachmentCommandParser implements Parser<AttachmentCommand> {
         case COMMAND_GET_ACTION:
             return parseGetAction(index, argMultimap);
         default:
-            throw new ParseException(MESSAGE_UNKNOWN_COMMAND);
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AttachmentCommand.MESSAGE_USAGE));
         }
     }
 
@@ -75,6 +75,10 @@ public class AttachmentCommandParser implements Parser<AttachmentCommand> {
     private AttachmentCommand parseAddAction(Index index, ArgumentMultimap argMultimap) throws ParseException {
         if (!argMultimap.getValue(PREFIX_FILEPATH).isPresent()) {
             throw new ParseException(String.format(MESSAGE_MISSING_ARGUMENTS, "FILEPATH", "add"));
+        }
+        // Can only specify one file path
+        if (argMultimap.getAllValues(PREFIX_FILEPATH).size() > 1) {
+            throw new ParseException(String.format(MESSAGE_DUPLICATED_ARGUMENTS, "FILEPATH"));
         }
         String filePath = argMultimap.getValue(PREFIX_FILEPATH).get();
         AttachmentCommand.AttachmentAction action = new AttachmentCommand.AddAttachmentAction(filePath);
@@ -97,6 +101,10 @@ public class AttachmentCommandParser implements Parser<AttachmentCommand> {
         if (!argMultimap.getValue(PREFIX_FILENAME).isPresent()) {
             throw new ParseException(String.format(MESSAGE_MISSING_ARGUMENTS, "FILENAME", "delete"));
         }
+        // Can only specify one file path
+        if (argMultimap.getAllValues(PREFIX_FILENAME).size() > 1) {
+            throw new ParseException(String.format(MESSAGE_DUPLICATED_ARGUMENTS, "FILENAME"));
+        }
         String fileName = argMultimap.getValue(PREFIX_FILENAME).get();
         AttachmentCommand.AttachmentAction action = new AttachmentCommand.DeleteAttachmentAction(fileName);
         return new AttachmentCommand(index, action);
@@ -109,8 +117,16 @@ public class AttachmentCommandParser implements Parser<AttachmentCommand> {
         if (!argMultimap.getValue(PREFIX_FILENAME).isPresent()) {
             throw new ParseException(String.format(MESSAGE_MISSING_ARGUMENTS, "FILENAME", "get"));
         }
+        // Can only specify one file path
+        if (argMultimap.getAllValues(PREFIX_FILENAME).size() > 1) {
+            throw new ParseException(String.format(MESSAGE_DUPLICATED_ARGUMENTS, "FILENAME"));
+        }
         if (!argMultimap.getValue(PREFIX_FILEPATH).isPresent()) {
             throw new ParseException(String.format(MESSAGE_MISSING_ARGUMENTS, "FILEPATH", "get"));
+        }
+        // Can only specify one file path
+        if (argMultimap.getAllValues(PREFIX_FILEPATH).size() > 1) {
+            throw new ParseException(String.format(MESSAGE_DUPLICATED_ARGUMENTS, "FILEPATH"));
         }
         String fileName = argMultimap.getValue(PREFIX_FILENAME).get();
         String filePath = argMultimap.getValue(PREFIX_FILEPATH).get();

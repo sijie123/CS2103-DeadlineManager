@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.logging.Logger;
@@ -24,6 +25,31 @@ public class Attachment {
     public Attachment(File file) {
         requireNonNull(file);
         this.file = file;
+    }
+
+    /**
+     * Checks if the attachment can be read by the system.
+     * THat is, if it exists, it is a file and it is possible for us to read it.
+     * @return True if the attachment can be read by the system, False otherwise
+     */
+    public boolean isReadable() {
+        if (!file.exists()) {
+            logger.info(String.format("Attachment %s is not readable as file.exists() fails", file));
+            return false;
+        }
+        if (!file.isFile()) {
+            logger.info(String.format("Attachment %s is not readable as file.isFile() fails", file));
+            return false;
+        }
+        if (!file.canRead()) {
+            logger.info(String.format("Attachment %s is not readable as file.canRead() fails", file));
+            return false;
+        }
+        if (!Files.isReadable(FileSystems.getDefault().getPath(file.getPath()))) {
+            logger.info(String.format("Attachment %s is not readable as isReadable fails", file));
+            return false;
+        }
+        return true;
     }
 
     /**

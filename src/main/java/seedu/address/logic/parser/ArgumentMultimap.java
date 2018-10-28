@@ -62,6 +62,6 @@ public class ArgumentMultimap {
      * spaces.
      */
     public String getPreamble() {
-        return getValue(new Prefix("", true)).orElse("");
+        return getValue(Prefix.EMPTY).orElse("");
     }
 }

@@ -1,5 +1,6 @@
 package seedu.address.logic.parser;
 
+import java.util.HashSet;
 import java.util.InputMismatchException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,6 +30,7 @@ public class ArgumentTokenizer {
         if (prefixes.length == 0) {
             return tokenizeWithoutPrefix(tokenizer, argsString);
         }
+        checkUniquePrefixes(prefixes);
         Pattern pattern = makePattern(prefixes);
         return tokenize(tokenizer, pattern, prefixes);
     }
@@ -45,7 +47,7 @@ public class ArgumentTokenizer {
     private static ArgumentMultimap tokenize(StringTokenizer tokenizer, Pattern pattern, Prefix... prefixes)
         throws InputMismatchException {
         ArgumentMultimap argMultimap = new ArgumentMultimap();
-        Prefix currPrefix = new Prefix("", true);
+        Prefix currPrefix = Prefix.EMPTY;
         StringBuilder currArgumentValue = new StringBuilder();
         boolean isEmpty = true;
         while (tokenizer.hasNextToken()) {
@@ -70,6 +72,21 @@ public class ArgumentTokenizer {
     }
 
     /**
+     * Ensures that the given list of prefixes are all unique in their prefix string.
+     * Throws a (@code IllegalArgumentException) if not all prefixes are unique.
+     */
+    public static void checkUniquePrefixes(Prefix... prefixes) {
+        HashSet<String> prefixStringSet = new HashSet<>();
+        for (int i = 0; i != prefixes.length; ++i) {
+            String prefixString = prefixes[i].getPrefix();
+            if (prefixStringSet.contains(prefixString)) {
+                throw new IllegalArgumentException("Prefixes for parsing is not unique");
+            }
+            prefixStringSet.add(prefixString);
+        }
+    }
+
+    /**
      * Tokenizes an arguments string without any prefixes.
      *
      * @param argsString Arguments string
@@ -88,7 +105,7 @@ public class ArgumentTokenizer {
             }
             currArgumentValue.append(textToken);
         }
-        argMultimap.put(new Prefix("", true), currArgumentValue.toString());
+        argMultimap.put(Prefix.EMPTY, currArgumentValue.toString());
         return argMultimap;
     }
 

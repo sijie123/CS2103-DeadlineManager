@@ -6,12 +6,23 @@ package seedu.address.logic.parser;
  */
 public class Prefix {
 
+    public static final Prefix EMPTY = new Prefix("");
+
     private final String prefix;
     private final boolean hasMultiple;
+
 
     public Prefix(String prefix, boolean hasMultiple) {
         this.prefix = prefix;
         this.hasMultiple = hasMultiple;
+    }
+
+    /**
+     * Convenience constructor that caters for the majority of the prefixes which cannot occur multiple times
+     */
+    public Prefix(String prefix) {
+        this.prefix = prefix;
+        this.hasMultiple = false;
     }
 
     public String getPrefix() {

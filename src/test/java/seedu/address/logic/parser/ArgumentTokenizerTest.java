@@ -5,14 +5,19 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.InputMismatchException;
+
 import org.junit.Test;
 
 public class ArgumentTokenizerTest {
 
     private final Prefix unknownPrefix = new Prefix("--u", true);
     private final Prefix pSlash = new Prefix("p/", true);
+    private final Prefix pSlashSingle = new Prefix("p/", false);
     private final Prefix dashT = new Prefix("-t", true);
+    private final Prefix dashTSingle = new Prefix("-t", false);
     private final Prefix hatQ = new Prefix("^Q", true);
+    private final Prefix hatQSingle = new Prefix("^Q", false);
 
     @Test
     public void tokenize_emptyArgsString_noValues() {
@@ -79,6 +84,13 @@ public class ArgumentTokenizerTest {
         assertPreambleEmpty(argMultimap);
         assertArgumentPresent(argMultimap, pSlash, "Argument value");
 
+    }
+
+    @Test(expected = InputMismatchException.class)
+    public void tokenize_oneArgumentWithNoRepeats() {
+        // No repeated with preamble
+        String argsString = "  Some preamble string p/ Argument value  p/ Second Arg p/ Third";
+        ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(argsString, pSlashSingle);
     }
 
     @Test
@@ -182,6 +194,12 @@ public class ArgumentTokenizerTest {
         assertArgumentPresent(argMultimap, pSlash, "p/p/p.docx");
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void tokenize_argumentsWithSamePrefixes() {
+        String argsString = "p/123 p/\"Hello World\"";
+        ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(argsString, pSlash, pSlashSingle);
+    }
+
     @Test
     public void equalsMethod() {
         Prefix aaa = new Prefix("aaa", true);
@@ -191,6 +209,7 @@ public class ArgumentTokenizerTest {
 
         assertNotEquals(aaa, "aaa");
         assertNotEquals(aaa, new Prefix("aab", true));
+        assertNotEquals(aaa, new Prefix("aaa", false));
     }
 
 }

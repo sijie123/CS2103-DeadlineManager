@@ -3,28 +3,28 @@
   [
     {
       "githubId": "btzy",
-      "displayName": "Bernard Teo",
+      "displayName": "BERNA...HI YI",
       "authorNames": ["btzy", "Bernard Teo"]
     },
     {
-      "githubId": "ranaldmiao",
-      "displayName": "Ranald Lam",
-      "authorNames": ["ranaldmiao", "Ranald Lam"]
-    },
-    {
       "githubId": "sijie123",
-      "displayName": "Lin Si Jie",
+      "displayName": "LIN S...I JIE",
       "authorNames": ["sijie123", "Si Jie"]
     },
     {
-      "githubId": "sidhant007",
-      "displayName": "Sidhant Bansal",
-      "authorNames": ["sidhant007", "Sidhant Bansal"]
+      "githubId": "kc97ble",
+      "displayName": "NGUYE... KIEN",
+      "authorNames": ["Nguyen Tien Trung Kien", "Kien Nguyen"]
     },
     {
-      "githubId": "kc97ble",
-      "displayName": "Nguyen Tien Trung Kien",
-      "authorNames": ["Nguyen Tien Trung Kien", "Kien Nguyen"]
+      "githubId": "ranaldmiao",
+      "displayName": "RANAL... SHAO",
+      "authorNames": ["ranaldmiao", "Ranald Lam"]
+    },
+    {
+      "githubId": "sidhant007",
+      "displayName": "SIDHA...ANSAL",
+      "authorNames": ["sidhant007", "Sidhant Bansal"]
     }
   ]
 }

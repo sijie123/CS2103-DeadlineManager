@@ -222,7 +222,7 @@ Returns a subset of the current list of tasks that have a name that contains "Al
 Returns a subset of the current list of tasks that have priority = 1 (highest priority).
 
 * `filter p<3`
-Returns a subset of the current list of tasks that have priority < 3. (Highest priority or second highest priority.)
+Returns a subset of the current list of tasks that have priority = 1, 2, or 3. (Highest priority, second highest priority, or third highest priority.)
 
 * `filter t:CS2103T`
 Returns a subset of the current list of tasks that has the tag "CS2103T".
@@ -540,7 +540,7 @@ e.g. `add n/CS2103 Assignment d/11/10/2018 P/2 t/java t/hard`
 * *Add Recurring*: `addr n/NAME d/DEADLINE f/FREQUENCY [P/PRIORITY] [t/TAG]...`
 e.g. `add n/CS2103 Tutorial d/1/10/2018 f/7 P/4 t/easy`
 
-* *Attachment (Add)* : `attachment INDEX add p\FILEPATH`
+* *Attachment (Add)* : `attachment INDEX add p/FILEPATH`
 
 * *Attachment (Delete)* : `attachment INDEX delete n/FILENAME`
 

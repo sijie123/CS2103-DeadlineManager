@@ -27,6 +27,8 @@ public class StringTokenizer {
 
     /**
      * Constructs an instance of Stringtokenizer, using default predicates.
+     *
+     * @param str The strong to tokenize, it is not allowed to be null.
      */
     public StringTokenizer(String str) {
         this(str, WHITESPACE_PREDICATE, ANY_QUOTES_PREDICATE);
@@ -193,6 +195,8 @@ public class StringTokenizer {
 
     /**
      * Gets all the tokens from this tokenizer.
+     *
+     * @throws InputMismatchException if there are invalid tokens.
      */
     public List<String> toList() {
         ArrayList<String> items = new ArrayList<>();
