@@ -5,6 +5,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static seedu.address.testutil.TypicalTasks.getTypicalTaskCollections;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,7 +18,6 @@ import org.junit.rules.TemporaryFolder;
 
 import seedu.address.commons.events.model.TaskCollectionChangedEvent;
 import seedu.address.commons.events.storage.DataSavingExceptionEvent;
-import seedu.address.commons.exceptions.DataConversionException;
 import seedu.address.model.ReadOnlyTaskCollection;
 import seedu.address.model.TaskCollection;
 import seedu.address.model.UserPrefs;
@@ -123,7 +124,6 @@ public class StorageManagerTest {
     public void overwriteExportOnUnwritableFile_exceptionThrown() throws IOException {
         // Exporting with file name "." should throw as directory is unwritable.
         TaskCollection original = getTypicalTaskCollections();
-        //storageManager.saveTaskCollection(original);
         Assert.assertThrows(IOException.class,
             String.format(Storage.MESSAGE_WRITE_FILE_NO_PERMISSION_ERROR, getTempFilePath(".")), () ->
             storageManager.exportTaskCollection(original, getTempFilePath("."), false));
@@ -136,7 +136,28 @@ public class StorageManagerTest {
     }
 
     @Test
-    public void importExistingFile_success() throws DataConversionException {
+    public void importUnreadableFile_exceptionThrown() throws IOException {
+        String rubbishFile = "rubbishFile";
+        createTempFile(rubbishFile);
+        Assert.assertThrows(IOException.class,
+            String.format(Storage.MESSAGE_READ_FILE_PARSE_ERROR, getTempFilePath(rubbishFile)), () ->
+                storageManager.importTaskCollection(getTempFilePath(rubbishFile)));
+        removeTempFile(rubbishFile);
+    }
+
+    private void removeTempFile(String filename) {
+        File delete = new File(getTempFilePath(filename).toString());
+        delete.delete();
+    }
+
+    private void createTempFile(String filename) throws IOException {
+        FileWriter fileWriter = new FileWriter(getTempFilePath(filename).toString());
+        fileWriter.write("garbage");
+        fileWriter.close();
+    }
+
+    @Test
+    public void importExistingFile_success() {
         TaskCollection original = getTypicalTaskCollections();
         try {
             storageManager.saveTaskCollection(original);
