@@ -414,8 +414,8 @@ The deadline manager supports import and export features. This feature uses 2 co
 ===== Overview of components
 Internally, `StorageManager` implements the following APIs from `ImportExportStorage` interface:
 
-* `importTaskCollection`:  Imports and returns a `TaskCollection` given a filename
-* `exportTaskCollection`: Exports and writes to a file given a `TaskCollection`.
+* `importTaskCollection`:  Given a filename, imports and returns a `TaskCollection`.
+* `exportTaskCollection`: Given a `TaskCollection`, exports and writes to a specified file.
 
 Internally, it uses the same API as reading and saving the working taskCollection file.
 However, additional checks are performed to ensure that the user does not inadvertently overwrite the current working file, or import and corrupt the current working file.
@@ -742,10 +742,10 @@ When each filter unit is parsed, it invokes the field-specific parser for the gi
 === Attachment feature
 The attachment feature aims to help users organise and keep track of important files needed for the respective tasks. It allows users to associate files in their computer with a particular task. When the user decides to perform the task, this feature provides functionality to identify previously associated files and export it to an appropriate location.
 
-==== Current implementation
+==== Overview
 The attachment feature is mainly implemented by `AttachmentCommand`. As `AttachmentCommand` is an all-purpose command that allows users to perform numerous actions related to attachments, a nested abstract class `AttachmentAction` is defined within `AttachmentCommand`. There are 4 classes that extend `AttachmentAction` in order to implement the various actions of the attachment feature. The command line arguments for the attachment command is parsed by `AttachmentCommandParser`.
 
-==== Sequence Flow
+==== Current Implementation
 
 Given below is a sequence of steps, illustrating the interaction between `AttachmentCommandParser`, `AttachmentCommand` and classes that implement `AttachmentAction` after a user enters a relevant command.
 
@@ -763,16 +763,16 @@ Step 1. The task identified by the user is retrieved from the `Model`.
 
 Step 2. The `perform` method of the `AttachmentAction` is invoked, with the task retrieved in Step 1 as the parameter.
 
-Step 3. The `Model` is updated with the `Task` object returned by the `perform` method in Step 2.
+Step 3. The invoked `AttachmentAction` performs specific application logic which is different for each action. Then, a `ActionResult` object containing a `Task` and a message is returned to the `execute` method.
 
-Step 4. The `resultMessage` method of `AttachmentAction` is invoked. The returned value is used to construct a `CommandResult` object and returned to the `LogicManager`.
+Step 4. The `Model` is updated with the `Task` object retrieved from the returned `ActionResult`.
+
+Step 5. The message to be shown to the user is retrieved from the returned `ActionResult`. Then, it is used to create a `CommandResult` object which is to be returned to the the `LogicManager`.
 
 ==== AttachmentAction and implementing classes
-`AttachmentAction` is an abstract static class nested within `AttachmentCommand`. It defines the following 2 APIs:
+`AttachmentAction` is an abstract static class nested within `AttachmentCommand`. It defines and requires implementing classes to implement the following method:
 
-* `public abstract Task perform(Task taskToEdit)` This method is invoked by `AttachmentCommand` to perform the action on the task provided. Since `Task` is immutable, a new task with the modified values should be returned by the method. Implementing classes would need to implement this method with the logic for the respective actions.
-
-*  `public String resultMessage()` This method will be invoked by `AttachmentCommand` to retrieve the response message after a call to `perform`. It would be good for implementing classes to override the default implementation to provide a more customized response message.
+* `public abstract ActionResult perform(Task taskToEdit)` This method is invoked by `AttachmentCommand` to perform the action on the task provided. `ActionResult` is immutable and contains two properties: a `Task` and a `message` which can be used by implementing classes to return the updated `Task` as well as any `message` that should be displayed to the user. Since `Task` is immutable, a new task with the modified values should be returned by the method, instead of modifying `taskToEdit`. Since this is an abstract method,implementing classes would be required to implement this method with the logic for the respective actions.
 
 ===== AddAttachmentAction
 `AddAttachmentAction` implements `AttachmentAction` and provides the implementations required for the user to associate a file with a task. In other words, it adds an attachment to a task. The constructor class takes in a single parameter, `filePath`, denoting the path to the file to be associated with the task. The `perform` method of `AddAttachmentAction` executes the following:
@@ -821,7 +821,9 @@ Step 4. The `resultMessage` method of `AttachmentAction` is invoked. The returne
 * **Alternative 2:** Use the path to the file as an identifier.
 ** Pros: Allows for more than one attachments with the same file name to be associated with the same task. For example: `folder1/Template.docx` and `folder2/Template.docx` can be added to the same task as attachments.
 ** Cons: Cumbersome for the user to type the full path to identify the file.
-
+* **Alternative 3** Prompt the user for an identifier for each attachment added.
+** Pros: Can be customized by the user to manage multiple files with the same file name in the same task.
+** Cons: Cumbersome for the user to type the identifier for every time they want to add attachments to a task.
 // end::eattachments[]
 
 // tag::dataencryption[]
