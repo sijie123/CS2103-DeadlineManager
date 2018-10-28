@@ -76,10 +76,6 @@ public class AttachmentCommandParser implements Parser<AttachmentCommand> {
         if (!argMultimap.getValue(PREFIX_FILEPATH).isPresent()) {
             throw new ParseException(String.format(MESSAGE_MISSING_ARGUMENTS, "FILEPATH", "add"));
         }
-        // Can only specify one file path
-        if (argMultimap.getAllValues(PREFIX_FILEPATH).size() > 1) {
-            throw new ParseException(String.format(MESSAGE_DUPLICATED_ARGUMENTS, "FILEPATH"));
-        }
         String filePath = argMultimap.getValue(PREFIX_FILEPATH).get();
         AttachmentCommand.AttachmentAction action = new AttachmentCommand.AddAttachmentAction(filePath);
         return new AttachmentCommand(index, action);
@@ -101,10 +97,6 @@ public class AttachmentCommandParser implements Parser<AttachmentCommand> {
         if (!argMultimap.getValue(PREFIX_FILENAME).isPresent()) {
             throw new ParseException(String.format(MESSAGE_MISSING_ARGUMENTS, "FILENAME", "delete"));
         }
-        // Can only specify one file path
-        if (argMultimap.getAllValues(PREFIX_FILENAME).size() > 1) {
-            throw new ParseException(String.format(MESSAGE_DUPLICATED_ARGUMENTS, "FILENAME"));
-        }
         String fileName = argMultimap.getValue(PREFIX_FILENAME).get();
         AttachmentCommand.AttachmentAction action = new AttachmentCommand.DeleteAttachmentAction(fileName);
         return new AttachmentCommand(index, action);
@@ -117,16 +109,8 @@ public class AttachmentCommandParser implements Parser<AttachmentCommand> {
         if (!argMultimap.getValue(PREFIX_FILENAME).isPresent()) {
             throw new ParseException(String.format(MESSAGE_MISSING_ARGUMENTS, "FILENAME", "get"));
         }
-        // Can only specify one file path
-        if (argMultimap.getAllValues(PREFIX_FILENAME).size() > 1) {
-            throw new ParseException(String.format(MESSAGE_DUPLICATED_ARGUMENTS, "FILENAME"));
-        }
         if (!argMultimap.getValue(PREFIX_FILEPATH).isPresent()) {
             throw new ParseException(String.format(MESSAGE_MISSING_ARGUMENTS, "FILEPATH", "get"));
-        }
-        // Can only specify one file path
-        if (argMultimap.getAllValues(PREFIX_FILEPATH).size() > 1) {
-            throw new ParseException(String.format(MESSAGE_DUPLICATED_ARGUMENTS, "FILEPATH"));
         }
         String fileName = argMultimap.getValue(PREFIX_FILENAME).get();
         String filePath = argMultimap.getValue(PREFIX_FILEPATH).get();

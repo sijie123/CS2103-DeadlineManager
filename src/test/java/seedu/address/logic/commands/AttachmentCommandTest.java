@@ -389,6 +389,7 @@ public class AttachmentCommandTest {
         assertEquals(attachmentCommand, new AttachmentCommand(INDEX_SECOND_TASK, list));
         assertNotEquals(attachmentCommand, new AttachmentCommand(INDEX_THIRD_TASK, list));
         assertNotEquals(attachmentCommand, new AttachmentCommand(INDEX_SECOND_TASK, get));
+        assertNotEquals(attachmentCommand, null);
 
         assertNotEquals(add, attachmentCommand);
         assertNotEquals(delete, attachmentCommand);

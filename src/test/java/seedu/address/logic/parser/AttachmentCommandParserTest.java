@@ -5,6 +5,7 @@ import static seedu.address.logic.commands.AttachmentCommand.COMMAND_ADD_ACTION;
 import static seedu.address.logic.commands.AttachmentCommand.COMMAND_DELETE_ACTION;
 import static seedu.address.logic.commands.AttachmentCommand.COMMAND_GET_ACTION;
 import static seedu.address.logic.commands.AttachmentCommand.COMMAND_LIST_ACTION;
+import static seedu.address.logic.commands.AttachmentCommand.MESSAGE_MISSING_ARGUMENTS;
 import static seedu.address.logic.commands.AttachmentCommand.MESSAGE_USAGE;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
@@ -79,6 +80,15 @@ public class AttachmentCommandParserTest {
     }
 
     @Test
+    public void parse_addActionInvalidArguments_throwsParseException() {
+        String expected = String.format(MESSAGE_MISSING_ARGUMENTS, "FILEPATH", "add");
+        assertParseFailure(parser, "1 add", expected);
+        assertParseFailure(parser, "1 add n/HelloWorld.docx", expected);
+        expected = String.format(MESSAGE_INVALID_COMMAND_FORMAT, AttachmentCommand.MESSAGE_USAGE, "");
+        assertParseFailure(parser, "1 add p/HelloWorld p/HelloWorld.docx", expected);
+    }
+
+    @Test
     public void parse_listAction_returnsAttachmentCommand() {
         Index targetIndex = INDEX_FIRST_TASK;
         AttachmentCommand expected = new AttachmentCommand(targetIndex,
@@ -105,6 +115,15 @@ public class AttachmentCommandParserTest {
             new AttachmentCommand.DeleteAttachmentAction(fileName));
         String command = String.format(ATTACHMENT_DELETE_FORMAT, targetIndex.getOneBased(), "'" + fileName + "'");
         assertParseSuccess(parser, command, expected);
+    }
+
+    @Test
+    public void parse_deleteActionInvalidArguments_throwsParseException() {
+        String expected = String.format(MESSAGE_MISSING_ARGUMENTS, "FILENAME", "delete");
+        assertParseFailure(parser, "1 delete", expected);
+        assertParseFailure(parser, "1 delete p/HelloWorld.docx", expected);
+        expected = String.format(MESSAGE_INVALID_COMMAND_FORMAT, AttachmentCommand.MESSAGE_USAGE, "");
+        assertParseFailure(parser, "1 delete n/HelloWorld n/HelloWorld.docx", expected);
     }
 
     @Test
@@ -139,5 +158,17 @@ public class AttachmentCommandParserTest {
         command = String.format(ATTACHMENT_GET_WITH_NAME_PATH_FORMAT,
             targetIndex.getOneBased(), "\"" + filePath + "\"", "\"" + fileName + "\"");
         assertParseSuccess(parser, command, expected);
+    }
+
+    @Test
+    public void parse_getActionInvalidArguments_throwsParseException() {
+        String expected = String.format(MESSAGE_MISSING_ARGUMENTS, "FILENAME", "get");
+        assertParseFailure(parser, "1 get", expected);
+        assertParseFailure(parser, "1 get p/HelloWorld.docx", expected);
+        expected = String.format(MESSAGE_MISSING_ARGUMENTS, "FILEPATH", "get");
+        assertParseFailure(parser, "1 get n/Hello Kitty.txt", expected);
+        expected = String.format(MESSAGE_INVALID_COMMAND_FORMAT, AttachmentCommand.MESSAGE_USAGE, "");
+        assertParseFailure(parser, "1 get n/HelloWorld n/HelloWorld.docx p/Meow.txt", expected);
+        assertParseFailure(parser, "1 get n/HelloWorld p/HelloWorld.docx p/Meow.txt", expected);
     }
 }
