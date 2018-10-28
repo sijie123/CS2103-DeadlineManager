@@ -3,6 +3,7 @@ package systemtests;
 import static org.junit.Assert.assertFalse;
 import static seedu.address.commons.core.Messages.MESSAGE_TASKS_LISTED_OVERVIEW;
 import static seedu.address.commons.core.Messages.MESSAGE_UNKNOWN_COMMAND;
+import static seedu.address.testutil.TypicalTasks.ALICE;
 import static seedu.address.testutil.TypicalTasks.BENSON;
 import static seedu.address.testutil.TypicalTasks.CARL;
 import static seedu.address.testutil.TypicalTasks.DANIEL;
@@ -15,20 +16,20 @@ import org.junit.Test;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.DeleteCommand;
-import seedu.address.logic.commands.FindCommand;
+import seedu.address.logic.commands.FilterCommand;
 import seedu.address.logic.commands.RedoCommand;
 import seedu.address.logic.commands.UndoCommand;
 import seedu.address.model.Model;
 import seedu.address.model.tag.Tag;
 
-public class FindCommandSystemTest extends TaskCollectionSystemTest {
+public class FilterCommandSystemTest extends TaskCollectionSystemTest {
 
     @Test
     public void find() {
         /* Case: find multiple tasks in deadline manager, command with leading spaces and trailing spaces
          * -> 2 tasks found
          */
-        String command = "   " + FindCommand.COMMAND_WORD + " " + KEYWORD_MATCHING_MEIER + "   ";
+        String command = "   " + FilterCommand.COMMAND_WORD + " " + KEYWORD_MATCHING_MEIER + "   ";
         Model expectedModel = getModel();
         ModelHelper.setFilteredList(expectedModel, BENSON,
             DANIEL); // first names of Benson and Daniel are "Meier"
@@ -38,36 +39,32 @@ public class FindCommandSystemTest extends TaskCollectionSystemTest {
         /* Case: repeat previous find command where task list is displaying the tasks we are finding
          * -> 2 tasks found
          */
-        command = FindCommand.COMMAND_WORD + " " + KEYWORD_MATCHING_MEIER;
+        command = FilterCommand.COMMAND_WORD + " " + KEYWORD_MATCHING_MEIER;
         assertCommandSuccess(command, expectedModel);
         assertSelectedCardUnchanged();
 
         /* Case: find task where task list is not displaying the task we are finding -> 1 task found */
-        command = FindCommand.COMMAND_WORD + " Carl";
+        command = FilterCommand.COMMAND_WORD + " Carl";
         ModelHelper.setFilteredList(expectedModel, CARL);
         assertCommandSuccess(command, expectedModel);
         assertSelectedCardUnchanged();
 
-        /* Case: find multiple tasks in deadline manager, 2 keywords -> 2 tasks found */
-        command = FindCommand.COMMAND_WORD + " Benson Daniel";
-        ModelHelper.setFilteredList(expectedModel, BENSON, DANIEL);
+        /* Case: find tags of task in deadline manager -> 3 tasks found */
+        List<Tag> tags = new ArrayList<>(DANIEL.getTags());
+        command = FilterCommand.COMMAND_WORD + " " + tags.get(0).tagName;
+        ModelHelper.setFilteredList(expectedModel, ALICE, BENSON, DANIEL);
         assertCommandSuccess(command, expectedModel);
         assertSelectedCardUnchanged();
 
-        /* Case: find multiple tasks in deadline manager, 2 keywords in reversed order -> 2 tasks found */
-        command = FindCommand.COMMAND_WORD + " Daniel Benson";
+        /* Case: find tasks matching both words */
+        command = FilterCommand.COMMAND_WORD + " Benson Meier";
+        ModelHelper.setFilteredList(expectedModel, BENSON);
         assertCommandSuccess(command, expectedModel);
         assertSelectedCardUnchanged();
 
-        /* Case: find multiple tasks in deadline manager, 2 keywords with 1 repeat -> 2 tasks found */
-        command = FindCommand.COMMAND_WORD + " Daniel Benson Daniel";
-        assertCommandSuccess(command, expectedModel);
-        assertSelectedCardUnchanged();
-
-        /* Case: find multiple tasks in deadline manager, 2 matching keywords and 1 non-matching keyword
-         * -> 2 tasks found
-         */
-        command = FindCommand.COMMAND_WORD + " Daniel Benson NonMatchingKeyWord";
+        /* Case: find tasks matching both words */
+        command = FilterCommand.COMMAND_WORD + " Meier Benson";
+        ModelHelper.setFilteredList(expectedModel, BENSON);
         assertCommandSuccess(command, expectedModel);
         assertSelectedCardUnchanged();
 
@@ -84,37 +81,30 @@ public class FindCommandSystemTest extends TaskCollectionSystemTest {
         /* Case: find same tasks in deadline manager after deleting 1 of them -> 1 task found */
         executeCommand(DeleteCommand.COMMAND_WORD + " 1");
         assertFalse(getModel().getTaskCollection().getTaskList().contains(BENSON));
-        command = FindCommand.COMMAND_WORD + " " + KEYWORD_MATCHING_MEIER;
+        command = FilterCommand.COMMAND_WORD + " " + KEYWORD_MATCHING_MEIER;
         expectedModel = getModel();
         ModelHelper.setFilteredList(expectedModel, DANIEL);
         assertCommandSuccess(command, expectedModel);
         assertSelectedCardUnchanged();
 
         /* Case: find task in deadline manager, keyword is same as name but of different case -> 1 task found */
-        command = FindCommand.COMMAND_WORD + " MeIeR";
+        command = FilterCommand.COMMAND_WORD + " MeIeR";
         assertCommandSuccess(command, expectedModel);
         assertSelectedCardUnchanged();
 
-        /* Case: find task in deadline manager, keyword is substring of name -> 0 tasks found */
-        command = FindCommand.COMMAND_WORD + " Mei";
-        ModelHelper.setFilteredList(expectedModel);
+        /* Case: find task in deadline manager, keyword is substring of name -> 1 task found */
+        command = FilterCommand.COMMAND_WORD + " Mei";
         assertCommandSuccess(command, expectedModel);
         assertSelectedCardUnchanged();
 
         /* Case: find task in deadline manager, name is substring of keyword -> 0 tasks found */
-        command = FindCommand.COMMAND_WORD + " Meiers";
+        command = FilterCommand.COMMAND_WORD + " Meiers";
         ModelHelper.setFilteredList(expectedModel);
         assertCommandSuccess(command, expectedModel);
         assertSelectedCardUnchanged();
 
         /* Case: find task not in deadline manager -> 0 tasks found */
-        command = FindCommand.COMMAND_WORD + " Mark";
-        assertCommandSuccess(command, expectedModel);
-        assertSelectedCardUnchanged();
-
-        /* Case: find tags of task in deadline manager -> 0 tasks found */
-        List<Tag> tags = new ArrayList<>(DANIEL.getTags());
-        command = FindCommand.COMMAND_WORD + " " + tags.get(0).tagName;
+        command = FilterCommand.COMMAND_WORD + " Mark";
         assertCommandSuccess(command, expectedModel);
         assertSelectedCardUnchanged();
 
@@ -123,21 +113,21 @@ public class FindCommandSystemTest extends TaskCollectionSystemTest {
         selectTask(Index.fromOneBased(1));
         assertFalse(getPersonListPanel().getHandleToSelectedCard().getName()
             .equals(DANIEL.getName().value));
-        command = FindCommand.COMMAND_WORD + " Daniel";
+        command = FilterCommand.COMMAND_WORD + " Daniel";
         ModelHelper.setFilteredList(expectedModel, DANIEL);
         assertCommandSuccess(command, expectedModel);
         assertSelectedCardDeselected();
 
         /* Case: find task in empty deadline manager -> 0 tasks found */
         deleteAllTests();
-        command = FindCommand.COMMAND_WORD + " " + KEYWORD_MATCHING_MEIER;
+        command = FilterCommand.COMMAND_WORD + " " + KEYWORD_MATCHING_MEIER;
         expectedModel = getModel();
         ModelHelper.setFilteredList(expectedModel, DANIEL);
         assertCommandSuccess(command, expectedModel);
         assertSelectedCardUnchanged();
 
         /* Case: mixed case command word -> rejected */
-        command = "FiNd Meier";
+        command = "FiLter Meier";
         assertCommandFailure(command, MESSAGE_UNKNOWN_COMMAND);
     }
 
