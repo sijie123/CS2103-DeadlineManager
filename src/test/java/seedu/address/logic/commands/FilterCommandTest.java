@@ -101,6 +101,20 @@ public class FilterCommandTest {
     }
 
     @Test
+    public void execute_nameMissingQuote_failure() {
+        ensureParseFailure("n:\"abcde");
+        ensureParseFailure("n:abcde\"");
+        ensureParseFailure("n:\'abcde");
+        ensureParseFailure("n:abcde\'");
+    }
+
+    @Test
+    public void execute_nameWrongQuote_failure() {
+        ensureParseFailure("n:\"abcde\'");
+        ensureParseFailure("n:\'abcde\"");
+    }
+
+    @Test
     public void execute_dueExact_success() {
         FilterCommand command = ensureParseSuccess("d=1/10/2018");
         command.execute(model, null);
@@ -136,24 +150,72 @@ public class FilterCommandTest {
     }
 
     @Test
-    public void execute_dueSpaced_success() {
+    public void execute_dueQuotedDouble_success() {
+        FilterCommand command = ensureParseSuccess("due:\"2/10/2018\"");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(ALICE, ELLE, FIONA, GEORGE), model.getFilteredTaskList());
+    }
+
+    @Test
+    public void execute_dueInvalidDate_failure() {
+        ensureParseFailure("due:abcde");
+        ensureParseFailure("due:ab/c/defg");
+    }
+
+    @Test
+    public void execute_priorityExact_success() {
+        FilterCommand command = ensureParseSuccess("p=2");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(BENSON, FIONA), model.getFilteredTaskList());
+    }
+
+    @Test
+    public void execute_priorityLower_success() {
+        FilterCommand command = ensureParseSuccess("p<2");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(BENSON, CARL, DANIEL, FIONA, GEORGE), model.getFilteredTaskList());
+    }
+
+    @Test
+    public void execute_priorityHigher_success() {
+        FilterCommand command = ensureParseSuccess("p>2");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(ALICE, BENSON, ELLE, FIONA), model.getFilteredTaskList());
+    }
+
+    @Test
+    public void execute_priorityConvenience_success() {
+        FilterCommand command = ensureParseSuccess("p:2");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(ALICE, BENSON, ELLE, FIONA), model.getFilteredTaskList());
+    }
+
+    @Test
+    public void execute_priorityLongform_success() {
+        FilterCommand command = ensureParseSuccess("priority:2");
+        command.execute(model, null);
+        assertEquals(Arrays.asList(ALICE, BENSON, ELLE, FIONA), model.getFilteredTaskList());
+    }
+
+    @Test
+    public void execute_prioritySpaced_success() {
         FilterCommand command;
 
-        command = ensureParseSuccess("due: 2/10/2018");
+        command = ensureParseSuccess("priority: 2");
         command.execute(model, null);
-        assertEquals(Arrays.asList(ALICE, ELLE, FIONA, GEORGE), model.getFilteredTaskList());
+        assertEquals(Arrays.asList(ALICE, BENSON, ELLE, FIONA), model.getFilteredTaskList());
 
-        command = ensureParseSuccess("due : 2/10/2018");
+        command = ensureParseSuccess("priority : 2");
         command.execute(model, null);
-        assertEquals(Arrays.asList(ALICE, ELLE, FIONA, GEORGE), model.getFilteredTaskList());
+        assertEquals(Arrays.asList(ALICE, BENSON, ELLE, FIONA), model.getFilteredTaskList());
 
-        command = ensureParseSuccess("due :2/10/2018");
+        command = ensureParseSuccess("priority :2");
         command.execute(model, null);
-        assertEquals(Arrays.asList(ALICE, ELLE, FIONA, GEORGE), model.getFilteredTaskList());
+        assertEquals(Arrays.asList(ALICE, BENSON, ELLE, FIONA), model.getFilteredTaskList());
 
-        command = ensureParseSuccess("due  :   2/10/2018");
+        command = ensureParseSuccess("priority  :   2");
         command.execute(model, null);
-        assertEquals(Arrays.asList(ALICE, ELLE, FIONA, GEORGE), model.getFilteredTaskList());
+        assertEquals(Arrays.asList(ALICE, BENSON, ELLE, FIONA), model.getFilteredTaskList());
     }
 
     @Test
@@ -287,6 +349,20 @@ public class FilterCommandTest {
             return new FilterCommandParser().parse(predicate);
         } catch (ParseException e) {
             throw new AssertionError("ParseException was thrown.", e);
+        }
+    }
+
+    /**
+     * Throws an assertion error if parsing succeeds, or else returns normally.
+     *
+     * @param predicate The string to parse as a predicate.
+     */
+    private void ensureParseFailure(String predicate) {
+        try {
+            new FilterCommandParser().parse(predicate);
+            throw new AssertionError("ParseException was expected but not thrown.");
+        } catch (ParseException e) {
+            // don't do anything
         }
     }
 }
