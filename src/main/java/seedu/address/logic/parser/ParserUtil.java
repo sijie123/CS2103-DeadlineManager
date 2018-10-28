@@ -125,18 +125,4 @@ public class ParserUtil {
         }
         return tagSet;
     }
-
-    /**
-     * Parses and determines if a filename is legal.
-     * A filename is legal if it uses only alphanumeric characters, the underscore, or fullstop characters.
-     * @param filename the filename to be checked
-     * @return the fileName if it is legal
-     * @throws ParseException if filename is illegal
-     */
-    public static String parseFileName(String filename) throws ParseException {
-        if (!filename.matches("^[a-zA-Z0-9_.]+$")) {
-            throw new ParseException(MESSAGE_INVALID_FILENAME);
-        }
-        return filename;
-    }
 }

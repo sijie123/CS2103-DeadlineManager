@@ -1,6 +1,7 @@
 package seedu.address.storage;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Path;
 
 import javax.xml.bind.JAXBException;
@@ -17,11 +18,11 @@ public class XmlFileStorage {
      * Saves the given deadline manager data to the specified file.
      */
     public static void saveDataToFile(Path file, XmlSerializableTaskCollection taskCollection)
-        throws FileNotFoundException {
+        throws IOException {
         try {
             XmlUtil.saveDataToFile(file, taskCollection);
         } catch (JAXBException e) {
-            throw new AssertionError("Unexpected exception " + e.getMessage(), e);
+            throw new IOException("Could not write data to file.", e);
         }
     }
 

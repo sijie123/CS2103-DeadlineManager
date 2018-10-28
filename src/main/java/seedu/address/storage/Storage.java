@@ -19,6 +19,8 @@ public interface Storage extends ImportExportStorage, TaskCollectionStorage, Use
 
     String MESSAGE_WRITE_FILE_EXISTS_ERROR = "Save file already exists."
             + " Please rename or force export with the r/overwrite flag.";
+    String MESSAGE_WRITE_FILE_NO_PERMISSION_ERROR = "Cannot write to the file at %s. "
+            + " Please check your file permission settings.";
     String MESSAGE_READ_FILE_MISSING_ERROR = "File does not exist."
             + " Double check your import file.";
     String MESSAGE_READ_FILE_SAME_ERROR = "Cannot import from the current working file.";
