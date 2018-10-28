@@ -26,6 +26,12 @@ public class TaskCardTest extends GuiUnitTest {
         taskCard = new TaskCard(taskWithTags, 2);
         uiPartRule.setUiPart(taskCard);
         assertCardDisplay(taskCard, taskWithTags, 2);
+
+        // with attachments
+        Task taskWithAttachments = new TaskBuilder().withAttachments("HelloWorld.txt", "Hello World.txt").build();
+        taskCard = new TaskCard(taskWithAttachments, 3);
+        uiPartRule.setUiPart(taskCard);
+        assertCardDisplay(taskCard, taskWithAttachments, 3);
     }
 
     @Test
