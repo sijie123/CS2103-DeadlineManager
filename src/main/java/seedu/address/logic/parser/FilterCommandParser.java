@@ -31,44 +31,93 @@ public class FilterCommandParser implements Parser<FilterCommand> {
     private static final String MESSAGE_INVALID_TESTPHRASE_FORMAT = "Invalid filter test value: %1$s";
     private static final String MESSAGE_INVALID_GENERAL_PREDICATE_FORMAT = "Invalid filter: %1$s";
 
+    private static final Predicate<Task> ALWAYS_FALSE = task -> false;
+
+    private static Predicate<Task> createNamePredicate(FilterOperator operator, String testPhrase)
+        throws InvalidPredicateOperatorException {
+        Predicate<Name> namePredicate = Name.makeFilter(operator, testPhrase);
+        return task -> namePredicate.test(task.getName());
+    }
+
+    private static Predicate<Task> createDeadlinePredicate(FilterOperator operator, String testPhrase)
+        throws InvalidPredicateException {
+        Predicate<Deadline> deadlinePredicate = Deadline.makeFilter(operator, testPhrase);
+        return task -> deadlinePredicate.test(task.getDeadline());
+    }
+
+    private static Predicate<Task> createPriorityPredicate(FilterOperator operator, String testPhrase)
+        throws InvalidPredicateException {
+        Predicate<Priority> priorityPredicate = Priority.makeFilter(operator, testPhrase);
+        return task -> priorityPredicate.test(task.getPriority());
+    }
+
+    private static Predicate<Task> createFrequencyPredicate(FilterOperator operator, String testPhrase)
+        throws InvalidPredicateException {
+        Predicate<Frequency> frequencyPredicate = Frequency.makeFilter(operator, testPhrase);
+        return task -> frequencyPredicate.test(task.getFrequency());
+    }
+
+    private static Predicate<Task> createTagsPredicate(FilterOperator operator, String testPhrase)
+        throws InvalidPredicateException {
+        Predicate<Set<Tag>> tagsPredicate = SetUtil.makeFilter(Tag.class, operator, testPhrase);
+        return task -> tagsPredicate.test(task.getTags());
+    }
+
     /**
-     * Creates a predicate from the specified key, operator, and testphrase.
+     * A functional interface that represents a supplier than can throw InvalidPredicateException.
+     */
+    @FunctionalInterface
+    private interface ExceptionalSupplier<T> {
+        T get() throws InvalidPredicateException;
+    }
+
+    /**
+     * Invokes the supplier, and converts an InvalidPredicateException to a predicate that always returns false.
+     *
+     * @param supplier The supplier that either produces a predicate or throws an exception.
+     * @return On success returns the predicate that is returned by the supplier,
+     *         on failure returns a predicate that is always false.
+     */
+    private static Predicate<Task> silencePredicateException(ExceptionalSupplier<Predicate<Task>> supplier) {
+        try {
+            return supplier.get();
+        } catch (InvalidPredicateException e) {
+            return ALWAYS_FALSE;
+        }
+    }
+
+    /**
+     * Creates a predicate from the specified key, operator, and test phrase.
+     *
+     * @param key        The key that refers to the specific field in a task.
+     * @param operator   The filter operator.
+     * @param testPhrase The test phrase to compare with the specific field of each task.
+     * @return The predicate that is created.
      */
     private static Predicate<Task> createPredicate(String key, FilterOperator operator, String testPhrase)
         throws ParseException, InvalidPredicateException {
-        Predicate<Task> predicate;
 
         try {
             switch (key) {
             case "n": // fallthrough
             case "name": {
-                Predicate<Name> namePredicate = Name.makeFilter(operator, testPhrase);
-                predicate = task -> namePredicate.test(task.getName());
-                break;
+                return createNamePredicate(operator, testPhrase);
             }
             case "d": // fallthrough
             case "due": {
-                Predicate<Deadline> deadlinePredicate = Deadline.makeFilter(operator, testPhrase);
-                predicate = task -> deadlinePredicate.test(task.getDeadline());
-                break;
+                return createDeadlinePredicate(operator, testPhrase);
             }
             case "p": // fallthrough
             case "priority": {
-                Predicate<Priority> priorityPredicate = Priority.makeFilter(operator, testPhrase);
-                predicate = task -> priorityPredicate.test(task.getPriority());
-                break;
+                return createPriorityPredicate(operator, testPhrase);
             }
             case "f": // fallthrough
             case "frequency": {
-                Predicate<Frequency> frequencyPredicate = Frequency.makeFilter(operator, testPhrase);
-                predicate = task -> frequencyPredicate.test(task.getFrequency());
-                break;
+                return createFrequencyPredicate(operator, testPhrase);
             }
             case "t": // fallthrough
             case "tag": {
-                Predicate<Set<Tag>> tagsPredicate = SetUtil.makeFilter(Tag.class, operator, testPhrase);
-                predicate = task -> tagsPredicate.test(task.getTags());
-                break;
+                return createTagsPredicate(operator, testPhrase);
             }
             default:
                 throw new ParseException(String.format(MESSAGE_INVALID_KEY_FORMAT, key));
@@ -78,9 +127,23 @@ public class FilterCommandParser implements Parser<FilterCommand> {
         } catch (InvalidPredicateTestPhraseException e) {
             throw new ParseException(String.format(MESSAGE_INVALID_TESTPHRASE_FORMAT, testPhrase), e);
         }
-
-        return predicate;
     }
+
+    /**
+     * Creates a predicate matches any textual or date field in a task, using the convenience operator.
+     * It does not match numeric fields because they clutter the results and are usually not intended by the user.
+     *
+     * @param testPhrase The test phrase to compare with the specific field of each task.
+     */
+    private static Predicate<Task> createPredicateAny(String testPhrase)
+        throws InvalidPredicateException {
+        return ALWAYS_FALSE
+            .or(silencePredicateException(() -> createNamePredicate(FilterOperator.CONVENIENCE, testPhrase)))
+            .or(silencePredicateException(() -> createDeadlinePredicate(FilterOperator.CONVENIENCE, testPhrase)))
+            .or(silencePredicateException(() -> createTagsPredicate(FilterOperator.CONVENIENCE, testPhrase)));
+    }
+
+
 
     /**
      * Parses the given {@code String} of arguments in the context of the FindCommand and returns an
@@ -101,22 +164,34 @@ public class FilterCommandParser implements Parser<FilterCommand> {
         // test<blah
         // name>"hello world"
 
-        final Predicate<Character> allowedKeyCharacterPredicate = ch
-            -> (ch >= 'A' && ch <= 'Z')
-            || (ch >= 'a' && ch <= 'z');
+        final Predicate<Character> operatorCharacterPredicate = ch
+            -> ch == '=' || ch == '<' || ch == '>' || ch == ':';
+
+        final Predicate<Character> allowedKeyCharacterPredicate = operatorCharacterPredicate.negate();
 
         try {
             BooleanExpressionParser<Task> expressionParser =
                 new BooleanExpressionParser<>((tokenizer, reservedCharPredicate) -> {
-                    final String key = tokenizer.nextString(allowedKeyCharacterPredicate);
-                    final String opString = tokenizer.nextPattern(Pattern.compile("[\\=\\<\\>\\:]"));
-                    final FilterOperator operator = FilterOperator.parse(opString);
-                    final String value = tokenizer.nextString(reservedCharPredicate.negate());
-                    try {
-                        return createPredicate(key, operator, value);
-                    } catch (InvalidPredicateException e) { // note: this catch block never happens so is not testable
-                        throw new ParseException(String.format(MESSAGE_INVALID_GENERAL_PREDICATE_FORMAT, key + ' '
-                            + opString + ' ' + operator), e);
+                    final Predicate<Character> negatedReservedCharPredicate = reservedCharPredicate.negate();
+                    final String key = tokenizer.nextString(
+                        negatedReservedCharPredicate.and(allowedKeyCharacterPredicate));
+                    String opString;
+                    if (tokenizer.hasNextToken()
+                        && (opString = tokenizer.tryNextPattern(Pattern.compile("[\\=\\<\\>\\:]"))) != null) {
+                        final FilterOperator operator = FilterOperator.parse(opString);
+                        final String value = tokenizer.nextString(negatedReservedCharPredicate);
+                        try {
+                            return createPredicate(key, operator, value);
+                        } catch (InvalidPredicateException e) { // note: this catch block can never happen
+                            throw new ParseException(String.format(MESSAGE_INVALID_GENERAL_PREDICATE_FORMAT, key + ' '
+                                + opString + ' ' + value), e);
+                        }
+                    } else {
+                        try {
+                            return createPredicateAny(key);
+                        } catch (InvalidPredicateException e) { // note: this catch block can never happen
+                            throw new ParseException(String.format(MESSAGE_INVALID_GENERAL_PREDICATE_FORMAT, key), e);
+                        }
                     }
                 });
             Predicate<Task> predicate = expressionParser.parse(args);

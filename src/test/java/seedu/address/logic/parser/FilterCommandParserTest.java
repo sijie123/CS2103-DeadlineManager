@@ -53,6 +53,16 @@ public class FilterCommandParserTest {
         assertParseSuccess(parser, "p:4");
         assertParseSuccess(parser, "p:\"3\"");
 
+        assertParseSuccess(parser, "f>1");
+        assertParseSuccess(parser, "f:1");
+        assertParseSuccess(parser, "f<1");
+        assertParseSuccess(parser, "f=1");
+        assertParseSuccess(parser, "f:0");
+        assertParseSuccess(parser, "f:2");
+        assertParseSuccess(parser, "f:3");
+        assertParseSuccess(parser, "f:4");
+        assertParseSuccess(parser, "f:\"3\"");
+
         assertParseSuccess(parser, "t:CS2101,CS2103");
         assertParseSuccess(parser, "t:CS2101");
         assertParseSuccess(parser, "t:\"CS2101,CS2103\"");
@@ -130,6 +140,33 @@ public class FilterCommandParserTest {
     }
 
     @Test
+    public void parse_anyField_doesNotThrow() {
+        assertParseSuccess(parser, "Testp");
+        assertParseSuccess(parser, "1/10/2018");
+        assertParseSuccess(parser, "1/10/2018 Testp");
+        assertParseSuccess(parser, "1/10/2018 Testp htrhrth");
+        assertParseSuccess(parser, "1/10/2018 \"Testp htrhrth\"");
+        assertParseSuccess(parser, "Testp htrhrth 1/10/2018");
+        assertParseSuccess(parser, "Testp 1/10/2018");
+        assertParseSuccess(parser, "Testp   1/10/2018");
+        assertParseSuccess(parser, "Testp && 1/10/2018");
+        assertParseSuccess(parser, "Testp&&1/10/2018");
+        assertParseSuccess(parser, "Testp!1/10/2018");
+        assertParseSuccess(parser, "Testp d:1/10/2018");
+        assertParseSuccess(parser, "n:Testp 1/10/2018");
+        assertParseSuccess(parser, "Testp|d:1/10/2018");
+        assertParseSuccess(parser, "Testp | d:1/10/2018");
+        assertParseSuccess(parser, "Testp | d : 1/10/2018");
+        assertParseSuccess(parser, "Testp || 1/10/2018");
+        assertParseSuccess(parser, "n:Testp | 1/10/2018");
+        assertParseSuccess(parser, "n:Testp|1/10/2018");
+        assertParseSuccess(parser, "Testp|(!n:Hello||!n:World)");
+        assertParseSuccess(parser, "Testp(!n:Hello||!n:World)");
+        assertParseSuccess(parser, "(!n:Hello||!n:World)|Testp");
+        assertParseSuccess(parser, "(!n:Hello||!n:World)Testp");
+    }
+
+    @Test
     public void parse_invalidArgs_throwsParseException() {
         assertParseThrowsException(parser, "d<\"1/10/2018");
         assertParseThrowsException(parser, "d<1/10/2018\"");
@@ -141,23 +178,23 @@ public class FilterCommandParserTest {
         assertParseThrowsException(parser, "d<");
         assertParseThrowsException(parser, "d=");
         assertParseThrowsException(parser, "d>");
-        assertParseThrowsException(parser, "d");
         assertParseThrowsException(parser, "p:5");
         assertParseThrowsException(parser, "p:b");
+        assertParseThrowsException(parser, "f:b");
+        assertParseThrowsException(parser, "f:teh");
         assertParseThrowsException(parser, "=");
         assertParseThrowsException(parser, ":");
-        assertParseThrowsException(parser, "-");
         assertParseThrowsException(parser, "test=test");
         assertParseThrowsException(parser, "=test");
         assertParseThrowsException(parser, "name>");
         assertParseThrowsException(parser, "name<");
-        assertParseThrowsException(parser, "name~");
         assertParseThrowsException(parser, "name:");
         assertParseThrowsException(parser, "t:\"CS2101,CS2103");
         assertParseThrowsException(parser, "(t:\"CS2101,CS2103");
         assertParseThrowsException(parser, "t:CS2101,CS2103 && ");
         assertParseThrowsException(parser, "t:CS2101,CS2103 && )");
         assertParseThrowsException(parser, "t:CS2101,CS2103 && n:Hello)");
+        assertParseThrowsException(parser, "t:\"1/2/3\"");
         assertParseThrowsException(parser, "(");
         assertParseThrowsException(parser, ")");
         assertParseThrowsException(parser, "&& n:Hello");
@@ -167,6 +204,7 @@ public class FilterCommandParserTest {
         assertParseThrowsException(parser, "(!n:Hello|| ||!n:World)");
         assertParseThrowsException(parser, "(!n:Hello||||!n:World)");
         assertParseThrowsException(parser, "(!n:Hello|||!n:World)");
+        assertParseThrowsException(parser, "n:Hello!");
     }
 
     /**
