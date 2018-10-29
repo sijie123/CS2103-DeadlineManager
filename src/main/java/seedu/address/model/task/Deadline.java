@@ -21,9 +21,14 @@ public class Deadline implements Comparable<Deadline> {
     public static final String MESSAGE_DEADLINE_CONSTRAINTS =
         "Deadline has to be a valid date";
 
-    private static DateFormat dateFormatter = new SimpleDateFormat("d/M/y", new Locale("en", "SG"));
+    private static DateFormat dateFormatter;
 
     public final Date value;
+
+    static {
+        dateFormatter = new SimpleDateFormat("d/M/y", new Locale("en", "SG"));
+        dateFormatter.setLenient(false);
+    }
 
     /**
      * Constructs a {@code Deadline}.
