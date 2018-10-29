@@ -1,14 +1,23 @@
 package seedu.address.model.attachment;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import seedu.address.testutil.Assert;
 
 public class AttachmentTest {
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
 
     @Test
     public void constructor_null_throwsNullPointerException() {
@@ -27,5 +36,12 @@ public class AttachmentTest {
         assertEquals(relativeAttachment, absoluteAttachment);
     }
 
+    @Test
+    public void isReadable_returnFalse() throws IOException {
+        File testFolder = folder.newFolder();
+        Attachment attachment = new Attachment(testFolder);
+        assertFalse(attachment.isReadable());
+
+    }
 
 }
