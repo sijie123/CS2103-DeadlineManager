@@ -21,6 +21,7 @@ import seedu.address.commons.events.storage.DataSavingExceptionEvent;
 import seedu.address.model.ReadOnlyTaskCollection;
 import seedu.address.model.TaskCollection;
 import seedu.address.model.UserPrefs;
+import seedu.address.storage.XmlStorage.XmlTaskCollectionStorage;
 import seedu.address.testutil.Assert;
 import seedu.address.ui.testutil.EventsCollectorRule;
 

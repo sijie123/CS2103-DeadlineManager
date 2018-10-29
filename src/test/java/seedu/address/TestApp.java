@@ -17,7 +17,7 @@ import seedu.address.model.ReadOnlyTaskCollection;
 import seedu.address.model.TaskCollection;
 import seedu.address.model.UserPrefs;
 import seedu.address.storage.UserPrefsStorage;
-import seedu.address.storage.XmlSerializableTaskCollection;
+import seedu.address.storage.XmlStorage.XmlSerializableTaskCollection;
 import seedu.address.testutil.TestUtil;
 import systemtests.ModelHelper;
 

@@ -41,27 +41,16 @@ public interface Storage extends ImportExportStorage, TaskCollectionStorage, Use
     @Override
     void saveTaskCollection(ReadOnlyTaskCollection taskCollection) throws IOException;
 
-    /**
-     * Imports a task collection from an external save file. The file must exist, otherwise an IOException
-     * will be thrown.
-     * @param filePath file to import
-     * @return The task collection wrapped in an Optional class
-     * @throws DataConversionException
-     * @throws IOException
-     */
     @Override
     Optional<ReadOnlyTaskCollection> importTaskCollection(Path filePath)
             throws DataConversionException, IOException;
 
-    /**
-     * Exports the current view of task collection to a path specified. The path must not already exist,
-     * otherwise an IOException will be thrown
-     * @param taskCollection A view of the task collection to be exported
-     * @param filePath The file to export to
-     * @throws IOException
-     */
     @Override
     void exportTaskCollection(ReadOnlyTaskCollection taskCollection, Path filePath, boolean shouldOverwrite)
+        throws IOException;
+
+    @Override
+    void exportCsvTaskCollection(ReadOnlyTaskCollection taskCollection, Path filePath, boolean shouldOverwrite)
         throws IOException;
 
 

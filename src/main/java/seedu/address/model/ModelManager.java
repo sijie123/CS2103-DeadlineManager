@@ -180,7 +180,16 @@ public class ModelManager extends ComponentManager implements Model {
         List<Task> lastShownList = getFilteredTaskList();
         TaskCollection exportCollection = new TaskCollection();
         exportCollection.setTasks(lastShownList);
-        raise(new ExportRequestEvent(exportCollection, filename, shouldOverwrite));
+        raise(new ExportRequestEvent(exportCollection, filename, shouldOverwrite, false));
+    }
+
+    @Override
+    public void exportCsvTaskCollection(String filename, boolean shouldOverwrite) {
+        requireNonNull(filename);
+        List<Task> lastShownList = getFilteredTaskList();
+        TaskCollection exportCollection = new TaskCollection();
+        exportCollection.setTasks(lastShownList);
+        raise(new ExportRequestEvent(exportCollection, filename, shouldOverwrite, true));
     }
 
     @Override

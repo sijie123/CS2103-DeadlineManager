@@ -101,6 +101,11 @@ public interface Model {
     void exportTaskCollection(String filename, boolean shouldOverwrite);
 
     /**
+     * Exports current deadline manager to CSV format.
+     */
+    void exportCsvTaskCollection(String filename, boolean shouldOverwrite);
+
+    /**
      * Imports tasks from file to the current deadline manager.
      */
     void importTaskCollection(String filename, ImportConflictResolver mode);

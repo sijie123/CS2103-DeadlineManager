@@ -1,4 +1,4 @@
-package seedu.address.storage;
+package seedu.address.storage.XmlStorage;
 
 import static java.util.Objects.requireNonNull;
 
@@ -14,6 +14,7 @@ import seedu.address.commons.exceptions.DataConversionException;
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.commons.util.FileUtil;
 import seedu.address.model.ReadOnlyTaskCollection;
+import seedu.address.storage.TaskCollectionStorage;
 
 /**
  * A class to access TaskCollection data stored as an xml file on the hard disk.

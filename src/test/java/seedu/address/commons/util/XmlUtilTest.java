@@ -16,10 +16,10 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import seedu.address.model.TaskCollection;
-import seedu.address.storage.XmlAdaptedAttachment;
-import seedu.address.storage.XmlAdaptedTag;
-import seedu.address.storage.XmlAdaptedTask;
-import seedu.address.storage.XmlSerializableTaskCollection;
+import seedu.address.storage.XmlStorage.XmlAdaptedAttachment;
+import seedu.address.storage.XmlStorage.XmlAdaptedTag;
+import seedu.address.storage.XmlStorage.XmlAdaptedTask;
+import seedu.address.storage.XmlStorage.XmlSerializableTaskCollection;
 import seedu.address.testutil.TaskBuilder;
 import seedu.address.testutil.TaskManagerBuilder;
 import seedu.address.testutil.TestUtil;

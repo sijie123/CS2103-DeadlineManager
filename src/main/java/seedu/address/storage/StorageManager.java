@@ -19,6 +19,8 @@ import seedu.address.commons.events.storage.ImportExportExceptionEvent;
 import seedu.address.commons.exceptions.DataConversionException;
 import seedu.address.model.ReadOnlyTaskCollection;
 import seedu.address.model.UserPrefs;
+import seedu.address.storage.CsvStorage.CsvTaskCollectionWriteStorage;
+import seedu.address.storage.XmlStorage.XmlTaskCollectionStorage;
 
 /**
  * Manages storage of TaskCollection data in local storage.
@@ -101,7 +103,7 @@ public class StorageManager extends ComponentManager implements Storage {
     @Override
     public void exportTaskCollection(ReadOnlyTaskCollection taskCollection, Path filePath, boolean shouldOverwrite)
         throws IOException {
-        if (!shouldOverwrite && fileExists(filePath)) {
+        if (!shouldWriteToPath(filePath, shouldOverwrite)) {
             throw new IOException(String.format(MESSAGE_WRITE_FILE_EXISTS_ERROR, filePath));
         }
         TaskCollectionStorage importExportStorage = new XmlTaskCollectionStorage(filePath);
@@ -112,6 +114,28 @@ public class StorageManager extends ComponentManager implements Storage {
             throw new IOException(String.format(MESSAGE_WRITE_FILE_NO_PERMISSION_ERROR, filePath), ioe);
         }
 
+    }
+
+    @Override
+    public void exportCsvTaskCollection(ReadOnlyTaskCollection taskCollection, Path filePath, boolean shouldOverwrite)
+        throws IOException {
+        if (!shouldWriteToPath(filePath, shouldOverwrite)) {
+            throw new IOException(String.format(MESSAGE_WRITE_FILE_EXISTS_ERROR, filePath));
+        }
+        TaskCollectionWriteStorage importExportStorage = new CsvTaskCollectionWriteStorage(filePath);
+        logger.fine("Attempting to export to CSV: " + filePath);
+        try {
+            importExportStorage.saveTaskCollection(taskCollection);
+        } catch (IOException ioe) {
+            throw new IOException(String.format(MESSAGE_WRITE_FILE_NO_PERMISSION_ERROR, filePath), ioe);
+        }
+    }
+
+    private boolean shouldWriteToPath(Path filePath, boolean shouldOverwrite) {
+        if (!shouldOverwrite && fileExists(filePath)) {
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -131,7 +155,11 @@ public class StorageManager extends ComponentManager implements Storage {
     public void handleExportRequestEvent(ExportRequestEvent event) {
         logger.info(LogsCenter.getEventHandlingLogMessage(event, "Exporting file"));
         try {
-            exportTaskCollection(event.data, getPathFromFileName(event.filename), event.overwrite);
+            if (event.isCsvFormat == true) {
+                exportCsvTaskCollection(event.data, getPathFromFileName(event.filename), event.overwrite);
+            } else {
+                exportTaskCollection(event.data, getPathFromFileName(event.filename), event.overwrite);
+            }
         } catch (IOException e) {
             raise(new ImportExportExceptionEvent(e));
         }

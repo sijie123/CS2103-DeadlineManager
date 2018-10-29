@@ -11,11 +11,13 @@ public class ExportRequestEvent extends BaseEvent {
     public final ReadOnlyTaskCollection data;
     public final String filename;
     public final boolean overwrite;
+    public final boolean isCsvFormat;
 
-    public ExportRequestEvent(ReadOnlyTaskCollection data, String filename, boolean overwrite) {
+    public ExportRequestEvent(ReadOnlyTaskCollection data, String filename, boolean overwrite, boolean isCsvFormat) {
         this.data = data;
         this.filename = filename;
         this.overwrite = overwrite;
+        this.isCsvFormat = isCsvFormat;
     }
 
     @Override

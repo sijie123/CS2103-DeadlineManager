@@ -1,7 +1,7 @@
 package seedu.address.storage;
 
 import static org.junit.Assert.assertEquals;
-import static seedu.address.storage.XmlAdaptedTask.MISSING_FIELD_MESSAGE_FORMAT;
+import static seedu.address.storage.XmlStorage.XmlAdaptedTask.MISSING_FIELD_MESSAGE_FORMAT;
 import static seedu.address.testutil.TypicalTasks.BENSON;
 
 import java.util.ArrayList;
@@ -15,6 +15,9 @@ import seedu.address.model.task.Deadline;
 import seedu.address.model.task.Frequency;
 import seedu.address.model.task.Name;
 import seedu.address.model.task.Priority;
+import seedu.address.storage.XmlStorage.XmlAdaptedAttachment;
+import seedu.address.storage.XmlStorage.XmlAdaptedTag;
+import seedu.address.storage.XmlStorage.XmlAdaptedTask;
 import seedu.address.testutil.Assert;
 
 public class XmlAdaptedTaskTest {

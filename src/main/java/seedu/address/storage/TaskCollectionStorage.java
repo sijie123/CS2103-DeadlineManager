@@ -11,39 +11,22 @@ import seedu.address.model.TaskCollection;
 /**
  * Represents a storage for {@link TaskCollection}.
  */
-public interface TaskCollectionStorage {
+public interface TaskCollectionStorage extends TaskCollectionWriteStorage, TaskCollectionReadStorage {
 
-    /**
-     * Returns the file path of the data file.
-     */
+    @Override
     Path getTaskCollectionFilePath();
 
-    /**
-     * Returns TaskCollection data as a {@link ReadOnlyTaskCollection}. Returns {@code Optional.empty()}
-     * if storage file is not found.
-     *
-     * @throws DataConversionException if the data in storage is not in the expected format.
-     * @throws IOException             if there was any problem when reading from the storage.
-     */
+    @Override
     Optional<ReadOnlyTaskCollection> readTaskCollection() throws DataConversionException, IOException;
 
-    /**
-     * @see #getTaskCollectionFilePath()
-     */
+    @Override
     Optional<ReadOnlyTaskCollection> readTaskCollection(Path filePath)
         throws DataConversionException, IOException;
 
-    /**
-     * Saves the given {@link ReadOnlyTaskCollection} to the storage.
-     *
-     * @param taskCollection cannot be null.
-     * @throws IOException if there was any problem writing to the file.
-     */
+    @Override
     void saveTaskCollection(ReadOnlyTaskCollection taskCollection) throws IOException;
 
-    /**
-     * @see #saveTaskCollection(ReadOnlyTaskCollection)
-     */
+    @Override
     void saveTaskCollection(ReadOnlyTaskCollection taskCollection, Path filePath) throws IOException;
 
 }
