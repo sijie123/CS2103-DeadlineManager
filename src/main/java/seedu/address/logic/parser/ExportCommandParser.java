@@ -22,9 +22,6 @@ public class ExportCommandParser implements Parser<ExportCommand> {
      * @throws ParseException if the user input does not conform to the expected format
      */
     public ExportCommand parse(String args) throws ParseException {
-        if (args.equals(" sijie123test")) {
-            return new ExportCommand("sijie123hardcode", true);
-        }
         ArgumentMultimap argMultimap;
         try {
             argMultimap =
@@ -37,13 +34,23 @@ public class ExportCommandParser implements Parser<ExportCommand> {
         String filename = argMultimap.getValue(PREFIX_FILEPATH).orElseThrow(() -> new ParseException(
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE)));
 
-        Optional<String> shouldOverwriteCmd = argMultimap.getValue(PREFIX_RESOLVER);
-        if (!shouldOverwriteCmd.isPresent()) {
-            return new ExportCommand(filename, false);
+        String exportCSV = argMultimap.getPreamble();
+        boolean isCSVFormat = false;
+        if (!exportCSV.trim().equals("")) {
+            if (exportCSV.trim().equals("csv")) {
+                isCSVFormat = true;
+            } else {
+                throw new ParseException(
+                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE));
+            }
         }
 
+        Optional<String> shouldOverwriteCmd = argMultimap.getValue(PREFIX_RESOLVER);
+        if (!shouldOverwriteCmd.isPresent()) {
+            return new ExportCommand(filename, false, isCSVFormat);
+        }
         if (shouldOverwriteCmd.get().equals("overwrite")) {
-            return new ExportCommand(filename, true);
+            return new ExportCommand(filename, true, isCSVFormat);
         } else {
             throw new ParseException(
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE));

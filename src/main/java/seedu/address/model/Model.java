@@ -98,12 +98,7 @@ public interface Model {
     /**
      * Exports current deadline manager to file.
      */
-    void exportTaskCollection(String filename, boolean shouldOverwrite);
-
-    /**
-     * Exports current deadline manager to CSV format.
-     */
-    void exportCsvTaskCollection(String filename, boolean shouldOverwrite);
+    void exportTaskCollection(String filename, boolean shouldOverwrite, boolean isCsvFormat);
 
     /**
      * Imports tasks from file to the current deadline manager.

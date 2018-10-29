@@ -91,7 +91,7 @@ public class StorageManager extends ComponentManager implements Storage {
         if (!fileExists(filePath)) {
             throw new IOException(MESSAGE_READ_FILE_MISSING_ERROR);
         }
-        TaskCollectionStorage importExportStorage = new XmlTaskCollectionStorage(filePath);
+        TaskCollectionReadStorage importExportStorage = new XmlTaskCollectionStorage(filePath);
         logger.fine("Attempting to import from file: " + filePath);
         try {
             return importExportStorage.readTaskCollection(filePath);
@@ -101,31 +101,17 @@ public class StorageManager extends ComponentManager implements Storage {
     }
 
     @Override
-    public void exportTaskCollection(ReadOnlyTaskCollection taskCollection, Path filePath, boolean shouldOverwrite)
+    public void exportTaskCollection(ReadOnlyTaskCollection taskCollection, Path filePath, boolean shouldOverwrite,
+                                     boolean isCsvFormat)
         throws IOException {
         if (!shouldWriteToPath(filePath, shouldOverwrite)) {
             throw new IOException(String.format(MESSAGE_WRITE_FILE_EXISTS_ERROR, filePath));
         }
-        TaskCollectionStorage importExportStorage = new XmlTaskCollectionStorage(filePath);
+        TaskCollectionWriteStorage exportStorage =
+            createExportStorageFromPathname(filePath, isCsvFormat);
         logger.fine("Attempting to export to file: " + filePath);
         try {
-            importExportStorage.saveTaskCollection(taskCollection);
-        } catch (IOException ioe) {
-            throw new IOException(String.format(MESSAGE_WRITE_FILE_NO_PERMISSION_ERROR, filePath), ioe);
-        }
-
-    }
-
-    @Override
-    public void exportCsvTaskCollection(ReadOnlyTaskCollection taskCollection, Path filePath, boolean shouldOverwrite)
-        throws IOException {
-        if (!shouldWriteToPath(filePath, shouldOverwrite)) {
-            throw new IOException(String.format(MESSAGE_WRITE_FILE_EXISTS_ERROR, filePath));
-        }
-        TaskCollectionWriteStorage importExportStorage = new CsvTaskCollectionWriteStorage(filePath);
-        logger.fine("Attempting to export to CSV: " + filePath);
-        try {
-            importExportStorage.saveTaskCollection(taskCollection);
+            exportStorage.saveTaskCollection(taskCollection);
         } catch (IOException ioe) {
             throw new IOException(String.format(MESSAGE_WRITE_FILE_NO_PERMISSION_ERROR, filePath), ioe);
         }
@@ -155,13 +141,17 @@ public class StorageManager extends ComponentManager implements Storage {
     public void handleExportRequestEvent(ExportRequestEvent event) {
         logger.info(LogsCenter.getEventHandlingLogMessage(event, "Exporting file"));
         try {
-            if (event.isCsvFormat == true) {
-                exportCsvTaskCollection(event.data, getPathFromFileName(event.filename), event.overwrite);
-            } else {
-                exportTaskCollection(event.data, getPathFromFileName(event.filename), event.overwrite);
-            }
+            exportTaskCollection(event.data, getPathFromFileName(event.filename), event.overwrite, event.isCsvFormat);
         } catch (IOException e) {
             raise(new ImportExportExceptionEvent(e));
+        }
+    }
+
+    public TaskCollectionWriteStorage createExportStorageFromPathname(Path pathname, boolean isCSVFormat) {
+        if (isCSVFormat) {
+            return new CsvTaskCollectionWriteStorage(pathname);
+        } else {
+            return new XmlTaskCollectionStorage(pathname);
         }
     }
 

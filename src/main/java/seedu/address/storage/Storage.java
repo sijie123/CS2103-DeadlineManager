@@ -46,13 +46,9 @@ public interface Storage extends ImportExportStorage, TaskCollectionStorage, Use
             throws DataConversionException, IOException;
 
     @Override
-    void exportTaskCollection(ReadOnlyTaskCollection taskCollection, Path filePath, boolean shouldOverwrite)
+    void exportTaskCollection(ReadOnlyTaskCollection taskCollection, Path filePath, boolean shouldOverwrite,
+                              boolean isCsvFormat)
         throws IOException;
-
-    @Override
-    void exportCsvTaskCollection(ReadOnlyTaskCollection taskCollection, Path filePath, boolean shouldOverwrite)
-        throws IOException;
-
 
     /**
      * Saves the current version of the deadline manager to the hard disk. Creates the data file if it

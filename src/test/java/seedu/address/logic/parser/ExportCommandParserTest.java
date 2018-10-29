@@ -28,7 +28,9 @@ public class ExportCommandParserTest {
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE));
         assertParseFailure(parser, " r/all",
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE));
-        assertParseFailure(parser, " n",
+        assertParseFailure(parser, " csv n",
+            String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE));
+        assertParseFailure(parser, " notCsv n",
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE));
         assertParseFailure(parser, " p/all r/",
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE));
@@ -39,23 +41,46 @@ public class ExportCommandParserTest {
 
     @Test
     public void parse_validFileName_returnsExportCommand() {
-        assertParseSuccess(parser, " p/ab", new ExportCommand("ab", false));
-        assertParseSuccess(parser, " p/a_b", new ExportCommand("a_b", false));
-        assertParseSuccess(parser, " p/veryverylongname", new ExportCommand("veryverylongname", false));
-        assertParseSuccess(parser, " p/fullstop.txt", new ExportCommand("fullstop.txt", false));
-        assertParseSuccess(parser, " p/filename_xml.txt", new ExportCommand("filename_xml.txt", false));
-        assertParseSuccess(parser, " p/.", new ExportCommand(".", false));
-        assertParseSuccess(parser, " p/./folder/file", new ExportCommand("./folder/file", false));
-        assertParseSuccess(parser, " p/../folder/file", new ExportCommand("../folder/file", false));
-        assertParseSuccess(parser, " p/华文", new ExportCommand("华文", false));
+        assertParseSuccess(parser, " p/ab",
+            new ExportCommand("ab", false, false));
+        assertParseSuccess(parser, " p/a_b",
+            new ExportCommand("a_b", false, false));
+        assertParseSuccess(parser, " p/fullstop.txt",
+            new ExportCommand("fullstop.txt", false, false));
+        assertParseSuccess(parser, " p/.",
+            new ExportCommand(".", false, false));
+        assertParseSuccess(parser, " p/./folder/file",
+            new ExportCommand("./folder/file", false, false));
+        assertParseSuccess(parser, " p/../folder/file",
+            new ExportCommand("../folder/file", false, false));
+        assertParseSuccess(parser, " p/华文",
+            new ExportCommand("华文", false, false));
         //Filename is "ab c/what"
-        assertParseSuccess(parser, " p/ab c/what", new ExportCommand("ab c/what", false));
+        assertParseSuccess(parser, " p/ab c/what",
+            new ExportCommand("ab c/what", false, false));
         //Filename is ""
-        assertParseSuccess(parser, " p/    ", new ExportCommand("", false));
+        assertParseSuccess(parser, " p/    ",
+            new ExportCommand("", false, false));
+    }
+
+    @Test
+    public void parse_validFileNameCSV_returnsExportCommand() {
+        assertParseSuccess(parser, " csv p/ab",
+            new ExportCommand("ab", false, true));
+        assertParseSuccess(parser, " csv p/.csv",
+            new ExportCommand(".csv", false, true));
+        //Filename is ab c/what
+        assertParseSuccess(parser, " csv p/ab c/what",
+            new ExportCommand("ab c/what", false, true));
+        //Filename is ""
+        assertParseSuccess(parser, " csv p/    ",
+            new ExportCommand("", false, true));
     }
 
     @Test
     public void parse_invalidParameters_throwsParseException() {
+        assertParseFailure(parser, " notCSV p/file r/override",
+            String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE));
         assertParseFailure(parser, " p/file r/override",
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE));
         assertParseFailure(parser, " p/file r/invalid",
@@ -69,13 +94,13 @@ public class ExportCommandParserTest {
 
     @Test
     public void parse_validFileNameParameters_returnsExportCommand() {
-        assertParseSuccess(parser, " p/ab r/overwrite",
-            new ExportCommand("ab", true));
+        assertParseSuccess(parser, " csv p/ab r/overwrite",
+            new ExportCommand("ab", true, true));
         assertParseSuccess(parser, " p/a_b",
-            new ExportCommand("a_b", false));
+            new ExportCommand("a_b", false, false));
         assertParseSuccess(parser, " p/filename_xml.txt r/overwrite",
-            new ExportCommand("filename_xml.txt", true));
+            new ExportCommand("filename_xml.txt", true, false));
         assertParseSuccess(parser, " p/'file p/name'",
-            new ExportCommand("file p/name", false));
+            new ExportCommand("file p/name", false, false));
     }
 }

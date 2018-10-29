@@ -29,23 +29,15 @@ public interface ImportExportStorage {
     Optional<ReadOnlyTaskCollection> importTaskCollection(Path filePath) throws DataConversionException, IOException;
 
     /**
-     * Saves the given {@link ReadOnlyTaskCollection} to the path specified in a Deadline Manager compatible format.
-     *
-     * @param taskCollection cannot be null.
-     * @param filePath location of export file.
-     * @throws IOException if there was any problem writing to the file.
+     * Saves the given {@link ReadOnlyTaskCollection} to the path specified.
+     * @param taskCollection cannot be null. The task collection to be saved.
+     * @param filePath the destination to save the file
+     * @param shouldOverwrite if the file exists, whether the file should be overwritten.
+     * @param isCsvFormat whether the task collection should be saved as a CSV or a XML file.
+     * @throws IOException
      */
-    void exportTaskCollection(ReadOnlyTaskCollection taskCollection, Path filePath, boolean shouldOverwrite)
-        throws IOException;
-
-    /**
-     * Saves the given {@link ReadOnlyTaskCollection} to the path specified in CSV format.
-     *
-     * @param taskCollection cannot be null.
-     * @param filePath location of export file.
-     * @throws IOException if there was any problem writing to the file.
-     */
-    void exportCsvTaskCollection(ReadOnlyTaskCollection taskCollection, Path filePath, boolean sholdOverwrite)
+    void exportTaskCollection(ReadOnlyTaskCollection taskCollection, Path filePath, boolean shouldOverwrite,
+                              boolean isCsvFormat)
         throws IOException;
 
 }

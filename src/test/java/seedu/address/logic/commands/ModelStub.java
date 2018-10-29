@@ -87,7 +87,7 @@ public class ModelStub extends ComponentManager implements Model {
     }
 
     @Override
-    public void exportTaskCollection(String filename, boolean shouldOverwrite) {
+    public void exportTaskCollection(String filename, boolean shouldOverwrite, boolean isCsvFormat) {
         throw new AssertionError("This method should not be called.");
     }
 
