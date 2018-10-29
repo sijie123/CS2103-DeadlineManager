@@ -5,7 +5,7 @@ import java.util.Objects;
 import seedu.address.model.task.Task;
 
 /**
- * JAXB-friendly version of the Task.
+ * CSV-friendly version of the Task.
  */
 public class CsvAdaptedTask {
 
@@ -13,16 +13,10 @@ public class CsvAdaptedTask {
     private String deadline;
 
     /**
-     * Constructs an XmlAdaptedTask. This is the no-arg constructor that is required by JAXB.
-     */
-    public CsvAdaptedTask() {
-    }
-
-    /**
      * Constructs an {@code XmlAdaptedTask} with the given task details.
      */
     public CsvAdaptedTask(String name, String deadline) {
-        this.name = name;
+        this.name = pad(name);
         this.deadline = deadline;
     }
 
@@ -32,8 +26,12 @@ public class CsvAdaptedTask {
      * @param source future changes to this will not affect the created XmlAdaptedTask
      */
     public CsvAdaptedTask(Task source) {
-        name = "'" + source.getName().value + "'";
+        name = pad(source.getName().toString());
         deadline = source.getDeadline().toString();
+    }
+
+    private String pad(String input) {
+        return "'" + input + "'";
     }
 
     @Override
