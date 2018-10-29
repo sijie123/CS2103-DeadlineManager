@@ -21,7 +21,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import seedu.address.commons.core.Messages;
 import seedu.address.commons.core.index.Index;
@@ -38,7 +40,11 @@ import seedu.address.testutil.TaskBuilder;
  * Contains unit tests for AttachmentCommand.
  */
 public class AttachmentCommandTest {
+
     private static File nonExistentFile = new File("blabla/not-here1827364.txt");
+
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
 
     private Model model = new ModelManager(getTypicalTaskCollections(), new UserPrefs());
     private CommandHistory commandHistory = new CommandHistory();
@@ -51,7 +57,8 @@ public class AttachmentCommandTest {
      */
     private File createTestFile() {
         try {
-            File file = File.createTempFile("deadline-manager-attachment-test-", ".zip");
+            //File file = File.createTempFile("deadline-manager-attachment-test-", ".zip");
+            File file = folder.newFile();
             return file;
         } catch (IOException ioe) {
             return null;
