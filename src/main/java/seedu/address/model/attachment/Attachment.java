@@ -30,6 +30,7 @@ public class Attachment {
     /**
      * Checks if the attachment can be read by the system.
      * THat is, if it exists, it is a file and it is possible for us to read it.
+     *
      * @return True if the attachment can be read by the system, False otherwise
      */
     public boolean isReadable() {
@@ -54,6 +55,7 @@ public class Attachment {
 
     /**
      * Copies the file from file to a specified location, overwriting the file at destination if a file exists
+     *
      * @param savePath path to save the attachment to
      */
     public File saveTo(String savePath) throws IOException {

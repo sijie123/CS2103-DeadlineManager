@@ -126,4 +126,12 @@ public class XmlAdaptedTaskTest {
         Assert.assertThrows(IllegalValueException.class, person::toModelType);
     }
 
+    @Test
+    public void toModelType_invalidAttachments_throwsIllegalValueException() {
+        List<XmlAdaptedAttachment> invalidAttachments = new ArrayList<>(VALID_ATTACHMENTS);
+        invalidAttachments.addAll(new ArrayList<>(VALID_ATTACHMENTS));
+        XmlAdaptedTask person = new XmlAdaptedTask(VALID_NAME, VALID_PRIORITY, VALID_FREQUENCY, VALID_DEADLINE, VALID_TAGS, invalidAttachments);
+        Assert.assertThrows(IllegalValueException.class, person::toModelType);
+    }
+
 }
