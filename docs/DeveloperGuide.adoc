@@ -729,7 +729,7 @@ When each filter unit is parsed, it invokes the field-specific parser for the gi
 
 ==== Design Considerations
 
-===== Aspect: Parsing of composite filter expressions
+===== Aspect: How to parse composite filter expressions
 
 * **Alternative 1 (current choice):** Use an algorithm that can parse arbitrarily complex expressions (i.e. the https://en.wikipedia.org/wiki/Shunting-yard_algorithm[shunting yard algorithm]).
 ** Pros: Provides full flexibility in specifying composite filters.
@@ -737,6 +737,24 @@ When each filter unit is parsed, it invokes the field-specific parser for the gi
 * **Alternative 2:** Use a more restrictive parsing algorithm that prohibits parentheses and does not take operator precedence into consideration.
 ** Pros: Easy to implement.
 ** Cons: Filter command will be limited in expressiveness.  As the order of operations do not follow usual programming languages or mathematical expressions, users need to spend more time to understand the parsing format before use, and they might use the command erroneously.
+
+===== Aspect: Whether to support simplified filter semantics
+
+* **Alternative 1 (current choice):** Support simplified filter semantics (implicit-AND and any-match).
+** Pros: Reduces cognitive overhead and typing time for most common cases, and makes `filter` feel like a standard keyword search function.
+** Cons: Not possible to detect when user accidentally omits the boolean operator or filter field.
+* **Alternative 2:** Only support the unsimplified version.
+** Pros: Easier to implement, can display an error if the user accidentally omits a boolean operator or filter field.
+** Cons: More verbose filter expressions which may require higher cognitive overhead.
+
+===== Aspect: What the convenience operator should do
+
+* **Alternative 1 (current choice):** Support a convenience operator that is an alias of the most common filter operator for each field.
+** Pros: Reduces cognitive overhead as the convenience operator is usually the expected behaviour for most applications.
+** Cons: Users might be surprised that the convenience operator is an alias for a different operator depending on the field identifier.
+* **Alternative 2:** Support a convenience operator that is an alias of a fixed operator regardless of field.
+** Pros: Easier for users to remember what the convenience operator does.
+** Cons: Convenience operator is not really _convenient_ -- the behaviour might be surprising or awkward for some fields.
 
 // tag::attachments[]
 === Attachment feature
