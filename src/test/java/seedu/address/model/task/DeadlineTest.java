@@ -1,7 +1,6 @@
 package seedu.address.model.task;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
@@ -39,8 +38,8 @@ public class DeadlineTest {
         Deadline a = new Deadline("1/10/2018");
         Deadline b = new Deadline("1/9/2018");
         Deadline c = new Deadline("01/10/2018");
-        assertTrue(a.compareTo(b) == 1);
-        assertTrue(b.compareTo(a) == -1);
-        assertTrue(a.compareTo(c) == 0);
+        assertEquals(a.compareTo(b), 1);
+        assertEquals(b.compareTo(a), -1);
+        assertEquals(a.compareTo(c), 0);
     }
 }
