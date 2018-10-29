@@ -164,10 +164,11 @@ public class FilterCommandParser implements Parser<FilterCommand> {
         // test<blah
         // name>"hello world"
 
-        final Predicate<Character> operatorCharacterPredicate = ch
-            -> ch == '=' || ch == '<' || ch == '>' || ch == ':';
-
-        final Predicate<Character> allowedKeyCharacterPredicate = operatorCharacterPredicate.negate();
+        // note: '/' is necessary for dates
+        final Predicate<Character> allowedKeyCharacterPredicate = ch -> (ch >= 'A' && ch <= 'Z')
+                                                                     || (ch >= 'a' && ch <= 'z')
+                                                                     || (ch >= '0' && ch <= '9')
+                                                                     || ch == '_' || ch == '-' || ch == '/';
 
         try {
             BooleanExpressionParser<Task> expressionParser =
