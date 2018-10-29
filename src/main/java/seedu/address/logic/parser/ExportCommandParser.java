@@ -34,11 +34,11 @@ public class ExportCommandParser implements Parser<ExportCommand> {
         String filename = argMultimap.getValue(PREFIX_FILEPATH).orElseThrow(() -> new ParseException(
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE)));
 
-        String exportCSV = argMultimap.getPreamble();
-        boolean isCSVFormat = false;
-        if (!exportCSV.trim().equals("")) {
-            if (exportCSV.trim().equals("csv")) {
-                isCSVFormat = true;
+        String exportCsv = argMultimap.getPreamble();
+        boolean isCsvFormat = false;
+        if (!exportCsv.trim().equals("")) {
+            if (exportCsv.trim().equals("csv")) {
+                isCsvFormat = true;
             } else {
                 throw new ParseException(
                     String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE));
@@ -47,10 +47,10 @@ public class ExportCommandParser implements Parser<ExportCommand> {
 
         Optional<String> shouldOverwriteCmd = argMultimap.getValue(PREFIX_RESOLVER);
         if (!shouldOverwriteCmd.isPresent()) {
-            return new ExportCommand(filename, false, isCSVFormat);
+            return new ExportCommand(filename, false, isCsvFormat);
         }
         if (shouldOverwriteCmd.get().equals("overwrite")) {
-            return new ExportCommand(filename, true, isCSVFormat);
+            return new ExportCommand(filename, true, isCsvFormat);
         } else {
             throw new ParseException(
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE));

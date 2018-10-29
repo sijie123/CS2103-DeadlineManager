@@ -64,7 +64,7 @@ public class ExportCommandParserTest {
     }
 
     @Test
-    public void parse_validFileNameCSV_returnsExportCommand() {
+    public void parse_validFileNameCsv_returnsExportCommand() {
         assertParseSuccess(parser, " csv p/ab",
             new ExportCommand("ab", false, true));
         assertParseSuccess(parser, " csv p/.csv",

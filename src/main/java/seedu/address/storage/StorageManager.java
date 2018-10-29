@@ -19,8 +19,8 @@ import seedu.address.commons.events.storage.ImportExportExceptionEvent;
 import seedu.address.commons.exceptions.DataConversionException;
 import seedu.address.model.ReadOnlyTaskCollection;
 import seedu.address.model.UserPrefs;
-import seedu.address.storage.CsvStorage.CsvTaskCollectionWriteStorage;
-import seedu.address.storage.XmlStorage.XmlTaskCollectionStorage;
+import seedu.address.storage.csvstorage.CsvTaskCollectionWriteStorage;
+import seedu.address.storage.xmlstorage.XmlTaskCollectionStorage;
 
 /**
  * Manages storage of TaskCollection data in local storage.
@@ -117,6 +117,12 @@ public class StorageManager extends ComponentManager implements Storage {
         }
     }
 
+    /**
+     * Determines whether export should be written to the path, or we should abort the export.
+     * @param filePath path to write to
+     * @param shouldOverwrite whether we should overwrite if file exists
+     * @return true if we should write, false otherwise
+     */
     private boolean shouldWriteToPath(Path filePath, boolean shouldOverwrite) {
         if (!shouldOverwrite && fileExists(filePath)) {
             return false;
@@ -147,8 +153,14 @@ public class StorageManager extends ComponentManager implements Storage {
         }
     }
 
-    public TaskCollectionWriteStorage createExportStorageFromPathname(Path pathname, boolean isCSVFormat) {
-        if (isCSVFormat) {
+    /**
+     * Creates the relevant write storage from pathname and whether CSV is required.
+     * @param pathname the pathname to export to
+     * @param isCsvFormat whether the file should be exported in CSV format (or xml otherwise)
+     * @return a TaskCollectionWriteStorage that can be used to export.
+     */
+    private TaskCollectionWriteStorage createExportStorageFromPathname(Path pathname, boolean isCsvFormat) {
+        if (isCsvFormat) {
             return new CsvTaskCollectionWriteStorage(pathname);
         } else {
             return new XmlTaskCollectionStorage(pathname);

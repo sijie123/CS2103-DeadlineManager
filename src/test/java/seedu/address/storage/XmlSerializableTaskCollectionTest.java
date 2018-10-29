@@ -12,7 +12,7 @@ import org.junit.rules.ExpectedException;
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.commons.util.XmlUtil;
 import seedu.address.model.TaskCollection;
-import seedu.address.storage.XmlStorage.XmlSerializableTaskCollection;
+import seedu.address.storage.xmlstorage.XmlSerializableTaskCollection;
 import seedu.address.testutil.TypicalTasks;
 
 public class XmlSerializableTaskCollectionTest {

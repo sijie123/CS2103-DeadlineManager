@@ -1,4 +1,4 @@
-package seedu.address.storage.CsvStorage;
+package seedu.address.storage.csvstorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +11,9 @@ import seedu.address.model.ReadOnlyTaskCollection;
  */
 public class CsvSerializableTaskCollection {
 
-    private List<CsvAdaptedTask> tasks;
     public static final String CSV_HEADER = "Subject, Start date, All Day Event\n";
+    private List<CsvAdaptedTask> tasks;
+
 
     /**
      * Creates an empty XmlSerializableTaskCollection. This empty constructor is required for

@@ -22,7 +22,7 @@ import seedu.address.commons.events.ui.JumpToListRequestEvent;
 import seedu.address.commons.util.FileUtil;
 import seedu.address.commons.util.XmlUtil;
 import seedu.address.model.task.Task;
-import seedu.address.storage.XmlStorage.XmlSerializableTaskCollection;
+import seedu.address.storage.xmlstorage.XmlSerializableTaskCollection;
 
 public class TaskListPanelTest extends GuiUnitTest {
 

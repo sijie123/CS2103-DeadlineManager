@@ -1,4 +1,4 @@
-package seedu.address.storage.XmlStorage;
+package seedu.address.storage.xmlstorage;
 
 import static java.util.Objects.requireNonNull;
 
