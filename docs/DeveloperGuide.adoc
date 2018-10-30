@@ -682,6 +682,7 @@ There are four filterable fields in a task, and each of these fields correspond 
 * `n` or `name` -- the name of the task
 * `d`, `due` or `deadline` -- the deadline (i.e. due date) of the task
 * `p` or `priority` -- the priority of the task
+* `f` or `frequency` -- the frequency of the task (in days)
 * `t` or `tag` -- the set of tags associated with the task
 
 Field identifiers that correspond to the same field are equivalent.
@@ -695,6 +696,7 @@ The following is the required syntax for each filterable field:
 * Name: Any text string
 * Deadline: Any date in the form `DD/MM/YYYY`
 * Priority: Any valid priority value (i.e. any integer between 0 and 4 inclusive)
+* Frequency: Any valid frequency value (i.e. any non-negative integer that does not exceed the maximum bounds of an integer)
 * Tag set: Any comma-separated list of tags, where each tag can be any text string (e.g. `CS2101,CS2103T`)
 
 [NOTE]
@@ -706,7 +708,7 @@ Tags that contain spaces may be specified by placing quotes around those tags.  
 
 The filter operator specifies exactly _how_ the task should be compared to the test phrase.
 
-For fields that are intrinsically ordered (i.e. deadline and priority), the `<`, `=`, and `>` operators have their usual mathematical meaning, except that the operators `<` and `>` are non-strict.  This means that `p>2` will return a superset of the tasks returned by `p=2`.
+For fields that are intrinsically ordered (i.e. deadline, priority and frequency), the `<`, `=`, and `>` operators have their usual mathematical meaning, except that the operators `<` and `>` are non-strict.  This means that `p>2` will return a superset of the tasks returned by `p=2`.
 
 For textual fields (i.e. name), the `<`, `=`, `>` operators represent _substring_, _equivalence_, and _superstring_ relations respectively.
 
@@ -719,13 +721,17 @@ The following list shows what the convenience operator means, in the context of 
 * Name: `:` is an alias for `>`
 * Deadline: `:` is an alias for `<`
 * Priority: `:` is an alias for `>`
+* Frequency: `:` is an alias for `<`
 * Tag set: `:` is an alias for `>`
 
 ==== Field-specific parser
 
-As field-specific parsers have to be implemented differently for each filterable field, the design choice was made to place each field-specific parser in its respective field class.  More precisely, each field-specific parser is implemented as a static method in its field class.
+As field-specific parsers have to be implemented differently for each filterable field, the design choice was made to place each field-specific parser in its respective field class.  More precisely, each field-specific parser is implemented as a static method (`makeFilter()`) in its field class.
 
 When each filter unit is parsed, it invokes the field-specific parser for the given field identifier.  The field-specific parser then creates and returns a predicate from the given filter operator and test phrase.
+
+[NOTE]
+Priority values do not compare in the same order as their values as integers.  Priority values have this order (from highest to lowest priority): 1 > 2 > 3 > 4 > 0.
 
 ==== Design Considerations
 
