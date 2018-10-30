@@ -76,9 +76,9 @@ public class Frequency implements Comparable<Frequency> {
         switch (operator) {
         case EQUAL:
             return frequency -> frequency.equals(tmpFrequency);
+        case CONVENIENCE: // convenience operator, works the same as "<"
         case LESS:
             return frequency -> frequency.compareTo(tmpFrequency) <= 0;
-        case CONVENIENCE: // convenience operator, works the same as ">"
         case GREATER:
             return frequency -> frequency.compareTo(tmpFrequency) >= 0;
         default:
@@ -105,10 +105,10 @@ public class Frequency implements Comparable<Frequency> {
 
     @Override
     public int compareTo(Frequency other) {
-        int booleanCompareResult = Boolean.compare(this.value > 0, other.value > 0);
+        int booleanCompareResult = Boolean.compare(this.value == 0, other.value == 0);
         if (booleanCompareResult != 0) {
             return booleanCompareResult;
         }
-        return Integer.compare(other.value, this.value);
+        return Integer.compare(this.value, other.value);
     }
 }

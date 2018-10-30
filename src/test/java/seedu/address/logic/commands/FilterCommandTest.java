@@ -239,14 +239,14 @@ public class FilterCommandTest {
     public void execute_frequencyLower_success() {
         FilterCommand command = ensureParseSuccess("f<200");
         command.execute(model, null);
-        assertEquals(Arrays.asList(ALICE, BENSON, CARL, DANIEL, ELLE, FIONA, GEORGE), model.getFilteredTaskList());
+        assertEquals(Arrays.asList(ALICE), model.getFilteredTaskList());
     }
 
     @Test
     public void execute_frequencyHigher_success() {
         FilterCommand command = ensureParseSuccess("f>200");
         command.execute(model, null);
-        assertEquals(Arrays.asList(ALICE), model.getFilteredTaskList());
+        assertEquals(Arrays.asList(ALICE, BENSON, CARL, DANIEL, ELLE, FIONA, GEORGE), model.getFilteredTaskList());
     }
 
     @Test
