@@ -139,7 +139,7 @@ Edits the priority of the 1st task to 1 (highest priority).
 Filters the current list of tasks with a specified filter expression. +
 Format: `filter FILTER_EXPRESSION`
 
-When this command is used, Deadline Manager will display only those tasks which satisfies the given filter expression. +
+When this command is used, Deadline Manager will display only those tasks which satisfy the given filter expression. +
 Filter predicates are the core of the `filter` command.  Each filter predicate specifies a particular attribute (e.g. deadline, priority) and a value to test this attribute against (e.g. deadline being earlier than 1/10/2018).  Filter predicates are regarded as "indivisible".
 
 [NOTE]
