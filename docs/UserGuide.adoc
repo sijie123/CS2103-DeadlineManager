@@ -473,7 +473,7 @@ The following is a step-by-step guide on how the export command behaves.
 .Command box.
 [#img-exportdemo1]
 [caption="Figure 2.1: "]
-image::userguide/exportdemo_1.png[ExportDemo, width="790"]
+image::userguide/exportdemo_1.PNG[ExportDemo, width="790"]
 In Figure 2.1 above, the user enters the `export p/cs2101.xml` command into the command box.
 
 [exportdemo2]
@@ -561,7 +561,7 @@ Imports all tasks from `cs2101.xml`. Since the r/all parameter is not specified,
 .Result of import command with no additional parameters
 [#img-importdemo]
 [caption="Figure 3.4: "]
-image::userguide/importdemo_4.png[ExportDemo, width="790"]
+image::userguide/importdemo_4.PNG[ExportDemo, width="790"]
 Figure 3.4 shows the success message after importing from cs2101.xml. As cs2101.xml contains a duplicate copy of "CS2101 Oral Presentation", nothing new is imported.
 
 * `import p/"C:\Documents\cs2101.xml" r/all` +
