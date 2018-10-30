@@ -5,6 +5,7 @@ import static java.util.Objects.requireNonNull;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.function.Predicate;
@@ -53,6 +54,17 @@ public class Deadline implements Comparable<Deadline> {
         } catch (ParseException e) {
             throw new IllegalArgumentException(MESSAGE_DEADLINE_CONSTRAINTS, e);
         }
+    }
+
+    /**
+     * Returns a new {@code Deadline}
+     */
+
+    public Deadline addDays(int days) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(value);
+        cal.add(Calendar.DATE, days);
+        return new Deadline(cal.getTime());
     }
 
     /**
