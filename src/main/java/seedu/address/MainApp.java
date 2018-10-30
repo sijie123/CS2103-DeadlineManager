@@ -55,7 +55,7 @@ public class MainApp extends Application {
     @Override
     public void init() throws Exception {
         logger.info(
-            "=============================[ Initializing TaskCollection ]===========================");
+            "=============================[ Initializing DeadlineManager ]===========================");
         super.init();
 
         AppParameters appParameters = AppParameters.parse(getParameters());

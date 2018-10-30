@@ -5,6 +5,7 @@ import static java.util.Objects.requireNonNull;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.function.Predicate;
@@ -21,9 +22,14 @@ public class Deadline implements Comparable<Deadline> {
     public static final String MESSAGE_DEADLINE_CONSTRAINTS =
         "Deadline has to be a valid date";
 
-    private static DateFormat dateFormatter = new SimpleDateFormat("d/M/y", new Locale("en", "SG"));
+    private static DateFormat dateFormatter;
 
     public final Date value;
+
+    static {
+        dateFormatter = new SimpleDateFormat("d/M/y", new Locale("en", "SG"));
+        dateFormatter.setLenient(false);
+    }
 
     /**
      * Constructs a {@code Deadline}.
@@ -48,6 +54,17 @@ public class Deadline implements Comparable<Deadline> {
         } catch (ParseException e) {
             throw new IllegalArgumentException(MESSAGE_DEADLINE_CONSTRAINTS, e);
         }
+    }
+
+    /**
+     * Returns a new {@code Deadline}
+     */
+
+    public Deadline addDays(int days) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(value);
+        cal.add(Calendar.DATE, days);
+        return new Deadline(cal.getTime());
     }
 
     /**

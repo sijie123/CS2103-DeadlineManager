@@ -20,7 +20,4 @@ public class TaskPanelSelectionChangedEvent extends BaseEvent {
         return getClass().getSimpleName();
     }
 
-    public Task getNewSelection() {
-        return newSelection;
-    }
 }

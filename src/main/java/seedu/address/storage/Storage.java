@@ -17,13 +17,14 @@ import seedu.address.model.UserPrefs;
  */
 public interface Storage extends ImportExportStorage, TaskCollectionStorage, UserPrefsStorage {
 
-    String MESSAGE_WRITE_FILE_EXISTS_ERROR = "Save file already exists."
+    String MESSAGE_WRITE_FILE_EXISTS_ERROR = "Save file at %s already exists."
             + " Please rename or force export with the r/overwrite flag.";
     String MESSAGE_WRITE_FILE_NO_PERMISSION_ERROR = "Cannot write to the file at %s. "
             + " Please check your file permission settings.";
     String MESSAGE_READ_FILE_MISSING_ERROR = "File does not exist."
             + " Double check your import file.";
-    String MESSAGE_READ_FILE_SAME_ERROR = "Cannot import from the current working file.";
+    String MESSAGE_READ_FILE_PARSE_ERROR = "Failed to read file at %s."
+            + " The file format is incompatible with Deadine Manager.";
 
     @Override
     Optional<UserPrefs> readUserPrefs() throws DataConversionException, IOException;
