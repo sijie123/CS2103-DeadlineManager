@@ -569,6 +569,9 @@ Step 2. The `SortCommandParser` receives the command with the user comparator gi
 
 Step 3. The `SortCommandParser` parses the string into a valid comparator and calls the `SortCommand` with this comparator provided.
 
+image::SortOperationSequenceDiagram.png[width="800"]
+Figure 10 illustrates the sequence diagram for Sort Command
+
 Step 4. The `SortCommand` calls the `updateSortedTaskList` API method of `ModelManager`
 
 Step 5. The method `updateSortedTaskList` sorts the `versionTaskCollection` using JavaFx sort method
@@ -583,6 +586,15 @@ Step 5. The method `updateSortedTaskList` sorts the `versionTaskCollection` usin
 * **Alternative 2:** The sorting is done ONLY on the viewable `filteredTasks` list.
 ** Pros: Will be more efficient in terms of time complexity.
 ** Cons: Requires significant changes to the codebase since sorting the `filteredTasks` requires it to be modifiable.
+
+===== Aspect: How to sort mechanism for Tags
+
+* **Alternative 1 (current choice):** The sort command takes in user input so that the user can specify the priority order of tags.
+** Pros: Provides immense flexibility to the user. Also follows Law of Demeter / Law of Least Knowledge since the `Tag` model itself does NOT know that it can be compared.
+** Cons: The flexibility comes at the cost of making sorting by tags complex for newbie users.
+* **Alternative 2:** The sorting is done in a pre-defined manner, example sorting tasks according to their alphabetical order of tags.
+** Pros: Easier to implement and simpler for newbie users.
+** Cons: Might not be useful for the user in many situations. Disobeys the Law of Demeter / Law of Least Knowledge since the `Tag` model will know that it can be compared with other tags.
 // end::sort[]
 
 // tag::extendedfilter[]
