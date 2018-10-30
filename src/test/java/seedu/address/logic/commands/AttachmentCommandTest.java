@@ -277,11 +277,6 @@ public class AttachmentCommandTest {
     @Test
     public void execute_getAttachmentWriteToNonEmptyDirectory_error() throws IOException {
         File tempFile = createTestFile();
-        // Initialize file with some content that can be verified later
-        String fileContent = "Hello Rar the Cat!\n";
-        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(tempFile.getPath()));
-        bufferedWriter.write(fileContent);
-        bufferedWriter.close();
 
         // Construct a file with one attachment
         Task originalTask = model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased());
@@ -312,6 +307,34 @@ public class AttachmentCommandTest {
 
         deleteTestFile(tempFile);
         deleteTestFile(tempFileInFolder);
+    }
+
+    @Test
+    public void execute_getAttachmentWriteToInvalidFileName_error() throws IOException {
+        File tempFile = createTestFile();
+
+        // Construct a file with one attachment
+        Task originalTask = model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased());
+        Task taskWithAttachment = addAttachmentToTask(originalTask, new Attachment(tempFile));
+        Model modelStub = new ModelManager(new TaskCollection(model.getTaskCollection()),
+            new UserPrefs());
+        modelStub.updateTask(originalTask, taskWithAttachment);
+        modelStub.commitTaskCollection();
+
+        String fileName = tempFile.getName();
+        // < and * are invalid characters in file names for many systems
+        String invalidFileName = "<bad*>";
+        //Attempt to export an attachment to that location
+        AttachmentCommand.AttachmentAction action =
+            new AttachmentCommand.GetAttachmentAction(fileName, invalidFileName);
+        AttachmentCommand attachmentCommand = new AttachmentCommand(INDEX_FIRST_TASK, action);
+        String expectedMessage = String.format(
+            AttachmentCommand.GetAttachmentAction.MESSAGE_GET_FAILED, invalidFileName);
+        Model expectedModel = modelStub;
+
+        assertCommandFailure(attachmentCommand, modelStub, commandHistory, expectedMessage);
+
+        deleteTestFile(tempFile);
     }
 
     @Test
