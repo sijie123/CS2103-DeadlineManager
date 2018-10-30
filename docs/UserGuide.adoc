@@ -582,7 +582,7 @@ Examples:
 * `list` +
 `delete 2` +
 Deletes the 2nd task in the deadline manager.
-* `find `OP1 Assignment` +
+* `filter OP1 Assignment` +
 `delete 1` +
 Deletes the 1st task in the results of the `find` command.
 
