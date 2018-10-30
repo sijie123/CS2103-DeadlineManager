@@ -58,7 +58,7 @@ e.g. typing *`help`* and pressing kbd:[Enter] will open the help window.
 ====
 
 === Viewing help : `help`
-Help will list the available functions for the user to use.
+Displays the list of available functions for the user to use. It acts as a guide to help the user.
 
 Format: `help`
 
@@ -278,6 +278,11 @@ What this means is that in case two tasks are in tie according to the first comp
 ****
 
 Format: `sort SORT_COMPARATOR [SORT_COMPARATORS]...` +
+
+[NOTE]
+The syntax of sort command requires to be followed strictly. There should not be extra spaces or trailing spaces. +
+Also when curly braces are opened or closed for sorting by tags, the first and the last tag name mentioned should NOT be preceded and followed by spaces respectively.
+
 ****
 * Format of `SORT_COMPARATOR`: `(n|name|d|due|p|priority)(<|>)` OR `(t|tag)(<|>){TAG1 TAG2 TAG3 ...}
 * Sorts the list by the 1st comparator, in case of ties, it sorts by 2nd comparator and so on.
