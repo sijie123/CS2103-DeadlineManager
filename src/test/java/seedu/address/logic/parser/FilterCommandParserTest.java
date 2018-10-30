@@ -65,6 +65,7 @@ public class FilterCommandParserTest {
 
         assertParseSuccess(parser, "t:CS2101,CS2103");
         assertParseSuccess(parser, "t:CS2101");
+        assertParseSuccess(parser, "t:\"CS2101\"");
         assertParseSuccess(parser, "t:\"CS2101,CS2103\"");
         assertParseSuccess(parser, "t:\'CS2101,CS2103\'");
         assertParseSuccess(parser, "t:\'CS2101, CS2103\'");
@@ -182,6 +183,18 @@ public class FilterCommandParserTest {
         assertParseThrowsException(parser, "p:b");
         assertParseThrowsException(parser, "f:b");
         assertParseThrowsException(parser, "f:teh");
+        assertParseThrowsException(parser, "n::");
+        assertParseThrowsException(parser, "n:~");
+        assertParseThrowsException(parser, "n:&");
+        assertParseThrowsException(parser, "n:|");
+        assertParseThrowsException(parser, "n:!");
+        assertParseThrowsException(parser, "n:@");
+        assertParseThrowsException(parser, "n:#");
+        assertParseThrowsException(parser, "n:$");
+        assertParseThrowsException(parser, "n:\\");
+        assertParseThrowsException(parser, "n:abc$");
+        assertParseThrowsException(parser, "n:$abc$");
+        assertParseThrowsException(parser, "n:$abc");
         assertParseThrowsException(parser, "=");
         assertParseThrowsException(parser, ":");
         assertParseThrowsException(parser, "test=test");
@@ -191,6 +204,8 @@ public class FilterCommandParserTest {
         assertParseThrowsException(parser, "name:");
         assertParseThrowsException(parser, "t:\"CS2101,CS2103");
         assertParseThrowsException(parser, "(t:\"CS2101,CS2103");
+        assertParseThrowsException(parser, "t:CS2101,CS2103\"");
+        assertParseThrowsException(parser, "(t:CS2101,CS2103\"");
         assertParseThrowsException(parser, "t:CS2101,CS2103 && ");
         assertParseThrowsException(parser, "t:CS2101,CS2103 && )");
         assertParseThrowsException(parser, "t:CS2101,CS2103 && n:Hello)");
