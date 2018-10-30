@@ -584,7 +584,7 @@ Examples:
 Deletes the 2nd task in the deadline manager.
 * `filter OP1 Assignment` +
 `delete 1` +
-Deletes the 1st task in the results of the `find` command.
+Deletes the 1st task in the results of the `filter` command.
 
 //TODO: Ranald or Sidhant
 === Selecting a task : `select`
@@ -602,9 +602,9 @@ Examples:
 * `list` +
 `select 2` +
 Selects the 2nd task in the deadline manager.
-* `find Assignment` +
+* `filter Assignment` +
 `select 1` +
-Selects the 1st task in the results of the `find` command.
+Selects the 1st task in the results of the `filter` command.
 
 === Listing entered commands : `history`
 
@@ -741,9 +741,6 @@ e.g. `edit 2 n/CS2103 Assignment 2 t/easy`
 * *Exit* : `exit`
 
 * *Export* : `export FILEPATH`
-
-* *Find* : `find KEYWORD [MORE_KEYWORDS]` +
-e.g. `find CS2103 CS2102`
 
 * *Filter* : `filter FILTER_EXPRESSION`
 e.g. `filter due<1/10/2018`
