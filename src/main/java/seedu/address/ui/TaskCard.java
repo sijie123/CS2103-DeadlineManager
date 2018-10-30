@@ -77,7 +77,7 @@ public class TaskCard extends UiPart<Region> {
         Label label = new Label(attachment.getName());
         label.setOnMouseClicked(event -> {
             raise(new SelectFileSaveEvent(file -> {
-                String commandText = String.format("%s %d %s %s%s %s%s",
+                String commandText = String.format("%s %d %s %s\"%s\" %s\"%s\"",
                     AttachmentCommand.COMMAND_WORD, index,
                     AttachmentCommand.COMMAND_GET_ACTION,
                     PREFIX_FILENAME, attachment.getName(),
