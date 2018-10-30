@@ -606,7 +606,7 @@ There are three components to parsing the filter operation:
 3. A method for each field (e.g. `Name`, `Deadline`, `Priority`, `Set<Tag>`) that interprets the parts from the previous part in the context of that particular field, and returns the predicate that is required  -- this is referred to as the _field-specific parser_, and is implemented as a static method in each filterable field
 
 [NOTE]
-The second component in the list above also accepts a filter unit that contains the third part alone (e.g. `CS2101`) without the other two parts.  This will be elaborated in more detail below.
+The second component in the list above also accepts a filter unit that contains the third part alone (e.g. `CS2101`) without the other two parts.  This is known as the _simplified filter unit syntax_, and will be explained in more detail below.
 
 A general string tokenizer (this is the `StringTokenizer` class in the `parser` subdirectory) is shared by parts 1 and 2 to split the filter expression into tokens.
 
@@ -640,7 +640,7 @@ The string tokenizer class is also used to parse comma-separated tag expressions
 
 ==== Boolean expression parser
 
-This is represented by the class `seedu.address.logic.parser.BooleanExpressionParser<T>`, and it is a general boolean expression parser that is designed to be unaware of the syntax of individual filter units.
+This is represented by the generic class `seedu.address.logic.parser.BooleanExpressionParser<T>`, and it is a general boolean expression parser that is designed to be unaware of the syntax of individual filter units.
 
 The following operators are recognized (highest precedence first):
 
@@ -648,7 +648,7 @@ The following operators are recognized (highest precedence first):
 * `&` or `&&`: Logical conjunction (AND) of two predicates
 * `|` or `||`: Logical disjunction (OR) of two predicates
 
-Parentheses (`(` and `)`) are also recognized and respected, and they may be nested to arbitrary depth.
+Parentheses (`(` and `)`) are also recognized and respected, and they may be nested to arbitrary depth.  When two predicates are adjacent, the `&` operator is inserted between them.  This allows for simpler filter expressions (especially when combined with the simplified filter unit syntax).
 
 The boolean expression parser uses the link:https://en.wikipedia.org/wiki/Shunting-yard_algorithm[shunting yard algorithm] to provide precedence-respecting parsing of the filter expression.
 
