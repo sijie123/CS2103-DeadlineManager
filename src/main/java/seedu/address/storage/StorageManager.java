@@ -1,4 +1,6 @@
 package seedu.address.storage;
+import static java.util.Objects.requireNonNull;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -145,6 +147,7 @@ public class StorageManager extends ComponentManager implements Storage {
     @Override
     @Subscribe
     public void handleExportRequestEvent(ExportRequestEvent event) {
+        requireNonNull(event);
         logger.info(LogsCenter.getEventHandlingLogMessage(event, "Exporting file"));
         try {
             exportTaskCollection(event.data, getPathFromFileName(event.filename), event.overwrite, event.isCsvFormat);
@@ -170,6 +173,7 @@ public class StorageManager extends ComponentManager implements Storage {
     @Override
     @Subscribe
     public void handleImportRequestEvent(ImportRequestEvent event) {
+        requireNonNull(event);
         logger.info(LogsCenter.getEventHandlingLogMessage(event, "Importing file"));
         try {
             ReadOnlyTaskCollection data = importTaskCollection(getPathFromFileName(event.filename)).get();

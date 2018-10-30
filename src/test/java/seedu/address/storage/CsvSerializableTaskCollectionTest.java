@@ -25,7 +25,11 @@ public class CsvSerializableTaskCollectionTest {
         typicalTaskCollection.addTask(TypicalTasks.ALICE);
         typicalTaskCollection.addTask(TypicalTasks.BENSON);
         String output = csvHeader + aliceCsv + bensonCsv;
-        assertEquals(new CsvSerializableTaskCollection(typicalTaskCollection).toString(), output);
+
+        CsvSerializableTaskCollection typicalCsvCollection = new CsvSerializableTaskCollection(typicalTaskCollection);
+        CsvSerializableTaskCollection copy = new CsvSerializableTaskCollection(typicalTaskCollection);
+        assertEquals(typicalCsvCollection, copy);
+        assertEquals(typicalCsvCollection.toString(), output);
     }
 
 }
