@@ -277,11 +277,6 @@ public class AttachmentCommandTest {
     @Test
     public void execute_getAttachmentWriteToNonEmptyDirectory_error() throws IOException {
         File tempFile = createTestFile();
-        // Initialize file with some content that can be verified later
-        String fileContent = "Hello Rar the Cat!\n";
-        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(tempFile.getPath()));
-        bufferedWriter.write(fileContent);
-        bufferedWriter.close();
 
         // Construct a file with one attachment
         Task originalTask = model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased());
