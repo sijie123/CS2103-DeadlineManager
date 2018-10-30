@@ -322,7 +322,19 @@ This section describes some noteworthy details on how major features are impleme
 
 === Add feature
 
-Working in progress.
+The `add` command enables the user to create
+a new task with a name and a deadline. The user can
+also provide additional information like priority,
+frequency and tags.
+
+=== Complete feature
+
+The `complete` command allows the user
+to delete (if the task is not recurred)
+or shift the deadline to the next occurrence
+(if the task is recurred). Thanks to this command,
+the user no longer needs to decide if he/she needs
+to use `delete` command or `snooze` command.
 
 === Undo/Redo feature
 ==== Current Implementation
