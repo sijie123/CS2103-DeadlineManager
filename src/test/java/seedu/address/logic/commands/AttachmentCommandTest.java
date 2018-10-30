@@ -323,7 +323,7 @@ public class AttachmentCommandTest {
 
         String fileName = tempFile.getName();
         // < and * are invalid characters in file names for many systems
-        String invalidFileName = "<bad*>";
+        String invalidFileName = "<bad*>!\"\'";
         //Attempt to export an attachment to that location
         AttachmentCommand.AttachmentAction action =
             new AttachmentCommand.GetAttachmentAction(fileName, invalidFileName);
