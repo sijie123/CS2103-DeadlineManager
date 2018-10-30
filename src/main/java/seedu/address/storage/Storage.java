@@ -21,6 +21,7 @@ public interface Storage extends ImportExportStorage, TaskCollectionStorage, Use
             + " Please rename or force export with the r/overwrite flag.";
     String MESSAGE_WRITE_FILE_NO_PERMISSION_ERROR = "Cannot write to the file at %s. "
             + " Please check your file permission settings.";
+    String MESSAGE_FILE_INVALID_ERROR = "Filename %s is invalid. Please check your filename and try again.";
     String MESSAGE_READ_FILE_MISSING_ERROR = "File does not exist."
             + " Double check your import file.";
     String MESSAGE_READ_FILE_PARSE_ERROR = "Failed to read file at %s."
