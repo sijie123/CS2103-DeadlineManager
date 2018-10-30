@@ -171,9 +171,11 @@ Intuitively, the syntax for filter expressions mirrors that of arithmetic expres
 
 `FILTER_PREDICATE` is a string in the following format: `<key><operator><phrase>`:
 
-* where `key` is an alphanumeric string that describes the attribute being compared. Example - `priority`, `tag` and `name`
+* where `key` is an alphabetic string that describes the attribute being compared. Example - `priority`, `tag` and `name`
 * where `operator` is one of `:`, `=`, `<`, `>`
 * where `phrase` is a string that describes what to search (this is called the search phrase)
+
+An unquoted `phrase` string can contain only alphanumeric characters, `_`, `-`, `/`, and `-`.  To use other characters, the search phrase must be placed in quotes (both single (`'`) and double (`"`) quotes work, but the opening and closing quotes must match).
 
 The operator `:` is known as the *convenience* operator -- it is an alias for the operator that intuitively does what you expect for the given `key`.  More details are given below.
 
@@ -182,8 +184,6 @@ The operator `:` is known as the *convenience* operator -- it is an alias for th
 For simplicity, a filter predicate may also be specified with just the search phrase.  This is known as an _any-match predicate_. Such a predicate will match any filterable textual or date fields (i.e. name, deadline, and tags) using the convenience operator.  This allows for a simplified syntax that reduces cognitive overhead (especially when used with the implicit-AND rule), e.g. `filter assignment cs2103` will match tasks that contain _both_ `assignment` and `cs2103` in any textual or date field.
 
 Numeric fields such as priority and frequency are not matched by an any-match predicate because the integer values used for priority and frequency often match many task names and tags too.
-
-An unquoted any-match predicate can only contain alphanumeric characters, `_`, `-`, and `/`.  To use other characters, the search phrase must be placed in quotes.
 
 ****
 
@@ -199,7 +199,7 @@ Meaning of the operators for each valid key:
 * When `key` is `d` or `due`, the task's due date is compared, and the search phrase is interpreted as a date.  Dates must be in `d/m/y` format.  The operator `>` tests if the task's due date is on or after the specified due date.  The operator `<` tests if the task's due date is on or before the specified due date.  The operator `=` tests if the task's due date is exactly equal to the specified due date.  The convenience operator is an alias for `<`.
 * When `key` is `p` or `priority`, the task's priority is compared, and the search phrase is interpreted as an integer, representing the priority to be searched.  A priority of zero matches all the tasks with no priority set.  The operator `>` tests if the task has priority at least as high as the specified priority.  The operator `<` tests if the task has priority at most as high as the specified priority.  The operator `=` tests if the task's priority is exactly equal to the specified priority.  The convenience operator is an alias for `>`.  Note that priority 1 is the highest priority, priority 4 is the lowest priority, and tasks without any priority are considered to be of lower priority than priority 4.  In other words, `1 > 2 > 3 > 4 > (no priority)`.
 * When `key` is `f` or `frequency`, the task's frequency (i.e. the number of days between consecutive occurrences of that task) is compared, and the search phrase is interpreted as an integer, representing the frequency to be searched.  A non-recurring task is treated as if it has a frequency that is infinitely large (i.e. `f>100` also includes all non-recurring tasks).  The operator `>` tests if the task has a recurrence interval larger than or equal to the specified number of days.  The operator `<` tests if the task has a recurrence interval smaller than or equal to the specified number of days.  The operator `=` tests if the task has a recurrence interval exactly equal to the specified number of days.  The convenience operator is an alias for `<`.
-* When `key` is `t` or `tag`, the task's tags are compared, and the search phrase is interpreted as a (unordered) set of tags.  Multiple tags are separated by commas (see examples below).  The operator `>` tests if every tag of the given task is contained in the specified set of tags.  The operator `<` tests if the every specified tag is present for the given task.  The operator `=` tests if the set of tags for the given task is exactly the same as the set of specified tags.  The convenience operator is an alias for `<`.  Note that tag names have to be specified exactly - substrings of the tag name will not work.
+* When `key` is `t` or `tag`, the task's tags are compared, and the search phrase is interpreted as a (unordered) set of tags.  Multiple tags are separated by commas (see examples below).  The operator `>` tests if every tag of the given task is contained in the specified set of tags.  The operator `<` tests if the every specified tag is present for the given task.  The operator `=` tests if the set of tags for the given task is exactly the same as the set of specified tags.  The convenience operator is an alias for `<`.  Note that tag names have to be specified exactly -- substrings of the tag name will not work.
 * Any other `key` will cause Deadline Manager to produce an error.
 
 ****
