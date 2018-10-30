@@ -39,7 +39,14 @@ public class Frequency implements Comparable<Frequency> {
     }
 
     /**
-     * Returns true if a given string is a valid frequency number.
+     * Returns true if {@code value} is equal to 0.
+     */
+    public boolean isZero() {
+        return value == 0;
+    }
+
+    /**
+     * Returns true if a given integer is a valid frequency number.
      */
     public static boolean isValidFrequency(int test) {
         return test >= 0;
