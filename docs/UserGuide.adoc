@@ -284,10 +284,10 @@ The syntax of sort command requires to be followed strictly. There should not be
 Also when curly braces are opened or closed for sorting by tags, the first and the last tag name mentioned should NOT be preceded and followed by spaces respectively.
 
 ****
-* Format of `SORT_COMPARATOR`: `(n|name|d|due|p|priority)(<|>)` OR `(t|tag)(<|>){TAG1 TAG2 TAG3 ...}
+* Format of `SORT_COMPARATOR`: `(n|name|d|due|p|priority)(<|>)` OR `(t|tag)(<|>){TAG1 TAG2 TAG3 ...}`
 * Sorts the list by the 1st comparator, in case of ties, it sorts by 2nd comparator and so on.
 * Meaning of the operators for each valid key:
-** When `key` is `n` or `name`, the task name is compared. Comparision is case-insensitive.
+** When `key` is `n` or `name`, the task name is compared. Comparison is case-insensitive.
 ** When `key` is `d` or `due`, the task's due date is compared.
 ** When `key` is `p` or `priority`, the task's priority is compared. Note that 1 is the highest priority and 4 is the lowest priority.
 ** When `key` is `f` or `frequency`, the task's frequency (i.e. the number of days between consecutive occurrences of that task) is compared.  A non-recurring task is treated as if it has a frequency that is infinitely large.
