@@ -10,6 +10,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.logging.Logger;
 
 import seedu.address.commons.core.LogsCenter;
+import seedu.address.commons.util.FileUtil;
 
 /**
  * Represents a Attachment in the deadline manager. Guarantees: immutable;
@@ -60,10 +61,14 @@ public class Attachment {
      */
     public File saveTo(String savePath) throws IOException {
         File destination = new File(savePath);
+        if (!FileUtil.isValidPath(savePath)) {
+            throw new IOException("Invalid file path");
+        }
         if (destination.exists()) {
             logger.warning(
                 String.format("Attachment destination %s will be overwritten.", destination.getAbsolutePath()));
         }
+
         File copiedFile = Files.copy(file.toPath(), destination.toPath(), StandardCopyOption.REPLACE_EXISTING).toFile();
         return copiedFile;
     }
