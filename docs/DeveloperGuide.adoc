@@ -684,6 +684,8 @@ As shown in the diagram above, a filter unit (using the full syntax) consists of
 [NOTE]
 The simplified syntax only contains the test phrase, and is explained in a separate section below.
 
+A non-quoted test phrase only allows alphanumeric characters and the characters `_`, `-`, `/`, and `,`.  (The `/` character allows dates to work, and the `,` character allows tag lists to work.)  The string tokenizer provides the bindings to facilitate this check.  If other characters are required, then the test phrase must be placed in quotes (either single or double quotes are acceptable, but they must match).
+
 These three parts are described in the following sections.
 
 ===== Field identifier
@@ -743,7 +745,7 @@ All textual and date fields are _eligible_.  This means that the name, deadline,
 
 Each eligible field is compared as if using the convenience operator.  A match in _any_ eligible field of a task will cause the task to match this filter unit.  Errors in interpreting the test phrase in the context of a field are simply treated as a non-match of the field (e.g. the test phrase `Assignment` cannot be interpreted as a deadline, so the deadline field will be skipped when attempting to match this test phrase).
 
-As with the full syntax, the simplified syntax supports quoting the test phrase if special characters are required.  A non-quoted test phrase only allows alphanumeric characters and the characters `_`, `-`, and `/`.  (The `/` character allows dates to work without quotes.)
+As with the full syntax, the simplified syntax supports quoting the test phrase if special characters are required.
 
 ==== Field-specific parser
 
