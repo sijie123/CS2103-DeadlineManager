@@ -17,6 +17,7 @@ import seedu.address.commons.events.storage.DataSavingExceptionEvent;
 import seedu.address.commons.events.storage.ImportDataAvailableEvent;
 import seedu.address.commons.events.storage.ImportExportExceptionEvent;
 import seedu.address.commons.exceptions.DataConversionException;
+import seedu.address.commons.util.FileUtil;
 import seedu.address.model.ReadOnlyTaskCollection;
 import seedu.address.model.UserPrefs;
 
@@ -160,7 +161,10 @@ public class StorageManager extends ComponentManager implements Storage {
     }
 
 
-    private Path getPathFromFileName(String fileName) {
+    private Path getPathFromFileName(String fileName) throws IOException {
+        if (!FileUtil.isValidPath(fileName)) {
+            throw new IOException(String.format(MESSAGE_FILE_INVALID_ERROR, fileName));
+        }
         return Paths.get(fileName);
     }
 

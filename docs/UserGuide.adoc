@@ -58,13 +58,13 @@ e.g. typing *`help`* and pressing kbd:[Enter] will open the help window.
 ====
 
 === Viewing help : `help`
-Help will list the available functions for the user to use.
+Displays the list of available functions for the user to use. It acts as a guide to help the user.
 
 Format: `help`
 
 === Adding a task: `add`
 Adds a task to the deadline manager +
-Format: `add n/NAME [P/PRIORITY] [f/FREQUENCY] d/DEADLINE [t/TAG]...`
+Format: `add n/NAME [p/PRIORITY] [f/FREQUENCY] d/DEADLINE [t/TAG]...`
 
 [TIP]
 A task can have any number of tags (including 0)
@@ -115,7 +115,7 @@ Format: `list`
 
 === Editing a task : `edit`
 Edits an existing task in the deadline manager. +
-Format: `edit INDEX [n/NAME] [P/PRIORITY] [f/FREQUENCY] [d/DEADLINE] [t/TAG]...`
+Format: `edit INDEX [n/NAME] [p/PRIORITY] [f/FREQUENCY] [d/DEADLINE] [t/TAG]...`
 
 ****
 * Edits the task at the specified `INDEX`. The index refers to the index number shown in the displayed task list. The index *must be a positive integer* 1, 2, 3, ...
@@ -132,7 +132,7 @@ Examples:
 Edits the deadline of the 1st task to 3rd October 2018.
 * `edit 2 n/v1.2 Milestone t/` +
 Edits the name of the 2nd task to be `v1.2 Milestone` and clears all existing tags.
-* `edit 1 P/1` +
+* `edit 1 p/1` +
 Edits the priority of the 1st task to 1 (highest priority).
 
 === Filtering a list of tasks: `filter`
@@ -198,7 +198,7 @@ Meaning of the operators for each valid key:
 * When `key` is `n` or `name`, the task name is compared.  Comparision is case-insensitive.  The operator `>` tests if the search phrase is contained within the task name.  The operator `<` tests if the task name is contained within the search phrase.  The operator `=` tests if the search phrase is exactly the same as the task name.  The convenience operator is an alias for `>`.
 * When `key` is `d` or `due`, the task's due date is compared, and the search phrase is interpreted as a date.  Dates must be in `d/m/y` format.  The operator `>` tests if the task's due date is on or after the specified due date.  The operator `<` tests if the task's due date is on or before the specified due date.  The operator `=` tests if the task's due date is exactly equal to the specified due date.  The convenience operator is an alias for `<`.
 * When `key` is `p` or `priority`, the task's priority is compared, and the search phrase is interpreted as an integer, representing the priority to be searched.  A priority of zero matches all the tasks with no priority set.  The operator `>` tests if the task has priority at least as high as the specified priority.  The operator `<` tests if the task has priority at most as high as the specified priority.  The operator `=` tests if the task's priority is exactly equal to the specified priority.  The convenience operator is an alias for `>`.  Note that priority 1 is the highest priority, priority 4 is the lowest priority, and tasks without any priority are considered to be of lower priority than priority 4.  In other words, `1 > 2 > 3 > 4 > (no priority)`.
-* When `key` is `f` or `frequency`, the task's frequency is compared, and the search phrase is interpreted as an integer, representing the frequency to be searched.  A frequency of zero matches all the non-recurring tasks.  The operator `>` tests if the task has frequency at least as high as the specified frequency.  The operator `<` tests if the task has frequency at most as high as the specified frequency.  The operator `=` tests if the task's frequency is exactly equal to the specified frequency.  The convenience operator is an alias for `>`.
+* When `key` is `f` or `frequency`, the task's frequency (i.e. the number of days between consecutive occurrences of that task) is compared, and the search phrase is interpreted as an integer, representing the frequency to be searched.  A non-recurring task is treated as if it has a frequency that is infinitely large (i.e. `f>100` also includes all non-recurring tasks).  The operator `>` tests if the task has a recurrence interval larger than or equal to the specified number of days.  The operator `<` tests if the task has a recurrence interval smaller than or equal to the specified number of days.  The operator `=` tests if the task has a recurrence interval exactly equal to the specified number of days.  The convenience operator is an alias for `<`.
 * When `key` is `t` or `tag`, the task's tags are compared, and the search phrase is interpreted as a (unordered) set of tags.  Multiple tags are separated by commas (see examples below).  The operator `>` tests if every tag of the given task is contained in the specified set of tags.  The operator `<` tests if the every specified tag is present for the given task.  The operator `=` tests if the set of tags for the given task is exactly the same as the set of specified tags.  The convenience operator is an alias for `<`.  Note that tag names have to be specified exactly - substrings of the tag name will not work.
 * Any other `key` will cause Deadline Manager to produce an error.
 
@@ -278,6 +278,11 @@ What this means is that in case two tasks are in tie according to the first comp
 ****
 
 Format: `sort SORT_COMPARATOR [SORT_COMPARATORS]...` +
+
+[NOTE]
+The syntax of sort command requires to be followed strictly. There should not be extra spaces or trailing spaces. +
+Also when curly braces are opened or closed for sorting by tags, the first and the last tag name mentioned should NOT be preceded and followed by spaces respectively.
+
 ****
 * Format of `SORT_COMPARATOR`: `(n|name|d|due|p|priority)(<|>)` OR `(t|tag)(<|>){TAG1 TAG2 TAG3 ...}
 * Sorts the list by the 1st comparator, in case of ties, it sorts by 2nd comparator and so on.
@@ -285,6 +290,7 @@ Format: `sort SORT_COMPARATOR [SORT_COMPARATORS]...` +
 ** When `key` is `n` or `name`, the task name is compared. Comparision is case-insensitive.
 ** When `key` is `d` or `due`, the task's due date is compared.
 ** When `key` is `p` or `priority`, the task's priority is compared. Note that 1 is the highest priority and 4 is the lowest priority.
+** When `key` is `f` or `frequency`, the task's frequency (i.e. the number of days between consecutive occurrences of that task) is compared.  A non-recurring task is treated as if it has a frequency that is infinitely large.
 ** When `key` is `t` or `tag`, the task's tags are compared.
 [NOTE]
 For sorting by tags the user has to specify which tags are more important and which are less important.
@@ -299,14 +305,17 @@ Sorts the current list of tasks in view in descending order by name, where sorti
 Sorts the current list of tasks in view in ascending order by due date, where ties are broken by descending order of names.
 * `sort priority<` +
 Sorts the current list of tasks in view in ascending order by priority.
+* `sort frequency<` +
+Sorts the current list of tasks in view in ascending order by frequency.
 * `sort tag<{cs2100 family cs2103t}` +
 Sorts the current list of tasks in view in ascending order by tags. In this case all the tasks with the tag `cs2100` will be placed
 before those tasks with the tag `family`, finally followed by those tasks with the tag `cs2103t`.
 
-****
-* In case a task does not belong to any of the tags mentioned it will be placed at the bottom of the sorted list.
-* In case a task contains more than one tag specified in the comparator, then it will be attempted to be sorted according to those tags first which place it former in the sorted list.
-****
+[TIP]
+In case a task does not belong to any of the tags mentioned it will be placed at the bottom of the sorted list.
+
+[TIP]
+In case a task contains more than one tag specified in the comparator, then it will be attempted to be sorted according to those tags first which place it former in the sorted list.
 
 //TODO: Sidhant
 //Not sure if this is implemented
@@ -634,11 +643,11 @@ Figure 4.1 above indicates which button should be clicked in order to obtain the
 
 == Command Summary
 
-* *Add* `add n/NAME d/DEADLINE [P/PRIORITY] [t/TAG]...` +
-e.g. `add n/CS2103 Assignment d/11/10/2018 P/2 t/java t/hard`
+* *Add* `add n/NAME d/DEADLINE [p/PRIORITY] [t/TAG]...` +
+e.g. `add n/CS2103 Assignment d/11/10/2018 p/2 t/java t/hard`
 
-* *Add Recurring*: `addr n/NAME d/DEADLINE f/FREQUENCY [P/PRIORITY] [t/TAG]...`
-e.g. `add n/CS2103 Tutorial d/1/10/2018 f/7 P/4 t/easy`
+* *Add Recurring*: `addr n/NAME d/DEADLINE f/FREQUENCY [p/PRIORITY] [t/TAG]...`
+e.g. `add n/CS2103 Tutorial d/1/10/2018 f/7 p/4 t/easy`
 
 * *Attachment (Add)* : `attachment INDEX add p/"FILEPATH"`
 

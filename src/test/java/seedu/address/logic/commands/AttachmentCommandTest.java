@@ -21,7 +21,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import seedu.address.commons.core.Messages;
 import seedu.address.commons.core.index.Index;
@@ -38,7 +40,11 @@ import seedu.address.testutil.TaskBuilder;
  * Contains unit tests for AttachmentCommand.
  */
 public class AttachmentCommandTest {
+
     private static File nonExistentFile = new File("blabla/not-here1827364.txt");
+
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
 
     private Model model = new ModelManager(getTypicalTaskCollections(), new UserPrefs());
     private CommandHistory commandHistory = new CommandHistory();
@@ -51,7 +57,8 @@ public class AttachmentCommandTest {
      */
     private File createTestFile() {
         try {
-            File file = File.createTempFile("deadline-manager-attachment-test-", ".zip");
+            //File file = File.createTempFile("deadline-manager-attachment-test-", ".zip");
+            File file = folder.newFile();
             return file;
         } catch (IOException ioe) {
             return null;
@@ -267,6 +274,45 @@ public class AttachmentCommandTest {
         assertCommandFailure(attachmentCommand, model, commandHistory, expectedMessage);
     }
 
+    @Test
+    public void execute_getAttachmentWriteToNonEmptyDirectory_error() throws IOException {
+        File tempFile = createTestFile();
+        // Initialize file with some content that can be verified later
+        String fileContent = "Hello Rar the Cat!\n";
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(tempFile.getPath()));
+        bufferedWriter.write(fileContent);
+        bufferedWriter.close();
+
+        // Construct a file with one attachment
+        Task originalTask = model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased());
+        Task taskWithAttachment = addAttachmentToTask(originalTask, new Attachment(tempFile));
+        Model modelStub = new ModelManager(new TaskCollection(model.getTaskCollection()),
+            new UserPrefs());
+        modelStub.updateTask(originalTask, taskWithAttachment);
+        modelStub.commitTaskCollection();
+
+
+        File tempDir = folder.newFolder("attachment-test");
+        File tempFileInFolder = folder.newFile("attachment-test/test.zip");
+        File outputFile = tempDir;
+
+
+        //Attempt to get it from attachments
+        String fileName = tempFile.getName();
+        String outputPath = outputFile.getPath();
+        AttachmentCommand.AttachmentAction action =
+            new AttachmentCommand.GetAttachmentAction(fileName, outputPath);
+        AttachmentCommand attachmentCommand = new AttachmentCommand(INDEX_FIRST_TASK, action);
+        String expectedMessage = String.format(
+            AttachmentCommand.GetAttachmentAction.MESSAGE_GET_FAILED, outputPath);
+
+        Model expectedModel = modelStub;
+
+        assertCommandFailure(attachmentCommand, modelStub, commandHistory, expectedMessage);
+
+        deleteTestFile(tempFile);
+        deleteTestFile(tempFileInFolder);
+    }
 
     @Test
     public void execute_getAttachment_success() throws IOException {
@@ -389,6 +435,7 @@ public class AttachmentCommandTest {
         assertEquals(attachmentCommand, new AttachmentCommand(INDEX_SECOND_TASK, list));
         assertNotEquals(attachmentCommand, new AttachmentCommand(INDEX_THIRD_TASK, list));
         assertNotEquals(attachmentCommand, new AttachmentCommand(INDEX_SECOND_TASK, get));
+        assertNotEquals(attachmentCommand, null);
 
         assertNotEquals(add, attachmentCommand);
         assertNotEquals(delete, attachmentCommand);

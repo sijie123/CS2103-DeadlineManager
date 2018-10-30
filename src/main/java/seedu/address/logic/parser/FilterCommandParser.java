@@ -164,23 +164,27 @@ public class FilterCommandParser implements Parser<FilterCommand> {
         // test<blah
         // name>"hello world"
 
-        // note: '/' is necessary for dates
-        final Predicate<Character> allowedKeyCharacterPredicate = ch -> (ch >= 'A' && ch <= 'Z')
+        // note: '/' is necessary for dates, ',' is necessary for tags
+        final Predicate<Character> allowedUnquotedCharacterPredicate = ch -> (ch >= 'A' && ch <= 'Z')
                                                                      || (ch >= 'a' && ch <= 'z')
                                                                      || (ch >= '0' && ch <= '9')
-                                                                     || ch == '_' || ch == '-' || ch == '/';
+                                                                     || ch == '_'
+                                                                     || ch == '-'
+                                                                     || ch == '/'
+                                                                     || ch == ',';
 
         try {
             BooleanExpressionParser<Task> expressionParser =
                 new BooleanExpressionParser<>((tokenizer, reservedCharPredicate) -> {
-                    final Predicate<Character> negatedReservedCharPredicate = reservedCharPredicate.negate();
-                    final String key = tokenizer.nextString(
-                        negatedReservedCharPredicate.and(allowedKeyCharacterPredicate));
+                    final Predicate<Character> effectiveUnquotedCharacterPredicate = reservedCharPredicate.negate()
+                        .and(allowedUnquotedCharacterPredicate);
+
+                    final String key = tokenizer.nextString(effectiveUnquotedCharacterPredicate);
                     String opString;
                     if (tokenizer.hasNextToken()
                         && (opString = tokenizer.tryNextPattern(Pattern.compile("[\\=\\<\\>\\:]"))) != null) {
                         final FilterOperator operator = FilterOperator.parse(opString);
-                        final String value = tokenizer.nextString(negatedReservedCharPredicate);
+                        final String value = tokenizer.nextString(effectiveUnquotedCharacterPredicate);
                         try {
                             return createPredicate(key, operator, value);
                         } catch (InvalidPredicateException e) { // note: this catch block can never happen

@@ -35,22 +35,23 @@ public class AttachmentCommand extends Command {
     public static final String COMMAND_LIST_ACTION = "list";
     public static final String MESSAGE_USAGE =
         COMMAND_WORD + ": Modify and manages the attachments of the task identified "
-            + "by the index number used in the displayed task list. "
+            + "by the index number used in the displayed task list.\n"
             + "Parameters: INDEX (must be a positive integer) "
             + "[add|get|delete|list] "
-            + "[" + PREFIX_FILEPATH + "FILEPATH] "
-            + "[" + PREFIX_FILENAME + "FILENAME]\n"
+            + "[" + PREFIX_FILEPATH + "\"FILEPATH\"] "
+            + "[" + PREFIX_FILENAME + "\"FILENAME\"]\n"
+            + "It is recommended for FILEPATH and FILENAME to be enclosed in quotes (\"\")."
+            + "Otherwise, the application might fail to interpret your command.\n"
             + "Example 1: " + COMMAND_WORD + " 1 " + COMMAND_ADD_ACTION + " "
-            + PREFIX_FILEPATH + "D:\\Documents\\HelloWorld.docx\n"
+            + PREFIX_FILEPATH + "\"D:\\Documents\\HelloWorld.docx\"\n"
             + "Example 2: " + COMMAND_WORD + " 2 " + COMMAND_GET_ACTION + " "
-            + PREFIX_FILEPATH + "D:\\Documents\\TaskAttachments.zip\n"
+            + PREFIX_FILEPATH + "\"D:\\Documents\\TaskAttachments.zip\"\n"
             + "Example 3: " + COMMAND_WORD + " 1 " + COMMAND_LIST_ACTION + "\n"
             + "Example 4: " + COMMAND_WORD + " 1 " + COMMAND_DELETE_ACTION + " "
-            + PREFIX_FILENAME + "HelloWorld.docx";
+            + PREFIX_FILENAME + "\"HelloWorld.docx\"";
 
 
     public static final String MESSAGE_MISSING_ARGUMENTS = "Missing argument %1$s for %2$s action";
-    public static final String MESSAGE_DUPLICATED_ARGUMENTS = "Only one argument of %1$s allowed";
     public static final String MESSAGE_NAME_NOT_FOUND = "%1$s is not an attachment.";
 
     private static final Logger logger = LogsCenter.getLogger(Attachment.class);

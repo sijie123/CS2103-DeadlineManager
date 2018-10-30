@@ -602,8 +602,11 @@ In the rest of this guide that describes the filtering system, we use the term _
 There are three components to parsing the filter operation:
 
 1. A boolean expression parser that understands the high-level syntax of the filter expression and digests the filter expression into filter units
-2. A parser that splits each filter unit (e.g. `t:CS2101`) into its three constituent parts (e.g. `t`, `:`, `CS2101`) -- this is the lambda expression in the sequence diagram below, which resides in the `FilterCommandParser` class
+2. A parser that splits each filter unit (e.g. `t:CS2101`) into its three constituent parts if possible (e.g. `t`, `:`, `CS2101`) -- this is the lambda expression in the sequence diagram below, which resides in the `FilterCommandParser` class
 3. A method for each field (e.g. `Name`, `Deadline`, `Priority`, `Set<Tag>`) that interprets the parts from the previous part in the context of that particular field, and returns the predicate that is required  -- this is referred to as the _field-specific parser_, and is implemented as a static method in each filterable field
+
+[NOTE]
+The second component in the list above also accepts a filter unit that contains the third part alone (e.g. `CS2101`) without the other two parts.  This is known as the _simplified filter unit syntax_, and will be explained in more detail below.
 
 A general string tokenizer (this is the `StringTokenizer` class in the `parser` subdirectory) is shared by parts 1 and 2 to split the filter expression into tokens.
 
@@ -637,7 +640,7 @@ The string tokenizer class is also used to parse comma-separated tag expressions
 
 ==== Boolean expression parser
 
-This is represented by the class `seedu.address.logic.parser.BooleanExpressionParser<T>`, and it is a general boolean expression parser that is designed to be unaware of the syntax of individual filter units.
+This is represented by the generic class `seedu.address.logic.parser.BooleanExpressionParser<T>`, and it is a general boolean expression parser that is designed to be unaware of the syntax of individual filter units.
 
 The following operators are recognized (highest precedence first):
 
@@ -645,7 +648,7 @@ The following operators are recognized (highest precedence first):
 * `&` or `&&`: Logical conjunction (AND) of two predicates
 * `|` or `||`: Logical disjunction (OR) of two predicates
 
-Parentheses (`(` and `)`) are also recognized and respected, and they may be nested to arbitrary depth.
+Parentheses (`(` and `)`) are also recognized and respected, and they may be nested to arbitrary depth.  When two predicates are adjacent, the `&` operator is inserted between them.  This allows for simpler filter expressions (especially when combined with the simplified filter unit syntax).
 
 The boolean expression parser uses the link:https://en.wikipedia.org/wiki/Shunting-yard_algorithm[shunting yard algorithm] to provide precedence-respecting parsing of the filter expression.
 
@@ -663,15 +666,23 @@ The filter unit parser is written as a lambda expression inside the `FilterComma
 * The filter unit parser parses syntax that is specific to filters only, and it cannot be easily adapted for other uses.
 * It frees both the boolean expression parser and the field-specific parser from having to depend on the `FilterCommandParser` class.
 
-The following diagram describes the syntax of a filter unit:
+There are two possible ways to express a filter unit:
+
+1. The full syntax -- this allows for maximum customization of the filter unit
+2. The simplified syntax -- this improves terseness and reduces cognitive overhead
+
+The following diagram is describes a filter unit that is specified using the full syntax:
 
 image::FilterUnitDiagram.png[width="400"]
 
-As shown in the diagram above, a filter unit consists of three parts:
+As shown in the diagram above, a filter unit (using the full syntax) consists of three parts:
 
 1. The field identifier, which identifies the field (e.g. name or deadline) that is being filtered on
 2. The test phrase, which represents the value or keyword that tasks are being compared to
 3. The filter operator, which describes the how the identified field is compared to the test phrase (more details below)
+
+[NOTE]
+The simplified syntax only contains the test phrase, and is explained in a separate section below.
 
 These three parts are described in the following sections.
 
@@ -682,6 +693,7 @@ There are four filterable fields in a task, and each of these fields correspond 
 * `n` or `name` -- the name of the task
 * `d`, `due` or `deadline` -- the deadline (i.e. due date) of the task
 * `p` or `priority` -- the priority of the task
+* `f` or `frequency` -- the frequency of the task (in days)
 * `t` or `tag` -- the set of tags associated with the task
 
 Field identifiers that correspond to the same field are equivalent.
@@ -695,6 +707,7 @@ The following is the required syntax for each filterable field:
 * Name: Any text string
 * Deadline: Any date in the form `DD/MM/YYYY`
 * Priority: Any valid priority value (i.e. any integer between 0 and 4 inclusive)
+* Frequency: Any valid frequency value (i.e. any non-negative integer that does not exceed the maximum bounds of an integer)
 * Tag set: Any comma-separated list of tags, where each tag can be any text string (e.g. `CS2101,CS2103T`)
 
 [NOTE]
@@ -706,7 +719,7 @@ Tags that contain spaces may be specified by placing quotes around those tags.  
 
 The filter operator specifies exactly _how_ the task should be compared to the test phrase.
 
-For fields that are intrinsically ordered (i.e. deadline and priority), the `<`, `=`, and `>` operators have their usual mathematical meaning, except that the operators `<` and `>` are non-strict.  This means that `p>2` will return a superset of the tasks returned by `p=2`.
+For fields that are intrinsically ordered (i.e. deadline, priority and frequency), the `<`, `=`, and `>` operators have their usual mathematical meaning, except that the operators `<` and `>` are non-strict.  This means that `p>2` will return a superset of the tasks returned by `p=2`.
 
 For textual fields (i.e. name), the `<`, `=`, `>` operators represent _substring_, _equivalence_, and _superstring_ relations respectively.
 
@@ -719,13 +732,27 @@ The following list shows what the convenience operator means, in the context of 
 * Name: `:` is an alias for `>`
 * Deadline: `:` is an alias for `<`
 * Priority: `:` is an alias for `>`
+* Frequency: `:` is an alias for `<`
 * Tag set: `:` is an alias for `>`
+
+===== Simplified filter unit syntax
+
+The simplified filter unit syntax elides the field identifier and the filter operator.  A filter unit (specified with the simplified syntax) is tested against all _eligible_ fields.
+
+All textual and date fields are _eligible_.  This means that the name, deadline, and tags fields are tested against when the simplified syntax is used.  Numeric fields (i.e. priority and frequency) are omitted because they often inadvertently match a test phrase (e.g. when the user attempts to search for tasks which have a name or tag that contains numbers).
+
+Each eligible field is compared as if using the convenience operator.  A match in _any_ eligible field of a task will cause the task to match this filter unit.  Errors in interpreting the test phrase in the context of a field are simply treated as a non-match of the field (e.g. the test phrase `Assignment` cannot be interpreted as a deadline, so the deadline field will be skipped when attempting to match this test phrase).
+
+As with the full syntax, the simplified syntax supports quoting the test phrase if special characters are required.  A non-quoted test phrase only allows alphanumeric characters and the characters `_`, `-`, and `/`.  (The `/` character allows dates to work without quotes.)
 
 ==== Field-specific parser
 
-As field-specific parsers have to be implemented differently for each filterable field, the design choice was made to place each field-specific parser in its respective field class.  More precisely, each field-specific parser is implemented as a static method in its field class.
+As field-specific parsers have to be implemented differently for each filterable field, the design choice was made to place each field-specific parser in its respective field class.  More precisely, each field-specific parser is implemented as a static method (`makeFilter()`) in its field class.
 
 When each filter unit is parsed, it invokes the field-specific parser for the given field identifier.  The field-specific parser then creates and returns a predicate from the given filter operator and test phrase.
+
+[NOTE]
+Priority values do not compare in the same order as their values as integers.  Priority values have this order (from highest to lowest priority): 1 > 2 > 3 > 4 > 0.
 
 ==== Design Considerations
 
