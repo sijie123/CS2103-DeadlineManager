@@ -285,6 +285,7 @@ Format: `sort SORT_COMPARATOR [SORT_COMPARATORS]...` +
 ** When `key` is `n` or `name`, the task name is compared. Comparision is case-insensitive.
 ** When `key` is `d` or `due`, the task's due date is compared.
 ** When `key` is `p` or `priority`, the task's priority is compared. Note that 1 is the highest priority and 4 is the lowest priority.
+** When `key` is `f` or `frequency`, the task's frequency (i.e. the number of days between consecutive occurrences of that task) is compared.  A non-recurring task is treated as if it has a frequency that is infinitely large.
 ** When `key` is `t` or `tag`, the task's tags are compared.
 [NOTE]
 For sorting by tags the user has to specify which tags are more important and which are less important.
@@ -299,14 +300,17 @@ Sorts the current list of tasks in view in descending order by name, where sorti
 Sorts the current list of tasks in view in ascending order by due date, where ties are broken by descending order of names.
 * `sort priority<` +
 Sorts the current list of tasks in view in ascending order by priority.
+* `sort frequency<` +
+Sorts the current list of tasks in view in ascending order by frequency.
 * `sort tag<{cs2100 family cs2103t}` +
 Sorts the current list of tasks in view in ascending order by tags. In this case all the tasks with the tag `cs2100` will be placed
 before those tasks with the tag `family`, finally followed by those tasks with the tag `cs2103t`.
 
-****
-* In case a task does not belong to any of the tags mentioned it will be placed at the bottom of the sorted list.
-* In case a task contains more than one tag specified in the comparator, then it will be attempted to be sorted according to those tags first which place it former in the sorted list.
-****
+[TIP]
+In case a task does not belong to any of the tags mentioned it will be placed at the bottom of the sorted list.
+
+[TIP]
+In case a task contains more than one tag specified in the comparator, then it will be attempted to be sorted according to those tags first which place it former in the sorted list.
 
 //TODO: Sidhant
 //Not sure if this is implemented
