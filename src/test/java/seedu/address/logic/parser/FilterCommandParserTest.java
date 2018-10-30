@@ -202,6 +202,11 @@ public class FilterCommandParserTest {
         assertParseThrowsException(parser, "name>");
         assertParseThrowsException(parser, "name<");
         assertParseThrowsException(parser, "name:");
+        assertParseThrowsException(parser, "1:");
+        assertParseThrowsException(parser, "2:");
+        assertParseThrowsException(parser, "-:");
+        assertParseThrowsException(parser, "/:");
+        assertParseThrowsException(parser, "wert/:");
         assertParseThrowsException(parser, "t:\"CS2101,CS2103");
         assertParseThrowsException(parser, "(t:\"CS2101,CS2103");
         assertParseThrowsException(parser, "t:CS2101,CS2103\"");
