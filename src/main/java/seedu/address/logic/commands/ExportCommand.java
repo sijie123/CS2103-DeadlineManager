@@ -18,22 +18,23 @@ public class ExportCommand extends Command {
     public static final String COMMAND_WORD = "export";
     public static final String MESSAGE_EXPORT_ERROR = "Export failed. Error: %s";
     public static final String MESSAGE_SUCCESS = "Exported successfully to external file: %s";
-    public static final String MESSAGE_USAGE = "export p/FILEPATH [r/overwrite]";
+    public static final String MESSAGE_USAGE = "export [csv] p/FILEPATH [r/overwrite]";
     private String pathName;
     private String exportError = "";
-    private boolean overwrite;
+    private boolean shouldOverwrite;
+    private boolean isCsvFormat;
 
-    public ExportCommand(String filename, boolean overwrite) {
+    public ExportCommand(String filename, boolean shouldOverwrite, boolean isCsvFormat) {
         this.pathName = filename;
-        this.overwrite = overwrite;
-        //this.pathName = Paths.get(filename);
+        this.shouldOverwrite = shouldOverwrite;
+        this.isCsvFormat = isCsvFormat;
     }
 
     @Override
     public CommandResult execute(Model model, CommandHistory history) throws CommandException {
         requireNonNull(model);
         EventsCenter.getInstance().registerHandler(this);
-        model.exportTaskCollection(pathName, overwrite);
+        model.exportTaskCollection(pathName, shouldOverwrite, isCsvFormat);
         EventsCenter.getInstance().unregisterHandler(this);
         if (hasExportError()) {
             throw new CommandException(String.format(MESSAGE_EXPORT_ERROR, exportError));
@@ -47,7 +48,8 @@ public class ExportCommand extends Command {
         return other == this // short circuit if same object
             || (other instanceof ExportCommand // instanceof handles nulls
             && pathName.equals(((ExportCommand) other).pathName)
-            && overwrite == ((ExportCommand) other).overwrite); // state check
+            && shouldOverwrite == ((ExportCommand) other).shouldOverwrite
+            && isCsvFormat == ((ExportCommand) other).isCsvFormat); // state check
     }
 
     private boolean hasExportError() {

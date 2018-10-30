@@ -30,12 +30,14 @@ public interface ImportExportStorage {
 
     /**
      * Saves the given {@link ReadOnlyTaskCollection} to the path specified.
-     *
-     * @param taskCollection cannot be null.
-     * @param filePath location of export file.
-     * @throws IOException if there was any problem writing to the file.
+     * @param taskCollection cannot be null. The task collection to be saved.
+     * @param filePath the destination to save the file
+     * @param shouldOverwrite if the file exists, whether the file should be overwritten.
+     * @param isCsvFormat whether the task collection should be saved as a CSV or a XML file.
+     * @throws IOException
      */
-    void exportTaskCollection(ReadOnlyTaskCollection taskCollection, Path filePath, boolean shouldOverwrite)
+    void exportTaskCollection(ReadOnlyTaskCollection taskCollection, Path filePath, boolean shouldOverwrite,
+                              boolean isCsvFormat)
         throws IOException;
 
 }

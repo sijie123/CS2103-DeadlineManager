@@ -19,6 +19,7 @@ import org.junit.rules.TemporaryFolder;
 import seedu.address.commons.exceptions.DataConversionException;
 import seedu.address.model.ReadOnlyTaskCollection;
 import seedu.address.model.TaskCollection;
+import seedu.address.storage.xmlstorage.XmlTaskCollectionStorage;
 
 public class XmlTaskCollectionStorageTest {
 

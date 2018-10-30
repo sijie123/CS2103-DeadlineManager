@@ -34,13 +34,23 @@ public class ExportCommandParser implements Parser<ExportCommand> {
         String filename = argMultimap.getValue(PREFIX_FILEPATH).orElseThrow(() -> new ParseException(
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE)));
 
-        Optional<String> shouldOverwriteCmd = argMultimap.getValue(PREFIX_RESOLVER);
-        if (!shouldOverwriteCmd.isPresent()) {
-            return new ExportCommand(filename, false);
+        String exportCsv = argMultimap.getPreamble();
+        boolean isCsvFormat = false;
+        if (!exportCsv.trim().equals("")) {
+            if (exportCsv.trim().equals("csv")) {
+                isCsvFormat = true;
+            } else {
+                throw new ParseException(
+                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE));
+            }
         }
 
+        Optional<String> shouldOverwriteCmd = argMultimap.getValue(PREFIX_RESOLVER);
+        if (!shouldOverwriteCmd.isPresent()) {
+            return new ExportCommand(filename, false, isCsvFormat);
+        }
         if (shouldOverwriteCmd.get().equals("overwrite")) {
-            return new ExportCommand(filename, true);
+            return new ExportCommand(filename, true, isCsvFormat);
         } else {
             throw new ParseException(
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE));

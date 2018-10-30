@@ -31,7 +31,7 @@ import seedu.address.storage.Storage;
 import seedu.address.storage.StorageManager;
 import seedu.address.storage.TaskCollectionStorage;
 import seedu.address.storage.UserPrefsStorage;
-import seedu.address.storage.XmlTaskCollectionStorage;
+import seedu.address.storage.xmlstorage.XmlTaskCollectionStorage;
 import seedu.address.ui.Ui;
 import seedu.address.ui.UiManager;
 

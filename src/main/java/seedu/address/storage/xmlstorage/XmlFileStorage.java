@@ -1,4 +1,4 @@
-package seedu.address.storage;
+package seedu.address.storage.xmlstorage;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

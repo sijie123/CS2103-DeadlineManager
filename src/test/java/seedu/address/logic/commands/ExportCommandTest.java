@@ -29,7 +29,7 @@ public class ExportCommandTest {
     public void execute_exportOnExistingFile_exceptionThrown() {
         IOException expectedException = new IOException(
             String.format(StorageManager.MESSAGE_WRITE_FILE_EXISTS_ERROR, defaultFile));
-        ExportCommand testCommand = new ExportCommand(defaultFile, false);
+        ExportCommand testCommand = new ExportCommand(defaultFile, false, false);
         ModelStubWithExportTaskCollection modelStub = new ModelStubWithExportTaskCollection(defaultFile, testCommand);
         assertCommandFailure(testCommand, modelStub, commandHistory,
                 String.format(ExportCommand.MESSAGE_EXPORT_ERROR, expectedException.getMessage()));
@@ -37,7 +37,7 @@ public class ExportCommandTest {
 
     @Test
     public void execute_exportNewFile_exportSuccessful() {
-        ExportCommand testCommand = new ExportCommand(temporaryFilePath, false);
+        ExportCommand testCommand = new ExportCommand(temporaryFilePath, false, false);
         ModelStubWithExportTaskCollection modelStub = new ModelStubWithExportTaskCollection(defaultFile, testCommand);
         assertCommandSuccess(testCommand, modelStub, commandHistory,
                  String.format(ExportCommand.MESSAGE_SUCCESS, temporaryFilePath), modelStub);
@@ -45,7 +45,7 @@ public class ExportCommandTest {
 
     @Test
     public void execute_overwriteExportOnExistingFile_exceptionThrown() {
-        ExportCommand testCommand = new ExportCommand(defaultFile, true);
+        ExportCommand testCommand = new ExportCommand(defaultFile, true, false);
         ModelStubWithExportTaskCollection modelStub = new ModelStubWithExportTaskCollection(defaultFile, testCommand);
         assertCommandSuccess(testCommand, modelStub, commandHistory,
             String.format(ExportCommand.MESSAGE_SUCCESS, defaultFile), modelStub);
@@ -73,7 +73,7 @@ public class ExportCommandTest {
         }
 
         @Override
-        public void exportTaskCollection(String filename, boolean shouldOverwrite) {
+        public void exportTaskCollection(String filename, boolean shouldOverwrite, boolean isCsvFormat) {
             if (shouldOverwrite) {
                 //No error.
                 return;

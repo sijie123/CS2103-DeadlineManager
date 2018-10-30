@@ -20,6 +20,8 @@ import seedu.address.commons.exceptions.DataConversionException;
 import seedu.address.commons.util.FileUtil;
 import seedu.address.model.ReadOnlyTaskCollection;
 import seedu.address.model.UserPrefs;
+import seedu.address.storage.csvstorage.CsvTaskCollectionWriteStorage;
+import seedu.address.storage.xmlstorage.XmlTaskCollectionStorage;
 
 /**
  * Manages storage of TaskCollection data in local storage.
@@ -90,7 +92,7 @@ public class StorageManager extends ComponentManager implements Storage {
         if (!fileExists(filePath)) {
             throw new IOException(MESSAGE_READ_FILE_MISSING_ERROR);
         }
-        TaskCollectionStorage importExportStorage = new XmlTaskCollectionStorage(filePath);
+        TaskCollectionReadStorage importExportStorage = new XmlTaskCollectionStorage(filePath);
         logger.fine("Attempting to import from file: " + filePath);
         try {
             return importExportStorage.readTaskCollection(filePath);
@@ -100,19 +102,33 @@ public class StorageManager extends ComponentManager implements Storage {
     }
 
     @Override
-    public void exportTaskCollection(ReadOnlyTaskCollection taskCollection, Path filePath, boolean shouldOverwrite)
+    public void exportTaskCollection(ReadOnlyTaskCollection taskCollection, Path filePath, boolean shouldOverwrite,
+                                     boolean isCsvFormat)
         throws IOException {
-        if (!shouldOverwrite && fileExists(filePath)) {
+        if (!shouldWriteToPath(filePath, shouldOverwrite)) {
             throw new IOException(String.format(MESSAGE_WRITE_FILE_EXISTS_ERROR, filePath));
         }
-        TaskCollectionStorage importExportStorage = new XmlTaskCollectionStorage(filePath);
+        TaskCollectionWriteStorage exportStorage =
+            createExportStorageFromPathname(filePath, isCsvFormat);
         logger.fine("Attempting to export to file: " + filePath);
         try {
-            importExportStorage.saveTaskCollection(taskCollection);
+            exportStorage.saveTaskCollection(taskCollection);
         } catch (IOException ioe) {
             throw new IOException(String.format(MESSAGE_WRITE_FILE_NO_PERMISSION_ERROR, filePath), ioe);
         }
+    }
 
+    /**
+     * Determines whether export should be written to the path, or we should abort the export.
+     * @param filePath path to write to
+     * @param shouldOverwrite whether we should overwrite if file exists
+     * @return true if we should write, false otherwise
+     */
+    private boolean shouldWriteToPath(Path filePath, boolean shouldOverwrite) {
+        if (!shouldOverwrite && fileExists(filePath)) {
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -132,9 +148,23 @@ public class StorageManager extends ComponentManager implements Storage {
     public void handleExportRequestEvent(ExportRequestEvent event) {
         logger.info(LogsCenter.getEventHandlingLogMessage(event, "Exporting file"));
         try {
-            exportTaskCollection(event.data, getPathFromFileName(event.filename), event.overwrite);
+            exportTaskCollection(event.data, getPathFromFileName(event.filename), event.overwrite, event.isCsvFormat);
         } catch (IOException e) {
             raise(new ImportExportExceptionEvent(e));
+        }
+    }
+
+    /**
+     * Creates the relevant write storage from pathname and whether CSV is required.
+     * @param pathname the pathname to export to
+     * @param isCsvFormat whether the file should be exported in CSV format (or xml otherwise)
+     * @return a TaskCollectionWriteStorage that can be used to export.
+     */
+    private TaskCollectionWriteStorage createExportStorageFromPathname(Path pathname, boolean isCsvFormat) {
+        if (isCsvFormat) {
+            return new CsvTaskCollectionWriteStorage(pathname);
+        } else {
+            return new XmlTaskCollectionStorage(pathname);
         }
     }
 
