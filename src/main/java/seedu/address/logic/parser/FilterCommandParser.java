@@ -173,29 +173,36 @@ public class FilterCommandParser implements Parser<FilterCommand> {
                                                                      || ch == '/'
                                                                      || ch == ',';
 
+        final Predicate<Character> allowedKeyCharacterPredicate = ch -> (ch >= 'A' && ch <= 'Z')
+                                                                || (ch >= 'a' && ch <= 'z');
+
         try {
             BooleanExpressionParser<Task> expressionParser =
                 new BooleanExpressionParser<>((tokenizer, reservedCharPredicate) -> {
                     final Predicate<Character> effectiveUnquotedCharacterPredicate = reservedCharPredicate.negate()
                         .and(allowedUnquotedCharacterPredicate);
 
-                    final String key = tokenizer.nextString(effectiveUnquotedCharacterPredicate);
+                    int tokenizerLocation = tokenizer.getLocation(); // get the location in case we need to rewind
+                    final String key = tokenizer.tryNextString(allowedKeyCharacterPredicate);
                     String opString;
-                    if (tokenizer.hasNextToken()
+                    if (key != null && tokenizer.hasNextToken()
                         && (opString = tokenizer.tryNextPattern(Pattern.compile("[\\=\\<\\>\\:]"))) != null) {
                         final FilterOperator operator = FilterOperator.parse(opString);
-                        final String value = tokenizer.nextString(effectiveUnquotedCharacterPredicate);
+                        final String testPhrase = tokenizer.nextString(effectiveUnquotedCharacterPredicate);
                         try {
-                            return createPredicate(key, operator, value);
+                            return createPredicate(key, operator, testPhrase);
                         } catch (InvalidPredicateException e) { // note: this catch block can never happen
                             throw new ParseException(String.format(MESSAGE_INVALID_GENERAL_PREDICATE_FORMAT, key + ' '
-                                + opString + ' ' + value), e);
+                                + opString + ' ' + testPhrase), e);
                         }
                     } else {
+                        tokenizer.setLocation(tokenizerLocation); // rewind the tokenizer
+                        final String testPhrase = tokenizer.nextString(effectiveUnquotedCharacterPredicate);
                         try {
-                            return createPredicateAny(key);
+                            return createPredicateAny(testPhrase);
                         } catch (InvalidPredicateException e) { // note: this catch block can never happen
-                            throw new ParseException(String.format(MESSAGE_INVALID_GENERAL_PREDICATE_FORMAT, key), e);
+                            throw new ParseException(
+                                String.format(MESSAGE_INVALID_GENERAL_PREDICATE_FORMAT, testPhrase), e);
                         }
                     }
                 });

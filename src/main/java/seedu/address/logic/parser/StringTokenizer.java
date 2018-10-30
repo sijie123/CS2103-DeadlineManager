@@ -194,6 +194,39 @@ public class StringTokenizer {
     }
 
     /**
+     * Consume the next string token.
+     * Returns null if no token available.
+     *
+     * @param validPred A predicate that returns false if the given character is not allowed in this token.
+     *                  If such a character is encountered, the token would be considered to have ended
+     *                  just before that character.  It is only used for unquoted strings.
+     *
+     * @throws NoSuchElementException if the string has reached the end.
+     */
+    public String tryNextString(Predicate<Character> validPred) {
+        try {
+            return nextString(validPred);
+        } catch (InputMismatchException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Gets the current read location in the string.
+     */
+    public int getLocation() {
+        return nextIndex;
+    }
+
+    /**
+     * Sets the current read location in the string.
+     */
+    public void setLocation(int location) {
+        assert(location >= 0 && location <= str.length());
+        nextIndex = location;
+    }
+
+    /**
      * Gets all the tokens from this tokenizer.
      *
      * @throws InputMismatchException if there are invalid tokens.
