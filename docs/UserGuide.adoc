@@ -584,6 +584,7 @@ Examples:
 * (Assuming that we have previously exported to `cs2101.xml`) +
 `import p/cs2101.xml r/all` +
 Imports all tasks from `cs2101.xml`. Even if an incoming task exists in Deadline Manager, it is still imported.
+
 [importdemo]
 .User prepares to import from cs2101.xml
 [#img-importdemo2]
