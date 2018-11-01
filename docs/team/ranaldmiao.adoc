@@ -1,0 +1,81 @@
+= Ranald Lam Yun Shao - Project Portfolio
+:site-section: AboutUs
+:imagesDir: ../images
+:stylesDir: ../stylesheets
+
+== PROJECT: Deadline Manager
+
+---
+
+== Overview
+
+Deadline Manager is an application that allows users to easily manage their tasks and deadlines. It enables users to keep track of and focus on important activities.
+
+It was written for students of NUS School of Computing in mind with an ability for computing students to programmatically manage their tasks through a Command Line Interface (CLI).
+
+It is developed as part of the requirements for CS2103T (Software Engineering) in a team consisting of 4 other members. Written in Java, Deadline Manager started off as AddressBook - Level 4 and was morphed into its current form.
+
+For more information, the Github page with the full source can be found: [https://cs2103-ay1819s1-w17-4.github.io/main[on GitHub]].
+
+== Summary of contributions
+* *Major enhancement*: added the *ability to manage attachments of tasks in Deadline Manager*
+** What it does: It allows users to add, list, delete or retrieve (get) attachments from any task added to the Deadline Manager. Users that want to associate certain files to a particular task can do so via this Attachment feature.
+** Justification: Tasks usually come with associated files that are required when a user performs the task. With this feature, users will be able to categorize and organize files related to tasks. This will reduce the time required for the user to search for these files at a subsequent stage, thereby increasing effectiveness in completing tasks.
+For instance, assignments for students usually come with an assignment brief. This feature allows them to associate that assignment brief with the task of completing the assignment. When the student decides to attempt the assignment, the assignment brief can be easily retrieved from Deadline Manager, thereby saving the hassle of searching for the file.
+** Highlights: This enhancement requires interaction with the user's filesystem. As users can run Deadline Manager with different Operating Systems, the filesystem in each Operating System behaves slightly differently. As a result, intensive testing and careful coding was required in order to ensure that the feature works on various Operating Systems.
+
+* *Minor enhancement*: modified the *User Interface* (UI) to be task-centric
+ ** What was modified:
+ *** Removed UI elements from the original AddressBook that were not relevant to Deadline Manager.
+ *** Added UI elements that displayed attributes of Tasks that are relevant to Deadline Manager. Example: displaying priority, deadline and the labels of attachments of a task.
+
+
+* *Code contributed*: [https://github.com/CS2103-AY1819S1-W17-4/main/commits?author=ranaldmiao[Commits]]
+
+* *Other contributions*:
+
+** Project management:
+*** Managed release `v1.1` on GitHub
+*** Contributed to user stories on GitHub Issue Tracker (https://github.com/CS2103-AY1819S1-W17-4/main/issues/5[#5], https://github.com/CS2103-AY1819S1-W17-4/main/issues/6[#6], https://github.com/CS2103-AY1819S1-W17-4/main/issues/7[#7], https://github.com/CS2103-AY1819S1-W17-4/main/issues/8[#8], https://github.com/CS2103-AY1819S1-W17-4/main/issues/14[#14], https://github.com/CS2103-AY1819S1-W17-4/main/issues/15[#15], https://github.com/CS2103-AY1819S1-W17-4/main/issues/16[#16], https://github.com/CS2103-AY1819S1-W17-4/main/issues/17[#17], https://github.com/CS2103-AY1819S1-W17-4/main/issues/18[#18], https://github.com/CS2103-AY1819S1-W17-4/main/issues/19[#19], https://github.com/CS2103-AY1819S1-W17-4/main/issues/20[#20]
+)
+*** Reported bugs in Deadline Manager (https://github.com/CS2103-AY1819S1-W17-4/main/issues/149[#149], https://github.com/CS2103-AY1819S1-W17-4/main/issues/178[#178], https://github.com/CS2103-AY1819S1-W17-4/main/issues/179[#179]
+
+** Significant modification of Address Book's code base for use in Deadline Manager:
+*** Rename Address Book application to Deadline Manager (https://github.com/CS2103-AY1819S1-W17-4/main/pull/31[#31])
+*** Remove unnecessary fields from User Interface (https://github.com/CS2103-AY1819S1-W17-4/main/pull/92[#92])
+*** Renaming of class and variable names (https://github.com/CS2103-AY1819S1-W17-4/main/pull/126[#126])
+
+
+
+////
+** Documentation:
+*** not yet
+////
+
+
+** Community:
+*** Reviewed Pull Requests (with non-trivial review comments): https://github.com/CS2103-AY1819S1-W17-4/main/pull/143[#143], https://github.com/CS2103-AY1819S1-W17-4/main/pull/154[#154]
+*** Commented on Pull Requests (with suggestions): https://github.com/CS2103-AY1819S1-W17-4/main/pull/112/[#112]
+
+** Tools:
+*** Integrated AppVeyor and Coveralls to the team repository.
+
+== Contributions to the User Guide
+
+
+|===
+|_Given below are sections I contributed to the User Guide. They showcase my ability to write documentation targeting end-users._
+|===
+
+include::../UserGuide.adoc[tag=attachment]
+
+=== FAQ
+include::../UserGuide.adoc[tag=faqfilepath]
+
+== Contributions to the Developer Guide
+
+|===
+|_Given below are sections I contributed to the Developer Guide. They showcase my ability to write technical documentation and the technical depth of my contributions to the project._
+|===
+
+include::../DeveloperGuide.adoc[tag=attachments]
