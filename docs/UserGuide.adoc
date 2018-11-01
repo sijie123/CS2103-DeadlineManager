@@ -188,7 +188,7 @@ Returns a subset of the current list of tasks that have a name, tag list, or dea
 
 Each keyword can instead be written as a _full predicate_, which is a string of the following format: `<key><operator><phrase>`. The following diagram is an example of a typical full predicate:
 
-image::FilterUnitDiagram.png[width="200"]
+image::FilterUnitDiagramUG.png[width="200"]
 
 Each of the three parts of a full predicate means the following:
 
