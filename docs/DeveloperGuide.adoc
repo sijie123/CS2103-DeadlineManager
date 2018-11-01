@@ -537,9 +537,6 @@ As described in <<Import Deconflict, Import Deconflict>>, an import conflict ari
 * **Alternative 2:** Use an `enum` to implement ImportConflictResolver. The `ImportConflictResolver` enum provides a pre-defined selection of algorithms that the user can specify.
 ** Pros: There is no need to implement separate classes. Since the `ImportConflictResolver` enum is only useful within Model, it reside within Model as a private variable.
 ** Cons: If/else statements are required to determine which algorithm should be used. Additionally, an `ImportConflictResolver` implemented this way cannot be easily reused or extended.
-
-
-
 // end::importexport[]
 
 // tag::sort[]
