@@ -1,0 +1,57 @@
+= Bernard Teo Zhi Yi - Project Portfolio
+:site-section: AboutUs
+:imagesDir: ../images
+:stylesDir: ../stylesheets
+
+== PROJECT: Deadline Manager
+
+---
+
+== Overview
+
+Deadline Manager is a desktop deadline manager application designed for students in NUS School of Computing.  It primarily uses a command line interface (CLI) and is optimized to be easy to use, but yet give users great control and flexibility.  It is written in Java and it builds upon AddressBook - Level 4, which was designed to teach software engineering principles.
+
+== Summary of contributions
+
+* *Major enhancement*: added an *expressive but terse way to filter tasks*
+** What it does: It allows the user to filter tasks using a filter expression.  Filter expressions can be composed from other filter expressions using "AND", "OR", and "NOT" logical operators, and users can optionally specify which attribute in the task to search against.
+** Justification: With an expected large number of tasks in our application, users need to be able to view a subset of tasks that are relevant to them so that they can make sense of their deadlines.  The ability to compose filter expressions adds great flexibility which is useful when filtering by more than one field.  The ability to export and share tasks further necessitates an expressive filter command that can filter precisely those tasks that the user would like to export.
+** Highlights: Firstly, the implementation features a full expression parser that parses arbitrary levels of parentheses and respects operator precedence.  Secondly, many different attribute of a tasks (of varying type, e.g. textual, numeric, date, sets) were made filterable.  Thirdly, each attribute could be compared in multiple ways (e.g. users can specify tasks to be filtered if they are due earlier than a given date, later than a given date, or exactly on a given date).  Fourthly, text can be quoted in order to search for a whole phrase.  Many design considerations have also been made to simplify its use: Specifying the attribute (of the task) for filtering is optional (when unspecified it searches all eligible attributes), a filter expression can use an attribute-specific default comparison, and "AND" operators may be omitted.  These design considerations greatly reduce the cognitive burden for simple use cases, but yet retain the ability to provide fine-grained control where needed.
+
+* *Minor enhancement*: added the deadline attribute to the task.
+** What it does: The deadline attribute contains the due date of the task, and this is essential to the core functionality of the deadline manager.
+** Highlights: The implementation deals with the parsing and validating of dates.  Furthermore, it integrates into other commands that need to specify a deadline.  This attribute was also integrated throughout the storage-related code so that the deadline can be exported to a file and imported into another instance of Deadline Manager.
+
+* *Code contributed*: https://github.com/CS2103-AY1819S1-W17-4/main/commits?author=btzy[Commits]
+
+* *Other contributions*:
+
+** Project management:
+*** Contributed to user stories on GitHub issue tracker (https://github.com/CS2103-AY1819S1-W17-4/main/issues/9[#9], https://github.com/CS2103-AY1819S1-W17-4/main/issues/9[#10], https://github.com/CS2103-AY1819S1-W17-4/main/issues/9[#11], https://github.com/CS2103-AY1819S1-W17-4/main/issues/9[#12], https://github.com/CS2103-AY1819S1-W17-4/main/issues/9[#21], https://github.com/CS2103-AY1819S1-W17-4/main/issues/9[#22])
+*** Manage milestones on GitHub
+** Enhancements to existing features:
+*** Overhauled the existing command parser to use a custom-made string tokenizer shared with the filter expression parser in order to support additional features such as quoted strings.  Almost all commands now depend on this string tokenizer.
+*** Remove uniqueness constraints and weak equality in the underlying model.
+** Community:
+*** Reviewed pull requests (with non-trivial review comments): https://github.com/CS2103-AY1819S1-W17-4/main/pull/92[#92], https://github.com/CS2103-AY1819S1-W17-4/main/pull/154[#154]
+*** Contributed to forum discussions (examples:  https://github.com/nus-cs2103-AY1819S1/forum/issues/127[1])
+
+
+== Contributions to the User Guide
+
+
+|===
+|_Given below are sections I contributed to the User Guide. They showcase my ability to write documentation targeting end-users._
+|===
+
+include::../UserGuide.adoc[tag=filter]
+
+== Contributions to the Developer Guide
+
+|===
+|_Given below are sections I contributed to the Developer Guide. They showcase my ability to write technical documentation and the technical depth of my contributions to the project._
+|===
+
+include::../DeveloperGuide.adoc[tag=filter]
+
+

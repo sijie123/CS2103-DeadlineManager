@@ -594,7 +594,7 @@ Step 5. The method `updateSortedTaskList` sorts the `versionTaskCollection` usin
 ** Cons: Might not be useful for the user in many situations. Disobeys the Law of Demeter / Law of Least Knowledge since the `Tag` model will know that it can be compared with other tags.
 // end::sort[]
 
-// tag::extendedfilter[]
+// tag::filter[]
 === Filter feature
 
 The deadline manager supports a very expressive filtering system.  The filtering system can be utilized with the `filter` command.
@@ -805,6 +805,8 @@ Priority values do not compare in the same order as their values as integers.  P
 * **Alternative 2:** Support a convenience operator that is an alias of a fixed operator regardless of field.
 ** Pros: Easier for users to remember what the convenience operator does.
 ** Cons: Convenience operator is not really _convenient_ -- the behaviour might be surprising or awkward for some fields.
+
+// end::filter[]
 
 // tag::attachments[]
 === Attachment feature

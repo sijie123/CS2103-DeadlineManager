@@ -135,6 +135,7 @@ Edits the name of the 2nd task to be `v1.2 Milestone` and clears all existing ta
 * `edit 1 p/1` +
 Edits the priority of the 1st task to 1 (highest priority).
 
+// tag::filter[]
 === Filtering a list of tasks: `filter`
 Filters the current list of tasks with a specified filter expression. +
 Format: `filter FILTER_EXPRESSION`
@@ -301,6 +302,8 @@ Returns a subset of the current list of tasks that have a name that contains "as
 
 * `filter !n:homework||(p:3 t:CS2101)`
 Returns a subset of the current list of tasks that have a name that does not contain "homework", or have priority at least 3 and contains tag "CS2101".
+
+// end::filter[]
 
 //TODO: Sidhant
 === Sorting a list of tasks : `sort`
