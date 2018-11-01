@@ -391,6 +391,7 @@ A task is 'snoozed' as its deadline is now shifted backwards to 20th September 2
 
 
 //TODO: Ranald
+// tag::attachment[]
 === Managing attachments of a task : `attachment`
 Allows the user to add, list, delete and retrieve files associated with a specific task. +
 Deadline manager does not make a copy or backup the files added. Only the location of the files are stored by Deadline Manager. Hence, it is possible that the file might have been modified, renamed, moved or deleted without Deadline Manager's knowledge. As such, there is no guarantee for a file associated with a specific task to always exist.  +
@@ -474,7 +475,7 @@ Figure 3.10.6 above shows an expected result message if the command is successfu
 The <<Importing a set of tasks: `import`, `import`>>, <<Exporting a set of tasks: `export`, `export`>> commands do *NOT* support backing up attachments. However they will keep a link to the attachments path if any.
 [NOTE]
 The <<Filtering a list of tasks: `filter`, `filter`>> and <<Sorting a list of tasks : `sort`, `sort`>> commands do *NOT* support filtering and sorting by attachments of a task as of now. Support for these commands maybe added in future releases of the application.
-
+// end::attachment[]
 
 
 //TODO: Add a picture on what I mean by "currently displayed"
@@ -743,7 +744,7 @@ Attachments are merely linked in the deadline manager. A separate copy of the fi
 
 *Q*: How do I transfer my data to another Computer? +
 *A*: Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous deadline manager folder.
-
+// tag::faqfilepath[]
 *Q*: How do I obtain the `FILEPATH` of a particular file in my Computer? +
 *A*: For `Windows 10` users, you may follow the following steps using the `File Explorer` application on your Computer in order to obtain the `FILEPATH`:
 
@@ -759,7 +760,7 @@ Attachments are merely linked in the deadline manager. A separate copy of the fi
 [caption="Figure 4.1: "]
 image::userguide/qna_filepath_1.png[QnAFilepath1, width="600"]
 Figure 4.1 above indicates which button should be clicked in order to obtain the `FILEPATH`. The `FILEPATH` should look something similar to `"D:\Documents\123 p\Assignment.docx"`. You can use this for the `FILEPATH` argument in both <<Importing a set of tasks: `import`, `import`>>, <<Exporting a set of tasks: `export`, `export`>> and <<Managing attachments of a task : `attachment`, `attachments`>>.
-
+// end::faqfilepath[]
 == Command Summary
 
 * *Add* `add n/NAME d/DEADLINE [p/PRIORITY] [t/TAG]...` +
