@@ -15,7 +15,7 @@ image::btzy.jpg[width="150", align="left"]
 {empty}[http://github.com/btzy[github]] [<<btzy#, portfolio>>]
 
 Role: Team Lead +
-Responsibilities: Search, Filter, Tags
+Responsibilities: Filter, Deadline
 
 '''
 
