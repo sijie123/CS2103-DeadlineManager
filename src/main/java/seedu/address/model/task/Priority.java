@@ -60,7 +60,7 @@ public class Priority implements Comparable<Priority> {
      * @param testPhrase The test phrase for this predicate.
      */
     public static Predicate<Priority> makeFilter(FilterOperator operator, String testPhrase)
-        throws InvalidPredicateException {
+        throws InvalidPredicateTestPhraseException, InvalidPredicateOperatorException {
         Priority tmpPriority;
         try {
             tmpPriority = new Priority(testPhrase);

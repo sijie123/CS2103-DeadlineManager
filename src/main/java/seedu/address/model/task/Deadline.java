@@ -74,7 +74,7 @@ public class Deadline implements Comparable<Deadline> {
      * @param testPhrase The test phrase for this predicate.
      */
     public static Predicate<Deadline> makeFilter(FilterOperator operator, String testPhrase)
-            throws InvalidPredicateException {
+            throws InvalidPredicateTestPhraseException, InvalidPredicateOperatorException {
         Deadline testDeadline;
         try {
             testDeadline = new Deadline(testPhrase);

@@ -168,6 +168,17 @@ public class FilterCommandParserTest {
     }
 
     @Test
+    public void parse_setFilter_doesNotThrow() {
+        assertParseSuccess(parser, "t::x");
+        assertParseSuccess(parser, "t:=x");
+        assertParseSuccess(parser, "t:<x");
+        assertParseSuccess(parser, "t:>x");
+        assertParseSuccess(parser, "t<:x");
+        assertParseSuccess(parser, "t>:x");
+        assertParseSuccess(parser, "t=:xeg4");
+    }
+
+    @Test
     public void parse_invalidArgs_throwsParseException() {
         assertParseThrowsException(parser, "d<\"1/10/2018");
         assertParseThrowsException(parser, "d<1/10/2018\"");
@@ -225,6 +236,11 @@ public class FilterCommandParserTest {
         assertParseThrowsException(parser, "(!n:Hello||||!n:World)");
         assertParseThrowsException(parser, "(!n:Hello|||!n:World)");
         assertParseThrowsException(parser, "n:Hello!");
+        assertParseThrowsException(parser, "n::test");
+        assertParseThrowsException(parser, "n=:test");
+        assertParseThrowsException(parser, "n:=test");
+        assertParseThrowsException(parser, "q::test");
+        assertParseThrowsException(parser, "t::1/2/6");
     }
 
     /**
