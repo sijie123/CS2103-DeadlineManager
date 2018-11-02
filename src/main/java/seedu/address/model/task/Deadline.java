@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.function.Predicate;
 
-import seedu.address.model.task.exceptions.InvalidPredicateException;
 import seedu.address.model.task.exceptions.InvalidPredicateOperatorException;
 import seedu.address.model.task.exceptions.InvalidPredicateTestPhraseException;
 
