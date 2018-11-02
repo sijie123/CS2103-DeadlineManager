@@ -130,8 +130,8 @@ Examples:
 
 * `edit 1 d/3/10/2018` +
 Edits the deadline of the 1st task to 3rd October 2018.
-* `edit 2 n/v1.2 Milestone t/` +
-Edits the name of the 2nd task to be `v1.2 Milestone` and clears all existing tags.
+* `edit 2 n/v2 Milestone t/` +
+Edits the name of the 2nd task to be `v2 Milestone` and clears all existing tags.
 * `edit 1 p/1` +
 Edits the priority of the 1st task to 1 (highest priority).
 
