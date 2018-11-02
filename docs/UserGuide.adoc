@@ -306,6 +306,7 @@ Returns a subset of the current list of tasks that have a name that does not con
 // end::filter[]
 
 //TODO: Sidhant
+// tag::sort[]
 === Sorting a list of tasks : `sort`
 
 Sorts the lists of all the tasks which the user is currently viewing. Generally meant to be used in combination with `filter`. +
@@ -360,6 +361,7 @@ In case a task does not belong to any of the tags mentioned it will be placed at
 
 [TIP]
 In case a task contains more than one tag specified in the comparator, then it will be attempted to be sorted according to those tags first which place it former in the sorted list.
+// end::sort[]
 
 //TODO: Sidhant
 //Not sure if this is implemented
