@@ -71,7 +71,7 @@ public class Tag {
         }
         switch (operator) {
         case EQUAL:
-            return tag -> tag.tagName.equals(testPhrase);
+            return tag -> StringUtil.equalsIgnoreCase(tag.tagName, testPhrase);
         case LESS:
             return tag -> StringUtil.containsFragmentIgnoreCase(testPhrase, tag.tagName);
         case CONVENIENCE: // convenience operator, works the same as ">"
