@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.function.Predicate;
 
-import seedu.address.model.task.exceptions.InvalidPredicateException;
 import seedu.address.model.task.exceptions.InvalidPredicateOperatorException;
 import seedu.address.model.task.exceptions.InvalidPredicateTestPhraseException;
 
@@ -74,7 +73,7 @@ public class Deadline implements Comparable<Deadline> {
      * @param testPhrase The test phrase for this predicate.
      */
     public static Predicate<Deadline> makeFilter(FilterOperator operator, String testPhrase)
-            throws InvalidPredicateException {
+            throws InvalidPredicateTestPhraseException, InvalidPredicateOperatorException {
         Deadline testDeadline;
         try {
             testDeadline = new Deadline(testPhrase);

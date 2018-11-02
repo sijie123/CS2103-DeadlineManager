@@ -5,7 +5,6 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
 
 import java.util.function.Predicate;
 
-import seedu.address.model.task.exceptions.InvalidPredicateException;
 import seedu.address.model.task.exceptions.InvalidPredicateOperatorException;
 import seedu.address.model.task.exceptions.InvalidPredicateTestPhraseException;
 
@@ -66,7 +65,7 @@ public class Frequency implements Comparable<Frequency> {
      * @param testPhrase The test phrase for this predicate.
      */
     public static Predicate<Frequency> makeFilter(FilterOperator operator, String testPhrase)
-        throws InvalidPredicateException {
+        throws InvalidPredicateTestPhraseException, InvalidPredicateOperatorException {
         Frequency tmpFrequency;
         try {
             tmpFrequency = new Frequency(testPhrase);

@@ -3,6 +3,13 @@ package seedu.address.model.tag;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
 
+import java.util.function.Predicate;
+
+import seedu.address.commons.util.StringUtil;
+import seedu.address.model.task.FilterOperator;
+import seedu.address.model.task.exceptions.InvalidPredicateOperatorException;
+import seedu.address.model.task.exceptions.InvalidPredicateTestPhraseException;
+
 /**
  * Represents a Tag in the deadline manager. Guarantees: immutable; name is valid as declared in {@link
  * #isValidTagName(String)}
@@ -49,6 +56,30 @@ public class Tag {
      */
     public String toString() {
         return '[' + tagName + ']';
+    }
+
+    /**
+     * Constructs a predicate from the given operator and test phrase.
+     *
+     * @param operator   The operator for this predicate.
+     * @param testPhrase The test phrase for this predicate.
+     */
+    public static Predicate<Tag> makeFilter(FilterOperator operator, String testPhrase)
+        throws InvalidPredicateTestPhraseException, InvalidPredicateOperatorException {
+        if (!isValidTagName(testPhrase)) {
+            throw new InvalidPredicateTestPhraseException();
+        }
+        switch (operator) {
+        case EQUAL:
+            return tag -> StringUtil.equalsIgnoreCase(tag.tagName, testPhrase);
+        case LESS:
+            return tag -> StringUtil.containsFragmentIgnoreCase(testPhrase, tag.tagName);
+        case CONVENIENCE: // convenience operator, works the same as ">"
+        case GREATER:
+            return tag -> StringUtil.containsFragmentIgnoreCase(tag.tagName, testPhrase);
+        default:
+            throw new InvalidPredicateOperatorException();
+        }
     }
 
 }
