@@ -17,6 +17,7 @@ import org.junit.Test;
 import seedu.address.logic.CommandHistory;
 import seedu.address.logic.parser.FilterCommandParser;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.logic.parser.exceptions.RichParseException;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
@@ -421,7 +422,7 @@ public class FilterCommandTest {
     private FilterCommand ensureParseSuccess(String predicate) {
         try {
             return new FilterCommandParser().parse(predicate);
-        } catch (ParseException e) {
+        } catch (ParseException | RichParseException e) {
             throw new AssertionError("ParseException was thrown.", e);
         }
     }
@@ -435,7 +436,7 @@ public class FilterCommandTest {
         try {
             new FilterCommandParser().parse(predicate);
             throw new AssertionError("ParseException was expected but not thrown.");
-        } catch (ParseException e) {
+        } catch (ParseException | RichParseException e) {
             // don't do anything
         }
     }

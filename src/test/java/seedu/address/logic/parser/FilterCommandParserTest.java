@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import seedu.address.logic.commands.FilterCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.logic.parser.exceptions.RichParseException;
 
 public class FilterCommandParserTest {
 
@@ -284,7 +285,7 @@ public class FilterCommandParserTest {
         try {
             FilterCommand command = parser.parse(str);
             assertNotNull("Expected not null", command);
-        } catch (ParseException e) {
+        } catch (ParseException | RichParseException e) {
             fail("Expected no parse error");
         }
     }
@@ -296,7 +297,7 @@ public class FilterCommandParserTest {
         try {
             parser.parse(str);
             fail("Expected a parse error");
-        } catch (ParseException ignore) {
+        } catch (ParseException | RichParseException ignore) {
             // Do not do anything, because we just want to make sure that an exception is thrown
         }
     }

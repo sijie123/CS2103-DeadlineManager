@@ -61,6 +61,9 @@ public class ResultDisplay extends UiPart<Region> {
         });
     }
 
+    /**
+     * A helper class that encapsulates a text string and its associated style class.
+     */
     public static class StyledText {
         public final String text;
         public final String styleClass;
