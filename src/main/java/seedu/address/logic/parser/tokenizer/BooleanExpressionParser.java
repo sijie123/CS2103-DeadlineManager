@@ -1,14 +1,15 @@
-package seedu.address.logic.parser;
+package seedu.address.logic.parser.tokenizer;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.InputMismatchException;
-import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 import seedu.address.logic.parser.exceptions.BooleanExpressionParseException;
-import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.logic.parser.exceptions.RichParseException;
+import seedu.address.logic.parser.tokenizer.exceptions.InvalidBooleanOperatorException;
+import seedu.address.logic.parser.tokenizer.exceptions.TokenizationEndOfStringException;
+import seedu.address.logic.parser.tokenizer.exceptions.TokenizationException;
 
 /**
  * Parses a boolean expression into a predicate.
@@ -122,7 +123,8 @@ public class BooleanExpressionParser<T> {
         /**
          * Creates an operator from the next token of the given StringTokenizer.
          */
-        public static BooleanOperator parse(StringTokenizer tokenizer) throws NoSuchElementException {
+        public static BooleanOperator parse(StringTokenizer tokenizer)
+            throws TokenizationEndOfStringException, InvalidBooleanOperatorException {
             BooleanOperator operator = null;
             if (operator == null) {
                 if (tokenizer.tryNextPattern(Pattern.compile("\\(")) != null) {
@@ -150,7 +152,8 @@ public class BooleanExpressionParser<T> {
                 }
             }
             if (operator == null) {
-                throw new InputMismatchException("No matching operator found!");
+                throw new InvalidBooleanOperatorException(tokenizer.getLocation(), tokenizer.getLocation(),
+                    "No matching operator found!");
             }
             return operator;
         }
@@ -159,10 +162,10 @@ public class BooleanExpressionParser<T> {
          * Creates an operator from the next token of the given StringTokenizer,
          * or returns null if the next token cannot be interpreted as any known operator.
          */
-        public static BooleanOperator tryParse(StringTokenizer tokenizer) throws NoSuchElementException {
+        public static BooleanOperator tryParse(StringTokenizer tokenizer) throws TokenizationEndOfStringException {
             try {
                 return parse(tokenizer);
-            } catch (InputMismatchException e) {
+            } catch (InvalidBooleanOperatorException e) {
                 return null;
             }
         }
@@ -173,12 +176,13 @@ public class BooleanExpressionParser<T> {
      */
     @FunctionalInterface
     public interface OperandParser<U> {
-        public Predicate<U> parse(StringTokenizer tokenizer, Predicate<Character> reservedChar) throws ParseException;
+        public Predicate<U> parse(StringTokenizer tokenizer, Predicate<Character> reservedChar)
+            throws TokenizationException, RichParseException;
     }
 
     private final OperandParser<T> operandParser;
 
-    BooleanExpressionParser(OperandParser<T> operandParser) {
+    public BooleanExpressionParser(OperandParser<T> operandParser) {
         this.operandParser = operandParser;
     }
 
@@ -269,7 +273,7 @@ public class BooleanExpressionParser<T> {
      * This method uses the shunting yard algorithm, with the ability to parse binary and unary operators.
      * This method is long because this algorithm cannot be easily broken into multiple methods.
      */
-    public Predicate<T> parse(String str) throws ParseException {
+    public Predicate<T> parse(String str) throws RichParseException, TokenizationException {
         StringTokenizer tokenizer = new StringTokenizer(str);
 
         ArrayDeque<BooleanOperator> operatorStack = new ArrayDeque<>();

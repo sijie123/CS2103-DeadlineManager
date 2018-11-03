@@ -642,7 +642,7 @@ The sections below describe the string tokenizer and the aforementioned three co
 
 ==== String tokenizer
 
-This is represented by the class `seedu.address.logic.parser.StringTokenizer`.
+This is represented by the class `seedu.address.logic.parser.tokenizer.StringTokenizer`.
 
 [NOTE]
 This class is not to be confused with `java.util.StringTokenizer`.
@@ -661,7 +661,7 @@ The string tokenizer class is also used to parse comma-separated tag expressions
 
 ==== Boolean expression parser
 
-This is represented by the generic class `seedu.address.logic.parser.BooleanExpressionParser<T>`, and it is a general boolean expression parser that is designed to be unaware of the syntax of individual filter units.
+This is represented by the generic class `seedu.address.logic.parser.tokenizer.BooleanExpressionParser<T>`, and it is a general boolean expression parser that is designed to be unaware of the syntax of individual filter units.
 
 The following operators are recognized (highest precedence first):
 

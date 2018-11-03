@@ -3,11 +3,11 @@ package seedu.address.logic.parser;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 
-import java.util.InputMismatchException;
-
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.CompleteCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.logic.parser.tokenizer.ArgumentMultimap;
+import seedu.address.logic.parser.tokenizer.exceptions.TokenizationException;
 
 /**
  * Parses input arguments and creates a new CompleteCommand object
@@ -25,7 +25,7 @@ public class CompleteCommandParser implements Parser<CompleteCommand> {
         ArgumentMultimap argMultimap;
         try {
             argMultimap = ArgumentTokenizer.tokenize(args);
-        } catch (InputMismatchException ime) {
+        } catch (TokenizationException ime) {
             throw new ParseException(
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, CompleteCommand.MESSAGE_USAGE), ime);
         }

@@ -3,6 +3,7 @@ package seedu.address.logic.parser.exceptions;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.scene.text.Text;
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.ui.ResultDisplay;
 
@@ -17,13 +18,25 @@ public class RichParseException extends IllegalValueException {
         this(makeMessage(parts));
     }
 
+    public RichParseException(Throwable cause, String... parts) {
+        this(makeMessage(parts), cause);
+    }
+
     public RichParseException(List<ResultDisplay.StyledText> message) {
         this(message, null);
     }
 
     public RichParseException(List<ResultDisplay.StyledText> message, Throwable cause) {
-        super(message.toString(), cause);
+        super(getTextMessage(message), cause);
         this.message = message;
+    }
+
+    private static String getTextMessage(List<ResultDisplay.StyledText> message) {
+        StringBuilder sb = new StringBuilder();
+        for (ResultDisplay.StyledText styledText : message) {
+            sb.append(styledText.text);
+        }
+        return sb.toString();
     }
 
     /**

@@ -422,7 +422,7 @@ public class FilterCommandTest {
     private FilterCommand ensureParseSuccess(String predicate) {
         try {
             return new FilterCommandParser().parse(predicate);
-        } catch (ParseException | RichParseException e) {
+        } catch (RichParseException e) {
             throw new AssertionError("ParseException was thrown.", e);
         }
     }
@@ -436,7 +436,7 @@ public class FilterCommandTest {
         try {
             new FilterCommandParser().parse(predicate);
             throw new AssertionError("ParseException was expected but not thrown.");
-        } catch (ParseException | RichParseException e) {
+        } catch (RichParseException e) {
             // don't do anything
         }
     }

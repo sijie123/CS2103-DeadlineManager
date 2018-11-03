@@ -4,7 +4,8 @@ import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT
 import static seedu.address.ui.ResultDisplay.TEXT_STYLE_CLASS_DEFAULT;
 import static seedu.address.ui.ResultDisplay.TEXT_STYLE_CLASS_ERROR;
 
-import java.util.NoSuchElementException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -12,6 +13,14 @@ import java.util.regex.Pattern;
 import seedu.address.logic.commands.FilterCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.logic.parser.exceptions.RichParseException;
+import seedu.address.logic.parser.tokenizer.BooleanExpressionParser;
+import seedu.address.logic.parser.tokenizer.StringTokenizer;
+import seedu.address.logic.parser.tokenizer.exceptions.TokenizationEndOfStringException;
+import seedu.address.logic.parser.tokenizer.exceptions.TokenizationException;
+import seedu.address.logic.parser.tokenizer.exceptions.TokenizationMismatchException;
+import seedu.address.logic.parser.tokenizer.exceptions.TokenizationMissingEndQuoteException;
+import seedu.address.logic.parser.tokenizer.exceptions.TokenizationNoMatchableCharacterException;
+import seedu.address.logic.parser.tokenizer.exceptions.TokenizationUnexpectedQuoteException;
 import seedu.address.model.attachment.Attachment;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.task.Deadline;
@@ -24,6 +33,7 @@ import seedu.address.model.task.exceptions.InvalidPredicateException;
 import seedu.address.model.task.exceptions.InvalidPredicateOperatorException;
 import seedu.address.model.task.exceptions.InvalidPredicateTestPhraseException;
 import seedu.address.model.util.SetUtil;
+import seedu.address.ui.ResultDisplay;
 
 /**
  * Parses input arguments and creates a new FilterCommand object
@@ -60,18 +70,18 @@ public class FilterCommandParser implements Parser<FilterCommand> {
     // note: '/' is necessary for dates, ',' is necessary for tags
     private static final Predicate<Character> ALLOWED_UNQUOTED_CHARACTER_PREDICATE =
         ch -> (ch >= 'A' && ch <= 'Z')
-        || (ch >= 'a' && ch <= 'z')
-        || (ch >= '0' && ch <= '9')
-        || ch == '_'
-        || ch == '-'
-        || ch == '/'
-        || ch == '\\'
-        || ch == ','
-        || ch == '.';
+            || (ch >= 'a' && ch <= 'z')
+            || (ch >= '0' && ch <= '9')
+            || ch == '_'
+            || ch == '-'
+            || ch == '/'
+            || ch == '\\'
+            || ch == ','
+            || ch == '.';
 
     private static final Predicate<Character> ALLOWED_KEY_CHARACTER_PREDICATE =
         ch -> (ch >= 'A' && ch <= 'Z')
-        || (ch >= 'a' && ch <= 'z');
+            || (ch >= 'a' && ch <= 'z');
 
     private static final Pattern FILTER_OPERATOR_PATTERN = Pattern.compile("[\\=\\<\\>\\:]");
 
@@ -125,7 +135,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
      * Creates a predicate that filters by tags.
      */
     private static Predicate<Task> createAttachmentsPredicate(FilterOperator setOperator, FilterOperator fieldOperator,
-                                                       String testPhrase)
+                                                              String testPhrase)
         throws InvalidPredicateTestPhraseException, InvalidPredicateOperatorException {
         Predicate<Set<Attachment>> attachmentsPredicate = SetUtil.makeFilter(Attachment.class,
             setOperator, fieldOperator, testPhrase);
@@ -144,9 +154,8 @@ public class FilterCommandParser implements Parser<FilterCommand> {
      * Invokes the supplier, and converts an InvalidPredicateException to a predicate that always returns false.
      *
      * @param supplier The supplier that either produces a predicate or throws an exception.
-     *
      * @return On success returns the predicate that is returned by the supplier,
-     *         on failure returns a predicate that is always false.
+     * on failure returns a predicate that is always false.
      */
     private static Predicate<Task> silencePredicateException(ExceptionalSupplier<Predicate<Task>> supplier) {
         try {
@@ -162,7 +171,6 @@ public class FilterCommandParser implements Parser<FilterCommand> {
      * @param key        The key that refers to the specific field in a task.
      * @param operator   The filter operator.
      * @param testPhrase The test phrase to compare with the specific field of each task.
-     *
      * @return The predicate that is created.
      */
     private static Predicate<Task> createPredicate(String key, FilterOperator operator, String testPhrase)
@@ -206,8 +214,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
      * @param key           The key that refers to the specific field in a task.
      * @param setOperator   The set filter operator.
      * @param fieldOperator The field-specific filter operator.
-     * @param testPhrase     The test phrase to compare with the specific field of each task.
-     *
+     * @param testPhrase    The test phrase to compare with the specific field of each task.
      * @return The predicate that is created.
      */
     private static Predicate<Task> createPredicate(String key,
@@ -242,7 +249,6 @@ public class FilterCommandParser implements Parser<FilterCommand> {
      * Checks if the given string represents a valid field identifier.
      *
      * @param key The field identifier to check.
-     *
      * @return True if the field identifier is valid, false otherwise.
      */
     private static boolean isValidKey(String key) {
@@ -287,11 +293,10 @@ public class FilterCommandParser implements Parser<FilterCommand> {
      * FilterCommand object for execution.
      *
      * @param args The filter expression to parse.
-     *
      * @throws ParseException if the user input does not conform the expected format.
      */
     @Override
-    public FilterCommand parse(String args) throws ParseException, RichParseException {
+    public FilterCommand parse(String args) throws RichParseException {
         String trimmedArgs = args.trim();
         if (trimmedArgs.isEmpty()) {
             throw new RichParseException(
@@ -304,19 +309,59 @@ public class FilterCommandParser implements Parser<FilterCommand> {
                     final Predicate<Character> effectiveUnquotedCharacterPredicate = reservedCharPredicate.negate()
                         .and(ALLOWED_UNQUOTED_CHARACTER_PREDICATE);
 
-                    return createFilterUnit(tokenizer, effectiveUnquotedCharacterPredicate,
+                    return tmpCreateFilterUnit(tokenizer, effectiveUnquotedCharacterPredicate,
                         ALLOWED_KEY_CHARACTER_PREDICATE);
                 });
-            Predicate<Task> predicate = expressionParser.parse(args);
+            Predicate<Task> predicate = expressionParser.parse(trimmedArgs);
 
             return new FilterCommand(predicate);
 
-        } catch (IllegalArgumentException | NoSuchElementException e) {
-            throw new ParseException("Invalid filter expression: " + e.getMessage(), e);
+        } catch (IllegalArgumentException e) {
+            throw new RichParseException("Invalid filter expression: " + e.getMessage(), TEXT_STYLE_CLASS_DEFAULT);
+        } catch (TokenizationMissingEndQuoteException e) {
+            throw createRichParseException(trimmedArgs, e, "Matching end quote is missing!");
+        } catch (TokenizationUnexpectedQuoteException e) {
+            throw createRichParseException(trimmedArgs, e, "Unexpected quote in middle of textual keyword!");
+        } catch (TokenizationNoMatchableCharacterException e) {
+            throw createRichParseException(trimmedArgs, e, "Unexpected character!");
+        } catch (TokenizationEndOfStringException e) {
+            throw new RichParseException(trimmedArgs + "\nUnexpected end of filter expression!", TEXT_STYLE_CLASS_DEFAULT);
+        } catch (TokenizationException e) {
+            throw new RichParseException(trimmedArgs + "\nInvalid filter expression!", TEXT_STYLE_CLASS_DEFAULT);
         }
-
     }
 
+    private RichParseException createRichParseException(String input, TokenizationMismatchException e,
+                                                        String message) {
+        List<ResultDisplay.StyledText> parts = new ArrayList<>();
+        if (e.getBeginIndex() > 0) {
+            parts.add(new ResultDisplay.StyledText(input.substring(0, e.getBeginIndex()), TEXT_STYLE_CLASS_DEFAULT));
+        }
+        int effectiveEndIndex = Math.min(Math.max(e.getEndIndex(), e.getBeginIndex() + 1), input.length());
+        if (e.getBeginIndex() < effectiveEndIndex) {
+            parts.add(new ResultDisplay.StyledText(input.substring(e.getBeginIndex(), effectiveEndIndex),
+                TEXT_STYLE_CLASS_ERROR));
+        }
+        if (effectiveEndIndex < input.length()) {
+            parts.add(new ResultDisplay.StyledText(input.substring(effectiveEndIndex), TEXT_STYLE_CLASS_DEFAULT));
+        }
+        parts.add(new ResultDisplay.StyledText("\n" + message, TEXT_STYLE_CLASS_DEFAULT));
+        return new RichParseException(parts);
+    }
+
+
+    private static Predicate<Task> tmpCreateFilterUnit(StringTokenizer tokenizer,
+                                                    Predicate<Character> effectiveUnquotedCharacterPredicate,
+                                                    Predicate<Character> allowedKeyCharacterPredicate)
+        throws TokenizationMissingEndQuoteException, TokenizationUnexpectedQuoteException,
+        TokenizationNoMatchableCharacterException, TokenizationEndOfStringException, RichParseException {
+
+        try {
+            return createFilterUnit(tokenizer, effectiveUnquotedCharacterPredicate, allowedKeyCharacterPredicate);
+        } catch (ParseException e) {
+            throw new RichParseException(e.getMessage(), TEXT_STYLE_CLASS_DEFAULT);
+        }
+    }
 
     /**
      * Reads and returns a predicate from the given string tokenizer.
@@ -332,7 +377,8 @@ public class FilterCommandParser implements Parser<FilterCommand> {
     private static Predicate<Task> createFilterUnit(StringTokenizer tokenizer,
                                                     Predicate<Character> effectiveUnquotedCharacterPredicate,
                                                     Predicate<Character> allowedKeyCharacterPredicate)
-        throws ParseException {
+        throws TokenizationMissingEndQuoteException, TokenizationUnexpectedQuoteException,
+        TokenizationNoMatchableCharacterException, TokenizationEndOfStringException, ParseException {
         int tokenizerLocation = tokenizer.getLocation(); // get the location in case we need to rewind
         final String key = tokenizer.tryNextString(allowedKeyCharacterPredicate);
         String opString;

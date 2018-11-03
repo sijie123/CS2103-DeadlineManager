@@ -4,11 +4,12 @@ import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT
 import static seedu.address.logic.parser.CliSyntax.PREFIX_FILEPATH;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_RESOLVER;
 
-import java.util.InputMismatchException;
 import java.util.Optional;
 
 import seedu.address.logic.commands.ExportCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.logic.parser.tokenizer.ArgumentMultimap;
+import seedu.address.logic.parser.tokenizer.exceptions.TokenizationException;
 
 /**
  * Parses input arguments and creates a new ImportCommand object
@@ -27,7 +28,7 @@ public class ExportCommandParser implements Parser<ExportCommand> {
             argMultimap =
                 ArgumentTokenizer
                     .tokenize(args, PREFIX_FILEPATH, PREFIX_RESOLVER);
-        } catch (InputMismatchException ime) {
+        } catch (TokenizationException ime) {
             throw new ParseException(
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE), ime);
         }

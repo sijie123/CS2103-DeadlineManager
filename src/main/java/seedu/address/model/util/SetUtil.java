@@ -4,12 +4,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import seedu.address.logic.parser.StringTokenizer;
+import seedu.address.logic.parser.tokenizer.StringTokenizer;
+import seedu.address.logic.parser.tokenizer.exceptions.TokenizationException;
 import seedu.address.model.task.FilterOperator;
 import seedu.address.model.task.exceptions.InvalidPredicateOperatorException;
 import seedu.address.model.task.exceptions.InvalidPredicateTestPhraseException;
@@ -36,27 +36,24 @@ public class SetUtil {
         assert (testPhrase != null);
         assert (fieldOperator != null);
         assert (setOperator != null);
-        try {
-            List<Predicate<T>> predicates = parseTestPhrase(klass, fieldOperator, testPhrase);
 
-            final Predicate<Set<T>> lessPredicate = set -> set.stream().allMatch(item -> predicates.stream()
-                .anyMatch(predicate -> predicate.test(item)));
-            final Predicate<Set<T>> greaterPredicate = set -> predicates.stream()
-                .allMatch(predicate -> set.stream().anyMatch(predicate));
+        List<Predicate<T>> predicates = parseTestPhrase(klass, fieldOperator, testPhrase);
 
-            switch (setOperator) {
-            case EQUAL:
-                return lessPredicate.and(greaterPredicate);
-            case LESS:
-                return lessPredicate;
-            case CONVENIENCE: // convenience operator, works the same as ">"
-            case GREATER:
-                return greaterPredicate;
-            default:
-                throw new InvalidPredicateOperatorException();
-            }
-        } catch (InputMismatchException e) {
-            throw new InvalidPredicateTestPhraseException(e);
+        final Predicate<Set<T>> lessPredicate = set -> set.stream().allMatch(item -> predicates.stream()
+            .anyMatch(predicate -> predicate.test(item)));
+        final Predicate<Set<T>> greaterPredicate = set -> predicates.stream()
+            .allMatch(predicate -> set.stream().anyMatch(predicate));
+
+        switch (setOperator) {
+        case EQUAL:
+            return lessPredicate.and(greaterPredicate);
+        case LESS:
+            return lessPredicate;
+        case CONVENIENCE: // convenience operator, works the same as ">"
+        case GREATER:
+            return greaterPredicate;
+        default:
+            throw new InvalidPredicateOperatorException();
         }
     }
 
@@ -71,17 +68,22 @@ public class SetUtil {
      */
     private static <T> List<Predicate<T>> parseTestPhrase(Class<T> klass, FilterOperator fieldOperator,
                                                           String testPhrase)
-        throws InvalidPredicateTestPhraseException, InvalidPredicateOperatorException, IllegalArgumentException {
+        throws InvalidPredicateTestPhraseException, InvalidPredicateOperatorException,
+        IllegalArgumentException {
         // comma-separated quotable tokenizer
         StringTokenizer tokenizer = new StringTokenizer(testPhrase,
             ch -> ch == ',', ch -> ch == '\'' || ch == '\"');
         List<Predicate<T>> predicates = new ArrayList<>();
-        for (String token : tokenizer.toList()) {
-            token = token.trim();
-            if (token.isEmpty()) {
-                throw new IllegalArgumentException("Tag cannot be empty");
+        try {
+            for (String token : tokenizer.toList()) {
+                token = token.trim();
+                if (token.isEmpty()) {
+                    throw new IllegalArgumentException("Tag cannot be empty");
+                }
+                predicates.add(makeFieldPredicate(klass, fieldOperator, token));
             }
-            predicates.add(makeFieldPredicate(klass, fieldOperator, token));
+        } catch (TokenizationException e) {
+            throw new InvalidPredicateTestPhraseException(e);
         }
         return predicates;
     }
