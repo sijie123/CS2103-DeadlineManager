@@ -5,7 +5,6 @@ import java.util.Deque;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-import seedu.address.logic.parser.exceptions.RichParseException;
 import seedu.address.logic.parser.tokenizer.exceptions.BooleanExpressionInvalidOperatorException;
 import seedu.address.logic.parser.tokenizer.exceptions.BooleanExpressionMismatchedLeftBracketException;
 import seedu.address.logic.parser.tokenizer.exceptions.BooleanExpressionMismatchedRightBracketException;
@@ -180,8 +179,8 @@ public class BooleanExpressionParser<T> {
      */
     @FunctionalInterface
     public interface OperandParser<U> {
-        public Predicate<U> parse(StringTokenizer tokenizer, Predicate<Character> reservedChar)
-            throws TokenizationException, RichParseException;
+        Predicate<U> parse(StringTokenizer tokenizer, Predicate<Character> reservedChar)
+            throws TokenizationException;
     }
 
     private final OperandParser<T> operandParser;
@@ -279,7 +278,7 @@ public class BooleanExpressionParser<T> {
      * This method uses the shunting yard algorithm, with the ability to parse binary and unary operators.
      * This method is long because this algorithm cannot be easily broken into multiple methods.
      */
-    public Predicate<T> parse(String str) throws RichParseException, TokenizationException {
+    public Predicate<T> parse(String str) throws TokenizationException {
         StringTokenizer tokenizer = new StringTokenizer(str);
 
         ArrayDeque<BooleanOperator> operatorStack = new ArrayDeque<>();

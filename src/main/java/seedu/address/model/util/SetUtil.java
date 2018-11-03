@@ -12,6 +12,7 @@ import seedu.address.logic.parser.tokenizer.StringTokenizer;
 import seedu.address.logic.parser.tokenizer.exceptions.TokenizationException;
 import seedu.address.model.task.FilterOperator;
 import seedu.address.model.task.exceptions.InvalidPredicateOperatorException;
+import seedu.address.model.task.exceptions.InvalidPredicateSetOperatorException;
 import seedu.address.model.task.exceptions.InvalidPredicateTestPhraseException;
 
 /**
@@ -32,7 +33,8 @@ public class SetUtil {
      */
     public static <T> Predicate<Set<T>> makeFilter(Class<T> klass, FilterOperator setOperator,
                                                    FilterOperator fieldOperator, String testPhrase)
-        throws InvalidPredicateTestPhraseException, InvalidPredicateOperatorException, IllegalArgumentException {
+        throws InvalidPredicateTestPhraseException, InvalidPredicateOperatorException,
+        InvalidPredicateSetOperatorException, IllegalArgumentException {
         assert (testPhrase != null);
         assert (fieldOperator != null);
         assert (setOperator != null);
@@ -53,7 +55,7 @@ public class SetUtil {
         case GREATER:
             return greaterPredicate;
         default:
-            throw new InvalidPredicateOperatorException();
+            throw new InvalidPredicateSetOperatorException();
         }
     }
 
