@@ -16,7 +16,6 @@ import org.junit.Test;
 
 import seedu.address.logic.CommandHistory;
 import seedu.address.logic.parser.FilterCommandParser;
-import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.logic.parser.exceptions.RichParseException;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;

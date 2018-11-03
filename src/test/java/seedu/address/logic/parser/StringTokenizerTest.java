@@ -36,8 +36,8 @@ public class StringTokenizerTest {
         assertTrue(tokenizer.hasNextToken());
         assertEquals(tokenizer.nextString(), "Hello");
         assertTrue(tokenizer.hasNextToken());
-        assertThrows(TokenizationNoMatchableCharacterException.class,
-            () -> tokenizer.nextPattern(Pattern.compile("!")));
+        assertThrows(TokenizationNoMatchableCharacterException.class, () ->
+            tokenizer.nextPattern(Pattern.compile("!")));
         assertEquals(tokenizer.nextString(x -> x >= 'a' && x <= 'z'), "world");
         assertTrue(tokenizer.hasNextToken());
         assertEquals(tokenizer.nextPattern(Pattern.compile("\\!")), "!");
@@ -55,16 +55,18 @@ public class StringTokenizerTest {
         assertTrue(tokenizer.hasNextToken());
         assertNull(tokenizer.tryNextPattern(Pattern.compile("[abc]")));
         assertEquals(tokenizer.tryNextPattern(Pattern.compile("[A-Za-z]+")), "Hello");
-        assertThrows(TokenizationNoMatchableCharacterException.class,
-            () -> tokenizer.nextMatcher(Pattern.compile("[a-z&&[^w]]+")));
+        assertThrows(TokenizationNoMatchableCharacterException.class, () ->
+            tokenizer.nextMatcher(Pattern.compile("[a-z&&[^w]]+")));
         assertEquals(tokenizer.tryNextMatcher(Pattern.compile("[A-Za-z]*")).group(), "world");
-        assertThrows(TokenizationNoMatchableCharacterException.class,
-            () -> tokenizer.nextPattern(Pattern.compile("h")));
+        assertThrows(TokenizationNoMatchableCharacterException.class, () ->
+            tokenizer.nextPattern(Pattern.compile("h")));
         assertEquals(tokenizer.nextPattern(Pattern.compile("!")), "!");
         assertEquals(tokenizer.nextString(), "Test Test2");
         assertFalse(tokenizer.hasNextToken());
-        assertThrows(TokenizationEndOfStringException.class, () -> tokenizer.nextMatcher(Pattern.compile("[a-z&&[^w]]+")));
-        assertThrows(TokenizationEndOfStringException.class, () -> tokenizer.nextPattern(Pattern.compile("[a-z&&[^w]]+")));
+        assertThrows(TokenizationEndOfStringException.class, () ->
+            tokenizer.nextMatcher(Pattern.compile("[a-z&&[^w]]+")));
+        assertThrows(TokenizationEndOfStringException.class, () ->
+            tokenizer.nextPattern(Pattern.compile("[a-z&&[^w]]+")));
     }
 
     @Test
