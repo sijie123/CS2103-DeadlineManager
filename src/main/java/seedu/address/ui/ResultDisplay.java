@@ -13,15 +13,18 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.events.ui.NewResultAvailableEvent;
+import seedu.address.commons.events.ui.NewRichResultAvailableEvent;
 
 /**
  * A ui for the status bar that is displayed at the header of the application.
  */
 public class ResultDisplay extends UiPart<Region> {
 
+    public static final String TEXT_STYLE_CLASS_DEFAULT = "result-display-text";
+    public static final String TEXT_STYLE_CLASS_ERROR = "result-display-text-error";
+
     private static final Logger logger = LogsCenter.getLogger(ResultDisplay.class);
     private static final String FXML = "ResultDisplay.fxml";
-    private static final String DEFAULT_TEXT_STYLE_CLASS = "result-display-text";
 
     private final ObservableList<Node> displayed;
 
@@ -40,9 +43,32 @@ public class ResultDisplay extends UiPart<Region> {
         Platform.runLater(() -> {
             displayed.clear();
             Text text = new Text(event.message);
-            text.getStyleClass().add(DEFAULT_TEXT_STYLE_CLASS);
+            text.getStyleClass().add(TEXT_STYLE_CLASS_DEFAULT);
             displayed.add(text);
         });
+    }
+
+    @Subscribe
+    private void handleNewRickResultAvailableEvent(NewRichResultAvailableEvent event) {
+        logger.info(LogsCenter.getEventHandlingLogMessage(event));
+        Platform.runLater(() -> {
+            displayed.clear();
+            for (StyledText styledText : event.message) {
+                Text text = new Text(styledText.text);
+                text.getStyleClass().add(styledText.styleClass);
+                displayed.add(text);
+            }
+        });
+    }
+
+    public static class StyledText {
+        public final String text;
+        public final String styleClass;
+
+        public StyledText(String text, String styleClass) {
+            this.text = text;
+            this.styleClass = styleClass;
+        }
     }
 
 }

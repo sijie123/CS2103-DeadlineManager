@@ -1,6 +1,8 @@
 package seedu.address.logic.parser;
 
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+import static seedu.address.ui.ResultDisplay.TEXT_STYLE_CLASS_DEFAULT;
+import static seedu.address.ui.ResultDisplay.TEXT_STYLE_CLASS_ERROR;
 
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -9,6 +11,7 @@ import java.util.regex.Pattern;
 
 import seedu.address.logic.commands.FilterCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.logic.parser.exceptions.RichParseException;
 import seedu.address.model.attachment.Attachment;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.task.Deadline;
@@ -288,11 +291,11 @@ public class FilterCommandParser implements Parser<FilterCommand> {
      * @throws ParseException if the user input does not conform the expected format.
      */
     @Override
-    public FilterCommand parse(String args) throws ParseException {
+    public FilterCommand parse(String args) throws ParseException, RichParseException {
         String trimmedArgs = args.trim();
         if (trimmedArgs.isEmpty()) {
-            throw new ParseException(
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE));
+            throw new RichParseException(
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE), TEXT_STYLE_CLASS_DEFAULT);
         }
 
         try {

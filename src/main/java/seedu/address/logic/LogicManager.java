@@ -10,6 +10,7 @@ import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.TaskCollectionParser;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.logic.parser.exceptions.RichParseException;
 import seedu.address.model.Model;
 import seedu.address.model.task.Task;
 
@@ -31,7 +32,7 @@ public class LogicManager extends ComponentManager implements Logic {
     }
 
     @Override
-    public CommandResult execute(String commandText) throws CommandException, ParseException {
+    public CommandResult execute(String commandText) throws CommandException, ParseException, RichParseException {
         logger.info("----------------[USER COMMAND][" + commandText + "]");
         try {
             Command command = taskCollectionParser.parseCommand(commandText);
