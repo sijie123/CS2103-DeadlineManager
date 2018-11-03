@@ -7,7 +7,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import seedu.address.logic.parser.tokenizer.exceptions.TokenizationEndOfStringException;
-import seedu.address.logic.parser.tokenizer.exceptions.TokenizationException;
 import seedu.address.logic.parser.tokenizer.exceptions.TokenizationMismatchException;
 import seedu.address.logic.parser.tokenizer.exceptions.TokenizationMissingEndQuoteException;
 import seedu.address.logic.parser.tokenizer.exceptions.TokenizationNoMatchableCharacterException;

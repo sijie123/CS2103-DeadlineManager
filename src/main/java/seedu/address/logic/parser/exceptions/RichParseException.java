@@ -3,7 +3,6 @@ package seedu.address.logic.parser.exceptions;
 import java.util.ArrayList;
 import java.util.List;
 
-import javafx.scene.text.Text;
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.ui.ResultDisplay;
 

@@ -15,6 +15,12 @@ import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.logic.parser.exceptions.RichParseException;
 import seedu.address.logic.parser.tokenizer.BooleanExpressionParser;
 import seedu.address.logic.parser.tokenizer.StringTokenizer;
+import seedu.address.logic.parser.tokenizer.exceptions.BooleanExpressionInvalidOperatorException;
+import seedu.address.logic.parser.tokenizer.exceptions.BooleanExpressionMismatchedLeftBracketException;
+import seedu.address.logic.parser.tokenizer.exceptions.BooleanExpressionMismatchedRightBracketException;
+import seedu.address.logic.parser.tokenizer.exceptions.BooleanExpressionUnexpectedBinaryOperatorException;
+import seedu.address.logic.parser.tokenizer.exceptions.BooleanExpressionUnexpectedEndOfStringException;
+import seedu.address.logic.parser.tokenizer.exceptions.BooleanExpressionUnexpectedRightBracketException;
 import seedu.address.logic.parser.tokenizer.exceptions.TokenizationEndOfStringException;
 import seedu.address.logic.parser.tokenizer.exceptions.TokenizationException;
 import seedu.address.logic.parser.tokenizer.exceptions.TokenizationMismatchException;
@@ -45,7 +51,6 @@ public class FilterCommandParser implements Parser<FilterCommand> {
         "Invalid key for set-based filter: %1$s";
     private static final String MESSAGE_INVALID_OPERATOR_FORMAT = "Invalid filter operator: %1$s";
     private static final String MESSAGE_INVALID_TESTPHRASE_FORMAT = "Invalid filter test value: %1$s";
-    private static final String MESSAGE_INVALID_GENERAL_PREDICATE_FORMAT = "Invalid filter: %1$s";
 
     private static final String KEY_NAME_SHORT = "n";
     private static final String KEY_NAME_LONG = "name";
@@ -293,7 +298,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
      * FilterCommand object for execution.
      *
      * @param args The filter expression to parse.
-     * @throws ParseException if the user input does not conform the expected format.
+     * @throws RichParseException if the user input does not conform the expected format.
      */
     @Override
     public FilterCommand parse(String args) throws RichParseException {
@@ -321,19 +326,44 @@ public class FilterCommandParser implements Parser<FilterCommand> {
         } catch (TokenizationMissingEndQuoteException e) {
             throw createRichParseException(trimmedArgs, e, "Matching end quote is missing!");
         } catch (TokenizationUnexpectedQuoteException e) {
-            throw createRichParseException(trimmedArgs, e, "Unexpected quote in middle of textual keyword!");
+            throw createRichParseException(trimmedArgs, e, "Unexpected quote in textual keyword!");
         } catch (TokenizationNoMatchableCharacterException e) {
             throw createRichParseException(trimmedArgs, e, "Unexpected character!");
-        } catch (TokenizationEndOfStringException e) {
-            throw new RichParseException(trimmedArgs + "\nUnexpected end of filter expression!", TEXT_STYLE_CLASS_DEFAULT);
+        } catch (TokenizationEndOfStringException | BooleanExpressionUnexpectedEndOfStringException e) {
+            throw createRichParseException(trimmedArgs,
+                new TokenizationMismatchException(trimmedArgs.length(), trimmedArgs.length(),
+                    "Unexpected end of tokenizer string"),
+                "Unexpected end of filter expression!");
+        } catch (BooleanExpressionInvalidOperatorException e) {
+            throw createRichParseException(trimmedArgs, e, "Unknown operator!");
+        } catch (BooleanExpressionMismatchedLeftBracketException e) {
+            throw createRichParseException(trimmedArgs, e, "Expected a right bracket to match an existing left bracket!");
+        } catch (BooleanExpressionMismatchedRightBracketException e) {
+            throw createRichParseException(trimmedArgs, e, "Mismatched right bracket!");
+        } catch (BooleanExpressionUnexpectedBinaryOperatorException e) {
+            throw createRichParseException(trimmedArgs, e, "Logical operator not expected in this context!");
+        } catch (BooleanExpressionUnexpectedRightBracketException e) {
+            throw createRichParseException(trimmedArgs, e, "Unexpected right bracket after an operator!");
         } catch (TokenizationException e) {
-            throw new RichParseException(trimmedArgs + "\nInvalid filter expression!", TEXT_STYLE_CLASS_DEFAULT);
+            throw createDefaultRichParseException(trimmedArgs, "Invalid filter expression!");
         }
     }
 
+    /**
+     * Constructs a RichParseException that does not highlight any substring.
+     */
+    private RichParseException createDefaultRichParseException(String trimmedArgs, String message) {
+        return new RichParseException(FilterCommand.COMMAND_WORD + ' ' + trimmedArgs + '\n' + message,
+            TEXT_STYLE_CLASS_DEFAULT);
+    }
+
+    /**
+     * Constructs a RichParseException from the error substring denoted by the TokenMismatchException.
+     */
     private RichParseException createRichParseException(String input, TokenizationMismatchException e,
                                                         String message) {
         List<ResultDisplay.StyledText> parts = new ArrayList<>();
+        parts.add(new ResultDisplay.StyledText(FilterCommand.COMMAND_WORD + ' ', TEXT_STYLE_CLASS_DEFAULT));
         if (e.getBeginIndex() > 0) {
             parts.add(new ResultDisplay.StyledText(input.substring(0, e.getBeginIndex()), TEXT_STYLE_CLASS_DEFAULT));
         }
@@ -341,6 +371,8 @@ public class FilterCommandParser implements Parser<FilterCommand> {
         if (e.getBeginIndex() < effectiveEndIndex) {
             parts.add(new ResultDisplay.StyledText(input.substring(e.getBeginIndex(), effectiveEndIndex),
                 TEXT_STYLE_CLASS_ERROR));
+        } else {
+            parts.add(new ResultDisplay.StyledText("......", TEXT_STYLE_CLASS_ERROR));
         }
         if (effectiveEndIndex < input.length()) {
             parts.add(new ResultDisplay.StyledText(input.substring(effectiveEndIndex), TEXT_STYLE_CLASS_DEFAULT));
@@ -379,6 +411,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
                                                     Predicate<Character> allowedKeyCharacterPredicate)
         throws TokenizationMissingEndQuoteException, TokenizationUnexpectedQuoteException,
         TokenizationNoMatchableCharacterException, TokenizationEndOfStringException, ParseException {
+
         int tokenizerLocation = tokenizer.getLocation(); // get the location in case we need to rewind
         final String key = tokenizer.tryNextString(allowedKeyCharacterPredicate);
         String opString;
