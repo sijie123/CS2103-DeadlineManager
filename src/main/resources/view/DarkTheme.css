@@ -148,10 +148,18 @@
     -fx-font-family: "Segoe UI Light";
     -fx-font-size: 13pt;
     -fx-text-fill: white;
+    -fx-padding:  6 12 6 12;
 }
 
 .result-display .label {
     -fx-text-fill: black !important;
+}
+
+.result-display-text {
+    -fx-background-color: transparent;
+    -fx-font-family: "Segoe UI Light";
+    -fx-font-size: 13pt;
+    -fx-fill: white;
 }
 
 .status-bar .label {

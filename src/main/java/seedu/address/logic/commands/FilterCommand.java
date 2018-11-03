@@ -34,7 +34,7 @@ public class FilterCommand extends Command {
         requireNonNull(model);
         model.updateFilteredTaskList(predicate);
         return new CommandResult(
-            String.format(Messages.MESSAGE_TASKS_LISTED_OVERVIEW,
+            String.format(Messages.MESSAGE_TASKS_LISTED_OVERVIEW + "h\u0333hi\u0333i0\u03330",
                 model.getFilteredTaskList().size()));
     }
 
