@@ -153,7 +153,7 @@ Most of the time, the simplified filter syntax is sufficient to find the needed 
 
 ==== Simplified filter syntax
 
-Tasks can be filtered by typing `filter` followed by one or more space-separated keywords (e.g. `filter homework`, `filter assignment CS2103`, or `filter badminton utown 3/10/2018`).  Such a filter expression would display only those tasks that contain textual or date fields (i.e. name, deadline, and tags) that matches **every** keyword (e.g. `filter assignment CS2103` will match a task with name `Assignment 1` **and** tags `CS2103` and `easy`).
+Tasks can be filtered by typing `filter` followed by one or more space-separated keywords (e.g. `filter homework`, `filter assignment CS2103`, or `filter badminton utown 3/10/2018`).  Such a filter expression would display only those tasks that contain textual or date fields (i.e. name, deadline, tags, and attachments) that matches **every** keyword (e.g. `filter assignment CS2103` will match a task with name `Assignment 1` **and** tags `CS2103` and `easy`).
 
 Numeric fields such as priority and frequency are not matched because the integer values used for priority and frequency often match many task names and tags too.  To filter by priority and frequency, the field must be specified explicitly (see the section on _Controlling the field being matched_ below).
 
@@ -164,9 +164,10 @@ An unquoted keyword can contain only alphanumeric characters, `_`, `-`, `/`, `\`
 
 Matching of each eligible field:
 
-* When matching task names, a task is considered to match if the given keywords is a substring (case-insensitive) of the task name (the given keyword need not be a whole word in the task name - e.g. `test` and `case` will both match `Testcase`).
+* When matching task names, a task is considered to match if the specified keyword is a substring (case-insensitive) of the task name (the given keyword need not be a whole word in the task name - e.g. `test` and `case` will both match `Testcase`).
 * When matching deadlines, a task is considered to match if its deadline is on or earlier than the specified date.
-* When matching tags, a task is considered to match it contains the specified tag (the tag name must be exact - e.g. `CS` and `cs2101` will not match `CS2101`).
+* When matching tags, a task is considered to match if the specified tag is a substring (case-insensitive) of any tag of the task.
+* When matching attachments, a task is considered to match if the specified keyword is a substring (case-insensitive) of a filename of any attachment in the task.
 
 ****
 
@@ -203,7 +204,7 @@ The operator `:` is known as the *convenience* operator -- it is an alias for th
 [NOTE]
 The `<` and `>` operators are non-strict: Every task that will be shown using `=` will also be shown using `<` or `>`.
 
-[NOTE]
+[TIP]
 This full predicate syntax can be mixed arbitrary with the keyword syntax described in the previous section.  For example, `badminton n:utown 3/10/2018` is allowed.
 
 ****
@@ -221,6 +222,9 @@ Meaning of the operators for each valid key:
 ****
 
 [NOTE]
+For set-based filter predicates (i.e. tags and attachments), an extension is available to specify that the set of tags (or attachments) in the task must be _exactly_ those tags (or attachments) in the filter predicate (i.e. there should be no extra tags (or attachments) in the task).  See the _Set-based extensions for filter predicates_ section for more details.
+
+[TIP]
 The behaviour of the simplified syntax mirrors that of the convenience operator.
 
 Examples:
@@ -253,14 +257,17 @@ Returns a subset of the current list of tasks that recurs daily.
 * `filter f<7`
 Returns a subset of the current list of tasks that recurs at least once a week.
 
-* `filter t:CS2103T`
-Returns a subset of the current list of tasks that has the tag "CS2103T" (case-insensitive).
+* `filter t:CS`
+Returns a subset of the current list of tasks that has a tag that contains the substring "CS" (case-insensitive).  The task could also contain other tags.
 
-* `filter t:CS2103T,CS2101`
-Returns a subset of the current list of tasks that has both the tags "CS2103T" and "CS2101" (case-insensitive).
+* `filter t=CS2103T`
+Returns a subset of the current list of tasks that has the tag "CS2103T" (case-insensitive).  The task could also contain other tags.
+
+* `filter t=CS2103T,CS2101`
+Returns a subset of the current list of tasks that has both the tags "CS2103T" and "CS2101" (case-insensitive).  The task could also contain other tags.
 
 * `filter a:hello`
-Returns a subset of the current list of tasks that contains an attachment with a filename that contains "hello" (case-insensitive).
+Returns a subset of the current list of tasks that contains an attachment with a filename that contains "hello" (case-insensitive).  The task could also contain other attachments.
 
 * `filter a=Test.java,'Hello world.txt'`
 Returns a subset of the current list of tasks that contains the attachments with exact filenames "Test.java" and "Hello world.txt" (case-insensitive).  The task could also contain other attachments.
@@ -309,6 +316,42 @@ Returns a subset of the current list of tasks that have a name that contains "as
 
 * `filter !n:homework||(p:3 t:CS2101)`
 Returns a subset of the current list of tasks that have a name that does not contain "homework", or have priority at least 3 and contains tag "CS2101".
+
+==== Set-based extensions for filter predicates
+
+For fields that represent a collection (i.e. tags and attachments), it is also possible to filter only tasks which **do not contain** other tags or attachments apart from those specified.  To do so, we introduce a set operator as per the diagram below:
+
+image::FilterUnitDiagramSetUG.png[width="200"]
+
+The part that was called `operator` previously is called the `field operator` here, and it retains its original meaning.  The `set operator` introduced here specifies how the specified set (in the filter predicate) compares to the task's set (of tags or attachments).
+
+****
+
+Meaning of the set operator:
+
+* The operator `>` tests if every item in the specified set is contained within the task's set.  The operator `<` tests if every item in the task's set is contained within the specified set.  The operator `=` tests if the two sets are equivalent (meaning that every item in the task's set is contained within the specified set and vice-versa).  The convenience operator is an alias for `>`.
+
+****
+
+[TIP]
+When comparing a set-based field without using this dual-operator syntax, the set based operator used is effectively the convenience operator.  (In other words, `<key><operator><phrase>` is equivalent to `<key>:<operator><phrase>`.)
+
+Examples:
+
+* `filter t=:CS`
+Returns a subset of the current list of tasks that has a tag that contains the substring "CS" (case-insensitive).  The task cannot contain any tags that do not have the substring "CS".
+
+* `filter a=:Hello`
+Returns a subset of the current list of tasks that has an attachment that contains the substring "Hello" (case-insensitive).  The task cannot contain any attachments that do not have the substring "Hello".
+
+* `filter t==CS2103T,CS2101`
+Returns a subset of the current list of tasks that has both the tags "CS2103T" and "CS2101" (case-insensitive).  The task cannot contain any other tags.
+
+* `filter t:=CS2103T`
+Returns a subset of the current list of tasks that has the tag "CS2103T" (case-insensitive).  The task could also contain other tags.  (This is equivalent to `filter t=CS2103T`.)
+
+* `filter t<:CS`
+Returns a subset of the current list of tasks that do not have any tags that do not contain the substring "CS" (case-insensitive).  The task need not have any tags that contain the substring "CS", and it could have no tags at all.  This is usually used in conjunction with other filter predicates to constrain the filtered list to be exported.
 
 // end::filter[]
 
