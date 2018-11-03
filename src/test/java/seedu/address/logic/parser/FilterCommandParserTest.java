@@ -44,6 +44,12 @@ public class FilterCommandParserTest {
         assertParseSuccess(parser, "n<\"Hello World\"");
         assertParseSuccess(parser, "n:Test");
         assertParseSuccess(parser, "name:Test");
+        assertParseSuccess(parser, "n:\\");
+        assertParseSuccess(parser, "n:-");
+        assertParseSuccess(parser, "n:_");
+        assertParseSuccess(parser, "n:/");
+        assertParseSuccess(parser, "n:.");
+        assertParseSuccess(parser, "n:,");
 
         assertParseSuccess(parser, "p>1");
         assertParseSuccess(parser, "p:1");
@@ -229,7 +235,6 @@ public class FilterCommandParserTest {
         assertParseThrowsException(parser, "n:@");
         assertParseThrowsException(parser, "n:#");
         assertParseThrowsException(parser, "n:$");
-        assertParseThrowsException(parser, "n:\\");
         assertParseThrowsException(parser, "n:abc$");
         assertParseThrowsException(parser, "n:$abc$");
         assertParseThrowsException(parser, "n:$abc");
