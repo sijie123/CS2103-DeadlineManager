@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 
 import seedu.address.logic.commands.FilterCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.attachment.Attachment;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.task.Deadline;
 import seedu.address.model.task.FilterOperator;
@@ -43,6 +44,8 @@ public class FilterCommandParser implements Parser<FilterCommand> {
     private static final String KEY_FREQUENCY_LONG = "frequency";
     private static final String KEY_TAG_SHORT = "t";
     private static final String KEY_TAG_LONG = "tag";
+    private static final String KEY_ATTACHMENT_SHORT = "a";
+    private static final String KEY_ATTACHMENT_LONG = "attachment";
 
     private static final Predicate<Task> ALWAYS_FALSE = task -> false;
 
@@ -59,7 +62,9 @@ public class FilterCommandParser implements Parser<FilterCommand> {
         || ch == '_'
         || ch == '-'
         || ch == '/'
-        || ch == ',';
+        || ch == '\\'
+        || ch == ','
+        || ch == '.';
 
     private static final Predicate<Character> ALLOWED_KEY_CHARACTER_PREDICATE =
         ch -> (ch >= 'A' && ch <= 'Z')
@@ -111,6 +116,17 @@ public class FilterCommandParser implements Parser<FilterCommand> {
         throws InvalidPredicateTestPhraseException, InvalidPredicateOperatorException {
         Predicate<Set<Tag>> tagsPredicate = SetUtil.makeFilter(Tag.class, setOperator, fieldOperator, testPhrase);
         return task -> tagsPredicate.test(task.getTags());
+    }
+
+    /**
+     * Creates a predicate that filters by tags.
+     */
+    private static Predicate<Task> createAttachmentsPredicate(FilterOperator setOperator, FilterOperator fieldOperator,
+                                                       String testPhrase)
+        throws InvalidPredicateTestPhraseException, InvalidPredicateOperatorException {
+        Predicate<Set<Attachment>> attachmentsPredicate = SetUtil.makeFilter(Attachment.class,
+            setOperator, fieldOperator, testPhrase);
+        return task -> attachmentsPredicate.test(task.getAttachments());
     }
 
     /**
@@ -166,6 +182,9 @@ public class FilterCommandParser implements Parser<FilterCommand> {
             case KEY_TAG_SHORT: // fallthrough
             case KEY_TAG_LONG:
                 return createTagsPredicate(FilterOperator.CONVENIENCE, operator, testPhrase);
+            case KEY_ATTACHMENT_SHORT: // fallthrough
+            case KEY_ATTACHMENT_LONG:
+                return createAttachmentsPredicate(FilterOperator.CONVENIENCE, operator, testPhrase);
             default:
                 throw new ParseException(String.format(MESSAGE_INVALID_KEY_FORMAT, key));
             }
@@ -199,6 +218,9 @@ public class FilterCommandParser implements Parser<FilterCommand> {
             case KEY_TAG_SHORT: // fallthrough
             case KEY_TAG_LONG:
                 return createTagsPredicate(setOperator, fieldOperator, testPhrase);
+            case KEY_ATTACHMENT_SHORT: // fallthrough
+            case KEY_ATTACHMENT_LONG:
+                return createAttachmentsPredicate(setOperator, fieldOperator, testPhrase);
             default:
                 if (isValidKey(key)) {
                     throw new ParseException(String.format(MESSAGE_INVALID_KEY_DOUBLE_OPERATOR_FORMAT, key));
@@ -232,6 +254,8 @@ public class FilterCommandParser implements Parser<FilterCommand> {
         case KEY_FREQUENCY_LONG:
         case KEY_TAG_SHORT:
         case KEY_TAG_LONG:
+        case KEY_ATTACHMENT_SHORT:
+        case KEY_ATTACHMENT_LONG:
             return true;
         default:
             return false;
@@ -249,6 +273,8 @@ public class FilterCommandParser implements Parser<FilterCommand> {
             .or(silencePredicateException(() -> createNamePredicate(FilterOperator.CONVENIENCE, testPhrase)))
             .or(silencePredicateException(() -> createDeadlinePredicate(FilterOperator.CONVENIENCE, testPhrase)))
             .or(silencePredicateException(() -> createTagsPredicate(
+                FilterOperator.CONVENIENCE, FilterOperator.CONVENIENCE, testPhrase)))
+            .or(silencePredicateException(() -> createAttachmentsPredicate(
                 FilterOperator.CONVENIENCE, FilterOperator.CONVENIENCE, testPhrase)));
     }
 

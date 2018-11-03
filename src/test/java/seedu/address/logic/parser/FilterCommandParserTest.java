@@ -34,6 +34,7 @@ public class FilterCommandParserTest {
         assertParseSuccess(parser, "d< 01/02/19");
         assertParseSuccess(parser, "d<01/02/19");
         assertParseSuccess(parser, "d:01/02/19");
+        assertParseSuccess(parser, "due:01/02/19");
 
         assertParseSuccess(parser, "n>Hello");
         assertParseSuccess(parser, "n>\"Hello\"");
@@ -42,6 +43,7 @@ public class FilterCommandParserTest {
         assertParseSuccess(parser, "n:\"Hello World\"");
         assertParseSuccess(parser, "n<\"Hello World\"");
         assertParseSuccess(parser, "n:Test");
+        assertParseSuccess(parser, "name:Test");
 
         assertParseSuccess(parser, "p>1");
         assertParseSuccess(parser, "p:1");
@@ -52,6 +54,7 @@ public class FilterCommandParserTest {
         assertParseSuccess(parser, "p:3");
         assertParseSuccess(parser, "p:4");
         assertParseSuccess(parser, "p:\"3\"");
+        assertParseSuccess(parser, "priority:3");
 
         assertParseSuccess(parser, "f>1");
         assertParseSuccess(parser, "f:1");
@@ -62,6 +65,7 @@ public class FilterCommandParserTest {
         assertParseSuccess(parser, "f:3");
         assertParseSuccess(parser, "f:4");
         assertParseSuccess(parser, "f:\"3\"");
+        assertParseSuccess(parser, "frequency:1");
 
         assertParseSuccess(parser, "t:CS2101,CS2103");
         assertParseSuccess(parser, "t:CS2101");
@@ -75,6 +79,22 @@ public class FilterCommandParserTest {
         assertParseSuccess(parser, "t>\"CS2101,CS2103\"");
         assertParseSuccess(parser, "t>\"CS2101,\'CS2103\'\"");
         assertParseSuccess(parser, "t:\"CS2101,,CS2103\"");
+        assertParseSuccess(parser, "tag:\"CS2101,CS2103\"");
+
+        assertParseSuccess(parser, "a:CS2101,CS2103");
+        assertParseSuccess(parser, "a:CS2101");
+        assertParseSuccess(parser, "a:\"CS2101\"");
+        assertParseSuccess(parser, "a:\"CS2101,CS2103\"");
+        assertParseSuccess(parser, "a:\'CS2101,CS2103\'");
+        assertParseSuccess(parser, "a:\'CS2101, CS2103\'");
+        assertParseSuccess(parser, "a :  \'CS2101, CS2103\'");
+        assertParseSuccess(parser, "a=\"CS2101,CS2103\"");
+        assertParseSuccess(parser, "a<\"CS2101,CS2103\"");
+        assertParseSuccess(parser, "a>\"CS2101,CS2103\"");
+        assertParseSuccess(parser, "a>\"CS2101,\'CS2103\'\"");
+        assertParseSuccess(parser, "a:\"CS2101,,CS2103\"");
+        assertParseSuccess(parser, "a:CS2101.html");
+        assertParseSuccess(parser, "attachment:\"CS2101,CS2103\"");
     }
 
     @Test
@@ -176,6 +196,13 @@ public class FilterCommandParserTest {
         assertParseSuccess(parser, "t<:x");
         assertParseSuccess(parser, "t>:x");
         assertParseSuccess(parser, "t=:xeg4");
+        assertParseSuccess(parser, "a::x");
+        assertParseSuccess(parser, "a:=x");
+        assertParseSuccess(parser, "a:<x");
+        assertParseSuccess(parser, "a:>x");
+        assertParseSuccess(parser, "a<:x");
+        assertParseSuccess(parser, "a>:x");
+        assertParseSuccess(parser, "a=:xeg4");
     }
 
     @Test
@@ -241,6 +268,8 @@ public class FilterCommandParserTest {
         assertParseThrowsException(parser, "n:=test");
         assertParseThrowsException(parser, "q::test");
         assertParseThrowsException(parser, "t::1/2/6");
+        assertParseThrowsException(parser, "t:::test");
+        assertParseThrowsException(parser, "a:::test");
     }
 
     /**
