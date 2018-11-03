@@ -319,7 +319,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE), TEXT_STYLE_CLASS_DEFAULT);
         }
 
-        return handleTokenizationExceptions(trimmedArgs, () -> {
+        return wrapTokenizationExceptions(trimmedArgs, () -> {
             BooleanExpressionParser<Task> expressionParser =
                 new BooleanExpressionParser<>((tokenizer, reservedCharPredicate) -> {
                     final Predicate<Character> effectiveUnquotedCharacterPredicate = reservedCharPredicate.negate()
@@ -335,11 +335,11 @@ public class FilterCommandParser implements Parser<FilterCommand> {
     }
 
     /**
-     * Converts all kinds of TokenizationException to RichParseException.
+     * Converts all kinds of thrown TokenizationException to RichParseException.
      *
      * @throws RichParseException if the user input does not conform the expected format.
      */
-    private FilterCommand handleTokenizationExceptions(String trimmedArgs,
+    private FilterCommand wrapTokenizationExceptions(String trimmedArgs,
                                                             TokenizationExceptionalSupplier<FilterCommand> supplier)
         throws RichParseException {
         try {
@@ -453,22 +453,22 @@ public class FilterCommandParser implements Parser<FilterCommand> {
         if (key != null && tokenizer.hasNextToken()
             && (opString = tokenizer.tryNextPattern(FILTER_OPERATOR_PATTERN)) != null) {
             int opEndIndex = tokenizer.getLocation();
-            final FilterOperator operator = wrapPredicateOperatorException(keyEndIndex, opEndIndex,
-                () -> FilterOperator.parse(opString));
+            final FilterOperator operator = wrapPredicateOperatorException(keyEndIndex,
+                opEndIndex, () -> FilterOperator.parse(opString));
             String opString2 = tokenizer.tryNextPattern(FILTER_OPERATOR_PATTERN); // could be null
             int op2EndIndex = tokenizer.getLocation();
             final String testPhrase = tokenizer.nextString(effectiveUnquotedCharacterPredicate);
             int testPhraseEndIndex = tokenizer.getLocation();
             if (opString2 == null) {
                 // has only one filter operator
-                return wrapPredicateException(keyStartIndex, keyEndIndex, keyEndIndex, opEndIndex, testPhraseEndIndex,
-                    () -> createPredicate(key, operator, testPhrase));
+                return wrapPredicateException(keyStartIndex, keyEndIndex, keyEndIndex, opEndIndex,
+                    testPhraseEndIndex, () -> createPredicate(key, operator, testPhrase));
             } else {
                 // has two filter operators
-                final FilterOperator operator2 = wrapPredicateSetOperatorException(opEndIndex, op2EndIndex,
-                    () -> FilterOperator.parse(opString2));
-                return wrapPredicateException(keyStartIndex, keyEndIndex, opEndIndex, op2EndIndex, testPhraseEndIndex,
-                    () -> createPredicate(key, operator, operator2, testPhrase));
+                final FilterOperator operator2 = wrapPredicateSetOperatorException(opEndIndex,
+                    op2EndIndex, () -> FilterOperator.parse(opString2));
+                return wrapPredicateException(keyStartIndex, keyEndIndex, opEndIndex, op2EndIndex,
+                    testPhraseEndIndex, () -> createPredicate(key, operator, operator2, testPhrase));
             }
         } else {
             tokenizer.setLocation(keyStartIndex); // rewind the tokenizer
@@ -477,6 +477,9 @@ public class FilterCommandParser implements Parser<FilterCommand> {
         }
     }
 
+    /**
+     * Converts a thrown InvalidPredicateOperatorException to a wrapped TokenizationInvalidPredicateException.
+     */
     private static FilterOperator wrapPredicateOperatorException(int startIndex, int endIndex,
         PredicateOperatorExceptionalSupplier<FilterOperator> supplier)
         throws TokenizationInvalidPredicateException {
@@ -487,6 +490,10 @@ public class FilterCommandParser implements Parser<FilterCommand> {
         }
     }
 
+    /**
+     * Converts a thrown InvalidPredicateOperatorException to a wrapped TokenizationInvalidPredicateException,
+     * but converts the wrapped exception to InvalidPredicateSetOperatorException.
+     */
     private static FilterOperator wrapPredicateSetOperatorException(int startIndex, int endIndex,
         PredicateOperatorExceptionalSupplier<FilterOperator> supplier)
         throws TokenizationInvalidPredicateException {
@@ -498,6 +505,9 @@ public class FilterCommandParser implements Parser<FilterCommand> {
         }
     }
 
+    /**
+     * Converts any thrown InvalidPredicateException to a wrapped TokenizationInvalidPredicateException.
+     */
     private static Predicate<Task> wrapPredicateException(int keyStartIndex, int keyEndIndex, int fieldOpStartIndex,
                                                           int fieldOpEndIndex, int testPhraseEndIndex,
                                                           ExceptionalSupplier<Predicate<Task>> supplier)
