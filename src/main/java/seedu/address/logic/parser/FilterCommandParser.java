@@ -337,7 +337,8 @@ public class FilterCommandParser implements Parser<FilterCommand> {
         } catch (BooleanExpressionInvalidOperatorException e) {
             throw createRichParseException(trimmedArgs, e, "Unknown operator!");
         } catch (BooleanExpressionMismatchedLeftBracketException e) {
-            throw createRichParseException(trimmedArgs, e, "Expected a right bracket to match an existing left bracket!");
+            throw createRichParseException(trimmedArgs, e,
+                "Expected a right bracket to match an existing left bracket!");
         } catch (BooleanExpressionMismatchedRightBracketException e) {
             throw createRichParseException(trimmedArgs, e, "Mismatched right bracket!");
         } catch (BooleanExpressionUnexpectedBinaryOperatorException e) {
