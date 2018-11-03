@@ -158,7 +158,7 @@ Tasks can be filtered by typing `filter` followed by one or more space-separated
 Numeric fields such as priority and frequency are not matched because the integer values used for priority and frequency often match many task names and tags too.  To filter by priority and frequency, the field must be specified explicitly (see the section on _Controlling the field being matched_ below).
 
 [NOTE]
-An unquoted keyword can contain only alphanumeric characters, `_`, `-`, `/`, and `,`.  To use other characters (including whitespace), the keyword must be placed in quotes (both single (`'`) and double (`"`) quotes work, but the opening and closing quotes must match).
+An unquoted keyword can contain only alphanumeric characters, `_`, `-`, `/`, `\`, `.`, and `,`.  To use other characters (including whitespace), the keyword must be placed in quotes (both single (`'`) and double (`"`) quotes work, but the opening and closing quotes must match).
 
 ****
 
@@ -196,7 +196,7 @@ Each of the three parts of a full predicate means the following:
 * `operator` is one of `:`, `=`, `<`, `>`.
 * `phrase` is a string that describes what to search (this is called the search phrase, and it is similar to the _keyword_ in the simplified syntax).
 
-As with the simplified syntax, an unquoted `phrase` string can contain only alphanumeric characters, `_`, `-`, `/`, and `,`.  To use other characters (including whitespace), the search phrase must be placed in quotes (both single (`'`) and double (`"`) quotes work, but the opening and closing quotes must match).
+As with the simplified syntax, an unquoted `phrase` string can contain only alphanumeric characters, `_`, `-`, `/`, `\`, `.`, and `,`.  To use other characters (including whitespace), the search phrase must be placed in quotes (both single (`'`) and double (`"`) quotes work, but the opening and closing quotes must match).
 
 The operator `:` is known as the *convenience* operator -- it is an alias for the operator that intuitively "does what you expect" for the given `key`.  More details are given below in the context of each key.
 
@@ -214,7 +214,8 @@ Meaning of the operators for each valid key:
 * When `key` is `d` or `due`, the task's due date is compared, and the search phrase is interpreted as a date.  Dates must be in `d/m/y` format.  The operator `>` tests if the task's due date is on or after the specified due date.  The operator `<` tests if the task's due date is on or before the specified due date.  The operator `=` tests if the task's due date is exactly equal to the specified due date.  The convenience operator is an alias for `<`.
 * When `key` is `p` or `priority`, the task's priority is compared, and the search phrase is interpreted as an integer, representing the priority to be searched.  A priority of zero matches all the tasks with no priority set.  The operator `>` tests if the task has priority at least as high as the specified priority.  The operator `<` tests if the task has priority at most as high as the specified priority.  The operator `=` tests if the task's priority is exactly equal to the specified priority.  The convenience operator is an alias for `>`.  Note that priority 1 is the highest priority, priority 4 is the lowest priority, and tasks without any priority are considered to be of lower priority than priority 4.  In other words, `1 > 2 > 3 > 4 > (no priority)`.
 * When `key` is `f` or `frequency`, the task's frequency (i.e. the number of days between consecutive occurrences of that task) is compared, and the search phrase is interpreted as an integer, representing the frequency to be searched.  A non-recurring task is treated as if it has a frequency that is infinitely large (i.e. `f>100` also includes all non-recurring tasks).  The operator `>` tests if the task has a recurrence interval larger than or equal to the specified number of days.  The operator `<` tests if the task has a recurrence interval smaller than or equal to the specified number of days.  The operator `=` tests if the task has a recurrence interval exactly equal to the specified number of days.  The convenience operator is an alias for `<`.
-* When `key` is `t` or `tag`, the task's tags are compared, and the search phrase is interpreted as a (unordered) set of tags.  Multiple tags are separated by commas (see examples below).  The operator `>` tests if every tag of the given task is contained in the specified set of tags.  The operator `<` tests if the every specified tag is present for the given task.  The operator `=` tests if the set of tags for the given task is exactly the same as the set of specified tags.  The convenience operator is an alias for `<`.  Note that tag names have to be specified exactly -- substrings of the tag name will not work.
+* When `key` is `t` or `tag`, the task's tags are compared, and the search phrase is interpreted as a (unordered) set of (substrings of) tags.  Comparison is case-insensitive.  Multiple tags are separated by commas (see examples below).  The operator `>` tests if every specified tag is a substring of a tag of the given task.  The operator `<` tests if every specified tag is a superstring of a tag of the given task.  The operator `=` tests if every specified tag exactly matches a tag of the given task.  The convenience operator is an alias for `>`.
+* When `key` is `a` or `attachment`, the task's attachments are compared, and the search phrase is interpreted as a (unordered) set of (substrings of) filenames.  Comparison is case-insensitive.  Multiple filenames are separated by commas, in the same way as tags.  The operator `>` tests if every specified filename is a substring of an attachment filename (of the given task).  The operator `<` tests if every specified tag is a superstring of an attachment filename.  The operator `=` tests if every specified tag exactly matches an attachment filename.  The convenience operator is an alias for `>`.
 * Any other `key` will cause Deadline Manager to produce an error.
 
 ****
@@ -235,10 +236,10 @@ Returns a subset of the current list of tasks that have deadlines equal to 1st O
 Returns a subset of the current list of tasks that have deadlines on or before 1st October 2018.
 
 * `filter name:Alex`
-Returns a subset of the current list of tasks that have a name that contains "Alex".
+Returns a subset of the current list of tasks that have a name that contains "Alex" (case-insensitive).
 
 * `filter n:"Alex Tan"`
-Returns a subset of the current list of tasks that have a name that contains "Alex Tan".
+Returns a subset of the current list of tasks that have a name that contains "Alex Tan" (case-insensitive).
 
 * `filter p=1`
 Returns a subset of the current list of tasks that have priority = 1 (highest priority).
@@ -253,10 +254,16 @@ Returns a subset of the current list of tasks that recurs daily.
 Returns a subset of the current list of tasks that recurs at least once a week.
 
 * `filter t:CS2103T`
-Returns a subset of the current list of tasks that has the tag "CS2103T".
+Returns a subset of the current list of tasks that has the tag "CS2103T" (case-insensitive).
 
 * `filter t:CS2103T,CS2101`
-Returns a subset of the current list of tasks that has both the tags "CS2103T" and "CS2101".
+Returns a subset of the current list of tasks that has both the tags "CS2103T" and "CS2101" (case-insensitive).
+
+* `filter a:hello`
+Returns a subset of the current list of tasks that contains an attachment with a filename that contains "hello" (case-insensitive).
+
+* `filter a=Test.java,'Hello world.txt'`
+Returns a subset of the current list of tasks that contains the attachments with exact filenames "Test.java" and "Hello world.txt" (case-insensitive).  The task could also contain other attachments.
 
 ==== Composing filter predicates
 
