@@ -1,6 +1,5 @@
 package seedu.address.model.task;
 
-import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.task.exceptions.InvalidPredicateOperatorException;
 
 /**
