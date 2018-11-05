@@ -145,7 +145,10 @@
 
 .result-scrollpane {
     -fx-background-color: derive(#1d1d1d, 20%);
-    -fx-background: transparent;
+    -fx-background: derive(#1d1d1d, 20%);
+    -fx-border-top-width: 0;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
 }
 
 .result-display {
@@ -153,7 +156,7 @@
     -fx-font-family: "Segoe UI Light";
     -fx-font-size: 13pt;
     -fx-text-fill: white;
-    -fx-padding:  4 11 4 11;
+    -fx-padding: 4 11 4 11;
     -fx-line-spacing: 0.2em;
 }
 
