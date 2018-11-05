@@ -143,12 +143,18 @@
     -fx-text-fill: black;
 }
 
+.result-scrollpane {
+    -fx-background-color: derive(#1d1d1d, 20%);
+    -fx-background: transparent;
+}
+
 .result-display {
     -fx-background-color: transparent;
     -fx-font-family: "Segoe UI Light";
     -fx-font-size: 13pt;
     -fx-text-fill: white;
-    -fx-padding:  6 12 6 12;
+    -fx-padding:  4 11 4 11;
+    -fx-line-spacing: 0.2em;
 }
 
 .result-display .label {
