@@ -64,7 +64,8 @@ public class AttachmentCommandParser implements Parser<AttachmentCommand> {
         case COMMAND_GET_ACTION:
             return parseGetAction(index, argMultimap);
         default:
-            throw new SimpleParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AttachmentCommand.MESSAGE_USAGE));
+            throw new SimpleParseException(
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, AttachmentCommand.MESSAGE_USAGE));
         }
     }
 

@@ -351,7 +351,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
         } catch (TokenizationUnexpectedQuoteException e) {
             throw createRichParseException(trimmedArgs, e, "Unexpected quote in textual keyword!");
         } catch (TokenizationNoMatchableCharacterException e) {
-            throw createRichParseException(trimmedArgs, e, "Unexpected character!");
+            throw createRichParseException(trimmedArgs, e, "This character is invalid here!");
         } catch (TokenizationEndOfStringException | BooleanExpressionUnexpectedEndOfStringException e) {
             throw createRichParseException(trimmedArgs,
                 new TokenizationMismatchException(trimmedArgs.length(), trimmedArgs.length(),

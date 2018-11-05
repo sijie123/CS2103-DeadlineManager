@@ -126,8 +126,7 @@ public class LogicManagerTest {
     private void assertHistoryCorrect(String... expectedCommands) {
         try {
             CommandResult result = logic.execute(HistoryCommand.COMMAND_WORD);
-            String expectedMessage
-                    = String.format(
+            String expectedMessage = String.format(
                 HistoryCommand.MESSAGE_SUCCESS, String.join("\n", expectedCommands));
             assertEquals(expectedMessage, result.feedbackToUser);
         } catch (CommandException | ParseException e) {

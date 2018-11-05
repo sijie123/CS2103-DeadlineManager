@@ -13,7 +13,6 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.events.ui.NewResultAvailableEvent;
-import seedu.address.commons.events.ui.NewResultAvailableEvent;
 
 /**
  * A ui for the status bar that is displayed at the header of the application.

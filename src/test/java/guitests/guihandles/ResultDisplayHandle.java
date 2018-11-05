@@ -1,12 +1,12 @@
 package guitests.guihandles;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.scene.Node;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import seedu.address.ui.ResultDisplay;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A handler for the {@code ResultDisplay} of the UI

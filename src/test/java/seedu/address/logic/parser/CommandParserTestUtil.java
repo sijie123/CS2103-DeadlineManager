@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import seedu.address.logic.commands.Command;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.logic.parser.exceptions.SimpleParseException;
 
 /**
  * Contains helper methods for testing command parsers.
