@@ -8,7 +8,7 @@ import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailur
 import org.junit.Test;
 
 import seedu.address.logic.commands.SortCommand;
-import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.logic.parser.exceptions.SimpleParseException;
 
 public class SortCommandParserTest {
 
@@ -50,19 +50,19 @@ public class SortCommandParserTest {
         try {
             SortCommand command = parser.parse(str);
             assertNotNull("Expected not null", command);
-        } catch (ParseException e) {
+        } catch (SimpleParseException e) {
             fail("Expected no parse error");
         }
     }
 
     /**
-     * Asserts that the parse throws a ParseException.
+     * Asserts that the parse throws a SimpleParseException.
      */
     private void assertParseThrowsException(SortCommandParser parser, String str) {
         try {
             parser.parse(str);
             fail("Expected a parse error");
-        } catch (ParseException ignore) {
+        } catch (SimpleParseException ignore) {
             // Do not do anything, because we just want to make sure that an exception is thrown
         }
     }

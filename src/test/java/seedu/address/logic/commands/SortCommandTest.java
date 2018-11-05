@@ -16,7 +16,7 @@ import org.junit.Test;
 
 import seedu.address.logic.CommandHistory;
 import seedu.address.logic.parser.SortCommandParser;
-import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.logic.parser.exceptions.SimpleParseException;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
@@ -110,8 +110,8 @@ public class SortCommandTest {
     private SortCommand ensureParseSuccess(String comparator) {
         try {
             return new SortCommandParser().parse(comparator);
-        } catch (ParseException e) {
-            throw new AssertionError("ParseException was thrown.", e);
+        } catch (SimpleParseException e) {
+            throw new AssertionError("SimpleParseException was thrown.", e);
         }
     }
 }

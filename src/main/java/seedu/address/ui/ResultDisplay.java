@@ -13,7 +13,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.events.ui.NewResultAvailableEvent;
-import seedu.address.commons.events.ui.NewRichResultAvailableEvent;
+import seedu.address.commons.events.ui.NewResultAvailableEvent;
 
 /**
  * A ui for the status bar that is displayed at the header of the application.
@@ -42,17 +42,6 @@ public class ResultDisplay extends UiPart<Region> {
         logger.info(LogsCenter.getEventHandlingLogMessage(event));
         Platform.runLater(() -> {
             displayed.clear();
-            Text text = new Text(event.message);
-            text.getStyleClass().add(TEXT_STYLE_CLASS_DEFAULT);
-            displayed.add(text);
-        });
-    }
-
-    @Subscribe
-    private void handleNewRickResultAvailableEvent(NewRichResultAvailableEvent event) {
-        logger.info(LogsCenter.getEventHandlingLogMessage(event));
-        Platform.runLater(() -> {
-            displayed.clear();
             for (StyledText styledText : event.message) {
                 Text text = new Text(styledText.text);
                 text.getStyleClass().add(styledText.styleClass);
@@ -71,6 +60,14 @@ public class ResultDisplay extends UiPart<Region> {
         public StyledText(String text, String styleClass) {
             this.text = text;
             this.styleClass = styleClass;
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            return other == this // short circuit if same object
+                    || (other instanceof StyledText // instanceof handles nulls
+                    && text.equals(((StyledText) other).text)
+                    && styleClass.equals(((StyledText) other).styleClass)); // state check
         }
     }
 

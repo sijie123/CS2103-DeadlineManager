@@ -11,7 +11,7 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 import seedu.address.logic.commands.FilterCommand;
-import seedu.address.logic.parser.exceptions.RichParseException;
+import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.logic.parser.tokenizer.BooleanExpressionParser;
 import seedu.address.logic.parser.tokenizer.StringTokenizer;
 import seedu.address.logic.parser.tokenizer.exceptions.BooleanExpressionInvalidOperatorException;
@@ -309,13 +309,13 @@ public class FilterCommandParser implements Parser<FilterCommand> {
      * FilterCommand object for execution.
      *
      * @param args The filter expression to parse.
-     * @throws RichParseException if the user input does not conform the expected format.
+     * @throws ParseException if the user input does not conform the expected format.
      */
     @Override
-    public FilterCommand parse(String args) throws RichParseException {
+    public FilterCommand parse(String args) throws ParseException {
         String trimmedArgs = args.trim();
         if (trimmedArgs.isEmpty()) {
-            throw new RichParseException(
+            throw new ParseException(
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE), TEXT_STYLE_CLASS_DEFAULT);
         }
 
@@ -335,17 +335,17 @@ public class FilterCommandParser implements Parser<FilterCommand> {
     }
 
     /**
-     * Converts all kinds of thrown TokenizationException to RichParseException.
+     * Converts all kinds of thrown TokenizationException to ParseException.
      *
-     * @throws RichParseException if the user input does not conform the expected format.
+     * @throws ParseException if the user input does not conform the expected format.
      */
     private FilterCommand wrapTokenizationExceptions(String trimmedArgs,
                                                             TokenizationExceptionalSupplier<FilterCommand> supplier)
-        throws RichParseException {
+        throws ParseException {
         try {
             return supplier.get();
         } catch (IllegalArgumentException e) {
-            throw new RichParseException("Invalid filter expression: " + e.getMessage(), TEXT_STYLE_CLASS_DEFAULT);
+            throw new ParseException("Invalid filter expression: " + e.getMessage(), TEXT_STYLE_CLASS_DEFAULT);
         } catch (TokenizationMissingEndQuoteException e) {
             throw createRichParseException(trimmedArgs, e, "Matching end quote is missing!");
         } catch (TokenizationUnexpectedQuoteException e) {
@@ -365,7 +365,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
         } catch (BooleanExpressionMismatchedRightBracketException e) {
             throw createRichParseException(trimmedArgs, e, "Mismatched right bracket!");
         } catch (BooleanExpressionUnexpectedBinaryOperatorException e) {
-            throw createRichParseException(trimmedArgs, e, "Logical operator not expected in this context!");
+            throw createRichParseException(trimmedArgs, e, "Logical operator not expected here!");
         } catch (BooleanExpressionUnexpectedRightBracketException e) {
             throw createRichParseException(trimmedArgs, e, "Unexpected right bracket after an operator!");
         } catch (TokenizationInvalidPredicateException e) {
@@ -376,12 +376,12 @@ public class FilterCommandParser implements Parser<FilterCommand> {
     }
 
     /**
-     * Converts all kinds of TokenizationInvalidPredicateException to RichParseException.
+     * Converts all kinds of TokenizationInvalidPredicateException to ParseException.
      *
-     * @throws RichParseException if the user input does not conform the expected format.
+     * @throws ParseException if the user input does not conform the expected format.
      */
-    private RichParseException createRichParseExceptionFromInvalidPredicate(String trimmedArgs,
-                                                                            TokenizationInvalidPredicateException e) {
+    private ParseException createRichParseExceptionFromInvalidPredicate(String trimmedArgs,
+                                                                        TokenizationInvalidPredicateException e) {
         final InvalidPredicateException predicateException = e.getPredicateException();
         if (predicateException instanceof InvalidPredicateKeyException) {
             return createRichParseException(trimmedArgs, e, "Invalid field identifier key!");
@@ -399,18 +399,18 @@ public class FilterCommandParser implements Parser<FilterCommand> {
     }
 
     /**
-     * Constructs a RichParseException that does not highlight any substring.
+     * Constructs a ParseException that does not highlight any substring.
      */
-    private RichParseException createDefaultRichParseException(String trimmedArgs, String message) {
-        return new RichParseException(FilterCommand.COMMAND_WORD + ' ' + trimmedArgs + '\n' + message,
+    private ParseException createDefaultRichParseException(String trimmedArgs, String message) {
+        return new ParseException(FilterCommand.COMMAND_WORD + ' ' + trimmedArgs + '\n' + message,
             TEXT_STYLE_CLASS_DEFAULT);
     }
 
     /**
-     * Constructs a RichParseException from the error substring denoted by the TokenMismatchException.
+     * Constructs a ParseException from the error substring denoted by the TokenMismatchException.
      */
-    private RichParseException createRichParseException(String input, TokenizationMismatchException e,
-                                                        String message) {
+    private ParseException createRichParseException(String input, TokenizationMismatchException e,
+                                                    String message) {
         List<ResultDisplay.StyledText> parts = new ArrayList<>();
         parts.add(new ResultDisplay.StyledText(FilterCommand.COMMAND_WORD + ' ', TEXT_STYLE_CLASS_DEFAULT));
         if (e.getBeginIndex() > 0) {
@@ -427,7 +427,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
             parts.add(new ResultDisplay.StyledText(input.substring(effectiveEndIndex), TEXT_STYLE_CLASS_DEFAULT));
         }
         parts.add(new ResultDisplay.StyledText("\n" + message, TEXT_STYLE_CLASS_DEFAULT));
-        return new RichParseException(parts);
+        return new ParseException(parts);
     }
 
     /**

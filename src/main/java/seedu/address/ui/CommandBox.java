@@ -12,13 +12,12 @@ import javafx.scene.layout.Region;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.events.ui.ExecuteCommandEvent;
 import seedu.address.commons.events.ui.NewResultAvailableEvent;
-import seedu.address.commons.events.ui.NewRichResultAvailableEvent;
+import seedu.address.commons.events.ui.NewResultAvailableEvent;
 import seedu.address.logic.ListElementPointer;
 import seedu.address.logic.Logic;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.logic.parser.exceptions.RichParseException;
 
 /**
  * The UI component that is responsible for receiving user command inputs.
@@ -116,13 +115,13 @@ public class CommandBox extends UiPart<Region> {
             logger.info("Result: " + commandResult.feedbackToUser);
             raise(new NewResultAvailableEvent(commandResult.feedbackToUser));
 
-        } catch (RichParseException e) {
+        } catch (ParseException e) {
             initHistory();
             // handle command failure
             setStyleToIndicateCommandFailure();
             logger.info("Invalid command: " + commandTextField.getText());
-            raise(new NewRichResultAvailableEvent(e.message));
-        } catch (CommandException | ParseException e) {
+            raise(new NewResultAvailableEvent(e.message));
+        } catch (CommandException e) {
             initHistory();
             // handle command failure
             setStyleToIndicateCommandFailure();

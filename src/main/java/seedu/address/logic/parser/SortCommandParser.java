@@ -6,7 +6,7 @@ import java.util.Comparator;
 import java.util.Set;
 
 import seedu.address.logic.commands.SortCommand;
-import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.logic.parser.exceptions.SimpleParseException;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.task.Task;
 
@@ -21,13 +21,13 @@ public class SortCommandParser implements Parser<SortCommand> {
      * Parses the given {@code String} of arguments in the context of the SortCommand and returns an
      * SortCommand object for execution.
      *
-     * @throws ParseException if the user input does not conform the expected format
+     * @throws SimpleParseException if the user input does not conform the expected format
      */
     @Override
-    public SortCommand parse(String args) throws ParseException {
+    public SortCommand parse(String args) throws SimpleParseException {
         StringBuilder trimmedArgs = new StringBuilder(args.trim());
         if (trimmedArgs.toString().equals("")) {
-            throw new ParseException(
+            throw new SimpleParseException(
                     String.format(MESSAGE_INVALID_COMMAND_FORMAT, SortCommand.MESSAGE_USAGE));
         }
 
@@ -56,7 +56,7 @@ public class SortCommandParser implements Parser<SortCommand> {
         for (String element: splittedArgs) {
 
             if (element.isEmpty()) {
-                throw new ParseException(
+                throw new SimpleParseException(
                         String.format(MESSAGE_INVALID_COMMAND_FORMAT, SortCommand.MESSAGE_USAGE));
             }
 
@@ -65,12 +65,12 @@ public class SortCommandParser implements Parser<SortCommand> {
             final char comparisonCharacter = splittedComparator[0].charAt(splittedComparator[0].length() - 1);
 
             if (comparisonCharacter != '>' && comparisonCharacter != '<') {
-                throw new ParseException(
+                throw new SimpleParseException(
                         String.format(MESSAGE_INVALID_KEY_FORMAT, element));
             }
 
             if (splittedComparator.length > 1 && (!taskField.equals("t") && !taskField.equals("tag"))) {
-                throw new ParseException(
+                throw new SimpleParseException(
                         String.format(MESSAGE_INVALID_KEY_FORMAT, element));
             }
 
@@ -115,7 +115,7 @@ public class SortCommandParser implements Parser<SortCommand> {
             case "tag": {
                 String tags = splittedComparator[1];
                 if (tags.isEmpty() || tags.length() < 2) {
-                    throw new ParseException(
+                    throw new SimpleParseException(
                             String.format(MESSAGE_INVALID_COMMAND_FORMAT, SortCommand.MESSAGE_USAGE));
                 }
 
@@ -131,7 +131,7 @@ public class SortCommandParser implements Parser<SortCommand> {
                     try {
                         tagsArray[i] = new Tag(tagsOrder[i]);
                     } catch (IllegalArgumentException e) {
-                        throw new ParseException(
+                        throw new SimpleParseException(
                                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, SortCommand.MESSAGE_USAGE));
                     }
                 }
@@ -140,7 +140,7 @@ public class SortCommandParser implements Parser<SortCommand> {
                 break;
             }
             default: {
-                throw new ParseException(String.format(MESSAGE_INVALID_KEY_FORMAT, element));
+                throw new SimpleParseException(String.format(MESSAGE_INVALID_KEY_FORMAT, element));
             }
             }
         }

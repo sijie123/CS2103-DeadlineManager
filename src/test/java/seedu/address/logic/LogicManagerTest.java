@@ -13,7 +13,7 @@ import seedu.address.logic.commands.HistoryCommand;
 import seedu.address.logic.commands.ListCommand;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.logic.parser.exceptions.RichParseException;
+import seedu.address.logic.parser.exceptions.SimpleParseException;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
@@ -66,13 +66,13 @@ public class LogicManagerTest {
     }
 
     /**
-     * Executes the command, confirms that a ParseException is thrown and that the result message is
+     * Executes the command, confirms that a SimpleParseException is thrown and that the result message is
      * correct.
      *
      * @see #assertCommandBehavior(Class, String, String, Model)
      */
     private void assertParseException(String inputCommand, String expectedMessage) {
-        assertCommandFailure(inputCommand, ParseException.class, expectedMessage);
+        assertCommandFailure(inputCommand, SimpleParseException.class, expectedMessage);
     }
 
     /**
@@ -111,7 +111,7 @@ public class LogicManagerTest {
             CommandResult result = logic.execute(inputCommand);
             assertEquals(expectedException, null);
             assertEquals(expectedMessage, result.feedbackToUser);
-        } catch (CommandException | ParseException | RichParseException e) {
+        } catch (CommandException | ParseException e) {
             assertEquals(expectedException, e.getClass());
             assertEquals(expectedMessage, e.getMessage());
         }
@@ -126,10 +126,11 @@ public class LogicManagerTest {
     private void assertHistoryCorrect(String... expectedCommands) {
         try {
             CommandResult result = logic.execute(HistoryCommand.COMMAND_WORD);
-            String expectedMessage = String.format(
+            String expectedMessage
+                    = String.format(
                 HistoryCommand.MESSAGE_SUCCESS, String.join("\n", expectedCommands));
             assertEquals(expectedMessage, result.feedbackToUser);
-        } catch (ParseException | CommandException | RichParseException e) {
+        } catch (CommandException | ParseException e) {
             throw new AssertionError(
                 "Parsing and execution of HistoryCommand.COMMAND_WORD should succeed.", e);
         }

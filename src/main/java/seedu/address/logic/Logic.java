@@ -3,8 +3,8 @@ package seedu.address.logic;
 import javafx.collections.ObservableList;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
+import seedu.address.logic.parser.exceptions.SimpleParseException;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.logic.parser.exceptions.RichParseException;
 import seedu.address.model.task.Task;
 
 /**
@@ -18,9 +18,9 @@ public interface Logic {
      * @param commandText The command as entered by the user.
      * @return the result of the command execution.
      * @throws CommandException If an error occurs during command execution.
-     * @throws ParseException   If an error occurs during parsing.
+     * @throws SimpleParseException   If an error occurs during parsing.
      */
-    CommandResult execute(String commandText) throws CommandException, ParseException, RichParseException;
+    CommandResult execute(String commandText) throws CommandException, SimpleParseException, ParseException;
 
     /**
      * Returns an unmodifiable view of the filtered list of tasks

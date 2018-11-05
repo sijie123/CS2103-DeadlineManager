@@ -3,6 +3,10 @@ package guitests.guihandles;
 import javafx.scene.Node;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import seedu.address.ui.ResultDisplay;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A handler for the {@code ResultDisplay} of the UI
@@ -26,5 +30,19 @@ public class ResultDisplayHandle extends NodeHandle<TextFlow> {
             }
         }
         return sb.toString();
+    }
+
+    /**
+     * Returns the text in the result display.
+     */
+    public List<ResultDisplay.StyledText> getStyledText() {
+        List<ResultDisplay.StyledText> ans = new ArrayList<>();
+        for (Node node : getRootNode().getChildren()) {
+            if (node instanceof Text) {
+                Text tNode = (Text) node;
+                ans.add(new ResultDisplay.StyledText(tNode.getText(), tNode.getStyleClass().get(0)));
+            }
+        }
+        return ans;
     }
 }
