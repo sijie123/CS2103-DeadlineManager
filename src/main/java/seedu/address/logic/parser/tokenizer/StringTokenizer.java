@@ -1,12 +1,16 @@
-package seedu.address.logic.parser;
+package seedu.address.logic.parser.tokenizer;
 
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import seedu.address.logic.parser.tokenizer.exceptions.TokenizationEndOfStringException;
+import seedu.address.logic.parser.tokenizer.exceptions.TokenizationMismatchException;
+import seedu.address.logic.parser.tokenizer.exceptions.TokenizationMissingEndQuoteException;
+import seedu.address.logic.parser.tokenizer.exceptions.TokenizationNoMatchableCharacterException;
+import seedu.address.logic.parser.tokenizer.exceptions.TokenizationUnexpectedQuoteException;
 
 /**
  * This class tokenizes a string.
@@ -62,7 +66,9 @@ public class StringTokenizer {
     /**
      * Consume the next string token.
      */
-    public String nextString() {
+    public String nextString()
+        throws TokenizationMissingEndQuoteException, TokenizationUnexpectedQuoteException,
+        TokenizationNoMatchableCharacterException, TokenizationEndOfStringException {
         return nextString(ch -> true);
     }
 
@@ -73,12 +79,16 @@ public class StringTokenizer {
      *                  If such a character is encountered, the token would be considered to have ended
      *                  just before that character.  It is only used for unquoted strings.
      *
-     * @throws InputMismatchException if the next token is malformed as a standard text token.
-     * @throws NoSuchElementException if the string has reached the end.
+     * @throws TokenizationMissingEndQuoteException if an end quote is missing.
+     * @throws TokenizationUnexpectedQuoteException if an unexpected quote was encountered.
+     * @throws TokenizationNoMatchableCharacterException if no characters could be matched.
+     * @throws TokenizationEndOfStringException if the string has reached the end.
      */
-    public String nextString(Predicate<Character> validPred) {
+    public String nextString(Predicate<Character> validPred)
+        throws TokenizationMissingEndQuoteException, TokenizationUnexpectedQuoteException,
+        TokenizationNoMatchableCharacterException, TokenizationEndOfStringException {
         if (!hasNextToken()) {
-            throw new NoSuchElementException("Reached end of string while reading delimiter!");
+            throw new TokenizationEndOfStringException("Reached end of string while reading delimiter!");
         }
 
         int startLocation = nextIndex;
@@ -106,7 +116,8 @@ public class StringTokenizer {
                 // rollback nextIndex
                 nextIndex = startLocation;
                 // throw an exception
-                throw new InputMismatchException("Reached end of string while reading quoted string!");
+                throw new TokenizationMissingEndQuoteException(nextIndex, str.length(),
+                    "Reached end of string while reading quoted string!");
             }
         } else {
             // does not start with quote
@@ -116,17 +127,19 @@ public class StringTokenizer {
                 if (delimPred.test(ch)) {
                     break;
                 } else if (quotePred.test(ch)) {
+                    int tmpNextIndex = nextIndex;
                     // rollback nextIndex
                     nextIndex = startLocation;
                     // throw an exception
-                    throw new InputMismatchException("Quotes encountered in the middle of unquoted string!");
+                    throw new TokenizationUnexpectedQuoteException(tmpNextIndex, tmpNextIndex + 1,
+                        "Quotes encountered in the middle of unquoted string!");
                 } else if (!validPred.test(ch)) {
                     // invalid character -> next token
                     break;
                 }
             }
             if (startLocation == nextIndex) {
-                throw new InputMismatchException("Input is invalid!");
+                throw new TokenizationNoMatchableCharacterException(nextIndex, nextIndex, "Input is invalid!");
             }
             return str.substring(startLocation, nextIndex);
         }
@@ -135,29 +148,32 @@ public class StringTokenizer {
     /**
      * Consume the next token specified with the regex.
      *
-     * @throws InputMismatchException if the string does not match the given pattern.
-     * @throws NoSuchElementException if the string has reached the end.
+     * @throws TokenizationNoMatchableCharacterException if the string does not match the given pattern.
+     * @throws TokenizationEndOfStringException if the string has reached the end.
      */
-    public String nextPattern(Pattern pattern) {
+    public String nextPattern(Pattern pattern)
+        throws TokenizationNoMatchableCharacterException, TokenizationEndOfStringException {
         return nextMatcher(pattern).group();
     }
 
     /**
      * Consume the next token specified with the regex.
      *
-     * @throws InputMismatchException if the string does not match the given pattern.
-     * @throws NoSuchElementException if the string has reached the end.
+     * @throws TokenizationNoMatchableCharacterException if the string does not match the given pattern.
+     * @throws TokenizationEndOfStringException if the string has reached the end.
      */
-    public Matcher nextMatcher(Pattern pattern) {
+    public Matcher nextMatcher(Pattern pattern)
+        throws TokenizationNoMatchableCharacterException, TokenizationEndOfStringException {
         if (!hasNextToken()) {
-            throw new NoSuchElementException("Reached end of string while reading delimiter!");
+            throw new TokenizationEndOfStringException("Reached end of string while reading delimiter!");
         }
 
         CharSequence tmp = str.subSequence(nextIndex, str.length());
         Matcher matcher = pattern.matcher(tmp);
 
         if (!matcher.find() || matcher.start() != 0) {
-            throw new InputMismatchException("The next token does not match the given pattern!");
+            throw new TokenizationNoMatchableCharacterException(nextIndex, nextIndex,
+                "The next token does not match the given pattern!");
         }
 
         nextIndex += matcher.end();
@@ -169,12 +185,12 @@ public class StringTokenizer {
      * Try to consume the next token specified with the regex.
      * Returns null if no token available.
      *
-     * @throws NoSuchElementException if the string has reached the end.
+     * @throws TokenizationEndOfStringException if the string has reached the end.
      */
-    public String tryNextPattern(Pattern pattern) {
+    public String tryNextPattern(Pattern pattern) throws TokenizationEndOfStringException {
         try {
             return nextPattern(pattern);
-        } catch (InputMismatchException e) {
+        } catch (TokenizationMismatchException e) {
             return null;
         }
     }
@@ -183,12 +199,12 @@ public class StringTokenizer {
      * Try to consume the next token specified with the regex.
      * Returns null if no token available.
      *
-     * @throws NoSuchElementException if the string has reached the end.
+     * @throws TokenizationEndOfStringException if the string has reached the end.
      */
-    public Matcher tryNextMatcher(Pattern pattern) {
+    public Matcher tryNextMatcher(Pattern pattern) throws TokenizationEndOfStringException {
         try {
             return nextMatcher(pattern);
-        } catch (InputMismatchException e) {
+        } catch (TokenizationMismatchException e) {
             return null;
         }
     }
@@ -201,12 +217,12 @@ public class StringTokenizer {
      *                  If such a character is encountered, the token would be considered to have ended
      *                  just before that character.  It is only used for unquoted strings.
      *
-     * @throws NoSuchElementException if the string has reached the end.
+     * @throws TokenizationEndOfStringException if the string has reached the end.
      */
-    public String tryNextString(Predicate<Character> validPred) {
+    public String tryNextString(Predicate<Character> validPred) throws TokenizationEndOfStringException {
         try {
             return nextString(validPred);
-        } catch (InputMismatchException e) {
+        } catch (TokenizationMismatchException e) {
             return null;
         }
     }
@@ -229,9 +245,13 @@ public class StringTokenizer {
     /**
      * Gets all the tokens from this tokenizer.
      *
-     * @throws InputMismatchException if there are invalid tokens.
+     * @throws TokenizationMissingEndQuoteException if an end quote is missing.
+     * @throws TokenizationUnexpectedQuoteException if an unexpected quote was encountered.
+     * @throws TokenizationNoMatchableCharacterException if no characters could be matched.
      */
-    public List<String> toList() {
+    public List<String> toList()
+        throws TokenizationMissingEndQuoteException, TokenizationUnexpectedQuoteException,
+        TokenizationNoMatchableCharacterException, TokenizationEndOfStringException {
         ArrayList<String> items = new ArrayList<>();
         while (hasNextToken()) {
             items.add(nextString());

@@ -34,6 +34,6 @@ public class ResultDisplayTest extends GuiUnitTest {
         // new result received
         postNow(NEW_RESULT_EVENT_STUB);
         guiRobot.pauseForHuman();
-        assertEquals(NEW_RESULT_EVENT_STUB.message, resultDisplayHandle.getText());
+        assertEquals(NEW_RESULT_EVENT_STUB.message, resultDisplayHandle.getStyledText());
     }
 }

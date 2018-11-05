@@ -10,11 +10,11 @@ import static seedu.address.logic.commands.AttachmentCommand.MESSAGE_MISSING_ARG
 import static seedu.address.logic.parser.CliSyntax.PREFIX_FILENAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_FILEPATH;
 
-import java.util.InputMismatchException;
-
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.AttachmentCommand;
-import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.logic.parser.exceptions.SimpleParseException;
+import seedu.address.logic.parser.tokenizer.ArgumentMultimap;
+import seedu.address.logic.parser.tokenizer.exceptions.TokenizationException;
 
 /**
  * Parses input arguments and creates a new AttachmentCommand object
@@ -25,17 +25,17 @@ public class AttachmentCommandParser implements Parser<AttachmentCommand> {
      * Parses the given {@code String} of arguments in the context of the AttachmentCommand and returns an
      * AttachmentCommand object for execution.
      *
-     * @throws ParseException if the user input does not conform the expected format
+     * @throws SimpleParseException if the user input does not conform the expected format
      */
-    public AttachmentCommand parse(String args) throws ParseException {
+    public AttachmentCommand parse(String args) throws SimpleParseException {
         requireNonNull(args);
         ArgumentMultimap argMultimap;
         try {
             argMultimap =
                 ArgumentTokenizer
                     .tokenize(args, PREFIX_FILEPATH, PREFIX_FILENAME);
-        } catch (InputMismatchException ime) {
-            throw new ParseException(
+        } catch (TokenizationException ime) {
+            throw new SimpleParseException(
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, AttachmentCommand.MESSAGE_USAGE), ime);
         }
 
@@ -45,11 +45,11 @@ public class AttachmentCommandParser implements Parser<AttachmentCommand> {
             String[] indexAndCommand = argMultimap.getPreamble().split(" ");
             index = ParserUtil.parseIndex(indexAndCommand[0]);
             actionWord = indexAndCommand[1].trim();
-        } catch (ParseException pe) {
-            throw new ParseException(
+        } catch (SimpleParseException pe) {
+            throw new SimpleParseException(
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, AttachmentCommand.MESSAGE_USAGE), pe);
         } catch (ArrayIndexOutOfBoundsException ae) {
-            throw new ParseException(
+            throw new SimpleParseException(
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, AttachmentCommand.MESSAGE_USAGE), ae);
         }
 
@@ -64,16 +64,17 @@ public class AttachmentCommandParser implements Parser<AttachmentCommand> {
         case COMMAND_GET_ACTION:
             return parseGetAction(index, argMultimap);
         default:
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AttachmentCommand.MESSAGE_USAGE));
+            throw new SimpleParseException(
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, AttachmentCommand.MESSAGE_USAGE));
         }
     }
 
     /**
      * Generates the attachment command for an add attachment action.
      */
-    private AttachmentCommand parseAddAction(Index index, ArgumentMultimap argMultimap) throws ParseException {
+    private AttachmentCommand parseAddAction(Index index, ArgumentMultimap argMultimap) throws SimpleParseException {
         if (!argMultimap.getValue(PREFIX_FILEPATH).isPresent()) {
-            throw new ParseException(String.format(MESSAGE_MISSING_ARGUMENTS, "FILEPATH", "add"));
+            throw new SimpleParseException(String.format(MESSAGE_MISSING_ARGUMENTS, "FILEPATH", "add"));
         }
         String filePath = argMultimap.getValue(PREFIX_FILEPATH).get();
         AttachmentCommand.AttachmentAction action = new AttachmentCommand.AddAttachmentAction(filePath);
@@ -84,7 +85,7 @@ public class AttachmentCommandParser implements Parser<AttachmentCommand> {
     /**
      * Generates the attachment command for a list attachment action.
      */
-    private AttachmentCommand parseListAction(Index index, ArgumentMultimap argMultimap) throws ParseException {
+    private AttachmentCommand parseListAction(Index index, ArgumentMultimap argMultimap) throws SimpleParseException {
         AttachmentCommand.AttachmentAction action = new AttachmentCommand.ListAttachmentAction();
         return new AttachmentCommand(index, action);
     }
@@ -92,9 +93,9 @@ public class AttachmentCommandParser implements Parser<AttachmentCommand> {
     /**
      * Generates the attachment command for a delete attachment action.
      */
-    private AttachmentCommand parseDeleteAction(Index index, ArgumentMultimap argMultimap) throws ParseException {
+    private AttachmentCommand parseDeleteAction(Index index, ArgumentMultimap argMultimap) throws SimpleParseException {
         if (!argMultimap.getValue(PREFIX_FILENAME).isPresent()) {
-            throw new ParseException(String.format(MESSAGE_MISSING_ARGUMENTS, "FILENAME", "delete"));
+            throw new SimpleParseException(String.format(MESSAGE_MISSING_ARGUMENTS, "FILENAME", "delete"));
         }
         String fileName = argMultimap.getValue(PREFIX_FILENAME).get();
         AttachmentCommand.AttachmentAction action = new AttachmentCommand.DeleteAttachmentAction(fileName);
@@ -104,12 +105,12 @@ public class AttachmentCommandParser implements Parser<AttachmentCommand> {
     /**
      * Generates the attachment command for a delete attachment action.
      */
-    private AttachmentCommand parseGetAction(Index index, ArgumentMultimap argMultimap) throws ParseException {
+    private AttachmentCommand parseGetAction(Index index, ArgumentMultimap argMultimap) throws SimpleParseException {
         if (!argMultimap.getValue(PREFIX_FILENAME).isPresent()) {
-            throw new ParseException(String.format(MESSAGE_MISSING_ARGUMENTS, "FILENAME", "get"));
+            throw new SimpleParseException(String.format(MESSAGE_MISSING_ARGUMENTS, "FILENAME", "get"));
         }
         if (!argMultimap.getValue(PREFIX_FILEPATH).isPresent()) {
-            throw new ParseException(String.format(MESSAGE_MISSING_ARGUMENTS, "FILEPATH", "get"));
+            throw new SimpleParseException(String.format(MESSAGE_MISSING_ARGUMENTS, "FILEPATH", "get"));
         }
         String fileName = argMultimap.getValue(PREFIX_FILENAME).get();
         String filePath = argMultimap.getValue(PREFIX_FILEPATH).get();

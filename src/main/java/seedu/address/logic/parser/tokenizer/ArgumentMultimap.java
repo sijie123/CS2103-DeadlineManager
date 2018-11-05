@@ -1,11 +1,13 @@
-package seedu.address.logic.parser;
+package seedu.address.logic.parser.tokenizer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import seedu.address.logic.parser.Prefix;
+import seedu.address.logic.parser.tokenizer.exceptions.DuplicatePrefixException;
 
 /**
  * Stores mapping of prefixes to their respective arguments. Each key may be associated with
@@ -28,10 +30,10 @@ public class ArgumentMultimap {
      * @param prefix   Prefix key with which the specified argument value is to be associated
      * @param argValue Argument value to be associated with the specified prefix key
      */
-    public void put(Prefix prefix, String argValue) throws InputMismatchException {
+    public void put(Prefix prefix, String argValue) throws DuplicatePrefixException {
         List<String> argValues = getAllValues(prefix);
         if (argValues.size() != 0 && !prefix.canOccurMultipleTimes()) {
-            throw new InputMismatchException("Multiple occurrences of prefix that should not repeat.");
+            throw new DuplicatePrefixException("Multiple occurrences of prefix that should not repeat.");
         }
         argValues.add(argValue);
         argMultimap.put(prefix, argValues);

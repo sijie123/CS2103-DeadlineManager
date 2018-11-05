@@ -290,7 +290,7 @@ public class FilterCommandParserTest {
     }
 
     /**
-     * Asserts that the parse throws a ParseException.
+     * Asserts that the parse throws a SimpleParseException.
      */
     private void assertParseThrowsException(FilterCommandParser parser, String str) {
         try {

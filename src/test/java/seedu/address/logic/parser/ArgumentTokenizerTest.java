@@ -5,9 +5,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.InputMismatchException;
-
 import org.junit.Test;
+
+import seedu.address.logic.parser.tokenizer.ArgumentMultimap;
+import seedu.address.logic.parser.tokenizer.exceptions.DuplicatePrefixException;
+import seedu.address.logic.parser.tokenizer.exceptions.TokenizationException;
 
 public class ArgumentTokenizerTest {
 
@@ -20,7 +22,7 @@ public class ArgumentTokenizerTest {
     private final Prefix hatQSingle = new Prefix("^Q", false);
 
     @Test
-    public void tokenize_emptyArgsString_noValues() {
+    public void tokenize_emptyArgsString_noValues() throws TokenizationException {
         String argsString = "  ";
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(argsString, pSlash);
 
@@ -61,7 +63,7 @@ public class ArgumentTokenizerTest {
     }
 
     @Test
-    public void tokenize_noPrefixes_allTakenAsPreamble() {
+    public void tokenize_noPrefixes_allTakenAsPreamble() throws TokenizationException {
         String argsString = "  some random string /t tag with leading and trailing spaces ";
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(argsString);
 
@@ -71,7 +73,7 @@ public class ArgumentTokenizerTest {
     }
 
     @Test
-    public void tokenize_oneArgument() {
+    public void tokenize_oneArgument() throws TokenizationException {
         // Preamble present
         String argsString = "  Some preamble string p/ Argument value ";
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(argsString, pSlash);
@@ -86,15 +88,15 @@ public class ArgumentTokenizerTest {
 
     }
 
-    @Test(expected = InputMismatchException.class)
-    public void tokenize_oneArgumentWithNoRepeats() {
+    @Test(expected = DuplicatePrefixException.class)
+    public void tokenize_oneArgumentWithNoRepeats() throws TokenizationException {
         // No repeated with preamble
         String argsString = "  Some preamble string p/ Argument value  p/ Second Arg p/ Third";
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(argsString, pSlashSingle);
     }
 
     @Test
-    public void tokenize_multipleArguments() {
+    public void tokenize_multipleArguments() throws TokenizationException {
         // Only two arguments are present
         String argsString = "SomePreambleString -t dashT-Value p/pSlash value";
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(argsString, pSlash, dashT, hatQ);
@@ -131,7 +133,7 @@ public class ArgumentTokenizerTest {
     }
 
     @Test
-    public void tokenize_multipleArgumentsWithRepeats() {
+    public void tokenize_multipleArgumentsWithRepeats() throws TokenizationException {
         // Two arguments repeated, some have empty values
         String argsString = "SomePreambleString -t dashT-Value ^Q ^Q -t another dashT value p/ pSlash value -t";
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(argsString, pSlash, dashT, hatQ);
@@ -142,7 +144,7 @@ public class ArgumentTokenizerTest {
     }
 
     @Test
-    public void tokenize_multipleArgumentsJoined() {
+    public void tokenize_multipleArgumentsJoined() throws TokenizationException {
         String argsString = "SomePreambleStringp/ pSlash joined-tjoined -t not joined^Qjoined";
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(argsString, pSlash, dashT, hatQ);
         assertPreamblePresent(argMultimap, "SomePreambleStringp/ pSlash joined-tjoined");
@@ -152,7 +154,7 @@ public class ArgumentTokenizerTest {
     }
 
     @Test
-    public void tokenize_quotedArguments() {
+    public void tokenize_quotedArguments() throws TokenizationException {
         String argsString = "\"Hello world\"";
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(argsString);
         assertPreamblePresent(argMultimap, "Hello world");
@@ -195,7 +197,7 @@ public class ArgumentTokenizerTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void tokenize_argumentsWithSamePrefixes() {
+    public void tokenize_argumentsWithSamePrefixes() throws TokenizationException {
         String argsString = "p/123 p/\"Hello World\"";
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(argsString, pSlash, pSlashSingle);
     }
