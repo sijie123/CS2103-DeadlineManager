@@ -19,7 +19,7 @@ public class TokenizationInvalidPredicateException extends TokenizationMismatchE
      * @param message the detail message.
      */
     public TokenizationInvalidPredicateException(int beginIndex, int endIndex, String message,
-                                                 InvalidPredicateException predicateException) {
+            InvalidPredicateException predicateException) {
         super(beginIndex, endIndex, message);
         this.predicateException = predicateException;
     }

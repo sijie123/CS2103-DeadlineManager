@@ -1,6 +1,7 @@
 package systemtests;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static seedu.address.commons.core.Messages.MESSAGE_TASKS_LISTED_OVERVIEW;
 import static seedu.address.commons.core.Messages.MESSAGE_UNKNOWN_COMMAND;
 import static seedu.address.testutil.TypicalTasks.ALICE;
@@ -32,7 +33,7 @@ public class FilterCommandSystemTest extends TaskCollectionSystemTest {
         String command = "   " + FilterCommand.COMMAND_WORD + " " + KEYWORD_MATCHING_MEIER + "   ";
         Model expectedModel = getModel();
         ModelHelper.setFilteredList(expectedModel, BENSON,
-            DANIEL); // first names of Benson and Daniel are "Meier"
+                DANIEL); // first names of Benson and Daniel are "Meier"
         assertCommandSuccess(command, expectedModel);
         assertSelectedCardUnchanged();
 
@@ -111,8 +112,7 @@ public class FilterCommandSystemTest extends TaskCollectionSystemTest {
         /* Case: find while a task is selected -> selected card deselected */
         showAllTasks();
         selectTask(Index.fromOneBased(1));
-        assertFalse(getPersonListPanel().getHandleToSelectedCard().getName()
-            .equals(DANIEL.getName().value));
+        assertNotEquals(getPersonListPanel().getHandleToSelectedCard().getName(), DANIEL.getName().value);
         command = FilterCommand.COMMAND_WORD + " Daniel";
         ModelHelper.setFilteredList(expectedModel, DANIEL);
         assertCommandSuccess(command, expectedModel);
@@ -145,7 +145,7 @@ public class FilterCommandSystemTest extends TaskCollectionSystemTest {
      */
     private void assertCommandSuccess(String command, Model expectedModel) {
         String expectedResultMessage = String.format(
-            MESSAGE_TASKS_LISTED_OVERVIEW, expectedModel.getFilteredTaskList().size());
+                MESSAGE_TASKS_LISTED_OVERVIEW, expectedModel.getFilteredTaskList().size());
 
         executeCommand(command);
         assertApplicationDisplaysExpected("", expectedResultMessage, expectedModel);

@@ -65,8 +65,8 @@ public class ResultDisplay extends UiPart<Region> {
         public boolean equals(Object other) {
             return other == this // short circuit if same object
                     || (other instanceof StyledText // instanceof handles nulls
-                    && text.equals(((StyledText) other).text)
-                    && styleClass.equals(((StyledText) other).styleClass)); // state check
+                        && text.equals(((StyledText) other).text)
+                        && styleClass.equals(((StyledText) other).styleClass)); // state check
         }
     }
 

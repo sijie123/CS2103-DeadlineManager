@@ -16,7 +16,7 @@ public class Priority implements Comparable<Priority> {
 
 
     public static final String MESSAGE_PRIORITY_CONSTRAINTS =
-        "Priority should only be 0, 1, 2, 3, or 4";
+            "Priority should only be 0, 1, 2, 3, or 4";
     public static final String PRIORITY_VALIDATION_REGEX = "[01234]";
     public static final String NO_PRIORITY = "0";
     public static final int LARGEST_PRIORITY_VALUE = 4;
@@ -59,7 +59,7 @@ public class Priority implements Comparable<Priority> {
      * @param testPhrase The test phrase for this predicate.
      */
     public static Predicate<Priority> makeFilter(FilterOperator operator, String testPhrase)
-        throws InvalidPredicateTestPhraseException, InvalidPredicateOperatorException {
+            throws InvalidPredicateTestPhraseException, InvalidPredicateOperatorException {
         Priority tmpPriority;
         try {
             tmpPriority = new Priority(testPhrase);
@@ -87,8 +87,8 @@ public class Priority implements Comparable<Priority> {
     @Override
     public boolean equals(Object other) {
         return other == this // short circuit if same object
-            || (other instanceof Priority // instanceof handles nulls
-            && value == ((Priority) other).value); // state check
+                || (other instanceof Priority // instanceof handles nulls
+                    && value == ((Priority) other).value); // state check
     }
 
     @Override

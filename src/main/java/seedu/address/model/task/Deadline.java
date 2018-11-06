@@ -18,8 +18,7 @@ import seedu.address.model.task.exceptions.InvalidPredicateTestPhraseException;
  */
 public class Deadline implements Comparable<Deadline> {
 
-    public static final String MESSAGE_DEADLINE_CONSTRAINTS =
-        "Deadline has to be a valid date";
+    public static final String MESSAGE_DEADLINE_CONSTRAINTS = "Deadline has to be a valid date";
 
     private static DateFormat dateFormatter;
 
@@ -101,8 +100,8 @@ public class Deadline implements Comparable<Deadline> {
     @Override
     public boolean equals(Object other) {
         return other == this // short circuit if same object
-            || (other instanceof Deadline // instanceof handles nulls
-            && value.equals(((Deadline) other).value)); // state check
+                || (other instanceof Deadline // instanceof handles nulls
+                    && value.equals(((Deadline) other).value)); // state check
     }
 
     @Override

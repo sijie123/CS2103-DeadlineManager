@@ -17,7 +17,7 @@ public class FilterCommandParserTest {
     @Test
     public void parse_emptyArg_throwsParseException() {
         assertParseFailure(parser, "     ",
-            String.format(MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE));
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE));
     }
 
     @Test
@@ -137,9 +137,9 @@ public class FilterCommandParserTest {
         assertParseSuccess(parser, "(n:Hello || d:1/10/2018) && t:\"CS2103, CS2101\"");
         assertParseSuccess(parser, "(n:Hello || d:1/10/2018) && t:\'CS2103   ,  CS2101\'");
         assertParseSuccess(parser, "(n:Hello || d:1/10/2018) && t:\'CS2103   ,  CS2101\'"
-            + " && (!n:World || ((!t:CS1231 || t:CS3230) && d:1/11/2018))");
+                + " && (!n:World || ((!t:CS1231 || t:CS3230) && d:1/11/2018))");
         assertParseSuccess(parser, "(n:Hello||d:1/10/2018)&&t:CS2103,CS2101"
-            + "&&(!n:World||((!t:CS1231||t:CS3230)&&d:1/11/2018))");
+                + "&&(!n:World||((!t:CS1231||t:CS3230)&&d:1/11/2018))");
     }
 
     @Test
