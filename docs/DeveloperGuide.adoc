@@ -620,25 +620,29 @@ The overwhelming majority of code for the filtering system comes from step 2, wh
 
 In the rest of this guide that describes the filtering system, we use the term _filter expression_ to refer to the full filter operation that the user typed (e.g. `t:CS2101 & n:Assignment`, or even `t:CS2101 & ( n:Assignment | n:Homework) & p<3`), and the term _filter unit_ to refer to substrings of the filter expression that represent single indivisible predicates (e.g. `t:CS2101`, or `n:Homework`).
 
-There are three components to parsing the filter operation:
+There are four components to parsing the filter operation:
 
 1. A boolean expression parser that understands the high-level syntax of the filter expression and digests the filter expression into filter units
-2. A parser that splits each filter unit (e.g. `t:CS2101`) into its three constituent parts if possible (e.g. `t`, `:`, `CS2101`) -- this is the lambda expression in the sequence diagram below, which resides in the `FilterCommandParser` class
-3. A method for each field (e.g. `Name`, `Deadline`, `Priority`, `Set<Tag>`) that interprets the parts from the previous part in the context of that particular field, and returns the predicate that is required  -- this is referred to as the _field-specific parser_, and is implemented as a static method in each filterable field
+2. A parser that splits each filter unit (e.g. `t:CS2101`) into its three (or four) constituent parts if possible (e.g. `t`, `:`, `CS2101`) -- this is the lambda expression in the sequence diagram below, which resides in the `FilterCommandParser` class
+3. A parser that splits set-based fields (e.g. `CS2101,CS2103`) into individual keywords (this applies only to set-based fields (tags and attachments)) -- this is referred to as the _set parser_, and is implemented as a static method in a utility class
+4. A method for each field (e.g. `Name`, `Deadline`, `Priority`, `Tag`) that interprets the the parts of the splitted filter unit in the context of that particular field, and returns the predicate that is required  -- this is referred to as the _field-specific parser_, and is implemented as a static method in each filterable field
 
 [NOTE]
-The second component in the list above also accepts a filter unit that contains the third part alone (e.g. `CS2101`) without the other two parts.  This is known as the _simplified filter unit syntax_, and will be explained in more detail below.
+The second component in the list above also accepts a filter unit that contains the third part alone (e.g. `CS2101`) without the other two parts -- this is known as the _simplified filter unit syntax_.  Also, when filtering by a set-based field, the filter unit can be splitted into four parts instead of three (e.g. `t=:CS2101,CS2103` will be plitted as `t`, `=`, `:`, `CS2101,CS2103`), and the additional symbol (`=` in this case) is used to specify how sets are compared.  These will be explained in more detail below.
 
 A general string tokenizer (this is the `StringTokenizer` class in the `parser` subdirectory) is shared by parts 1 and 2 to split the filter expression into tokens.
 
 image::FilterOperationSequenceDiagram.png[width="800"]
 
-The above diagram shows the simplified sequence of operations to parse a filter expression into a predicate.  Take note of the following simplifications in the sequence diagram above:
+The above diagram shows the simplified sequence of operations to parse a filter expression into a predicate for non-set fields.  Take note of the following simplifications in the sequence diagram above:
 
-* "Field" represents any filterable field -- `Name`, `Deadline`, `Priority`, or `Tag`.  For tags, filtering is more complicated as there can be any number of tags on a task, but the above sequence diagram still gives a rough idea of how parsing works.
+* "Field" represents any filterable field -- `Name`, `Deadline`, `Priority`, or `Frequency`.
 * Strictly speaking, the "loop" is not actually a loop.  As the boolean expression parser parses the filter expression, it invokes the lambda expression whenever a filter unit is encountered.  For simplicity, the sequence diagram above hides the complexity within the boolean expression parser.
 
-The sections below describe the string tokenizer and the aforementioned three compoments in more detail.
+[NOTE]
+Set-based fields are described in the _Set parser_ section.
+
+The sections below describe the string tokenizer and the aforementioned four components in more detail.
 
 ==== String tokenizer
 
@@ -654,10 +658,10 @@ There are two ways to consume tokens using the string tokenizer:
 * Consume a text string.  This is used for consuming tokens that are intended to be textual (e.g. `t`, `CS2101`).  Consumption of text strings is quote-aware -- if the text string is quoted using single or double quotes, the text string would be consumed as a single token, even if it contains spaces or special characters.  This is useful when the user wants to search for a name that contains those characters.
 * Consume a token by a regular expression.  This is used for consuming symbolic tokens (e.g. `:`, `|`, `&`, `(`).
 
-When unambiguous, adjacent tokens need not be separated by whitespace.  This is usually the case when consuming a token specified by a regular expression.
+When unambiguous, adjacent tokens need not be separated by whitespace.  This is usually the case when consuming a token specified by a regular expression.  This works because when consuming a token, it is often possible to know where the token ends even in the absense of whitespace (e.g. when encountering a matching closing quote or an operator symbol).
 
 [NOTE]
-The string tokenizer class is also used to parse comma-separated tag expressions.
+The `StringTokenizer` class is also used in two other places -- in the `ArgumentTokenizer` class to tokenize arguments specified in the usual syntax for most other commands (e.g. `add n/Assignment 2 d/1/1/2018 p/1`), and in the `SetUtil` class to parse comma-separated set-based filter expressions (i.e. tags and attachments).
 
 ==== Boolean expression parser
 
@@ -687,20 +691,26 @@ The filter unit parser is written as a lambda expression inside the `FilterComma
 * The filter unit parser parses syntax that is specific to filters only, and it cannot be easily adapted for other uses.
 * It frees both the boolean expression parser and the field-specific parser from having to depend on the `FilterCommandParser` class.
 
-There are two possible ways to express a filter unit:
+There are three possible ways to express a filter unit:
 
-1. The full syntax -- this allows for maximum customization of the filter unit
-2. The simplified syntax -- this improves terseness and reduces cognitive overhead
+1. The full syntax -- this allows for specifying the field for comparison and the method of comparison to be used
+2. The extended full syntax for sets -- this is like the full syntax, but enhanced with a way to specify how to compare sets
+3. The simplified syntax -- this improves terseness and reduces cognitive overhead
 
 The following diagram is describes a filter unit that is specified using the full syntax:
 
-image::FilterUnitDiagram.png[width="400"]
+image::FilterUnitDiagram.png[width="200"]
 
-As shown in the diagram above, a filter unit (using the full syntax) consists of three parts:
+The following diagram is describes a filter unit that is specified using the extended full syntax for sets:
+
+[TODO]
+
+As shown in the diagram above, a filter unit (using the full syntax or extended syntax) consists of these parts:
 
 1. The field identifier, which identifies the field (e.g. name or deadline) that is being filtered on
 2. The test phrase, which represents the value or keyword that tasks are being compared to
-3. The filter operator, which describes the how the identified field is compared to the test phrase (more details below)
+3. The filter operator, which describes how the identified field is compared to the test phrase (for set-based fields, this describes how each item (tag or attachment) in the identified field is compared to each item in the test phrase) (more details below)
+3. (For the extended syntax only) The set operator, which describes the how the set of items (tags or attachments) in the identified field is compared to the set of items in the test phrase, when regarded as a set (more details below)
 
 [NOTE]
 The simplified syntax only contains the test phrase, and is explained in a separate section below.
@@ -711,13 +721,14 @@ These three parts are described in the following sections.
 
 ===== Field identifier
 
-There are four filterable fields in a task, and each of these fields correspond to one or more field identifiers:
+There are six filterable fields in a task, and each of these fields correspond to two or more field identifiers:
 
 * `n` or `name` -- the name of the task
 * `d`, `due` or `deadline` -- the deadline (i.e. due date) of the task
 * `p` or `priority` -- the priority of the task
 * `f` or `frequency` -- the frequency of the task (in days)
 * `t` or `tag` -- the set of tags associated with the task
+* `a` or `attachment` -- the set of attachments associated with the task
 
 Field identifiers that correspond to the same field are equivalent.
 
@@ -732,11 +743,12 @@ The following is the required syntax for each filterable field:
 * Priority: Any valid priority value (i.e. any integer between 0 and 4 inclusive)
 * Frequency: Any valid frequency value (i.e. any non-negative integer that does not exceed the maximum bounds of an integer)
 * Tag set: Any comma-separated list of tags, where each tag can be any text string (e.g. `CS2101,CS2103T`)
+* Attachment set: Any comma-separated list of attachments, where each attachment can be any text string (e.g. `helloworld.txt,Main.java`)
 
 [NOTE]
 The rules for quoted strings for the string tokenizer applies here as well, because the same string tokenizer is used here.
 
-Tags that contain spaces may be specified by placing quotes around those tags.  This means that the whole test phrase must also be quoted with a different type of quote (e.g. `t:"CS2101,CS2103T,'Oral Presentation'"`).
+Set-based fields that contain spaces may be specified by placing quotes around those the item with spaces.  This means that the whole test phrase must also be quoted with a different type of quote (e.g. `t:"CS2101,CS2103T,'Oral Presentation'"`).
 
 ===== Filter operator
 
@@ -744,9 +756,7 @@ The filter operator specifies exactly _how_ the task should be compared to the t
 
 For fields that are intrinsically ordered (i.e. deadline, priority and frequency), the `<`, `=`, and `>` operators have their usual mathematical meaning, except that the operators `<` and `>` are non-strict.  This means that `p>2` will return a superset of the tasks returned by `p=2`.
 
-For textual fields (i.e. name), the `<`, `=`, `>` operators represent _substring_, _equivalence_, and _superstring_ relations respectively.
-
-For set-based fields (i.e. tags), the `<`, `=`, `>` operators represent _subset_, _equivalence_, and _superset_ relations respectively.  Individual tags are compared for equivalence, so it is currently not possible to filter by a substring of a tag.
+For textual fields (e.g. name, tag), the `<`, `=`, `>` operators represent _substring_, _equivalence_, and _superstring_ relations respectively.
 
 As most users do not usually require such fine-grained control over the filter operator, the `:` operator, known as the _convenience_ operator, is provided as well.  The convenience operator is an alias for one of the other filter operators, and the choice of filter operator depends on the field identifier.  For each field, the filter operator that is expected to be most commonly used is chosen as the target for the convenience operator.
 
@@ -757,16 +767,37 @@ The following list shows what the convenience operator means, in the context of 
 * Priority: `:` is an alias for `>`
 * Frequency: `:` is an alias for `<`
 * Tag set: `:` is an alias for `>`
+* Attachment set: `:` is an alias for `>`
+
+===== Set operator =====
+
+Set-based fields can specify an additional level of comparison - how the task's set compares with the specified set.  It is distinct from the filter operator because the filter operator is used to compare each individual item in the set (in the context of the given field), while the set operator is used to compare at the set level (which is same regardless of the given field).
+
+For set-based fields (e.g. tags), the `<`, `=`, `>` set operators represent _subset_, _equivalence_, and _superset_ relations respectively.  Each individual item is compared using the specified filter operator as specified in the previous _Filter operator_ section.
+
+Just like the filter operator, there is a convenience set operator (`:`), and it is an alias for `>`.
+
+[NOTE]
+The set operator is orthogonal to the filter operator, and hence they may be combined in any way.  Furthermore, when the set operator is omitted for a set-based field, the convenience set operator is implied.
 
 ===== Simplified filter unit syntax
 
 The simplified filter unit syntax elides the field identifier and the filter operator.  A filter unit (specified with the simplified syntax) is tested against all _eligible_ fields.
 
-All textual and date fields are _eligible_.  This means that the name, deadline, and tags fields are tested against when the simplified syntax is used.  Numeric fields (i.e. priority and frequency) are omitted because they often inadvertently match a test phrase (e.g. when the user attempts to search for tasks which have a name or tag that contains numbers).
+All textual and date fields are _eligible_.  This means that the name, deadline, tags, and attachments fields are tested against when the simplified syntax is used.  Numeric fields (i.e. priority and frequency) are omitted because they often inadvertently match a test phrase (e.g. when the user attempts to search for tasks which have a name or tag that contains numbers).
 
-Each eligible field is compared as if using the convenience operator.  A match in _any_ eligible field of a task will cause the task to match this filter unit.  Errors in interpreting the test phrase in the context of a field are simply treated as a non-match of the field (e.g. the test phrase `Assignment` cannot be interpreted as a deadline, so the deadline field will be skipped when attempting to match this test phrase).
+Each eligible field is compared as if using the convenience operator (for both the filter operator and set operator, if necessary).  A match in _any_ eligible field of a task will cause the task to match this filter unit.  Errors in interpreting the test phrase in the context of a field are simply treated as a non-match of the field instead of a hard error (e.g. the test phrase `Assignment` cannot be interpreted as a deadline, so the deadline field will be skipped when attempting to match this test phrase).
 
 As with the full syntax, the simplified syntax supports quoting the test phrase if special characters are required.
+
+==== Set parser
+
+The set parser is implemented in the `makeFilter()` method of the `seedu.address.model.util.SetUtil` class.  It parses the comma-separated list (i.e. the test phrase) using a new instance of `StringTokenizer`, and then uses reflection to invoke the relevant field-specific parser for each item in the comma-separated list.
+
+[NOTE]
+Reflection is required here because the `makeFilter()` method is static, and the correct `makeFilter()` method has to be chosen at runtime (based on the given field).
+
+The resultant predicates returned by the field-specific parser are then combined based on the given set operator.
 
 ==== Field-specific parser
 
@@ -805,6 +836,18 @@ Priority values do not compare in the same order as their values as integers.  P
 * **Alternative 2:** Support a convenience operator that is an alias of a fixed operator regardless of field.
 ** Pros: Easier for users to remember what the convenience operator does.
 ** Cons: Convenience operator is not really _convenient_ -- the behaviour might be surprising or awkward for some fields.
+
+===== Aspect: How to signal exceptional conditions when parsing filter expressions
+
+* **Alternative 1 (current choice):** Use a different type of checked exception for every possible type of failure condition.
+** Pros: Every possible failure condition is listed in the `throws` clause of all methods -- developers can easily tell how exactly each aspect of parsing could fail, and Java will statically check that every possible failure condition is handled (which makes it impossible to overlook any failure conditions).
+** Cons: Method signatures are more verbose.
+* **Alternative 2:** Use a single checked exception for all possible failure conditions, and distinguish errors by the message string instead.
+** Pros: Less verbose method signatures, and yet the benefit of checked exceptions is retained.
+** Cons: Developers can only tell what exact failure conditions are possible by inspecting the whole call graph of the method.  Furthermore, it is difficult to distinguish different error conditions in order to customize and show relevant messages to the user.
+* **Alternative 3:** Use unchecked exceptions.
+** Pros: Simplest method signatures.
+** Cons: Easy to overlook possible failure conditions when modifying the code.
 
 // end::filter[]
 
