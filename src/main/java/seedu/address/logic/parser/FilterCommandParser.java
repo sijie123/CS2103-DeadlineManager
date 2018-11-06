@@ -350,31 +350,31 @@ public class FilterCommandParser implements Parser<FilterCommand> {
         } catch (IllegalArgumentException e) {
             throw new ParseException("Invalid filter expression: " + e.getMessage(), TEXT_STYLE_CLASS_DEFAULT);
         } catch (TokenizationMissingEndQuoteException e) {
-            throw createRichParseException(trimmedArgs, e, "Matching end quote is missing!");
+            throw createParseException(trimmedArgs, e, "Matching end quote is missing!");
         } catch (TokenizationUnexpectedQuoteException e) {
-            throw createRichParseException(trimmedArgs, e, "Unexpected quote in textual keyword!");
+            throw createParseException(trimmedArgs, e, "Unexpected quote in textual keyword!");
         } catch (TokenizationNoMatchableCharacterException e) {
-            throw createRichParseException(trimmedArgs, e, "This character is invalid here!");
+            throw createParseException(trimmedArgs, e, "This character is invalid here!");
         } catch (TokenizationEndOfStringException | BooleanExpressionUnexpectedEndOfStringException e) {
-            throw createRichParseException(trimmedArgs,
+            throw createParseException(trimmedArgs,
                 new TokenizationMismatchException(trimmedArgs.length(), trimmedArgs.length(),
                     "Unexpected end of tokenizer string"),
                 "Unexpected end of filter expression!");
         } catch (BooleanExpressionInvalidOperatorException e) {
-            throw createRichParseException(trimmedArgs, e, "Unknown operator!");
+            throw createParseException(trimmedArgs, e, "Unknown operator!");
         } catch (BooleanExpressionMismatchedLeftBracketException e) {
-            throw createRichParseException(trimmedArgs, e,
+            throw createParseException(trimmedArgs, e,
                 "Expected a right bracket to match an existing left bracket!");
         } catch (BooleanExpressionMismatchedRightBracketException e) {
-            throw createRichParseException(trimmedArgs, e, "Mismatched right bracket!");
+            throw createParseException(trimmedArgs, e, "Mismatched right bracket!");
         } catch (BooleanExpressionUnexpectedBinaryOperatorException e) {
-            throw createRichParseException(trimmedArgs, e, "Logical operator not expected here!");
+            throw createParseException(trimmedArgs, e, "Logical operator not expected here!");
         } catch (BooleanExpressionUnexpectedRightBracketException e) {
-            throw createRichParseException(trimmedArgs, e, "Unexpected right bracket after an operator!");
+            throw createParseException(trimmedArgs, e, "Unexpected right bracket after an operator!");
         } catch (TokenizationInvalidPredicateException e) {
-            throw createRichParseExceptionFromInvalidPredicate(trimmedArgs, e);
+            throw createParseExceptionFromInvalidPredicate(trimmedArgs, e);
         } catch (TokenizationException e) {
-            throw createDefaultRichParseException(trimmedArgs, "Invalid filter expression!");
+            throw createDefaultParseException(trimmedArgs, "Invalid filter expression!");
         }
     }
 
@@ -383,28 +383,28 @@ public class FilterCommandParser implements Parser<FilterCommand> {
      *
      * @throws ParseException if the user input does not conform the expected format.
      */
-    private ParseException createRichParseExceptionFromInvalidPredicate(String trimmedArgs,
-                                                                        TokenizationInvalidPredicateException e) {
+    private ParseException createParseExceptionFromInvalidPredicate(String trimmedArgs,
+                                                                    TokenizationInvalidPredicateException e) {
         final InvalidPredicateException predicateException = e.getPredicateException();
         if (predicateException instanceof InvalidPredicateKeyException) {
-            return createRichParseException(trimmedArgs, e, "Invalid field identifier key!");
+            return createParseException(trimmedArgs, e, "Invalid field identifier key!");
         } else if (predicateException instanceof InvalidPredicateSetKeyException) {
-            return createRichParseException(trimmedArgs, e, "Cannot use set-based filter predicate on this field!");
+            return createParseException(trimmedArgs, e, "Cannot use set-based filter predicate on this field!");
         } else if (predicateException instanceof InvalidPredicateOperatorException) {
-            return createRichParseException(trimmedArgs, e, "Invalid filter operator!");
+            return createParseException(trimmedArgs, e, "Invalid filter operator!");
         } else if (predicateException instanceof InvalidPredicateSetOperatorException) {
-            return createRichParseException(trimmedArgs, e, "Invalid set filter operator!");
+            return createParseException(trimmedArgs, e, "Invalid set filter operator!");
         } else if (predicateException instanceof InvalidPredicateTestPhraseException) {
-            return createRichParseException(trimmedArgs, e, "Invalid test phrase!");
+            return createParseException(trimmedArgs, e, "Invalid test phrase!");
         } else {
-            return createDefaultRichParseException(trimmedArgs, "Invalid predicate expression!");
+            return createDefaultParseException(trimmedArgs, "Invalid predicate expression!");
         }
     }
 
     /**
      * Constructs a ParseException that does not highlight any substring.
      */
-    private ParseException createDefaultRichParseException(String trimmedArgs, String message) {
+    private ParseException createDefaultParseException(String trimmedArgs, String message) {
         return new ParseException(FilterCommand.COMMAND_WORD + ' ' + trimmedArgs + '\n' + message,
             TEXT_STYLE_CLASS_DEFAULT);
     }
@@ -412,8 +412,8 @@ public class FilterCommandParser implements Parser<FilterCommand> {
     /**
      * Constructs a ParseException from the error substring denoted by the TokenMismatchException.
      */
-    private ParseException createRichParseException(String input, TokenizationMismatchException e,
-                                                    String message) {
+    private ParseException createParseException(String input, TokenizationMismatchException e,
+                                                String message) {
         List<ResultDisplay.StyledText> parts = new ArrayList<>();
         parts.add(new ResultDisplay.StyledText(FilterCommand.COMMAND_WORD + ' ', TEXT_STYLE_CLASS_DEFAULT));
         if (e.getBeginIndex() > 0) {
