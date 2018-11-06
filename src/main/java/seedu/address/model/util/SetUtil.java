@@ -72,8 +72,7 @@ public class SetUtil {
             String testPhrase) throws InvalidPredicateTestPhraseException, InvalidPredicateOperatorException,
             IllegalArgumentException {
         // comma-separated quotable tokenizer
-        StringTokenizer tokenizer = new StringTokenizer(testPhrase,
-                ch -> ch == ',', ch -> ch == '\'' || ch == '\"');
+        StringTokenizer tokenizer = new StringTokenizer(testPhrase, ch -> ch == ',', ch -> ch == '\'' || ch == '\"');
         List<Predicate<T>> predicates = new ArrayList<>();
         try {
             for (String token : tokenizer.toList()) {

@@ -72,7 +72,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
     // name>"hello world"
     // note: '/' is necessary for dates, ',' is necessary for tags
     private static final Predicate<Character> ALLOWED_UNQUOTED_CHARACTER_PREDICATE =
-            ch -> (ch >= 'A' && ch <= 'Z')
+        ch -> (ch >= 'A' && ch <= 'Z')
             || (ch >= 'a' && ch <= 'z')
             || (ch >= '0' && ch <= '9')
             || ch == '_'
@@ -83,7 +83,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
             || ch == '.';
 
     private static final Predicate<Character> ALLOWED_KEY_CHARACTER_PREDICATE =
-            ch -> (ch >= 'A' && ch <= 'Z')
+        ch -> (ch >= 'A' && ch <= 'Z')
             || (ch >= 'a' && ch <= 'z');
 
     private static final Pattern FILTER_OPERATOR_PATTERN = Pattern.compile("[\\=\\<\\>\\:]");
@@ -378,7 +378,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
      */
     private ParseException createParseExceptionFromInvalidPredicate(String trimmedArgs,
             TokenizationInvalidPredicateException e) {
-            final InvalidPredicateException predicateException = e.getPredicateException();
+        final InvalidPredicateException predicateException = e.getPredicateException();
         if (predicateException instanceof InvalidPredicateKeyException) {
             return createParseException(trimmedArgs, e, "Invalid field identifier key!");
         } else if (predicateException instanceof InvalidPredicateSetKeyException) {
