@@ -22,14 +22,14 @@ import seedu.address.ui.testutil.EventsCollectorRule;
 
 public class ModelManagerTest {
 
+    private static final String VALID_PATH = "dummyFile.txt";
+
     @Rule
     public ExpectedException thrown = ExpectedException.none();
     @Rule
     public final EventsCollectorRule eventsCollectorRule = new EventsCollectorRule();
 
     private ModelManager modelManager = new ModelManager();
-
-    private static final String VALID_PATH = "dummyFile.txt";
 
     @Test
     public void hasPerson_nullPerson_throwsNullPointerException() {
