@@ -634,7 +634,7 @@ A general string tokenizer (this is the `StringTokenizer` class in the `parser` 
 
 image::FilterOperationSequenceDiagram.png[width="800"]
 
-The above diagram shows the simplified sequence of operations to parse a filter expression into a predicate for non-set fields.  Take note of the following simplifications in the sequence diagram above:
+The above diagram shows the simplified sequence of operations to parse a filter expression into a predicate for non-set-based fields.  Take note of the following simplifications in the sequence diagram above:
 
 * "Field" represents any filterable field -- `Name`, `Deadline`, `Priority`, or `Frequency`.
 * Strictly speaking, the "loop" is not actually a loop.  As the boolean expression parser parses the filter expression, it invokes the lambda expression whenever a filter unit is encountered.  For simplicity, the sequence diagram above hides the complexity within the boolean expression parser.
@@ -703,14 +703,14 @@ image::FilterUnitDiagram.png[width="200"]
 
 The following diagram is describes a filter unit that is specified using the extended full syntax for sets:
 
-[TODO]
+image::FilterUnitDiagramSet.png[width="250"]
 
 As shown in the diagram above, a filter unit (using the full syntax or extended syntax) consists of these parts:
 
 1. The field identifier, which identifies the field (e.g. name or deadline) that is being filtered on
 2. The test phrase, which represents the value or keyword that tasks are being compared to
 3. The filter operator, which describes how the identified field is compared to the test phrase (for set-based fields, this describes how each item (tag or attachment) in the identified field is compared to each item in the test phrase) (more details below)
-3. (For the extended syntax only) The set operator, which describes the how the set of items (tags or attachments) in the identified field is compared to the set of items in the test phrase, when regarded as a set (more details below)
+4. (For the extended syntax only) The set operator, which describes the how the set of items (tags or attachments) in the identified field is compared to the set of items in the test phrase, when regarded as a set (more details below)
 
 [NOTE]
 The simplified syntax only contains the test phrase, and is explained in a separate section below.
@@ -771,14 +771,9 @@ The following list shows what the convenience operator means, in the context of 
 
 ===== Set operator =====
 
-Set-based fields can specify an additional level of comparison - how the task's set compares with the specified set.  It is distinct from the filter operator because the filter operator is used to compare each individual item in the set (in the context of the given field), while the set operator is used to compare at the set level (which is same regardless of the given field).
+Set-based fields can specify an additional level of comparison - how the task's set compares with the specified set.  It is distinct from the filter operator because the filter operator is used to compare each individual item in the set (in the context of the given field), while the set operator is used to compare at the set level (which is same regardless of which field is being compared).
 
-For set-based fields (e.g. tags), the `<`, `=`, `>` set operators represent _subset_, _equivalence_, and _superset_ relations respectively.  Each individual item is compared using the specified filter operator as specified in the previous _Filter operator_ section.
-
-Just like the filter operator, there is a convenience set operator (`:`), and it is an alias for `>`.
-
-[NOTE]
-The set operator is orthogonal to the filter operator, and hence they may be combined in any way.  Furthermore, when the set operator is omitted for a set-based field, the convenience set operator is implied.
+For set-based fields (e.g. tags), the filter unit parser does not invoke the field-specific parser directly.  Instead, control goes through the set parser, which is described in the _Set parser_ section below.
 
 ===== Simplified filter unit syntax
 
@@ -792,7 +787,20 @@ As with the full syntax, the simplified syntax supports quoting the test phrase 
 
 ==== Set parser
 
-The set parser is implemented in the `makeFilter()` method of the `seedu.address.model.util.SetUtil` class.  It parses the comma-separated list (i.e. the test phrase) using a new instance of `StringTokenizer`, and then uses reflection to invoke the relevant field-specific parser for each item in the comma-separated list.
+The set parser tokenizes the given test phrase, and feeds each item into the field-specific parser separately.
+
+The `<`, `=`, `>` set operators represent _subset_, _equivalence_, and _superset_ relations respectively.  Each individual item is compared using the specified filter operator as specified in the previous _Filter operator_ section.
+
+Just like the filter operator, there is a convenience set operator (`:`), and it is an alias for `>`.
+
+[NOTE]
+The set operator is orthogonal to the filter operator, and hence they may be combined in any way.  Furthermore, when the set operator is omitted for a set-based field, the convenience set operator is implied.
+
+The set parser is implemented in the `makeFilter()` method of the `seedu.address.model.util.SetUtil` class.  It parses the comma-separated list (i.e. the test phrase) using a new instance of `StringTokenizer`, and then uses reflection to invoke the relevant field-specific parser for each item in the comma-separated list.  This is illustrated in the sequence diagram below:
+
+image::FilterOperationSequenceDiagramSet.png[width="800"]
+
+As with the sequence diagram for non-set-based fields, the above diagram is simplified and omits details about how the test phrase is split into tokens using a new `StringTokenizer` instance.  "Field" represents any filterable set-based field -- `Tag` or `Attachment`.
 
 [NOTE]
 Reflection is required here because the `makeFilter()` method is static, and the correct `makeFilter()` method has to be chosen at runtime (based on the given field).
