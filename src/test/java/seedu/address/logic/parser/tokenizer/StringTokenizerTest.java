@@ -1,4 +1,4 @@
-package seedu.address.logic.parser;
+package seedu.address.logic.parser.tokenizer;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -37,7 +37,7 @@ public class StringTokenizerTest {
         assertEquals(tokenizer.nextString(), "Hello");
         assertTrue(tokenizer.hasNextToken());
         assertThrows(TokenizationNoMatchableCharacterException.class, () ->
-            tokenizer.nextPattern(Pattern.compile("!")));
+                tokenizer.nextPattern(Pattern.compile("!")));
         assertEquals(tokenizer.nextString(x -> x >= 'a' && x <= 'z'), "world");
         assertTrue(tokenizer.hasNextToken());
         assertEquals(tokenizer.nextPattern(Pattern.compile("\\!")), "!");
@@ -56,17 +56,17 @@ public class StringTokenizerTest {
         assertNull(tokenizer.tryNextPattern(Pattern.compile("[abc]")));
         assertEquals(tokenizer.tryNextPattern(Pattern.compile("[A-Za-z]+")), "Hello");
         assertThrows(TokenizationNoMatchableCharacterException.class, () ->
-            tokenizer.nextMatcher(Pattern.compile("[a-z&&[^w]]+")));
+                tokenizer.nextMatcher(Pattern.compile("[a-z&&[^w]]+")));
         assertEquals(tokenizer.tryNextMatcher(Pattern.compile("[A-Za-z]*")).group(), "world");
         assertThrows(TokenizationNoMatchableCharacterException.class, () ->
-            tokenizer.nextPattern(Pattern.compile("h")));
+                tokenizer.nextPattern(Pattern.compile("h")));
         assertEquals(tokenizer.nextPattern(Pattern.compile("!")), "!");
         assertEquals(tokenizer.nextString(), "Test Test2");
         assertFalse(tokenizer.hasNextToken());
         assertThrows(TokenizationEndOfStringException.class, () ->
-            tokenizer.nextMatcher(Pattern.compile("[a-z&&[^w]]+")));
+                tokenizer.nextMatcher(Pattern.compile("[a-z&&[^w]]+")));
         assertThrows(TokenizationEndOfStringException.class, () ->
-            tokenizer.nextPattern(Pattern.compile("[a-z&&[^w]]+")));
+                tokenizer.nextPattern(Pattern.compile("[a-z&&[^w]]+")));
     }
 
     @Test

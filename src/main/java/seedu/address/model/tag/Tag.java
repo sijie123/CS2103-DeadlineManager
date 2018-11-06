@@ -42,8 +42,8 @@ public class Tag {
     @Override
     public boolean equals(Object other) {
         return other == this // short circuit if same object
-            || (other instanceof Tag // instanceof handles nulls
-            && tagName.equals(((Tag) other).tagName)); // state check
+                || (other instanceof Tag // instanceof handles nulls
+                    && tagName.equals(((Tag) other).tagName)); // state check
     }
 
     @Override
@@ -65,7 +65,7 @@ public class Tag {
      * @param testPhrase The test phrase for this predicate.
      */
     public static Predicate<Tag> makeFilter(FilterOperator operator, String testPhrase)
-        throws InvalidPredicateTestPhraseException, InvalidPredicateOperatorException {
+            throws InvalidPredicateTestPhraseException, InvalidPredicateOperatorException {
         if (!isValidTagName(testPhrase)) {
             throw new InvalidPredicateTestPhraseException();
         }

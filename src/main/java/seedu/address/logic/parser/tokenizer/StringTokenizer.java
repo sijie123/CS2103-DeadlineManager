@@ -67,8 +67,9 @@ public class StringTokenizer {
      * Consume the next string token.
      */
     public String nextString()
-        throws TokenizationMissingEndQuoteException, TokenizationUnexpectedQuoteException,
-        TokenizationNoMatchableCharacterException, TokenizationEndOfStringException {
+            throws TokenizationMissingEndQuoteException, TokenizationUnexpectedQuoteException,
+            TokenizationNoMatchableCharacterException, TokenizationEndOfStringException {
+
         return nextString(ch -> true);
     }
 
@@ -85,8 +86,9 @@ public class StringTokenizer {
      * @throws TokenizationEndOfStringException if the string has reached the end.
      */
     public String nextString(Predicate<Character> validPred)
-        throws TokenizationMissingEndQuoteException, TokenizationUnexpectedQuoteException,
-        TokenizationNoMatchableCharacterException, TokenizationEndOfStringException {
+            throws TokenizationMissingEndQuoteException, TokenizationUnexpectedQuoteException,
+            TokenizationNoMatchableCharacterException, TokenizationEndOfStringException {
+
         if (!hasNextToken()) {
             throw new TokenizationEndOfStringException("Reached end of string while reading delimiter!");
         }
@@ -108,7 +110,7 @@ public class StringTokenizer {
             if (hasEndedWithQuote) {
                 // successful read of quoted string
                 assert quotePred.test(str.charAt(startLocation)) && quotePred.test(str.charAt(nextIndex - 1))
-                    : "String did not start or end with quotes!";
+                        : "String did not start or end with quotes!";
                 // remove leading/trailing quote before returning
                 return str.substring(startLocation + 1, nextIndex - 1);
             } else {
@@ -117,7 +119,7 @@ public class StringTokenizer {
                 nextIndex = startLocation;
                 // throw an exception
                 throw new TokenizationMissingEndQuoteException(nextIndex, str.length(),
-                    "Reached end of string while reading quoted string!");
+                        "Reached end of string while reading quoted string!");
             }
         } else {
             // does not start with quote
@@ -132,7 +134,7 @@ public class StringTokenizer {
                     nextIndex = startLocation;
                     // throw an exception
                     throw new TokenizationUnexpectedQuoteException(tmpNextIndex, tmpNextIndex + 1,
-                        "Quotes encountered in the middle of unquoted string!");
+                            "Quotes encountered in the middle of unquoted string!");
                 } else if (!validPred.test(ch)) {
                     // invalid character -> next token
                     break;
@@ -152,7 +154,8 @@ public class StringTokenizer {
      * @throws TokenizationEndOfStringException if the string has reached the end.
      */
     public String nextPattern(Pattern pattern)
-        throws TokenizationNoMatchableCharacterException, TokenizationEndOfStringException {
+            throws TokenizationNoMatchableCharacterException, TokenizationEndOfStringException {
+
         return nextMatcher(pattern).group();
     }
 
@@ -163,7 +166,8 @@ public class StringTokenizer {
      * @throws TokenizationEndOfStringException if the string has reached the end.
      */
     public Matcher nextMatcher(Pattern pattern)
-        throws TokenizationNoMatchableCharacterException, TokenizationEndOfStringException {
+            throws TokenizationNoMatchableCharacterException, TokenizationEndOfStringException {
+
         if (!hasNextToken()) {
             throw new TokenizationEndOfStringException("Reached end of string while reading delimiter!");
         }
@@ -173,7 +177,7 @@ public class StringTokenizer {
 
         if (!matcher.find() || matcher.start() != 0) {
             throw new TokenizationNoMatchableCharacterException(nextIndex, nextIndex,
-                "The next token does not match the given pattern!");
+                    "The next token does not match the given pattern!");
         }
 
         nextIndex += matcher.end();
