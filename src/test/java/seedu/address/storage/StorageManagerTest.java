@@ -16,8 +16,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import seedu.address.commons.events.BaseEvent;
+import seedu.address.commons.events.model.ExportRequestEvent;
+import seedu.address.commons.events.model.ImportRequestEvent;
 import seedu.address.commons.events.model.TaskCollectionChangedEvent;
 import seedu.address.commons.events.storage.DataSavingExceptionEvent;
+import seedu.address.commons.events.storage.ImportDataAvailableEvent;
+import seedu.address.commons.events.storage.ImportExportExceptionEvent;
 import seedu.address.model.ReadOnlyTaskCollection;
 import seedu.address.model.TaskCollection;
 import seedu.address.model.UserPrefs;
@@ -185,6 +190,63 @@ public class StorageManagerTest {
         } catch (IOException e) {
             throw new AssertionError("Import on existent file should not throw.");
         }
+    }
+
+
+    @Test
+    public void handleImportRequestEvent_validEvent_importDataAvailableEventRaised() {
+        TaskCollection original = getTypicalTaskCollections();
+        try {
+            storageManager.saveTaskCollection(original);
+            storageManager.handleImportRequestEvent(
+                new ImportRequestEvent(storageManager.getTaskCollectionFilePath().toString()));
+            BaseEvent event = eventsCollectorRule.eventsCollector.getMostRecent();
+            assertTrue(event instanceof ImportDataAvailableEvent);
+            assertTrue(((ImportDataAvailableEvent) event).data.equals(original));
+        } catch (IOException e) {
+            throw new AssertionError("Import on existent file should not throw.");
+        }
+    }
+
+    @Test
+    public void handleImportRequestEvent_nullEvent_importExportExceptionEventRaised() {
+        storageManager.handleImportRequestEvent(null);
+        BaseEvent event = eventsCollectorRule.eventsCollector.getMostRecent();
+        assertTrue(event instanceof ImportExportExceptionEvent);
+    }
+
+    @Test
+    public void handleImportRequestEvent_invalidFilePath_importExportExceptionEventRaised() {
+        storageManager.handleImportRequestEvent(
+            new ImportRequestEvent(getTempFilePath("nonExistent").toString()));
+        BaseEvent event = eventsCollectorRule.eventsCollector.getMostRecent();
+        assertTrue(event instanceof ImportExportExceptionEvent);
+    }
+
+    @Test
+    public void handleExportRequestEvent_validEvent_success() {
+        TaskCollection original = getTypicalTaskCollections();
+        storageManager.handleExportRequestEvent(
+            new ExportRequestEvent(original, getTempFilePath("exportNewNonExistent").toString(),
+                false, false));
+        //Should not throw nor return anything.
+    }
+
+    @Test
+    public void handleExportRequestEvent_nullEvent_importExportExceptionEventRaised() {
+        storageManager.handleExportRequestEvent(null);
+        BaseEvent event = eventsCollectorRule.eventsCollector.getMostRecent();
+        assertTrue(event instanceof ImportExportExceptionEvent);
+    }
+
+    @Test
+    public void handleExportRequestEvent_invalidFilePath_importExportExceptionEventRaised() {
+        TaskCollection original = getTypicalTaskCollections();
+        storageManager.handleExportRequestEvent(
+            new ExportRequestEvent(original, getTempFilePath(".").toString(),
+                false, false));
+        BaseEvent event = eventsCollectorRule.eventsCollector.getMostRecent();
+        assertTrue(event instanceof ImportExportExceptionEvent);
     }
 
     @Test
