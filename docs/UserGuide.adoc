@@ -130,8 +130,8 @@ Examples:
 
 * `edit 1 d/3/10/2018` +
 Edits the deadline of the 1st task to 3rd October 2018.
-* `edit 2 n/v1.2 Milestone t/` +
-Edits the name of the 2nd task to be `v1.2 Milestone` and clears all existing tags.
+* `edit 2 n/v2 Milestone t/` +
+Edits the name of the 2nd task to be `v2 Milestone` and clears all existing tags.
 * `edit 1 p/1` +
 Edits the priority of the 1st task to 1 (highest priority).
 
@@ -463,7 +463,8 @@ The application does not allow adding more than one file with the same filename 
 ****
 [TIP]
 You may omit the quotation marks for `FILENAME` and `FILEPATH` arguments if the name or path of the file only contains alphanumeric characters or dots. However, it is still recommended to enclose them in quotation marks.
-
+[TIP]
+If your filename contains double quotation marks `"` but not single quotation marks `'`, you may enclose the filename with single quotation marks `'` instead. However, the application will not be able to work with files that have both double quotation marks and single quotation marks.
 
 Examples:
 
@@ -618,6 +619,10 @@ You can omit the quotes if your `FILEPATH` consists of only alphanumeric and ful
 
 [NOTE]
 Currently, Deadline Manager does not support importing from a CSV file. This feature will be made available in v2.0.
+
+[TIP]
+If your filename contains double quotation marks (`"`) but not single quotation marks (`'`), you may enclose the filename with single quotation marks (`'`) instead. However, the application will not be able to work with files that have both double quotation marks and single quotation marks.
+
 
 ****
 
