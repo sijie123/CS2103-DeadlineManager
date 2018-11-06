@@ -452,7 +452,7 @@ Allows the user to add, list, delete and retrieve files associated with a specif
 Deadline manager does not make a copy or backup the files added. Only the location of the files are stored by Deadline Manager. Hence, it is possible that the file might have been modified, renamed, moved or deleted without Deadline Manager's knowledge. As such, there is no guarantee for a file associated with a specific task to always exist.  +
 Format: `INDEX ACTION [p/"FILEPATH"] [n/"FILENAME"]`
 [TIP]
-The application does not allow adding more than one file with the same filename to the same task, even if they are in different locations on the computer.
+The application does not allow adding more than one file with the same filename to the same task, even if they are in different locations on the computer. For this application, filename does include the file extension as well.
 ****
 *  Modify and manages the attachments of the task at the specified INDEX. The index refers to the index number shown in the displayed task list. The index must be a positive integer 1, 2, 3, …​
 * `ACTION` is either `add`, `list`, `delete` or `get` +
@@ -884,7 +884,7 @@ e.g. `sort due< name>`
 == Glossary
 * Conjunction: A composite statement (i.e. predicate) that is true when two given statements are both true, or false otherwise.
 * Disjunction: A composite statement (i.e. predicate) that is true when any of two given statements are true, or false otherwise.
-* File Path: A string that defines the unique location of a file in the file system. You may like to refer to the <<FAQ, FAQ>> for instructions on how to obtain the File Path of a file on your computer.
+* File Path: A string that defines the unique location of a file in the file system. The file path provided to Deadline Manager should include the file extension as well. You may like to refer to the <<FAQ, FAQ>> for instructions on how to obtain the File Path of a file on your computer.
 * Negation: A composite statement (i.e. predicate) that is true when the given statement is false, or false otherwise.
 * Subset: A part of a larger group of related things.
 
