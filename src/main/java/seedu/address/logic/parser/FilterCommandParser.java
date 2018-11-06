@@ -58,7 +58,8 @@ public class FilterCommandParser implements Parser<FilterCommand> {
     private static final String KEY_NAME_SHORT = "n";
     private static final String KEY_NAME_LONG = "name";
     private static final String KEY_DEADLINE_SHORT = "d";
-    private static final String KEY_DEADLINE_LONG = "due";
+    private static final String KEY_DEADLINE_MEDIUM = "due";
+    private static final String KEY_DEADLINE_LONG = "deadline";
     private static final String KEY_PRIORITY_SHORT = "p";
     private static final String KEY_PRIORITY_LONG = "priority";
     private static final String KEY_FREQUENCY_SHORT = "f";
@@ -208,6 +209,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
         case KEY_NAME_LONG:
             return createNamePredicate(operator, testPhrase);
         case KEY_DEADLINE_SHORT: // fallthrough
+        case KEY_DEADLINE_MEDIUM:
         case KEY_DEADLINE_LONG:
             return createDeadlinePredicate(operator, testPhrase);
         case KEY_PRIORITY_SHORT: // fallthrough
@@ -272,6 +274,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
         case KEY_NAME_SHORT:
         case KEY_NAME_LONG:
         case KEY_DEADLINE_SHORT:
+        case KEY_DEADLINE_MEDIUM:
         case KEY_DEADLINE_LONG:
         case KEY_PRIORITY_SHORT:
         case KEY_PRIORITY_LONG:
