@@ -198,6 +198,7 @@ public class ModelManager extends ComponentManager implements Model {
         for (Task task: importData.getTaskList()) {
             resolveImportConflict(task);
         }
+        commitTaskCollection();
         updateFilteredTaskList(PREDICATE_SHOW_ALL_TASKS);
     }
 
