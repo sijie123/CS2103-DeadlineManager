@@ -142,6 +142,9 @@ Format: `filter FILTER_EXPRESSION`
 
 When this command is used, Deadline Manager will display only those tasks which satisfy the given filter expression.
 
+[NOTE]
+When executing any _modifying_ commands on a filtered list, the filter will be removed after that command (so all tasks will be shown).  Modifying commands are those commands that modify the deadline manager's content (e.g. `add`, `delete`, `edit` and `clear`).
+
 ==== Overview
 
 Filter predicates are the core of the `filter` command.  Each filter predicate specifies a testable condition that, for every task, may evaluate to either `true` or `false` (e.g. whether the deadline is earlier than 1/10/2018).  Filter predicates are regarded as "indivisible".
@@ -727,12 +730,12 @@ Pressing the kbd:[&uarr;] and kbd:[&darr;] arrows will display the previous and 
 // tag::undoredo[]
 === Undoing previous command : `undo`
 
-Restores the deadline manager to the state before the previous _undoable_ command was executed. +
+Restores the deadline manager to the state before the previous _modifying_ command was executed. +
 Format: `undo`
 
 [NOTE]
 ====
-Undoable commands: those commands that modify the deadline manager's content (`add`, `delete`, `edit` and `clear`).
+Modifying commands: those commands that modify the deadline manager's content (e.g. `add`, `delete`, `edit` and `clear`).
 ====
 
 Examples:
