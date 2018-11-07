@@ -616,6 +616,9 @@ Step 1 is performed by the `AddressBookParser` class, and no special actions nee
 
 Step 3 is performed by the `FilterCommand` class.  It is a simple operation that simply delegates the task to `Model#updateFilteredPersonList()`.
 
+[NOTE]
+When executing any _modifying_ commands on a filtered list, the filter will be removed after that command (so all tasks will be shown).  Modifying commands are those commands that modify the deadline manager's content (e.g. `add`, `delete`, `edit` and `clear`).  This design decision has been made because modifying a task might cause a task to no longer remain satisfy a filter.
+
 The overwhelming majority of code for the filtering system comes from step 2, which is performed by the `FilterCommandParser` class.  The ability to parse complex filter descriptions into usable predicates forms the core of the filtering feature, and this ability makes the filtering system very flexible.
 
 In the rest of this guide that describes the filtering system, we use the term _filter expression_ to refer to the full filter operation that the user typed (e.g. `t:CS2101 & n:Assignment`, or even `t:CS2101 & ( n:Assignment | n:Homework) & p<3`), and the term _filter unit_ to refer to substrings of the filter expression that represent single indivisible predicates (e.g. `t:CS2101`, or `n:Homework`).
