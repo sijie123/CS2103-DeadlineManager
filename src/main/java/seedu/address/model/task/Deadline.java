@@ -4,7 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.text.ParsePosition;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -25,7 +25,7 @@ public class Deadline implements Comparable<Deadline> {
     public final Date value;
 
     static {
-        dateFormatter = new SimpleDateFormat("d/M/y", new Locale("en", "SG"));
+        dateFormatter = new DeadlineDateFormat(new Locale("en", "SG"));
         dateFormatter.setLenient(false);
     }
 
@@ -47,10 +47,10 @@ public class Deadline implements Comparable<Deadline> {
     public Deadline(String deadline) {
         requireNonNull(deadline);
 
-        try {
-            this.value = dateFormatter.parse(deadline);
-        } catch (ParseException e) {
-            throw new IllegalArgumentException(MESSAGE_DEADLINE_CONSTRAINTS, e);
+        ParsePosition parsePosition = new ParsePosition(0);
+        this.value = dateFormatter.parse(deadline, parsePosition);
+        if (this.value == null || parsePosition.getIndex() != deadline.length()) {
+            throw new IllegalArgumentException(MESSAGE_DEADLINE_CONSTRAINTS);
         }
     }
 
