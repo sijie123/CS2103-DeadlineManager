@@ -3,7 +3,6 @@ package seedu.address.model.task;
 import static java.util.Objects.requireNonNull;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.ParsePosition;
 import java.util.Calendar;
 import java.util.Date;
