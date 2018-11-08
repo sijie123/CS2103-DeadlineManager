@@ -57,6 +57,14 @@ e.g. typing *`help`* and pressing kbd:[Enter] will open the help window.
 * Parameters can be in any order e.g. if the command specifies `n/NAME d/DEADLINE`, `d/DEADLINE n/NAME` is also acceptable.
 ====
 
+====
+*Deadline Format*
+
+* Deadline dates are accepted by various commands in Deadline Manager.  A deadline is only precise to a single day (it does not store the exact time within a day).
+* Dates are expressed in the format "D/M/YYYY".  Examples of valid dates are: 29/03/2018, 29/3/2018, 1/1/2018.  The year is _never_ interpreted relative to the current century: 29/3/12 is interpreted as 11 January 0012.
+* Dates can also be expressed without the year, i.e. in the format "D/M".  Examples of valid dates in this format are: 29/03, 29/3, 1/1.  The current year (at the instant the command is executed) will be used.
+====
+
 === Viewing help : `help`
 Displays the list of available functions for the user to use. It acts as a guide to help the user.
 
