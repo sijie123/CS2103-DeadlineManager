@@ -8,8 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+import seedu.address.commons.core.LogsCenter;
 import seedu.address.logic.commands.FilterCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.logic.parser.tokenizer.BooleanExpressionParser;
@@ -88,11 +90,14 @@ public class FilterCommandParser implements Parser<FilterCommand> {
 
     private static final Pattern FILTER_OPERATOR_PATTERN = Pattern.compile("[\\=\\<\\>\\:]");
 
+    private static final Logger logger = LogsCenter.getLogger(FilterCommandParser.class);
+
     /**
      * Creates a predicate that filters by name.
      */
     private static Predicate<Task> createNamePredicate(FilterOperator operator, String testPhrase)
             throws InvalidPredicateOperatorException {
+        logger.info("Making filter for name " + operator.toString() + ' ' + testPhrase);
         Predicate<Name> namePredicate = Name.makeFilter(operator, testPhrase);
         return task -> namePredicate.test(task.getName());
     }
@@ -102,6 +107,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
      */
     private static Predicate<Task> createDeadlinePredicate(FilterOperator operator, String testPhrase)
             throws InvalidPredicateTestPhraseException, InvalidPredicateOperatorException {
+        logger.info("Making filter for deadline " + operator.toString() + ' ' + testPhrase);
         Predicate<Deadline> deadlinePredicate = Deadline.makeFilter(operator, testPhrase);
         return task -> deadlinePredicate.test(task.getDeadline());
     }
@@ -111,6 +117,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
      */
     private static Predicate<Task> createPriorityPredicate(FilterOperator operator, String testPhrase)
             throws InvalidPredicateTestPhraseException, InvalidPredicateOperatorException {
+        logger.info("Making filter for priority " + operator.toString() + ' ' + testPhrase);
         Predicate<Priority> priorityPredicate = Priority.makeFilter(operator, testPhrase);
         return task -> priorityPredicate.test(task.getPriority());
     }
@@ -120,6 +127,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
      */
     private static Predicate<Task> createFrequencyPredicate(FilterOperator operator, String testPhrase)
             throws InvalidPredicateTestPhraseException, InvalidPredicateOperatorException {
+        logger.info("Making filter for frequency " + operator.toString() + ' ' + testPhrase);
         Predicate<Frequency> frequencyPredicate = Frequency.makeFilter(operator, testPhrase);
         return task -> frequencyPredicate.test(task.getFrequency());
     }
@@ -131,6 +139,8 @@ public class FilterCommandParser implements Parser<FilterCommand> {
             String testPhrase)
             throws InvalidPredicateTestPhraseException, InvalidPredicateOperatorException,
             InvalidPredicateSetOperatorException {
+        logger.info("Making filter for tag " + setOperator.toString()
+                + ' ' + fieldOperator.toString() + ' ' + testPhrase);
         Predicate<Set<Tag>> tagsPredicate = SetUtil.makeFilter(Tag.class, setOperator, fieldOperator, testPhrase);
         return task -> tagsPredicate.test(task.getTags());
     }
@@ -142,6 +152,8 @@ public class FilterCommandParser implements Parser<FilterCommand> {
             String testPhrase)
             throws InvalidPredicateTestPhraseException, InvalidPredicateOperatorException,
             InvalidPredicateSetOperatorException {
+        logger.info("Making filter for attachment " + setOperator.toString()
+                + ' ' + fieldOperator.toString() + ' ' + testPhrase);
         Predicate<Set<Attachment>> attachmentsPredicate = SetUtil.makeFilter(Attachment.class,
                 setOperator, fieldOperator, testPhrase);
         return task -> attachmentsPredicate.test(task.getAttachments());
@@ -325,6 +337,8 @@ public class FilterCommandParser implements Parser<FilterCommand> {
                                 ALLOWED_KEY_CHARACTER_PREDICATE);
                     });
             Predicate<Task> predicate = expressionParser.parse(trimmedArgs);
+
+            logger.info("Parse successful");
 
             return new FilterCommand(predicate);
         });
