@@ -79,13 +79,13 @@ public class StringTokenizer {
      * @param validPred A predicate that returns false if the given character is not allowed in this token.
      *                  If such a character is encountered, the token would be considered to have ended
      *                  just before that character.  It is only used for unquoted strings.
-     *
+     * @return The string that is extracted from the input.
      * @throws TokenizationMissingEndQuoteException if an end quote is missing.
      * @throws TokenizationUnexpectedQuoteException if an unexpected quote was encountered.
      * @throws TokenizationNoMatchableCharacterException if no characters could be matched.
      * @throws TokenizationEndOfStringException if the string has reached the end.
      */
-    public String nextString(Predicate<Character> validPred)
+    public String nextString(final Predicate<Character> validPred)
             throws TokenizationMissingEndQuoteException, TokenizationUnexpectedQuoteException,
             TokenizationNoMatchableCharacterException, TokenizationEndOfStringException {
 
@@ -93,57 +93,86 @@ public class StringTokenizer {
             throw new TokenizationEndOfStringException("Reached end of string while reading delimiter!");
         }
 
-        int startLocation = nextIndex;
         if (quotePred.test(str.charAt(nextIndex))) {
             // starts with quote
-            char quote = str.charAt(nextIndex);
-            boolean hasEndedWithQuote = false;
-            for (++nextIndex; nextIndex < str.length(); ++nextIndex) {
-                char ch = str.charAt(nextIndex);
-                if (quote == ch) {
-                    // matching quote, break
-                    hasEndedWithQuote = true;
-                    ++nextIndex;
-                    break;
-                }
-            }
-            if (hasEndedWithQuote) {
-                // successful read of quoted string
-                assert quotePred.test(str.charAt(startLocation)) && quotePred.test(str.charAt(nextIndex - 1))
-                        : "String did not start or end with quotes!";
-                // remove leading/trailing quote before returning
-                return str.substring(startLocation + 1, nextIndex - 1);
-            } else {
-                // bad, we ran out of characters
+            return nextQuotedString();
+        } else {
+            // does not start with quote
+            return nextUnquotedString(validPred);
+        }
+    }
+
+    /**
+     * Consume the next string, assuming that the next character is not a quote.
+     *
+     * @param validPred A predicate that returns false if the given character is not allowed in this token.
+     *                  If such a character is encountered, the token would be considered to have ended
+     *                  just before that character.
+     * @return The string that is extracted from the input.
+     * @throws TokenizationUnexpectedQuoteException if an unexpected quote was encountered.
+     * @throws TokenizationNoMatchableCharacterException if no characters could be matched.
+     */
+    private String nextUnquotedString(final Predicate<Character> validPred)
+            throws TokenizationUnexpectedQuoteException, TokenizationNoMatchableCharacterException {
+        int startLocation = nextIndex;
+        // there should be no quotes within this string
+        for (; nextIndex < str.length(); ++nextIndex) {
+            char ch = str.charAt(nextIndex);
+            if (delimPred.test(ch)) {
+                break;
+            } else if (quotePred.test(ch)) {
+                int tmpNextIndex = nextIndex;
                 // rollback nextIndex
                 nextIndex = startLocation;
                 // throw an exception
-                throw new TokenizationMissingEndQuoteException(nextIndex, str.length(),
-                        "Reached end of string while reading quoted string!");
+                throw new TokenizationUnexpectedQuoteException(tmpNextIndex, tmpNextIndex + 1,
+                        "Quotes encountered in the middle of unquoted string!");
+            } else if (!validPred.test(ch)) {
+                // invalid character -> next token
+                break;
             }
+        }
+        if (startLocation == nextIndex) {
+            // bad, we didn't read any characters at all
+            throw new TokenizationNoMatchableCharacterException(nextIndex, nextIndex, "Input is invalid!");
+        }
+        return str.substring(startLocation, nextIndex);
+    }
+
+    /**
+     * Consume the next string, assuming that the next character is a quote.
+     *
+     * @return The string that is extracted from the input.
+     * @throws TokenizationMissingEndQuoteException if an end quote is missing.
+     */
+    private String nextQuotedString()
+            throws TokenizationMissingEndQuoteException {
+        int startLocation = nextIndex;
+        char quote = str.charAt(nextIndex);
+        assert quotePred.test(quote);
+        boolean hasEndedWithQuote = false;
+        for (++nextIndex; nextIndex < str.length(); ++nextIndex) {
+            char ch = str.charAt(nextIndex);
+            if (quote == ch) {
+                // matching quote, break
+                hasEndedWithQuote = true;
+                ++nextIndex;
+                break;
+            }
+        }
+        if (hasEndedWithQuote) {
+            // successful read of quoted string
+            assert quotePred.test(str.charAt(startLocation)) && quotePred.test(str.charAt(nextIndex - 1))
+                    : "String did not start or end with quotes!";
+            // remove leading/trailing quote before returning
+            return str.substring(startLocation + 1, nextIndex - 1);
         } else {
-            // does not start with quote
-            // there should be no quotes within this string
-            for (; nextIndex < str.length(); ++nextIndex) {
-                char ch = str.charAt(nextIndex);
-                if (delimPred.test(ch)) {
-                    break;
-                } else if (quotePred.test(ch)) {
-                    int tmpNextIndex = nextIndex;
-                    // rollback nextIndex
-                    nextIndex = startLocation;
-                    // throw an exception
-                    throw new TokenizationUnexpectedQuoteException(tmpNextIndex, tmpNextIndex + 1,
-                            "Quotes encountered in the middle of unquoted string!");
-                } else if (!validPred.test(ch)) {
-                    // invalid character -> next token
-                    break;
-                }
-            }
-            if (startLocation == nextIndex) {
-                throw new TokenizationNoMatchableCharacterException(nextIndex, nextIndex, "Input is invalid!");
-            }
-            return str.substring(startLocation, nextIndex);
+            // bad, we ran out of characters
+            // rollback nextIndex
+            nextIndex = startLocation;
+            // throw an exception
+            throw new TokenizationMissingEndQuoteException(nextIndex, str.length(),
+                    "Reached end of string while reading quoted string!");
         }
     }
 
@@ -176,6 +205,8 @@ public class StringTokenizer {
         Matcher matcher = pattern.matcher(tmp);
 
         if (!matcher.find() || matcher.start() != 0) {
+            // we could find a match, or the match didn't start from the current character
+            // - this is not considered a match
             throw new TokenizationNoMatchableCharacterException(nextIndex, nextIndex,
                     "The next token does not match the given pattern!");
         }

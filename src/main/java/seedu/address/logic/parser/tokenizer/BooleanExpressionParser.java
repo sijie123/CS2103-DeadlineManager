@@ -185,6 +185,7 @@ public class BooleanExpressionParser<T> {
     private final OperandParser<T> operandParser;
 
     public BooleanExpressionParser(OperandParser<T> operandParser) {
+        assert operandParser != null;
         this.operandParser = operandParser;
     }
 
@@ -277,17 +278,20 @@ public class BooleanExpressionParser<T> {
     public Predicate<T> parse(String str) throws TokenizationException {
         StringTokenizer tokenizer = new StringTokenizer(str);
 
+        // operator stack and output stack as per the shunting yard algorithm
         ArrayDeque<BooleanOperator> operatorStack = new ArrayDeque<>();
         ArrayDeque<Predicate<T>> outputStack = new ArrayDeque<>();
 
+        // whether we are expecting the next token to be an operand
         boolean isExpectingOperand = true;
 
+        // read and parse tokens until there are no more left, as per the shunting yard algorithm
         while (tokenizer.hasNextToken()) {
             int beginLocation = tokenizer.getLocation();
             BooleanOperator operator = BooleanOperators.tryParse(tokenizer);
             int endLocation = tokenizer.getLocation();
             if (operator != null) {
-                // store operator
+                // we've got an operator, so we process it
                 if (operator instanceof PrefixUnaryOperator) {
                     if (!isExpectingOperand) {
                         // two operands are adjacent, so we insert the implicit operator (which is the AND operator)
@@ -320,7 +324,7 @@ public class BooleanExpressionParser<T> {
                     isExpectingOperand = false;
                 }
             } else {
-                // read and store operand
+                // we couldn't read an operator from the input, so it must be an operand instead
                 if (!isExpectingOperand) {
                     // two operands are adjacent, so we insert the implicit operator (which is the AND operator)
                     insertImplicitBinaryOperator(operatorStack, outputStack);
@@ -332,11 +336,15 @@ public class BooleanExpressionParser<T> {
         }
 
         if (isExpectingOperand) {
+            // we cannot end an expression while expecting an operand, so the expression must be malformed
             throw new BooleanExpressionUnexpectedEndOfStringException("Operand expected at end of expression");
         }
 
+        // process the remaining operators in the operator stack, since there is no more input remaining
         cleanUp(tokenizer.getLocation(), operatorStack, outputStack);
 
+        // If there are no bugs in the algorithm there should be a single element (our final answer)
+        // in the output stack.  Otherwise, the algorithm has a bug.
         assert outputStack.size() == 1 : "Shunting yard algorithm error in BooleanExpressionParser";
 
         return outputStack.poll();

@@ -42,7 +42,7 @@ public class ParseException extends IllegalValueException {
      * Converts a list of text parts and associated style classes into the whole rich message.
      */
     private static List<ResultDisplay.StyledText> makeMessage(String[] parts) {
-        assert(parts.length % 2 == 0);
+        assert parts.length % 2 == 0;
         List<ResultDisplay.StyledText> result = new ArrayList<>();
         for (int i = 0; i < parts.length; i += 2) {
             result.add(new ResultDisplay.StyledText(parts[i], parts[i + 1]));

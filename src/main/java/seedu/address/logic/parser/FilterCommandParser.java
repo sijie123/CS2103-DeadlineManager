@@ -320,6 +320,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
      */
     @Override
     public FilterCommand parse(String args) throws ParseException {
+        assert args != null;
         String trimmedArgs = args.trim();
         if (trimmedArgs.isEmpty()) {
             throw new ParseException(
@@ -338,6 +339,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
                     });
             Predicate<Task> predicate = expressionParser.parse(trimmedArgs);
 
+            assert predicate != null : "Predicate returned from expression parser was null!";
             logger.info("Parse successful");
 
             return new FilterCommand(predicate);
@@ -412,6 +414,8 @@ public class FilterCommandParser implements Parser<FilterCommand> {
      * Constructs a ParseException that does not highlight any substring.
      */
     private ParseException createDefaultParseException(String trimmedArgs, String message) {
+        assert trimmedArgs != null;
+        assert message != null;
         return new ParseException(FilterCommand.COMMAND_WORD + ' ' + trimmedArgs + '\n' + message,
                 TEXT_STYLE_CLASS_DEFAULT);
     }
@@ -420,6 +424,8 @@ public class FilterCommandParser implements Parser<FilterCommand> {
      * Constructs a ParseException from the error substring denoted by the TokenMismatchException.
      */
     private ParseException createParseException(String input, TokenizationMismatchException e, String message) {
+        assert input != null;
+        assert message != null;
         List<ResultDisplay.StyledText> parts = new ArrayList<>();
         parts.add(new ResultDisplay.StyledText(FilterCommand.COMMAND_WORD + ' ', TEXT_STYLE_CLASS_DEFAULT));
         if (e.getBeginIndex() > 0) {
@@ -441,6 +447,12 @@ public class FilterCommandParser implements Parser<FilterCommand> {
 
     /**
      * Reads and returns a predicate from the given string tokenizer.
+     * There are three allowed forms for filter units:
+     * [phrase]
+     * [key][op][phrase]
+     * [key][setOp][fieldOp][phrase]
+     * This method determines which option should be chosen (based on the input),
+     * and creates the correct predicate for it.
      *
      * @param tokenizer                           The string tokenizer.
      * @param effectiveUnquotedCharacterPredicate A predicate that specifies the allowable characters
@@ -455,9 +467,10 @@ public class FilterCommandParser implements Parser<FilterCommand> {
             TokenizationNoMatchableCharacterException, TokenizationEndOfStringException,
             TokenizationInvalidPredicateException {
 
-        int keyStartIndex = tokenizer.getLocation(); // get the location in case we need to rewind
+        // many indices are saved (using tokenizer.getLocation()) because they are used to report an error
+        int keyStartIndex = tokenizer.getLocation(); // get the key start location
         final String key = tokenizer.tryNextString(allowedKeyCharacterPredicate);
-        int keyEndIndex = tokenizer.getLocation();
+        int keyEndIndex = tokenizer.getLocation(); // get the key end location
         String opString;
         if (key != null && tokenizer.hasNextToken()
             && (opString = tokenizer.tryNextPattern(FILTER_OPERATOR_PATTERN)) != null) {
