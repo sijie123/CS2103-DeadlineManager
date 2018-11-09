@@ -27,7 +27,7 @@ Deadline Manager (DLM) is for those who *prefer to use a desktop app for keeping
 The steps to quickly get started with the project are as follows -
 
 .  Install Java version `9` or later on your Computer.
-.  Download the latest `addressbook.jar` link:{repoURL}/releases[here].
+.  Download the latest `deadlinemanager.jar` link:{repoURL}/releases[here].
 .  Copy the file to the folder you want to use as the home folder for your deadline manager.
 .  Double-click the file to start the app. The GUI should appear in a few seconds.
 +
