@@ -641,6 +641,7 @@ The above diagram shows the simplified sequence of operations to parse a filter 
 
 * "Field" represents any filterable field -- `Name`, `Deadline`, `Priority`, or `Frequency`.
 * Strictly speaking, the "loop" is not actually a loop.  As the boolean expression parser parses the filter expression, it invokes the lambda expression whenever a filter unit is encountered.  For simplicity, the sequence diagram above hides the complexity within the boolean expression parser.
+* The construction of the `tokenizer` object is omitted so as to give focus to the interaction between the three components.  The `BooleanExpressionParser` actually constructs a `StringTokenizer` from the given `expression` (which is a `String`), before entering the loop.  This same `StringTokenizer` is fed into the lambda expression every time a filter unit is encountered.
 
 [NOTE]
 Set-based fields are described in the _Set parser_ section.
