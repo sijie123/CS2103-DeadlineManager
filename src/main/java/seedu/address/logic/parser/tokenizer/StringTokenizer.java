@@ -93,13 +93,17 @@ public class StringTokenizer {
             throw new TokenizationEndOfStringException("Reached end of string while reading delimiter!");
         }
 
-        if (quotePred.test(str.charAt(nextIndex))) {
+        if (isQuoteAvailable(nextIndex)) {
             // starts with quote
             return nextQuotedString();
         } else {
             // does not start with quote
             return nextUnquotedString(validPred);
         }
+    }
+
+    private boolean isQuoteAvailable(int nextIndex) {
+        return quotePred.test(str.charAt(nextIndex));
     }
 
     /**
@@ -162,7 +166,7 @@ public class StringTokenizer {
         }
         if (hasEndedWithQuote) {
             // successful read of quoted string
-            assert quotePred.test(str.charAt(startLocation)) && quotePred.test(str.charAt(nextIndex - 1))
+            assert isQuoteAvailable(startLocation) && isQuoteAvailable(nextIndex - 1)
                     : "String did not start or end with quotes!";
             // remove leading/trailing quote before returning
             return str.substring(startLocation + 1, nextIndex - 1);
