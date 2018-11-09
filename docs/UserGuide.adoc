@@ -344,7 +344,7 @@ Returns a subset of the current list of tasks that have a name that does not con
 
 For fields that represent a collection (i.e. tags and attachments), it is also possible to filter only tasks which **do not contain** other tags or attachments apart from those specified.  To do so, we introduce a set operator as per the diagram below:
 
-image::FilterUnitDiagramSetUG.png[width="200"]
+image::FilterUnitDiagramSetUG.png[width="250"]
 
 The part that was called `operator` previously is called the `field operator` here, and it retains its original meaning.  The `set operator` introduced here specifies how the specified set (in the filter predicate) compares to the task's set (of tags or attachments).
 
