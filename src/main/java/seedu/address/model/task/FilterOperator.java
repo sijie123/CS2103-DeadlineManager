@@ -6,10 +6,26 @@ import seedu.address.model.task.exceptions.InvalidPredicateOperatorException;
  * Represents an operator used for the filter predicate.
  */
 public enum FilterOperator {
-    CONVENIENCE,
-    EQUAL,
-    LESS,
-    GREATER;
+    CONVENIENCE {
+        public String toString() {
+            return ":";
+        }
+    },
+    EQUAL {
+        public String toString() {
+            return "=";
+        }
+    },
+    LESS {
+        public String toString() {
+            return "<";
+        }
+    },
+    GREATER {
+        public String toString() {
+            return ">";
+        }
+    };
 
     /**
      * Parses a string into a filter operator.
