@@ -49,12 +49,21 @@ e.g. typing *`help`* and pressing kbd:[Enter] will open the help window.
 == Features
 
 ====
-*Command Format*
+*Command Format in User Guide*
 
 * Words in `UPPER_CASE` are the parameters to be supplied by the user e.g. in `add n/NAME`, `NAME` is a parameter which can be used as `add n/Assignment 2`.
 * Items in square brackets are optional e.g `n/NAME [t/TAG]` can be used as `n/Assignment 2 t/CS3230` or as `n/Assignment 2`.
 * Items with `…`​ after them can be used multiple times including zero times e.g. `[t/TAG]...` can be used as `{nbsp}` (i.e. 0 times), `t/CS2103`, `t/CS2103 t/Project` etc.
+====
+
+====
+*General Command Format*
+
+Most commands follow the following format (characterized by `X/` parameter prefixes, where `X` is a single alphabet).  For these commands, unless otherwise specified, the following apply:
+
 * Parameters can be in any order e.g. if the command specifies `n/NAME d/DEADLINE`, `d/DEADLINE n/NAME` is also acceptable.
+* Parameters that contain spaces or `/` should be placed within quotes (either `'` or `"` are okay, but the opening and closing quotes should match) in order to prevent any ambiguity with other parameter prefixes.  (Deadlines need not be quoted because they do not contain any spaces and letters, and hence will never be interpreted as a parameter prefix.)  While it will work when not quoted as long as there is no ambiguity, this is not recommended as future versions of Deadline Manager may introduce new prefixes.
+* Parameters containing `'` or `"` *must* be placed within the other kind of quote (i.e. parameters containing `'` must be placed within `"`, and vice-versa).  It is not possible to use both `'` and `"` in the same parameter.
 ====
 
 ====
