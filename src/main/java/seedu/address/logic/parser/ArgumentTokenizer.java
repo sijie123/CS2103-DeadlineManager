@@ -78,7 +78,7 @@ public class ArgumentTokenizer {
      * Ensures that the given list of prefixes are all unique in their prefix string.
      * Throws a (@code IllegalArgumentException) if not all prefixes are unique.
      */
-    public static void checkUniquePrefixes(Prefix... prefixes) {
+    private static void checkUniquePrefixes(Prefix... prefixes) {
         HashSet<String> prefixStringSet = new HashSet<>();
         for (int i = 0; i != prefixes.length; ++i) {
             String prefixString = prefixes[i].getPrefix();
@@ -95,7 +95,7 @@ public class ArgumentTokenizer {
      * @param argsString Arguments string
      * @return ArgumentMultimap object which only contains a single string
      */
-    public static ArgumentMultimap tokenizeWithoutPrefix(StringTokenizer tokenizer, String argsString)
+    private static ArgumentMultimap tokenizeWithoutPrefix(StringTokenizer tokenizer, String argsString)
         throws TokenizationException {
         ArgumentMultimap argMultimap = new ArgumentMultimap();
         StringBuilder currArgumentValue = new StringBuilder();
