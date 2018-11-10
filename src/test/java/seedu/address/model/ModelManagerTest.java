@@ -13,13 +13,21 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import seedu.address.commons.events.BaseEvent;
+import seedu.address.commons.events.model.ExportRequestEvent;
+import seedu.address.commons.events.model.ImportRequestEvent;
 import seedu.address.model.task.NameContainsKeywordsPredicate;
 import seedu.address.testutil.TaskManagerBuilder;
+import seedu.address.ui.testutil.EventsCollectorRule;
 
 public class ModelManagerTest {
 
+    private static final String VALID_PATH = "dummyFile.txt";
+
     @Rule
     public ExpectedException thrown = ExpectedException.none();
+    @Rule
+    public final EventsCollectorRule eventsCollectorRule = new EventsCollectorRule();
 
     private ModelManager modelManager = new ModelManager();
 
@@ -45,6 +53,48 @@ public class ModelManagerTest {
         thrown.expect(UnsupportedOperationException.class);
         modelManager.getFilteredTaskList().remove(0);
     }
+
+    @Test
+    public void exportTaskCollection_nullFilename_throwsNullPointerException() {
+        thrown.expect(NullPointerException.class);
+        modelManager.exportTaskCollection(null, false, false);
+    }
+
+    @Test
+    public void exportTaskCollection_validFilename_eventRaised() {
+        ModelManager exportManager = new ModelManager();
+        exportManager.addTask(ALICE);
+
+        TaskCollection expectedTaskCollection = new TaskCollection();
+        expectedTaskCollection.addTask(ALICE);
+
+        exportManager.exportTaskCollection(VALID_PATH, false, false);
+        BaseEvent event = eventsCollectorRule.eventsCollector.getMostRecent();
+        assertTrue(event instanceof ExportRequestEvent);
+        assertTrue(((ExportRequestEvent) event).filename.equals(VALID_PATH));
+        assertTrue(((ExportRequestEvent) event).data.equals(expectedTaskCollection));
+    }
+
+    @Test
+    public void importTaskCollection_nullFilename_throwsNullPointerException() {
+        thrown.expect(NullPointerException.class);
+        modelManager.importTaskCollection(null, new IgnoreImportConflictResolver());
+    }
+
+    @Test
+    public void importTaskCollection_nullResolver_throwsNullPointerException() {
+        thrown.expect(NullPointerException.class);
+        modelManager.importTaskCollection(VALID_PATH, null);
+    }
+
+    @Test
+    public void importTaskCollection_validParameters_eventRaised() {
+        modelManager.importTaskCollection(VALID_PATH, new IgnoreImportConflictResolver());
+        BaseEvent event = eventsCollectorRule.eventsCollector.getMostRecent();
+        assertTrue(event instanceof ImportRequestEvent);
+        assertTrue(((ImportRequestEvent) event).filename.equals(VALID_PATH));
+    }
+
 
     @Test
     public void equals() {

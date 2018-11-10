@@ -3,14 +3,12 @@ package seedu.address.model.task;
 import static java.util.Objects.requireNonNull;
 
 import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.text.ParsePosition;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.function.Predicate;
 
-import seedu.address.model.task.exceptions.InvalidPredicateException;
 import seedu.address.model.task.exceptions.InvalidPredicateOperatorException;
 import seedu.address.model.task.exceptions.InvalidPredicateTestPhraseException;
 
@@ -19,15 +17,14 @@ import seedu.address.model.task.exceptions.InvalidPredicateTestPhraseException;
  */
 public class Deadline implements Comparable<Deadline> {
 
-    public static final String MESSAGE_DEADLINE_CONSTRAINTS =
-        "Deadline has to be a valid date";
+    public static final String MESSAGE_DEADLINE_CONSTRAINTS = "Deadline has to be a valid date";
 
     private static DateFormat dateFormatter;
 
     public final Date value;
 
     static {
-        dateFormatter = new SimpleDateFormat("d/M/y", new Locale("en", "SG"));
+        dateFormatter = new DeadlineDateFormat(new Locale("en", "SG"));
         dateFormatter.setLenient(false);
     }
 
@@ -49,10 +46,10 @@ public class Deadline implements Comparable<Deadline> {
     public Deadline(String deadline) {
         requireNonNull(deadline);
 
-        try {
-            this.value = dateFormatter.parse(deadline);
-        } catch (ParseException e) {
-            throw new IllegalArgumentException(MESSAGE_DEADLINE_CONSTRAINTS, e);
+        ParsePosition parsePosition = new ParsePosition(0);
+        this.value = dateFormatter.parse(deadline, parsePosition);
+        if (this.value == null || parsePosition.getIndex() != deadline.length()) {
+            throw new IllegalArgumentException(MESSAGE_DEADLINE_CONSTRAINTS);
         }
     }
 
@@ -74,7 +71,7 @@ public class Deadline implements Comparable<Deadline> {
      * @param testPhrase The test phrase for this predicate.
      */
     public static Predicate<Deadline> makeFilter(FilterOperator operator, String testPhrase)
-            throws InvalidPredicateException {
+            throws InvalidPredicateTestPhraseException, InvalidPredicateOperatorException {
         Deadline testDeadline;
         try {
             testDeadline = new Deadline(testPhrase);
@@ -102,8 +99,8 @@ public class Deadline implements Comparable<Deadline> {
     @Override
     public boolean equals(Object other) {
         return other == this // short circuit if same object
-            || (other instanceof Deadline // instanceof handles nulls
-            && value.equals(((Deadline) other).value)); // state check
+                || (other instanceof Deadline // instanceof handles nulls
+                    && value.equals(((Deadline) other).value)); // state check
     }
 
     @Override

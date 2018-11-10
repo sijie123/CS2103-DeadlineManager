@@ -22,7 +22,7 @@ import seedu.address.logic.commands.ListCommand;
 import seedu.address.logic.commands.RedoCommand;
 import seedu.address.logic.commands.SelectCommand;
 import seedu.address.logic.commands.UndoCommand;
-import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.logic.parser.exceptions.SimpleParseException;
 import seedu.address.model.task.Task;
 import seedu.address.testutil.EditTaskDescriptorBuilder;
 import seedu.address.testutil.TaskBuilder;
@@ -85,8 +85,8 @@ public class TaskCollectionParserTest {
 
         try {
             parser.parseCommand("histories");
-            throw new AssertionError("The expected ParseException was not thrown.");
-        } catch (ParseException pe) {
+            throw new AssertionError("The expected SimpleParseException was not thrown.");
+        } catch (SimpleParseException pe) {
             assertEquals(MESSAGE_UNKNOWN_COMMAND, pe.getMessage());
         }
     }
@@ -118,7 +118,7 @@ public class TaskCollectionParserTest {
 
     @Test
     public void parseCommand_unrecognisedInput_throwsParseException() throws Exception {
-        thrown.expect(ParseException.class);
+        thrown.expect(SimpleParseException.class);
         thrown.expectMessage(
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, HelpCommand.MESSAGE_USAGE));
         parser.parseCommand("");
@@ -126,7 +126,7 @@ public class TaskCollectionParserTest {
 
     @Test
     public void parseCommand_unknownCommand_throwsParseException() throws Exception {
-        thrown.expect(ParseException.class);
+        thrown.expect(SimpleParseException.class);
         thrown.expectMessage(MESSAGE_UNKNOWN_COMMAND);
         parser.parseCommand("unknownCommand");
     }

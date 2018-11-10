@@ -143,15 +143,40 @@
     -fx-text-fill: black;
 }
 
+.result-scrollpane {
+    -fx-background-color: derive(#1d1d1d, 20%);
+    -fx-background: derive(#1d1d1d, 20%);
+    -fx-border-top-width: 0;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
 .result-display {
     -fx-background-color: transparent;
     -fx-font-family: "Segoe UI Light";
     -fx-font-size: 13pt;
     -fx-text-fill: white;
+    -fx-padding: 4 11 4 11;
+    -fx-line-spacing: 0.2em;
 }
 
 .result-display .label {
     -fx-text-fill: black !important;
+}
+
+.result-display-text {
+    -fx-background-color: transparent;
+    -fx-font-family: "Segoe UI Light";
+    -fx-font-size: 13pt;
+    -fx-fill: white;
+}
+
+.result-display-text-error {
+    -fx-background-color: transparent;
+    -fx-font-family: "Segoe UI Light";
+    -fx-font-size: 13pt;
+    -fx-fill: #d06651;
+    -fx-underline: true;
 }
 
 .status-bar .label {

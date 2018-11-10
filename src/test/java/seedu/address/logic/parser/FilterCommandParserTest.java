@@ -17,7 +17,7 @@ public class FilterCommandParserTest {
     @Test
     public void parse_emptyArg_throwsParseException() {
         assertParseFailure(parser, "     ",
-            String.format(MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE));
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE));
     }
 
     @Test
@@ -34,6 +34,7 @@ public class FilterCommandParserTest {
         assertParseSuccess(parser, "d< 01/02/19");
         assertParseSuccess(parser, "d<01/02/19");
         assertParseSuccess(parser, "d:01/02/19");
+        assertParseSuccess(parser, "due:01/02/19");
 
         assertParseSuccess(parser, "n>Hello");
         assertParseSuccess(parser, "n>\"Hello\"");
@@ -42,6 +43,13 @@ public class FilterCommandParserTest {
         assertParseSuccess(parser, "n:\"Hello World\"");
         assertParseSuccess(parser, "n<\"Hello World\"");
         assertParseSuccess(parser, "n:Test");
+        assertParseSuccess(parser, "name:Test");
+        assertParseSuccess(parser, "n:\\");
+        assertParseSuccess(parser, "n:-");
+        assertParseSuccess(parser, "n:_");
+        assertParseSuccess(parser, "n:/");
+        assertParseSuccess(parser, "n:.");
+        assertParseSuccess(parser, "n:,");
 
         assertParseSuccess(parser, "p>1");
         assertParseSuccess(parser, "p:1");
@@ -52,6 +60,7 @@ public class FilterCommandParserTest {
         assertParseSuccess(parser, "p:3");
         assertParseSuccess(parser, "p:4");
         assertParseSuccess(parser, "p:\"3\"");
+        assertParseSuccess(parser, "priority:3");
 
         assertParseSuccess(parser, "f>1");
         assertParseSuccess(parser, "f:1");
@@ -62,6 +71,7 @@ public class FilterCommandParserTest {
         assertParseSuccess(parser, "f:3");
         assertParseSuccess(parser, "f:4");
         assertParseSuccess(parser, "f:\"3\"");
+        assertParseSuccess(parser, "frequency:1");
 
         assertParseSuccess(parser, "t:CS2101,CS2103");
         assertParseSuccess(parser, "t:CS2101");
@@ -75,6 +85,22 @@ public class FilterCommandParserTest {
         assertParseSuccess(parser, "t>\"CS2101,CS2103\"");
         assertParseSuccess(parser, "t>\"CS2101,\'CS2103\'\"");
         assertParseSuccess(parser, "t:\"CS2101,,CS2103\"");
+        assertParseSuccess(parser, "tag:\"CS2101,CS2103\"");
+
+        assertParseSuccess(parser, "a:CS2101,CS2103");
+        assertParseSuccess(parser, "a:CS2101");
+        assertParseSuccess(parser, "a:\"CS2101\"");
+        assertParseSuccess(parser, "a:\"CS2101,CS2103\"");
+        assertParseSuccess(parser, "a:\'CS2101,CS2103\'");
+        assertParseSuccess(parser, "a:\'CS2101, CS2103\'");
+        assertParseSuccess(parser, "a :  \'CS2101, CS2103\'");
+        assertParseSuccess(parser, "a=\"CS2101,CS2103\"");
+        assertParseSuccess(parser, "a<\"CS2101,CS2103\"");
+        assertParseSuccess(parser, "a>\"CS2101,CS2103\"");
+        assertParseSuccess(parser, "a>\"CS2101,\'CS2103\'\"");
+        assertParseSuccess(parser, "a:\"CS2101,,CS2103\"");
+        assertParseSuccess(parser, "a:CS2101.html");
+        assertParseSuccess(parser, "attachment:\"CS2101,CS2103\"");
     }
 
     @Test
@@ -111,9 +137,9 @@ public class FilterCommandParserTest {
         assertParseSuccess(parser, "(n:Hello || d:1/10/2018) && t:\"CS2103, CS2101\"");
         assertParseSuccess(parser, "(n:Hello || d:1/10/2018) && t:\'CS2103   ,  CS2101\'");
         assertParseSuccess(parser, "(n:Hello || d:1/10/2018) && t:\'CS2103   ,  CS2101\'"
-            + " && (!n:World || ((!t:CS1231 || t:CS3230) && d:1/11/2018))");
+                + " && (!n:World || ((!t:CS1231 || t:CS3230) && d:1/11/2018))");
         assertParseSuccess(parser, "(n:Hello||d:1/10/2018)&&t:CS2103,CS2101"
-            + "&&(!n:World||((!t:CS1231||t:CS3230)&&d:1/11/2018))");
+                + "&&(!n:World||((!t:CS1231||t:CS3230)&&d:1/11/2018))");
     }
 
     @Test
@@ -168,6 +194,24 @@ public class FilterCommandParserTest {
     }
 
     @Test
+    public void parse_setFilter_doesNotThrow() {
+        assertParseSuccess(parser, "t::x");
+        assertParseSuccess(parser, "t:=x");
+        assertParseSuccess(parser, "t:<x");
+        assertParseSuccess(parser, "t:>x");
+        assertParseSuccess(parser, "t<:x");
+        assertParseSuccess(parser, "t>:x");
+        assertParseSuccess(parser, "t=:xeg4");
+        assertParseSuccess(parser, "a::x");
+        assertParseSuccess(parser, "a:=x");
+        assertParseSuccess(parser, "a:<x");
+        assertParseSuccess(parser, "a:>x");
+        assertParseSuccess(parser, "a<:x");
+        assertParseSuccess(parser, "a>:x");
+        assertParseSuccess(parser, "a=:xeg4");
+    }
+
+    @Test
     public void parse_invalidArgs_throwsParseException() {
         assertParseThrowsException(parser, "d<\"1/10/2018");
         assertParseThrowsException(parser, "d<1/10/2018\"");
@@ -191,7 +235,6 @@ public class FilterCommandParserTest {
         assertParseThrowsException(parser, "n:@");
         assertParseThrowsException(parser, "n:#");
         assertParseThrowsException(parser, "n:$");
-        assertParseThrowsException(parser, "n:\\");
         assertParseThrowsException(parser, "n:abc$");
         assertParseThrowsException(parser, "n:$abc$");
         assertParseThrowsException(parser, "n:$abc");
@@ -225,6 +268,13 @@ public class FilterCommandParserTest {
         assertParseThrowsException(parser, "(!n:Hello||||!n:World)");
         assertParseThrowsException(parser, "(!n:Hello|||!n:World)");
         assertParseThrowsException(parser, "n:Hello!");
+        assertParseThrowsException(parser, "n::test");
+        assertParseThrowsException(parser, "n=:test");
+        assertParseThrowsException(parser, "n:=test");
+        assertParseThrowsException(parser, "q::test");
+        assertParseThrowsException(parser, "t::1/2/6");
+        assertParseThrowsException(parser, "t:::test");
+        assertParseThrowsException(parser, "a:::test");
     }
 
     /**
@@ -240,7 +290,7 @@ public class FilterCommandParserTest {
     }
 
     /**
-     * Asserts that the parse throws a ParseException.
+     * Asserts that the parse throws a SimpleParseException.
      */
     private void assertParseThrowsException(FilterCommandParser parser, String str) {
         try {

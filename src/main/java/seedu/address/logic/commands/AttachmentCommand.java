@@ -320,7 +320,7 @@ public class AttachmentCommand extends Command {
      */
     public static class ListAttachmentAction extends AttachmentAction {
 
-        public static final String MESSAGE_TOTAL_ATTACHMENTS = "%d attachments in total.\n";
+        public static final String MESSAGE_TOTAL_ATTACHMENTS = "%d attachment(s) in total.\n";
         public static final String MESSAGE_LIST_ATTACHMENT_DETAILS = "%d) %s\n";
 
         @Override

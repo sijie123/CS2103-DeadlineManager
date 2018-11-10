@@ -75,6 +75,19 @@ public class StringUtil {
     }
 
     /**
+     * Like String.equals, but ignoring case.
+     *
+     * @param phrase1 cannot be null
+     * @param phrase2 cannot be null
+     */
+    public static boolean equalsIgnoreCase(String phrase1, String phrase2) {
+        requireNonNull(phrase1);
+        requireNonNull(phrase2);
+
+        return phrase1.toLowerCase().equals(phrase2.toLowerCase());
+    }
+
+    /**
      * Returns a detailed message of the t, including the stack trace.
      */
     public static String getDetails(Throwable t) {

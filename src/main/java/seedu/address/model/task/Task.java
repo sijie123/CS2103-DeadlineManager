@@ -26,7 +26,7 @@ public class Task {
      * Every field must be present and not null.
      */
     public Task(Name name, Priority priority, Frequency frequency, Deadline deadline,
-                Set<Tag> tags, Set<Attachment> attachments) {
+            Set<Tag> tags, Set<Attachment> attachments) {
         requireAllNonNull(name, priority, deadline, tags, attachments);
         this.name = name;
         this.priority = priority;
@@ -98,11 +98,11 @@ public class Task {
         }
         Task otherTask = (Task) other;
         return otherTask.getName().equals(getName())
-            && otherTask.getPriority().equals(getPriority())
-            && otherTask.getFrequency().equals(getFrequency())
-            && otherTask.getTags().equals(getTags())
-            && otherTask.getDeadline().equals(getDeadline())
-            && otherTask.getAttachments().equals(getAttachments());
+                && otherTask.getPriority().equals(getPriority())
+                && otherTask.getFrequency().equals(getFrequency())
+                && otherTask.getTags().equals(getTags())
+                && otherTask.getDeadline().equals(getDeadline())
+                && otherTask.getAttachments().equals(getAttachments());
     }
 
     @Override
@@ -115,13 +115,13 @@ public class Task {
     public String toString() {
         final StringBuilder builder = new StringBuilder();
         builder.append(getName())
-            .append(" Priority: ")
-            .append(getPriority())
-            .append(" Frequency: ")
-            .append(getFrequency())
-            .append(" Deadline: ")
-            .append(getDeadline())
-            .append(" Tags: ");
+                .append(" Priority: ")
+                .append(getPriority())
+                .append(" Frequency: ")
+                .append(getFrequency())
+                .append(" Deadline: ")
+                .append(getDeadline())
+                .append(" Tags: ");
         getTags().forEach(builder::append);
         builder.append(" Attachments: ");
         getAttachments().forEach(builder::append);

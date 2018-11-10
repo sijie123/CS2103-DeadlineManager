@@ -422,7 +422,7 @@ public class FilterCommandTest {
         try {
             return new FilterCommandParser().parse(predicate);
         } catch (ParseException e) {
-            throw new AssertionError("ParseException was thrown.", e);
+            throw new AssertionError("SimpleParseException was thrown.", e);
         }
     }
 
@@ -434,7 +434,7 @@ public class FilterCommandTest {
     private void ensureParseFailure(String predicate) {
         try {
             new FilterCommandParser().parse(predicate);
-            throw new AssertionError("ParseException was expected but not thrown.");
+            throw new AssertionError("SimpleParseException was expected but not thrown.");
         } catch (ParseException e) {
             // don't do anything
         }

@@ -1,9 +1,12 @@
 package seedu.address.logic.parser;
 
 import java.util.HashSet;
-import java.util.InputMismatchException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import seedu.address.logic.parser.tokenizer.ArgumentMultimap;
+import seedu.address.logic.parser.tokenizer.StringTokenizer;
+import seedu.address.logic.parser.tokenizer.exceptions.TokenizationException;
 
 /**
  * Tokenizes arguments string of the form: {@code preamble <prefix>value <prefix>value ...}<br> e.g.
@@ -25,7 +28,7 @@ public class ArgumentTokenizer {
      * @param prefixes   Prefixes to tokenize the arguments string with
      * @return ArgumentMultimap object that maps prefixes to their arguments
      */
-    public static ArgumentMultimap tokenize(String argsString, Prefix... prefixes) throws InputMismatchException {
+    public static ArgumentMultimap tokenize(String argsString, Prefix... prefixes) throws TokenizationException {
         StringTokenizer tokenizer = new StringTokenizer(argsString);
         if (prefixes.length == 0) {
             return tokenizeWithoutPrefix(tokenizer, argsString);
@@ -45,7 +48,7 @@ public class ArgumentTokenizer {
      * @return Pattern object that represents the regular expression
      */
     private static ArgumentMultimap tokenize(StringTokenizer tokenizer, Pattern pattern, Prefix... prefixes)
-        throws InputMismatchException {
+        throws TokenizationException {
         ArgumentMultimap argMultimap = new ArgumentMultimap();
         Prefix currPrefix = Prefix.EMPTY;
         StringBuilder currArgumentValue = new StringBuilder();
@@ -75,7 +78,7 @@ public class ArgumentTokenizer {
      * Ensures that the given list of prefixes are all unique in their prefix string.
      * Throws a (@code IllegalArgumentException) if not all prefixes are unique.
      */
-    public static void checkUniquePrefixes(Prefix... prefixes) {
+    private static void checkUniquePrefixes(Prefix... prefixes) {
         HashSet<String> prefixStringSet = new HashSet<>();
         for (int i = 0; i != prefixes.length; ++i) {
             String prefixString = prefixes[i].getPrefix();
@@ -92,7 +95,8 @@ public class ArgumentTokenizer {
      * @param argsString Arguments string
      * @return ArgumentMultimap object which only contains a single string
      */
-    public static ArgumentMultimap tokenizeWithoutPrefix(StringTokenizer tokenizer, String argsString) {
+    private static ArgumentMultimap tokenizeWithoutPrefix(StringTokenizer tokenizer, String argsString)
+        throws TokenizationException {
         ArgumentMultimap argMultimap = new ArgumentMultimap();
         StringBuilder currArgumentValue = new StringBuilder();
         boolean isEmpty = true;

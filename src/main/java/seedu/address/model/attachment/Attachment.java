@@ -7,17 +7,21 @@ import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.function.Predicate;
 import java.util.logging.Logger;
 
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.util.FileUtil;
+import seedu.address.commons.util.StringUtil;
+import seedu.address.model.task.FilterOperator;
+import seedu.address.model.task.exceptions.InvalidPredicateOperatorException;
 
 /**
  * Represents a Attachment in the deadline manager. Guarantees: immutable;
  */
 public class Attachment {
     public static final String MESSAGE_DUPLICATE_ATTACHMENT_NAME = "There cannot be more than one attachment"
-        + "with the same file name. Please rename one of them.";
+            + "with the same file name. Please rename one of them.";
     private static final Logger logger = LogsCenter.getLogger(Attachment.class);
 
     public final File file;
@@ -66,7 +70,7 @@ public class Attachment {
         }
         if (destination.exists()) {
             logger.warning(
-                String.format("Attachment destination %s will be overwritten.", destination.getAbsolutePath()));
+                    String.format("Attachment destination %s will be overwritten.", destination.getAbsolutePath()));
         }
 
         File copiedFile = Files.copy(file.toPath(), destination.toPath(), StandardCopyOption.REPLACE_EXISTING).toFile();
@@ -83,8 +87,8 @@ public class Attachment {
     @Override
     public boolean equals(Object other) {
         return other == this // short circuit if same object
-            || (other instanceof Attachment // instanceof handles nulls
-            && file.getAbsolutePath().equals(((Attachment) other).file.getAbsolutePath())); // state check
+                || (other instanceof Attachment // instanceof handles nulls
+                    && file.getAbsolutePath().equals(((Attachment) other).file.getAbsolutePath())); // state check
     }
 
     @Override
@@ -95,5 +99,26 @@ public class Attachment {
     @Override
     public String toString() {
         return file.getName();
+    }
+
+    /**
+     * Constructs a predicate from the given operator and test phrase.
+     *
+     * @param operator   The operator for this predicate.
+     * @param testPhrase The test phrase for this predicate.
+     */
+    public static Predicate<Attachment> makeFilter(FilterOperator operator, String testPhrase)
+            throws InvalidPredicateOperatorException {
+        switch (operator) {
+        case EQUAL:
+            return attachment -> StringUtil.equalsIgnoreCase(attachment.getName(), testPhrase);
+        case LESS:
+            return attachment -> StringUtil.containsFragmentIgnoreCase(testPhrase, attachment.getName());
+        case CONVENIENCE: // convenience operator, works the same as ">"
+        case GREATER:
+            return attachment -> StringUtil.containsFragmentIgnoreCase(attachment.getName(), testPhrase);
+        default:
+            throw new InvalidPredicateOperatorException();
+        }
     }
 }

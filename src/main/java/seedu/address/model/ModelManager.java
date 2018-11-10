@@ -186,6 +186,7 @@ public class ModelManager extends ComponentManager implements Model {
     @Override
     public void importTaskCollection(String filename, ImportConflictResolver mode) {
         requireNonNull(filename);
+        requireNonNull(mode);
         conflictResolver = mode;
         raise(new ImportRequestEvent(filename));
     }
@@ -198,6 +199,7 @@ public class ModelManager extends ComponentManager implements Model {
         for (Task task: importData.getTaskList()) {
             resolveImportConflict(task);
         }
+        commitTaskCollection();
         updateFilteredTaskList(PREDICATE_SHOW_ALL_TASKS);
     }
 

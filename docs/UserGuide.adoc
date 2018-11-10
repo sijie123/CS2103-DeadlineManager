@@ -27,7 +27,7 @@ Deadline Manager (DLM) is for those who *prefer to use a desktop app for keeping
 The steps to quickly get started with the project are as follows -
 
 .  Install Java version `9` or later on your Computer.
-.  Download the latest `addressbook.jar` link:{repoURL}/releases[here].
+.  Download the latest `deadlinemanager.jar` link:{repoURL}/releases[here].
 .  Copy the file to the folder you want to use as the home folder for your deadline manager.
 .  Double-click the file to start the app. The GUI should appear in a few seconds.
 +
@@ -55,6 +55,15 @@ e.g. typing *`help`* and pressing kbd:[Enter] will open the help window.
 * Items in square brackets are optional e.g `n/NAME [t/TAG]` can be used as `n/Assignment 2 t/CS3230` or as `n/Assignment 2`.
 * Items with `…`​ after them can be used multiple times including zero times e.g. `[t/TAG]...` can be used as `{nbsp}` (i.e. 0 times), `t/CS2103`, `t/CS2103 t/Project` etc.
 * Parameters can be in any order e.g. if the command specifies `n/NAME d/DEADLINE`, `d/DEADLINE n/NAME` is also acceptable.
+====
+
+====
+*Deadline Format*
+
+* Deadline dates are accepted by various commands in Deadline Manager.  A deadline is only precise to a single day (it does not store the exact time within a day).
+* Dates are expressed in the format "D/M/YYYY".  Examples of valid dates are: 29/03/2018, 29/3/2018, 1/1/2018.  The year is _never_ interpreted relative to the current century: 29/3/12 is interpreted as 11 January 0012.
+* Dates can also be expressed without the year, i.e. in the format "D/M".  Examples of valid dates in this format are: 29/03, 29/3, 1/1.  The current year (at the instant the command is executed) will be used.
+* The minimum year allowed is 1 (i.e. non-positive years are not allowed).  The maximum year allowed is rather large (more than 6 digits, but limited by Java's internal `Date` representation), but it will definitely work with year values less than 1000000.
 ====
 
 === Viewing help : `help`
@@ -142,6 +151,9 @@ Format: `filter FILTER_EXPRESSION`
 
 When this command is used, Deadline Manager will display only those tasks which satisfy the given filter expression.
 
+[NOTE]
+When executing any _modifying_ commands on a filtered list, the filter will be removed after that command (so all tasks will be shown).  Modifying commands are those commands that modify the deadline manager's content (e.g. `add`, `delete`, `edit` and `clear`).
+
 ==== Overview
 
 Filter predicates are the core of the `filter` command.  Each filter predicate specifies a testable condition that, for every task, may evaluate to either `true` or `false` (e.g. whether the deadline is earlier than 1/10/2018).  Filter predicates are regarded as "indivisible".
@@ -153,20 +165,21 @@ Most of the time, the simplified filter syntax is sufficient to find the needed 
 
 ==== Simplified filter syntax
 
-Tasks can be filtered by typing `filter` followed by one or more space-separated keywords (e.g. `filter homework`, `filter assignment CS2103`, or `filter badminton utown 3/10/2018`).  Such a filter expression would display only those tasks that contain textual or date fields (i.e. name, deadline, and tags) that matches **every** keyword (e.g. `filter assignment CS2103` will match a task with name `Assignment 1` **and** tags `CS2103` and `easy`).
+Tasks can be filtered by typing `filter` followed by one or more space-separated keywords (e.g. `filter homework`, `filter assignment CS2103`, or `filter badminton utown 3/10/2018`).  Such a filter expression would display only those tasks that contain textual or date fields (i.e. name, deadline, tags, and attachments) that matches **every** keyword (e.g. `filter assignment CS2103` will match a task with name `Assignment 1` **and** tags `CS2103` and `easy`).
 
 Numeric fields such as priority and frequency are not matched because the integer values used for priority and frequency often match many task names and tags too.  To filter by priority and frequency, the field must be specified explicitly (see the section on _Controlling the field being matched_ below).
 
 [NOTE]
-An unquoted keyword can contain only alphanumeric characters, `_`, `-`, `/`, and `,`.  To use other characters (including whitespace), the keyword must be placed in quotes (both single (`'`) and double (`"`) quotes work, but the opening and closing quotes must match).
+An unquoted keyword can contain only alphanumeric characters, `_`, `-`, `/`, `\`, `.`, and `,`.  To use other characters (including whitespace), the keyword must be placed in quotes (both single (`'`) and double (`"`) quotes work, but the opening and closing quotes must match).
 
 ****
 
 Matching of each eligible field:
 
-* When matching task names, a task is considered to match if the given keywords is a substring (case-insensitive) of the task name (the given keyword need not be a whole word in the task name - e.g. `test` and `case` will both match `Testcase`).
+* When matching task names, a task is considered to match if the specified keyword is a substring (case-insensitive) of the task name (the given keyword need not be a whole word in the task name - e.g. `test` and `case` will both match `Testcase`).
 * When matching deadlines, a task is considered to match if its deadline is on or earlier than the specified date.
-* When matching tags, a task is considered to match it contains the specified tag (the tag name must be exact - e.g. `CS` and `cs2101` will not match `CS2101`).
+* When matching tags, a task is considered to match if the specified tag is a substring (case-insensitive) of any tag of the task.
+* When matching attachments, a task is considered to match if the specified keyword is a substring (case-insensitive) of a filename of any attachment in the task.
 
 ****
 
@@ -196,14 +209,14 @@ Each of the three parts of a full predicate means the following:
 * `operator` is one of `:`, `=`, `<`, `>`.
 * `phrase` is a string that describes what to search (this is called the search phrase, and it is similar to the _keyword_ in the simplified syntax).
 
-As with the simplified syntax, an unquoted `phrase` string can contain only alphanumeric characters, `_`, `-`, `/`, and `,`.  To use other characters (including whitespace), the search phrase must be placed in quotes (both single (`'`) and double (`"`) quotes work, but the opening and closing quotes must match).
+As with the simplified syntax, an unquoted `phrase` string can contain only alphanumeric characters, `_`, `-`, `/`, `\`, `.`, and `,`.  To use other characters (including whitespace), the search phrase must be placed in quotes (both single (`'`) and double (`"`) quotes work, but the opening and closing quotes must match).
 
 The operator `:` is known as the *convenience* operator -- it is an alias for the operator that intuitively "does what you expect" for the given `key`.  More details are given below in the context of each key.
 
 [NOTE]
 The `<` and `>` operators are non-strict: Every task that will be shown using `=` will also be shown using `<` or `>`.
 
-[NOTE]
+[TIP]
 This full predicate syntax can be mixed arbitrary with the keyword syntax described in the previous section.  For example, `badminton n:utown 3/10/2018` is allowed.
 
 ****
@@ -211,15 +224,19 @@ This full predicate syntax can be mixed arbitrary with the keyword syntax descri
 Meaning of the operators for each valid key:
 
 * When `key` is `n` or `name`, the task name is compared.  Comparison is case-insensitive.  The operator `>` tests if the search phrase is contained within the task name.  The operator `<` tests if the task name is contained within the search phrase.  The operator `=` tests if the search phrase is exactly the same as the task name.  The convenience operator is an alias for `>`.
-* When `key` is `d` or `due`, the task's due date is compared, and the search phrase is interpreted as a date.  Dates must be in `d/m/y` format.  The operator `>` tests if the task's due date is on or after the specified due date.  The operator `<` tests if the task's due date is on or before the specified due date.  The operator `=` tests if the task's due date is exactly equal to the specified due date.  The convenience operator is an alias for `<`.
+* When `key` is `d`, `due` or `deadline`, the task's due date is compared, and the search phrase is interpreted as a date.  Dates must be in `d/m/y` format.  The operator `>` tests if the task's due date is on or after the specified due date.  The operator `<` tests if the task's due date is on or before the specified due date.  The operator `=` tests if the task's due date is exactly equal to the specified due date.  The convenience operator is an alias for `<`.
 * When `key` is `p` or `priority`, the task's priority is compared, and the search phrase is interpreted as an integer, representing the priority to be searched.  A priority of zero matches all the tasks with no priority set.  The operator `>` tests if the task has priority at least as high as the specified priority.  The operator `<` tests if the task has priority at most as high as the specified priority.  The operator `=` tests if the task's priority is exactly equal to the specified priority.  The convenience operator is an alias for `>`.  Note that priority 1 is the highest priority, priority 4 is the lowest priority, and tasks without any priority are considered to be of lower priority than priority 4.  In other words, `1 > 2 > 3 > 4 > (no priority)`.
 * When `key` is `f` or `frequency`, the task's frequency (i.e. the number of days between consecutive occurrences of that task) is compared, and the search phrase is interpreted as an integer, representing the frequency to be searched.  A non-recurring task is treated as if it has a frequency that is infinitely large (i.e. `f>100` also includes all non-recurring tasks).  The operator `>` tests if the task has a recurrence interval larger than or equal to the specified number of days.  The operator `<` tests if the task has a recurrence interval smaller than or equal to the specified number of days.  The operator `=` tests if the task has a recurrence interval exactly equal to the specified number of days.  The convenience operator is an alias for `<`.
-* When `key` is `t` or `tag`, the task's tags are compared, and the search phrase is interpreted as a (unordered) set of tags.  Multiple tags are separated by commas (see examples below).  The operator `>` tests if every tag of the given task is contained in the specified set of tags.  The operator `<` tests if the every specified tag is present for the given task.  The operator `=` tests if the set of tags for the given task is exactly the same as the set of specified tags.  The convenience operator is an alias for `<`.  Note that tag names have to be specified exactly -- substrings of the tag name will not work.
+* When `key` is `t` or `tag`, the task's tags are compared, and the search phrase is interpreted as a (unordered) set of (substrings of) tags.  Comparison is case-insensitive.  Multiple tags are separated by commas (see examples below).  The operator `>` tests if every specified tag is a substring of a tag of the given task.  The operator `<` tests if every specified tag is a superstring of a tag of the given task.  The operator `=` tests if every specified tag exactly matches a tag of the given task.  The convenience operator is an alias for `>`.
+* When `key` is `a` or `attachment`, the task's attachments are compared, and the search phrase is interpreted as a (unordered) set of (substrings of) filenames.  Comparison is case-insensitive.  Multiple filenames are separated by commas, in the same way as tags.  The operator `>` tests if every specified filename is a substring of an attachment filename (of the given task).  The operator `<` tests if every specified tag is a superstring of an attachment filename.  The operator `=` tests if every specified tag exactly matches an attachment filename.  The convenience operator is an alias for `>`.
 * Any other `key` will cause Deadline Manager to produce an error.
 
 ****
 
 [NOTE]
+For set-based filter predicates (i.e. tags and attachments), an extension is available to specify that the set of tags (or attachments) in the task must be _exactly_ those tags (or attachments) in the filter predicate (i.e. there should be no extra tags (or attachments) in the task).  See the _Set-based extensions for filter predicates_ section for more details.
+
+[TIP]
 The behaviour of the simplified syntax mirrors that of the convenience operator.
 
 Examples:
@@ -235,10 +252,10 @@ Returns a subset of the current list of tasks that have deadlines equal to 1st O
 Returns a subset of the current list of tasks that have deadlines on or before 1st October 2018.
 
 * `filter name:Alex`
-Returns a subset of the current list of tasks that have a name that contains "Alex".
+Returns a subset of the current list of tasks that have a name that contains "Alex" (case-insensitive).
 
 * `filter n:"Alex Tan"`
-Returns a subset of the current list of tasks that have a name that contains "Alex Tan".
+Returns a subset of the current list of tasks that have a name that contains "Alex Tan" (case-insensitive).
 
 * `filter p=1`
 Returns a subset of the current list of tasks that have priority = 1 (highest priority).
@@ -252,11 +269,20 @@ Returns a subset of the current list of tasks that recurs daily.
 * `filter f<7`
 Returns a subset of the current list of tasks that recurs at least once a week.
 
-* `filter t:CS2103T`
-Returns a subset of the current list of tasks that has the tag "CS2103T".
+* `filter t:CS`
+Returns a subset of the current list of tasks that has a tag that contains the substring "CS" (case-insensitive).  The task could also contain other tags.
 
-* `filter t:CS2103T,CS2101`
-Returns a subset of the current list of tasks that has both the tags "CS2103T" and "CS2101".
+* `filter t=CS2103T`
+Returns a subset of the current list of tasks that has the tag "CS2103T" (case-insensitive).  The task could also contain other tags.
+
+* `filter t=CS2103T,CS2101`
+Returns a subset of the current list of tasks that has both the tags "CS2103T" and "CS2101" (case-insensitive).  The task could also contain other tags.
+
+* `filter a:hello`
+Returns a subset of the current list of tasks that contains an attachment with a filename that contains "hello" (case-insensitive).  The task could also contain other attachments.
+
+* `filter a=Test.java,'Hello world.txt'`
+Returns a subset of the current list of tasks that contains the attachments with exact filenames "Test.java" and "Hello world.txt" (case-insensitive).  The task could also contain other attachments.
 
 ==== Composing filter predicates
 
@@ -302,6 +328,42 @@ Returns a subset of the current list of tasks that have a name that contains "as
 
 * `filter !n:homework||(p:3 t:CS2101)`
 Returns a subset of the current list of tasks that have a name that does not contain "homework", or have priority at least 3 and contains tag "CS2101".
+
+==== Set-based extensions for filter predicates
+
+For fields that represent a collection (i.e. tags and attachments), it is also possible to filter only tasks which **do not contain** other tags or attachments apart from those specified.  To do so, we introduce a set operator as per the diagram below:
+
+image::FilterUnitDiagramSetUG.png[width="200"]
+
+The part that was called `operator` previously is called the `field operator` here, and it retains its original meaning.  The `set operator` introduced here specifies how the specified set (in the filter predicate) compares to the task's set (of tags or attachments).
+
+****
+
+Meaning of the set operator:
+
+* The operator `>` tests if every item in the specified set is contained within the task's set.  The operator `<` tests if every item in the task's set is contained within the specified set.  The operator `=` tests if the two sets are equivalent (meaning that every item in the task's set is contained within the specified set and vice-versa).  The convenience operator is an alias for `>`.
+
+****
+
+[TIP]
+When comparing a set-based field without using this dual-operator syntax, the set based operator used is effectively the convenience operator.  (In other words, `<key><operator><phrase>` is equivalent to `<key>:<operator><phrase>`.)
+
+Examples:
+
+* `filter t=:CS`
+Returns a subset of the current list of tasks that has a tag that contains the substring "CS" (case-insensitive).  The task cannot contain any tags that do not have the substring "CS".
+
+* `filter a=:Hello`
+Returns a subset of the current list of tasks that has an attachment that contains the substring "Hello" (case-insensitive).  The task cannot contain any attachments that do not have the substring "Hello".
+
+* `filter t==CS2103T,CS2101`
+Returns a subset of the current list of tasks that has both the tags "CS2103T" and "CS2101" (case-insensitive).  The task cannot contain any other tags.
+
+* `filter t:=CS2103T`
+Returns a subset of the current list of tasks that has the tag "CS2103T" (case-insensitive).  The task could also contain other tags.  (This is equivalent to `filter t=CS2103T`.)
+
+* `filter t<:CS`
+Returns a subset of the current list of tasks that do not have any tags that do not contain the substring "CS" (case-insensitive).  The task need not have any tags that contain the substring "CS", and it could have no tags at all.  This is usually used in conjunction with other filter predicates to constrain the filtered list to be exported.
 
 // end::filter[]
 
@@ -402,7 +464,7 @@ Allows the user to add, list, delete and retrieve files associated with a specif
 Deadline manager does not make a copy or backup the files added. Only the location of the files are stored by Deadline Manager. Hence, it is possible that the file might have been modified, renamed, moved or deleted without Deadline Manager's knowledge. As such, there is no guarantee for a file associated with a specific task to always exist.  +
 Format: `INDEX ACTION [p/"FILEPATH"] [n/"FILENAME"]`
 [TIP]
-The application does not allow adding more than one file with the same filename to the same task, even if they are in different locations on the computer.
+The application does not allow adding more than one file with the same filename to the same task, even if they are in different locations on the computer. For this application, filename does include the file extension as well.
 ****
 *  Modify and manages the attachments of the task at the specified INDEX. The index refers to the index number shown in the displayed task list. The index must be a positive integer 1, 2, 3, …​
 * `ACTION` is either `add`, `list`, `delete` or `get` +
@@ -413,7 +475,8 @@ The application does not allow adding more than one file with the same filename 
 ****
 [TIP]
 You may omit the quotation marks for `FILENAME` and `FILEPATH` arguments if the name or path of the file only contains alphanumeric characters or dots. However, it is still recommended to enclose them in quotation marks.
-
+[TIP]
+If your filename contains double quotation marks `"` but not single quotation marks `'`, you may enclose the filename with single quotation marks `'` instead. However, the application will not be able to work with files that have both double quotation marks and single quotation marks.
 
 Examples:
 
@@ -569,6 +632,10 @@ You can omit the quotes if your `FILEPATH` consists of only alphanumeric and ful
 [NOTE]
 Currently, Deadline Manager does not support importing from a CSV file. This feature will be made available in v2.0.
 
+[TIP]
+If your filename contains double quotation marks (`"`) but not single quotation marks (`'`), you may enclose the filename with single quotation marks (`'`) instead. However, the application will not be able to work with files that have both double quotation marks and single quotation marks.
+
+
 ****
 
 Additionally, optional commands can provided to specify what Deadline Manager should do when there is an import conflict.
@@ -672,12 +739,12 @@ Pressing the kbd:[&uarr;] and kbd:[&darr;] arrows will display the previous and 
 // tag::undoredo[]
 === Undoing previous command : `undo`
 
-Restores the deadline manager to the state before the previous _undoable_ command was executed. +
+Restores the deadline manager to the state before the previous _modifying_ command was executed. +
 Format: `undo`
 
 [NOTE]
 ====
-Undoable commands: those commands that modify the deadline manager's content (`add`, `delete`, `edit` and `clear`).
+Modifying commands: those commands that modify the deadline manager's content (e.g. `add`, `delete`, `edit` and `clear`).
 ====
 
 Examples:
@@ -829,7 +896,7 @@ e.g. `sort due< name>`
 == Glossary
 * Conjunction: A composite statement (i.e. predicate) that is true when two given statements are both true, or false otherwise.
 * Disjunction: A composite statement (i.e. predicate) that is true when any of two given statements are true, or false otherwise.
-* File Path: A string that defines the unique location of a file in the file system. You may like to refer to the <<FAQ, FAQ>> for instructions on how to obtain the File Path of a file on your computer.
+* File Path: A string that defines the unique location of a file in the file system. The file path provided to Deadline Manager should include the file extension as well. You may like to refer to the <<FAQ, FAQ>> for instructions on how to obtain the File Path of a file on your computer.
 * Negation: A composite statement (i.e. predicate) that is true when the given statement is false, or false otherwise.
 * Subset: A part of a larger group of related things.
 

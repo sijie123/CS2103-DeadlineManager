@@ -14,7 +14,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.logic.parser.exceptions.SimpleParseException;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.task.Frequency;
 import seedu.address.model.task.Name;
@@ -41,13 +41,13 @@ public class ParserUtilTest {
 
     @Test
     public void parseIndex_invalidInput_throwsParseException() throws Exception {
-        thrown.expect(ParseException.class);
+        thrown.expect(SimpleParseException.class);
         ParserUtil.parseIndex("10 a");
     }
 
     @Test
     public void parseIndex_outOfRangeInput_throwsParseException() throws Exception {
-        thrown.expect(ParseException.class);
+        thrown.expect(SimpleParseException.class);
         thrown.expectMessage(MESSAGE_INVALID_INDEX);
         ParserUtil.parseIndex(Long.toString(Integer.MAX_VALUE + 1));
     }
@@ -68,7 +68,7 @@ public class ParserUtilTest {
 
     @Test
     public void parseName_invalidValue_throwsParseException() {
-        Assert.assertThrows(ParseException.class, () -> ParserUtil.parseName(INVALID_NAME));
+        Assert.assertThrows(SimpleParseException.class, () -> ParserUtil.parseName(INVALID_NAME));
     }
 
     @Test
@@ -91,7 +91,7 @@ public class ParserUtilTest {
 
     @Test
     public void parsePriority_invalidValue_throwsParseException() {
-        Assert.assertThrows(ParseException.class, () -> ParserUtil.parsePriority(INVALID_PRIORITY));
+        Assert.assertThrows(SimpleParseException.class, () -> ParserUtil.parsePriority(INVALID_PRIORITY));
     }
 
     @Test
@@ -114,7 +114,7 @@ public class ParserUtilTest {
 
     @Test
     public void parseFrequency_invalidValue_throwsParseException() {
-        Assert.assertThrows(ParseException.class, () -> ParserUtil.parseFrequency(INVALID_FREQUENCY));
+        Assert.assertThrows(SimpleParseException.class, () -> ParserUtil.parseFrequency(INVALID_FREQUENCY));
     }
 
     @Test
@@ -138,7 +138,7 @@ public class ParserUtilTest {
 
     @Test
     public void parseTag_invalidValue_throwsParseException() throws Exception {
-        thrown.expect(ParseException.class);
+        thrown.expect(SimpleParseException.class);
         ParserUtil.parseTag(INVALID_TAG);
     }
 
@@ -163,7 +163,7 @@ public class ParserUtilTest {
 
     @Test
     public void parseTags_collectionWithInvalidTags_throwsParseException() throws Exception {
-        thrown.expect(ParseException.class);
+        thrown.expect(SimpleParseException.class);
         ParserUtil.parseTags(Arrays.asList(VALID_TAG_1, INVALID_TAG));
     }
 

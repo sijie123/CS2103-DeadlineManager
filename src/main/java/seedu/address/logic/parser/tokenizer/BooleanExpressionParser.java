@@ -1,14 +1,18 @@
-package seedu.address.logic.parser;
+package seedu.address.logic.parser.tokenizer;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.InputMismatchException;
-import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-import seedu.address.logic.parser.exceptions.BooleanExpressionParseException;
-import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.logic.parser.tokenizer.exceptions.BooleanExpressionInvalidOperatorException;
+import seedu.address.logic.parser.tokenizer.exceptions.BooleanExpressionMismatchedLeftBracketException;
+import seedu.address.logic.parser.tokenizer.exceptions.BooleanExpressionMismatchedRightBracketException;
+import seedu.address.logic.parser.tokenizer.exceptions.BooleanExpressionUnexpectedBinaryOperatorException;
+import seedu.address.logic.parser.tokenizer.exceptions.BooleanExpressionUnexpectedEndOfStringException;
+import seedu.address.logic.parser.tokenizer.exceptions.BooleanExpressionUnexpectedRightBracketException;
+import seedu.address.logic.parser.tokenizer.exceptions.TokenizationEndOfStringException;
+import seedu.address.logic.parser.tokenizer.exceptions.TokenizationException;
 
 /**
  * Parses a boolean expression into a predicate.
@@ -117,12 +121,13 @@ public class BooleanExpressionParser<T> {
         static final NotOperator NOT = new NotOperator();
 
         static final Predicate<Character> OPERATOR_CHAR_PREDICATE = ch -> ch == '(' || ch == ')'
-            || ch == '&' || ch == '|' || ch == '!';
+                || ch == '&' || ch == '|' || ch == '!';
 
         /**
          * Creates an operator from the next token of the given StringTokenizer.
          */
-        public static BooleanOperator parse(StringTokenizer tokenizer) throws NoSuchElementException {
+        private static BooleanOperator parse(StringTokenizer tokenizer)
+                throws TokenizationEndOfStringException, BooleanExpressionInvalidOperatorException {
             BooleanOperator operator = null;
             if (operator == null) {
                 if (tokenizer.tryNextPattern(Pattern.compile("\\(")) != null) {
@@ -150,7 +155,8 @@ public class BooleanExpressionParser<T> {
                 }
             }
             if (operator == null) {
-                throw new InputMismatchException("No matching operator found!");
+                throw new BooleanExpressionInvalidOperatorException(tokenizer.getLocation(), tokenizer.getLocation(),
+                        "No matching operator found!");
             }
             return operator;
         }
@@ -159,10 +165,10 @@ public class BooleanExpressionParser<T> {
          * Creates an operator from the next token of the given StringTokenizer,
          * or returns null if the next token cannot be interpreted as any known operator.
          */
-        public static BooleanOperator tryParse(StringTokenizer tokenizer) throws NoSuchElementException {
+        private static BooleanOperator tryParse(StringTokenizer tokenizer) throws TokenizationEndOfStringException {
             try {
                 return parse(tokenizer);
-            } catch (InputMismatchException e) {
+            } catch (BooleanExpressionInvalidOperatorException e) {
                 return null;
             }
         }
@@ -173,21 +179,21 @@ public class BooleanExpressionParser<T> {
      */
     @FunctionalInterface
     public interface OperandParser<U> {
-        public Predicate<U> parse(StringTokenizer tokenizer, Predicate<Character> reservedChar) throws ParseException;
+        Predicate<U> parse(StringTokenizer tokenizer, Predicate<Character> reservedChar) throws TokenizationException;
     }
 
     private final OperandParser<T> operandParser;
 
-    BooleanExpressionParser(OperandParser<T> operandParser) {
+    public BooleanExpressionParser(OperandParser<T> operandParser) {
+        assert operandParser != null;
         this.operandParser = operandParser;
     }
 
     /**
      * Inserts a prefix unary operator as per the shunting yard algorithm.
      */
-    private static <T> void insertPrefixUnaryOperator(ArrayDeque<BooleanOperator> operatorStack,
-                                                      ArrayDeque<Predicate<T>> outputStack,
-                                                      PrefixUnaryOperator operator) {
+    private static void insertPrefixUnaryOperator(ArrayDeque<BooleanOperator> operatorStack,
+            PrefixUnaryOperator operator) {
         operatorStack.push(operator);
     }
 
@@ -195,11 +201,10 @@ public class BooleanExpressionParser<T> {
      * Inserts a binary operator as per the shunting yard algorithm.
      */
     private static <T> void insertBinaryOperator(ArrayDeque<BooleanOperator> operatorStack,
-                                                 ArrayDeque<Predicate<T>> outputStack, BinaryOperator operator) {
+            ArrayDeque<Predicate<T>> outputStack, BinaryOperator operator) {
         while (!operatorStack.isEmpty()
-            && operatorStack.peek() instanceof PrecedableOperator
-            && ((PrecedableOperator) operatorStack.peek()).precedence()
-            <= operator.precedence()) {
+                && operatorStack.peek() instanceof PrecedableOperator
+                && ((PrecedableOperator) operatorStack.peek()).precedence() <= operator.precedence()) {
             PrecedableOperator precOperator = (PrecedableOperator) operatorStack.poll();
             precOperator.operate(outputStack);
         }
@@ -209,24 +214,23 @@ public class BooleanExpressionParser<T> {
     /**
      * Inserts a left bracket as per the shunting yard algorithm.
      */
-    private static <T> void insertLeftBracket(ArrayDeque<BooleanOperator> operatorStack,
-                                              ArrayDeque<Predicate<T>> outputStack, LeftBracket operator) {
+    private static void insertLeftBracket(ArrayDeque<BooleanOperator> operatorStack, LeftBracket operator) {
         operatorStack.push(operator);
     }
 
     /**
      * Inserts a right bracket as per the shunting yard algorithm.
      */
-    private static <T> void insertRightBracket(ArrayDeque<BooleanOperator> operatorStack,
-                                               ArrayDeque<Predicate<T>> outputStack, RightBracket operator)
-                                               throws BooleanExpressionParseException {
+    private static <T> void insertRightBracket(int beginIndex, int endIndex, ArrayDeque<BooleanOperator> operatorStack,
+            ArrayDeque<Predicate<T>> outputStack)
+            throws BooleanExpressionMismatchedRightBracketException {
         while (!operatorStack.isEmpty() && operatorStack.peek() instanceof PrecedableOperator) {
             PrecedableOperator precOperator = (PrecedableOperator) operatorStack.poll();
             precOperator.operate(outputStack);
         }
         if (operatorStack.isEmpty()) {
-            throw new BooleanExpressionParseException(
-                "The right bracket was encountered without matching left bracket");
+            throw new BooleanExpressionMismatchedRightBracketException(beginIndex, endIndex,
+                    "The right bracket was encountered without matching left bracket");
         }
         assert operatorStack.peek() instanceof LeftBracket : "Expected a left bracket";
         operatorStack.pop();
@@ -236,23 +240,22 @@ public class BooleanExpressionParser<T> {
      * Inserts a binary operator as per the shunting yard algorithm.
      */
     private static <T> void insertImplicitBinaryOperator(ArrayDeque<BooleanOperator> operatorStack,
-                                                         ArrayDeque<Predicate<T>> outputStack) {
+            ArrayDeque<Predicate<T>> outputStack) {
         insertBinaryOperator(operatorStack, outputStack, BooleanOperators.AND);
     }
 
     /**
      * Inserts an operand to the output stack as per the shunting yard algorithm.
      */
-    private static <T> void insertOperand(ArrayDeque<BooleanOperator> operatorStack,
-                                          ArrayDeque<Predicate<T>> outputStack, Predicate<T> operand) {
+    private static <T> void insertOperand(ArrayDeque<Predicate<T>> outputStack, Predicate<T> operand) {
         outputStack.push(operand);
     }
 
     /**
      * Inserts an operand to the output stack as per the shunting yard algorithm.
      */
-    private static <T> void cleanUp(ArrayDeque<BooleanOperator> operatorStack, ArrayDeque<Predicate<T>> outputStack)
-        throws BooleanExpressionParseException {
+    private static <T> void cleanUp(int encounterIndex, ArrayDeque<BooleanOperator> operatorStack,
+            ArrayDeque<Predicate<T>> outputStack) throws BooleanExpressionMismatchedLeftBracketException {
         while (!operatorStack.isEmpty() && operatorStack.peek() instanceof PrecedableOperator) {
             PrecedableOperator precOperator = (PrecedableOperator) operatorStack.poll();
             precOperator.operate(outputStack);
@@ -260,7 +263,8 @@ public class BooleanExpressionParser<T> {
 
         if (!operatorStack.isEmpty()) {
             assert operatorStack.peek() instanceof LeftBracket : "Expected a left bracket";
-            throw new BooleanExpressionParseException("Left bracket does not have matching right bracket");
+            throw new BooleanExpressionMismatchedLeftBracketException(encounterIndex, encounterIndex,
+                    "Left bracket does not have matching right bracket");
         }
     }
 
@@ -269,31 +273,35 @@ public class BooleanExpressionParser<T> {
      * This method uses the shunting yard algorithm, with the ability to parse binary and unary operators.
      * This method is long because this algorithm cannot be easily broken into multiple methods.
      */
-    public Predicate<T> parse(String str) throws ParseException {
+    public Predicate<T> parse(String str) throws TokenizationException {
         StringTokenizer tokenizer = new StringTokenizer(str);
 
+        // operator stack and output stack as per the shunting yard algorithm
         ArrayDeque<BooleanOperator> operatorStack = new ArrayDeque<>();
         ArrayDeque<Predicate<T>> outputStack = new ArrayDeque<>();
 
+        // whether we are expecting the next token to be an operand
         boolean isExpectingOperand = true;
 
+        // read and parse tokens until there are no more left, as per the shunting yard algorithm
         while (tokenizer.hasNextToken()) {
+            int beginLocation = tokenizer.getLocation();
             BooleanOperator operator = BooleanOperators.tryParse(tokenizer);
+            int endLocation = tokenizer.getLocation();
             if (operator != null) {
-                // store operator
+                // we've got an operator, so we process it
                 if (operator instanceof PrefixUnaryOperator) {
                     if (!isExpectingOperand) {
                         // two operands are adjacent, so we insert the implicit operator (which is the AND operator)
                         insertImplicitBinaryOperator(operatorStack, outputStack);
-                        // throw new BooleanExpressionParseException("The " + operator.getClass().getSimpleName()
-                        //     + " operator cannot be preceded by an operand");
                     }
-                    insertPrefixUnaryOperator(operatorStack, outputStack, (PrefixUnaryOperator) operator);
+                    insertPrefixUnaryOperator(operatorStack, (PrefixUnaryOperator) operator);
                     isExpectingOperand = true;
                 } else if (operator instanceof BinaryOperator) {
                     if (isExpectingOperand) {
-                        throw new BooleanExpressionParseException("The " + operator.getClass().getSimpleName()
-                            + " operator cannot be preceded by another operator");
+                        throw new BooleanExpressionUnexpectedBinaryOperatorException(beginLocation, endLocation,
+                                "The " + operator.getClass().getSimpleName()
+                                    + " operator cannot be preceded by another operator");
                     }
                     insertBinaryOperator(operatorStack, outputStack, (BinaryOperator) operator);
                     isExpectingOperand = true;
@@ -301,38 +309,39 @@ public class BooleanExpressionParser<T> {
                     if (!isExpectingOperand) {
                         // two operands are adjacent, so we insert the implicit operator (which is the AND operator)
                         insertImplicitBinaryOperator(operatorStack, outputStack);
-                        // throw new BooleanExpressionParseException("The " + operator.getClass().getSimpleName()
-                        //     + " operator cannot be preceded by an operand");
                     }
-                    insertLeftBracket(operatorStack, outputStack, (LeftBracket) operator);
+                    insertLeftBracket(operatorStack, (LeftBracket) operator);
                     isExpectingOperand = true;
                 } else if (operator instanceof RightBracket) {
                     if (isExpectingOperand) {
-                        throw new BooleanExpressionParseException("The " + operator.getClass().getSimpleName()
-                            + " operator cannot be preceded by another operator");
+                        throw new BooleanExpressionUnexpectedRightBracketException(beginLocation, endLocation,
+                                "The " + operator.getClass().getSimpleName()
+                                    + " operator cannot be preceded by another operator");
                     }
-                    insertRightBracket(operatorStack, outputStack, (RightBracket) operator);
+                    insertRightBracket(beginLocation, endLocation, operatorStack, outputStack);
                     isExpectingOperand = false;
                 }
             } else {
-                // read and store operand
+                // we couldn't read an operator from the input, so it must be an operand instead
                 if (!isExpectingOperand) {
                     // two operands are adjacent, so we insert the implicit operator (which is the AND operator)
                     insertImplicitBinaryOperator(operatorStack, outputStack);
-                    // throw new BooleanExpressionParseException("Two operands cannot be adjacent");
                 }
-                insertOperand(operatorStack, outputStack,
-                    operandParser.parse(tokenizer, BooleanOperators.OPERATOR_CHAR_PREDICATE));
+                insertOperand(outputStack, operandParser.parse(tokenizer, BooleanOperators.OPERATOR_CHAR_PREDICATE));
                 isExpectingOperand = false;
             }
         }
 
         if (isExpectingOperand) {
-            throw new BooleanExpressionParseException("Operand expected at end of expression");
+            // we cannot end an expression while expecting an operand, so the expression must be malformed
+            throw new BooleanExpressionUnexpectedEndOfStringException("Operand expected at end of expression");
         }
 
-        cleanUp(operatorStack, outputStack);
+        // process the remaining operators in the operator stack, since there is no more input remaining
+        cleanUp(tokenizer.getLocation(), operatorStack, outputStack);
 
+        // If there are no bugs in the algorithm there should be a single element (our final answer)
+        // in the output stack.  Otherwise, the algorithm has a bug.
         assert outputStack.size() == 1 : "Shunting yard algorithm error in BooleanExpressionParser";
 
         return outputStack.poll();

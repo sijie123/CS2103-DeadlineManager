@@ -114,7 +114,13 @@ public class CommandBox extends UiPart<Region> {
             logger.info("Result: " + commandResult.feedbackToUser);
             raise(new NewResultAvailableEvent(commandResult.feedbackToUser));
 
-        } catch (CommandException | ParseException e) {
+        } catch (ParseException e) {
+            initHistory();
+            // handle command failure
+            setStyleToIndicateCommandFailure();
+            logger.info("Invalid command: " + commandTextField.getText());
+            raise(new NewResultAvailableEvent(e.message));
+        } catch (CommandException e) {
             initHistory();
             // handle command failure
             setStyleToIndicateCommandFailure();
