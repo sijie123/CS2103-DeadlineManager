@@ -2,6 +2,8 @@
 :site-section: AboutUs
 :imagesDir: ../images
 :stylesDir: ../stylesheets
+:sectnums:
+:sectnumlevels: 6
 
 == PROJECT: Deadline Manager
 
@@ -9,16 +11,18 @@
 
 == Overview
 
-Deadline Manager is a desktop deadline manager application designed for students in NUS School of Computing.  It primarily uses a command line interface (CLI) and is optimized to be easy to use, but yet give users great control and flexibility.  It is written in Java and it builds upon AddressBook - Level 4, which was designed to teach software engineering principles.
+This portfolio serves to document my contributions to Deadline Manager - our 2^nd^ year software engineering project.  We worked as a team of 5 people to create Deadline Manager, which is based on https://github.com/nus-cs2103-AY1819S1/addressbook-level4[Address Book (Level 4).  We were constrained to use a command line interface (CLI) and were given 6 weeks to work on our application.
+
+Deadline Manager is a desktop deadline manager application designed for students in NUS School of Computing.  It is optimized to be easy to use, but yet give users great control and flexibility.  It is written in Java.  Visit our project page at https://github.com/CS2103-AY1819S1-W17-4/main to try our application.
 
 == Summary of contributions
 
-* *Major enhancement*: added an *expressive but terse way to filter tasks*
+* *Major enhancement*: Added an *expressive but terse way to filter tasks*.
 ** What it does: It allows the user to filter tasks using a filter expression.  Filter expressions can be composed from other filter expressions using "AND", "OR", and "NOT" logical operators, and users can optionally specify which attribute in the task to search against.
 ** Justification: With an expected large number of tasks in our application, users need to be able to view a subset of tasks that are relevant to them so that they can make sense of their deadlines.  The ability to compose filter expressions adds great flexibility which is useful when filtering by more than one field.  The ability to export and share tasks further necessitates an expressive filter command that can filter precisely those tasks that the user would like to export.
 ** Highlights: Firstly, the implementation features a full expression parser that parses arbitrary levels of parentheses and respects operator precedence.  Secondly, many different attribute of a tasks (of varying type, e.g. textual, numeric, date, sets) were made filterable.  Thirdly, each attribute could be compared in multiple ways (e.g. users can specify tasks to be filtered if they are due earlier than a given date, later than a given date, or exactly on a given date).  Fourthly, text can be quoted in order to search for a whole phrase.  Many design considerations have also been made to simplify its use: Specifying the attribute (of the task) for filtering is optional (when unspecified it searches all eligible attributes), a filter expression can use an attribute-specific default comparison, and "AND" operators may be omitted.  These design considerations greatly reduce the cognitive burden for simple use cases, but yet retain the ability to provide fine-grained control where needed.
 
-* *Minor enhancement*: added the deadline attribute to the task.
+* *Minor enhancement*: Added the deadline attribute to tasks.
 ** What it does: The deadline attribute contains the due date of the task, and this is essential to the core functionality of the deadline manager.
 ** Highlights: The implementation deals with the parsing and validating of dates.  Furthermore, it integrates into other commands that need to specify a deadline.  This attribute was also integrated throughout the storage-related code so that the deadline can be exported to a file and imported into another instance of Deadline Manager.
 
