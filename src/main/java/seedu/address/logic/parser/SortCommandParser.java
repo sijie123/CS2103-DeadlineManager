@@ -120,7 +120,8 @@ public class SortCommandParser implements Parser<SortCommand> {
 
                 String tags = splittedComparator[1];
 
-                if (tags.isEmpty() || tags.length() < 2 || tags.charAt(0) != '{' || tags.charAt(tags.length() - 1) != '}') {
+                if (tags.isEmpty() || tags.length() < 2 || tags.charAt(0) != '{'
+                        || tags.charAt(tags.length() - 1) != '}') {
                     throw new SimpleParseException(
                             String.format(MESSAGE_INVALID_COMMAND_FORMAT, element));
                 }
