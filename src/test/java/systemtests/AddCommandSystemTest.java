@@ -134,7 +134,7 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
 
         /* Case: add a duplicate task except with different tags -> added normally */
         toAdd = new TaskBuilder(HOON).withTags("friends").build();
-        command = TaskUtil.getAddCommand(toAdd);// + " " + PREFIX_TAG.getPrefix() + "friends";
+        command = TaskUtil.getAddCommand(toAdd);
         assertCommandSuccess(command, toAdd);
 
         /* Case: add a duplicate task with everything the same -> added normally */
