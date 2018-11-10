@@ -1,6 +1,5 @@
 package seedu.address.logic.commands;
 
-import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.testutil.TypicalTasks.getTypicalTaskCollections;
 
@@ -40,10 +39,15 @@ public class AddCommandIntegrationTest {
     }
 
     @Test
-    public void execute_duplicatePerson_throwsCommandException() {
+    public void execute_duplicatePerson_success() {
         Task taskInList = model.getTaskCollection().getTaskList().get(0);
-        assertCommandFailure(new AddCommand(taskInList), model, commandHistory,
-            AddCommand.MESSAGE_DUPLICATE_TASK);
+
+        Model expectedModel = new ModelManager(model.getTaskCollection(), new UserPrefs());
+        expectedModel.addTask(taskInList);
+        expectedModel.commitTaskCollection();
+
+        assertCommandSuccess(new AddCommand(taskInList), model, commandHistory,
+            String.format(AddCommand.MESSAGE_SUCCESS, taskInList), expectedModel);
     }
 
 }

@@ -19,7 +19,6 @@ import static seedu.address.logic.commands.CommandTestUtil.TAG_DESC_HUSBAND;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_FREQUENCY_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PRIORITY_BOB;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 import static seedu.address.model.task.Frequency.NO_FREQUENCY;
 import static seedu.address.model.task.Priority.NO_PRIORITY;
 import static seedu.address.testutil.TypicalTasks.ALICE;
@@ -134,15 +133,16 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
         assertCommandSuccess(command, toAdd);
 
         /* Case: add a duplicate task except with different tags -> added normally */
-        command = TaskUtil.getAddCommand(HOON) + " " + PREFIX_TAG.getPrefix() + "friends";
         toAdd = new TaskBuilder(HOON).withTags("friends").build();
+        command = TaskUtil.getAddCommand(toAdd);// + " " + PREFIX_TAG.getPrefix() + "friends";
+        assertCommandSuccess(command, toAdd);
+
+        /* Case: add a duplicate task with everything the same -> added normally */
+        toAdd = HOON;
+        command = TaskUtil.getAddCommand(toAdd);
         assertCommandSuccess(command, toAdd);
 
         /* ----------------------------------- Perform invalid add operations --------------------------------------- */
-
-        /* Case: add a duplicate task -> rejected */
-        command = TaskUtil.getAddCommand(HOON);
-        assertCommandFailure(command, AddCommand.MESSAGE_DUPLICATE_TASK);
 
         /* Case: missing name -> rejected */
         command = AddCommand.COMMAND_WORD + PRIORITY_DESC_AMY + FREQUENCY_DESC_AMY + DEADLINE_DESC_AMY;

@@ -8,7 +8,6 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_PRIORITY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 
 import seedu.address.logic.CommandHistory;
-import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.task.Task;
 
@@ -35,7 +34,6 @@ public class AddCommand extends Command {
             + PREFIX_TAG + "project";
 
     public static final String MESSAGE_SUCCESS = "New task added: %1$s";
-    public static final String MESSAGE_DUPLICATE_TASK = "This task already exists in the deadline manager";
 
     private final Task toAdd;
 
@@ -48,12 +46,8 @@ public class AddCommand extends Command {
     }
 
     @Override
-    public CommandResult execute(Model model, CommandHistory history) throws CommandException {
+    public CommandResult execute(Model model, CommandHistory history) {
         requireNonNull(model);
-
-        if (model.hasTask(toAdd)) {
-            throw new CommandException(MESSAGE_DUPLICATE_TASK);
-        }
 
         model.addTask(toAdd);
         model.commitTaskCollection();
