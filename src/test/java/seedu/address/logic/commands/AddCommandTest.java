@@ -13,7 +13,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import seedu.address.logic.CommandHistory;
-import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.ReadOnlyTaskCollection;
 import seedu.address.model.TaskCollection;
 import seedu.address.model.task.Task;
@@ -48,14 +47,17 @@ public class AddCommandTest {
     }
 
     @Test
-    public void execute_duplicatePerson_throwsCommandException() throws Exception {
+    public void execute_duplicatePerson_addSuccessful() {
         Task validTask = new TaskBuilder().build();
         AddCommand addCommand = new AddCommand(validTask);
-        ModelStub modelStub = new ModelStubWithPerson(validTask);
+        ModelStubAcceptingPersonAdded modelStub = new ModelStubAcceptingPersonAdded();
+        modelStub.addTask(validTask);
 
-        thrown.expect(CommandException.class);
-        thrown.expectMessage(AddCommand.MESSAGE_DUPLICATE_TASK);
-        addCommand.execute(modelStub, commandHistory);
+        CommandResult commandResult = new AddCommand(validTask).execute(modelStub, commandHistory);
+        assertEquals(String.format(AddCommand.MESSAGE_SUCCESS, validTask),
+            commandResult.feedbackToUser);
+        assertEquals(Arrays.asList(validTask, validTask), modelStub.tasksAdded);
+        assertEquals(EMPTY_COMMAND_HISTORY, commandHistory);
     }
 
     @Test
