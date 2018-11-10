@@ -40,8 +40,8 @@ e.g. typing *`help`* and pressing kbd:[Enter] will open the help window.
 After starting the application, here are some sample commands you can try:
 
 * *`list`* : lists all tasks in the deadline manager
-* **`add`**`n/v1 milestone d/2/10/2018 t/CS2103T p/1` : adds a task named `v1 milestone` to the deadline manager.
-* **`delete`**`3` : deletes the 3rd task shown in the current list
+* *`add n/v1 milestone d/2/10/2018 t/CS2103T p/1`* : adds a task named `v1 milestone` to the deadline manager
+* *`delete 3`* : deletes the 3rd task shown in the current list
 * *`exit`* : exits the app
 
 You can refer to <<Features>> for the details of each command.
