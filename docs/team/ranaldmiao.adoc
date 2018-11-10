@@ -13,7 +13,6 @@ To comply with the module requirements, the team is constrained to start from an
 
 The final product that my team has developed is Deadline Manager, which will be detailed below.
 
----
 :sectnums:
 :sectnumlevels: 6
 
@@ -26,7 +25,7 @@ For more information, the Github page with the full source can be found: [https:
 * *Major enhancement*: added the *ability to manage attachments of tasks in Deadline Manager*
 ** What it does: It allows users to add, list, delete or retrieve (get) attachments from any task added to the Deadline Manager. Users that want to associate certain files to a particular task can do so via this Attachment feature.
 ** Justification: Tasks usually come with associated files that are required when a user performs the task. With this feature, users will be able to categorize and organize files related to tasks. This will reduce the time required for the user to search for these files at a subsequent stage, thereby increasing effectiveness in completing tasks.
-For instance, assignments for students usually come with an assignment brief. This feature allows them to associate that assignment brief with the task of completing the assignment. When the student decides to attempt the assignment, the assignment brief can be easily retrieved from Deadline Manager, thereby saving the hassle of searching for the file.
+//For instance, assignments for students usually come with an assignment brief. This feature allows them to associate that assignment brief with the task of completing the assignment. When the student decides to attempt the assignment, the assignment brief can be easily retrieved from Deadline Manager, thereby saving the hassle of searching for the file.
 ** Highlights: This enhancement requires interaction with the user's filesystem. As users can run Deadline Manager with different Operating Systems, the filesystem in each Operating System behaves slightly differently. As a result, intensive testing and careful coding was required in order to ensure that the feature works on various Operating Systems.
 
 * *Minor enhancement*: modified the *User Interface* (UI) to be task-centric
@@ -35,45 +34,107 @@ For instance, assignments for students usually come with an assignment brief. Th
  *** Added UI elements that displayed attributes of Tasks that are relevant to Deadline Manager. Example: displaying priority, deadline and the labels of attachments of a task.
 
 
-* *Code contributed*: [https://github.com/CS2103-AY1819S1-W17-4/main/commits?author=ranaldmiao[Commits]]
+* *Code contributed*: [https://nus-cs2103-ay1819s1.github.io/cs2103-dashboard/#=undefined&search=ranaldmiao[Commits]]
 
 * *Other contributions*:
 
 ** Project management:
 *** Managed release `v1.1` on GitHub
-*** Contributed to user stories on GitHub Issue Tracker (https://github.com/CS2103-AY1819S1-W17-4/main/issues/5[#5], https://github.com/CS2103-AY1819S1-W17-4/main/issues/6[#6], https://github.com/CS2103-AY1819S1-W17-4/main/issues/7[#7], https://github.com/CS2103-AY1819S1-W17-4/main/issues/8[#8], https://github.com/CS2103-AY1819S1-W17-4/main/issues/14[#14], https://github.com/CS2103-AY1819S1-W17-4/main/issues/15[#15], https://github.com/CS2103-AY1819S1-W17-4/main/issues/16[#16], https://github.com/CS2103-AY1819S1-W17-4/main/issues/17[#17], https://github.com/CS2103-AY1819S1-W17-4/main/issues/18[#18], https://github.com/CS2103-AY1819S1-W17-4/main/issues/19[#19], https://github.com/CS2103-AY1819S1-W17-4/main/issues/20[#20])
+*** Contributed to 11 user stories on GitHub Issue Tracker (https://github.com/CS2103-AY1819S1-W17-4/main/issues?utf8=%E2%9C%93&q=is%3Aissue+author%3Aranaldmiao+label%3Atype.Story[User Stories])
 
-*** Reported bugs in Deadline Manager (https://github.com/CS2103-AY1819S1-W17-4/main/issues/149[#149], https://github.com/CS2103-AY1819S1-W17-4/main/issues/178[#178], https://github.com/CS2103-AY1819S1-W17-4/main/issues/179[#179])
+*** Reported bugs in Deadline Manager: https://github.com/CS2103-AY1819S1-W17-4/main/issues/149[#149], https://github.com/CS2103-AY1819S1-W17-4/main/issues/178[#178], https://github.com/CS2103-AY1819S1-W17-4/main/issues/179[#179]
+Reviewed Pull Requests (with non-trivial review comments): https://github.com/CS2103-AY1819S1-W17-4/main/pull/143[#143], https://github.com/CS2103-AY1819S1-W17-4/main/pull/154[#154], https://github.com/CS2103-AY1819S1-W17-4/main/pull/112/[#112]
 
+*** Integrated AppVeyor and Coveralls to the team repository.
 ** Significant modification of Address Book's code base for use in Deadline Manager:
 *** Rename Address Book application to Deadline Manager (https://github.com/CS2103-AY1819S1-W17-4/main/pull/31[#31])
 *** Remove unnecessary fields from User Interface (https://github.com/CS2103-AY1819S1-W17-4/main/pull/92[#92])
 *** Renaming of class and variable names (https://github.com/CS2103-AY1819S1-W17-4/main/pull/126[#126])
 
 
-
-////
-** Documentation:
-*** not yet
-////
-
-
-** Community:
-*** Reviewed Pull Requests (with non-trivial review comments): https://github.com/CS2103-AY1819S1-W17-4/main/pull/143[#143], https://github.com/CS2103-AY1819S1-W17-4/main/pull/154[#154]
-*** Commented on Pull Requests (with suggestions): https://github.com/CS2103-AY1819S1-W17-4/main/pull/112/[#112]
-
-** Tools:
-*** Integrated AppVeyor to the team repository.
-*** Integrated Coveralls to the team repository.
-
 == Contributions to the User Guide
-
 
 |===
 |_Given below are some of the sections that I contributed to the User Guide. They showcase my ability to write documentation targeting end-users._
 |===
 
-include::../UserGuide.adoc[tag=attachment]
+//include::../UserGuide.adoc[tag=attachment]
+=== Managing attachments of a task : `attachment`
+Allows the user to add, list, delete and retrieve files associated with a specific task. +
+Deadline manager does not make a copy or backup the files added. Only the location of the files are stored by Deadline Manager. Hence, it is possible that the file might have been modified, renamed, moved or deleted without Deadline Manager's knowledge. As such, there is no guarantee for a file associated with a specific task to always exist.  +
+After the command is successfully executed, all the tasks in Deadline Manager will be listed. +
+Format (in general): `INDEX ACTION [p/"FILEPATH"] [n/"FILENAME"]`
+
+More specific formats for each actions are listed below.
+
+* Format for *Add* Action: `attachment INDEX add p/"FILEPATH"`
+
+* Format for *Delete* Action: `attachment INDEX delete n/"FILENAME"`
+
+* Format for *List* Action: `attachment INDEX list`
+
+* Format for *Get* Action: `attachment INDEX get n/"FILENAME" p/"FILEPATH"`
+[TIP]
+The application does not allow adding more than one file with the same filename to the same task, even if they are in different locations on the computer. For this application, filename includes the file extension as well.
+****
+*  Modify and manages the attachments of the task at the specified INDEX. The index refers to the index number shown in the displayed task list. The index must be a positive integer 1, 2, 3, …​
+* `ACTION` is either `add`, `list`, `delete` or `get` +
+* For `add` actions, the `FILEPATH` argument is required to denote the file you intend to attach to the task. A file must exist at the `FILEPATH` specified. The `FILEPATH` must be enclosed in quotation marks. For example: `"D:/Documents/HelloWorld.txt"`
+* For `list` actions, no additional arguments are required.
+* For `delete` actions, the `FILENAME` argument is required to represent the file to delete. The `FILENAME` must be enclosed in quotation marks. For example: `"Hello World.docx"`.
+* For `get` actions, the `FILENAME` argument is required to represent the file to retrieve and the `FILEPATH` argument is required to denote the destination you want the file to be exported to. If there is an existing file at `FILEPATH`, it would be overwritten without warning. The `FILEPATH` and `FILENAME` must be enclosed in quotation marks, similar to the arguments in `add` and `delete` actions. Do note that `FILEPATH` should be a path to a file, not a folder in the computer.
+****
+
+[TIP]
+The application might still be able to parse the command if `FILENAME` and `FILEPATH` are not specified. However, this behaviour is not guaranteed and it is still recommended to enclose them in quotation marks.
+[TIP]
+If your filename contains double quotation marks `"` but not single quotation marks `'`, you may enclose the filename with single quotation marks `'` instead. However, the application will not be able to work with files that have both double quotation marks and single quotation marks.
+
+Examples:
+
+* Add: `attachment 1 add p/"D:\Documents\Hello World.docx"` +
+Adds an attachment located at "D:\Documents\Hello World.docx" to the 1st task currently listed in the deadline manager. (Tip: You can list all tasks using the `list` command.)
+
+[attachmentdemo1]
+.Result of Attachment Command with Add Action
+[#img-attachmentdemo1]
+[caption="Figure 3.10.1: "]
+image::userguide/attachmentdemo_1.png[AttachmentDemo2, width="400"]
+Figure 3.10.1 above shows an expected result message if the command is successfully executed by Deadline Manager for the example command.
+
+
+[attachmentdemo2]
+.Attachment Label after an attachment is added to a file
+[#img-attachmentdemo2]
+[caption="Figure 3.10.2: "]
+image::userguide/attachmentdemo_2.png[AttachmentDemo2, width="200"]
+Figure 3.10.2 above shows the label that would be displayed along with the task after an attachment is added. The label will contain the file name.
+
+
+* List: `attachment 1 list` +
+Lists all attachments currently associated with the 1st task in the deadline manager.
+
+[attachmentdemo3]
+.Result of Attachment Command with List Action
+[#img-attachmentdemo3]
+[caption="Figure 3.10.3: "]
+image::userguide/attachmentdemo_3.png[AttachmentDemo3, width="200"]
+Figure 3.10.3 above shows an expected result message if the command is successfully executed by Deadline Manager for the above command with the List Action.
+
+
+* Get: `attachment 2 get p/"D:\Documents\TaskAttachments.zip" n/"Assignment.zip"` +
+Saves an attachment named "Assignment.zip" of the 2nd task in the deadline manager to "D:\Documents\TaskAttachments.zip"
+
+
+[attachmentdemo4]
+.Result of Attachment Command with Get Action
+[#img-attachmentdemo4]
+[caption="Figure 3.10.4: "]
+image::userguide/attachmentdemo_4.png[AttachmentDemo4, width="400"]
+Figure 3.10.4 above shows an expected result message if the command is successfully executed by Deadline Manager for the above command with the Get action.
+
+
+_{Truncated. For the full text, please do refer to the https://cs2103-ay1819s1-w17-4.github.io/main/UserGuide.html[User Guide]}_
 
 === FAQ
 include::../UserGuide.adoc[tag=faqfilepath]
@@ -81,7 +142,127 @@ include::../UserGuide.adoc[tag=faqfilepath]
 == Contributions to the Developer Guide
 
 |===
-|_Given below are sections I contributed to the Developer Guide. They showcase my ability to write technical documentation and the technical depth of my contributions to the project._
+|_Given below is one particular section which I contributed to the Developer Guide. They showcase my ability to write technical documentation and the technical depth of my contributions to the project._
 |===
+[discrete]
+=== Attachment Feature
+The attachment feature aims to help users organise and keep track of important files needed for the respective tasks. It allows users to associate files in their computer with a particular task. When the user subsequently decides to perform a particular task, this feature provides functionality to identify files previously associated with the task and facilitates exporting it to an appropriate location.
 
-include::../DeveloperGuide.adoc[tag=attachments]
+==== Current Implementation
+The attachment feature is mainly implemented by `AttachmentCommand`. As `AttachmentCommand` is an all-purpose command involving numerous actions, an interface `AttachmentAction` is defined within `AttachmentCommand` in order to facilitate this. There are 4 classes that implements `AttachmentAction` in order to implement the various actions of the attachment feature. The command line arguments for the attachment command is parsed by `AttachmentCommandParser`.
+
+==== Sequence Flow
+Given below is a sequence of steps, illustrating the interaction between `AttachmentCommandParser`, `AttachmentCommand` and classes that implement `AttachmentAction` after a user enters a relevant command.
+
+Step 1. The user enters an attachment command which involves either `add`, `list`, `delete` or `get` actions.
+
+Step 2. The `AttachmentCommandParser` receives the command with the arguments given as a string.
+
+Step 3. The `AttachmentCommandParser` interprets the arguments and constructs either a `AddAttachmentAction` for `add`, `ListAttachmentAction` for `list`, `DeleteAttachmentAction` for `delete` or `GetAttachmentAction` for `get`. The relevant arguments will also be passed as parameters to the constructors of these classes. Do note that these classes all extends from the abstract class `AttachmentAction`.
+
+Step 4. An `AttachmentCommand` is constructed and initialized with the `AttachmentAction` constructed in Step 3.
+
+Given below is another sequence of steps, also illustrated by the sequence diagram. They describe the interaction between `AttachmentCommand` and classes that implement `AttachmentAction` after the `AttachmentCommand#execute` method is invoked by the `LogicManager`.
+
+.Sequence Diagram for performing the `execute` method of an `AttachmentCommand`
+image::AttachmentExecuteSequenceDiagram.png[width="800"]
+
+Step 1. The task identified by the user is retrieved from the `Model`.
+
+Step 2. The `perform` method of the `AttachmentAction` is invoked, with the task retrieved in Step 1 as the parameter.
+
+Step 3. The invoked `AttachmentAction` performs specific application logic which is different for each action. Then, a `ActionResult` object containing a `Task` and a message is returned to the `execute` method.
+
+Step 4. The `Model` is updated with the `Task` object retrieved from the returned `ActionResult`.
+
+Step 5. The message to be shown to the user is retrieved from the returned `ActionResult`. Then, it is used to create a `CommandResult` object which is to be returned to the the `LogicManager`.
+
+==== AttachmentAction and Implementing Classes
+`AttachmentAction` is an interface nested within `AttachmentCommand`. It defines and requires implementing classes to implement a `perform` method. The implementation for `AttachmentAction` is shown below:
+[source,java]
+----
+public interface AttachmentAction {
+
+    ActionResult perform(Task taskToEdit) throws CommandException;
+
+}
+----
+
+
+* The `perform` method is invoked by `AttachmentCommand` to perform the action on the task provided. `ActionResult` is immutable and contains two properties: a `Task` and a `message` which can be used by implementing classes to return the updated `Task` together with any `message` that should be displayed to the user. Since `Task` is immutable, a new task with the modified values should be returned by the method, instead of modifying `taskToEdit`.
+
+The contents of `ActionResult` is shown below:
+[source,java]
+----
+private static class ActionResult {
+    public final String resultMessage;
+    public final Task updatedTask;
+
+    public ActionResult(Task updatedTask, String resultMessage) {
+        this.updatedTask = updatedTask;
+        this.resultMessage = resultMessage;
+    }
+
+    /**
+     * Returns the task
+     */
+    public Task getTask() { return updatedTask; }
+
+    /**
+     * Returns the result message
+     */
+    public String getMessage() { return resultMessage; }
+}
+----
+
+
+===== AddAttachmentAction
+`AddAttachmentAction` implements `AttachmentAction` and provides the implementations required for the user to associate a file with a task. In other words, it adds an attachment to a task. The constructor class takes in a single parameter, `filePath`, denoting the path to the file to be associated with the task. The `perform` method of `AddAttachmentAction` executes the following:
+
+. Checks if a file exists at the specified `filePath`. A `CommandException` will be raised if this is not the case.
+. Checks if the task already contains an attachment with the same filename. A `CommandException` will be raised if this is not the case.
+. Constructs a new `Attachment` object using the file at the specified `filePath`.
+. Constructs a new `Task` object with the same attributes as the original task, but with the additional `Attachment` object added to the set of attachments.
+
+
+===== ListAttachmentAction
+`ListAttachmentAction` implements `AttachmentAction` and provides the implementations required for the user to list all the files associated with a task. In other words, it provides a listing of all attachments that are added to the task. The constructor class requries no parameters. The `perform` method of `ListAttachmentAction` executes the following:
+
+. Prints the total number of attachments in the specified task.
+. Prints the filename of each of the attachments in the specified task, with one attachment per line.
+
+===== DeleteAttachmentAction
+`DeleteAttachmentAction` implements `AttachmentAction` and provides the implementations required for the user to remove the association of a file that was previously associated with the task. In other words, it removes an attachment from a task. The constructor class takes in a single parameter, `fileName`, denoting the name of the attachment that is to be unassociated with the task. The `perform` method of `DeleteAttachmentAction` executes the following:
+
+. Checks if `fileName` corresponds to a valid attachment in the specified task. A  `CommandException` will be raised if this is not the case. The `fileName` is case senstitive.
+. Constructs a new `Task` object with the same attributes as the original task, but with the `Attachment` object identified by the `fileName` removed from the set of attachments.
+
+===== GetAttachmentAction
+`GetAttachmentAction` implements `AttachmentAction` and provides the implementations required for the user to retrieve a file that was previously associated with the task as attachment. In other words, it allows users to copy an attachment from a task out to the file system. The constructor class takes in two parameters, `filename`, denoting the name of the attachment and `savePath`, denoting the path to copy the attachment to. The `perform` method of `GetAttachmentAction` executes the following:
+
+. Checks if `fileName` corresponds to a valid attachment in the specified task. A  `CommandException` will be raised if this is not the case. The `fileName` argument is case sensitive.
+. Checks if the attachment identified by `fileName` still exists on the user's filesystem and can be copied from. A `CommandException` will be raised if this is not the case.
+. Copies the identified attachment to the path denoted by `savePath` on the filesystem. A `CommandException` will be raised if there are errors in doing so.
+
+==== Design Considerations
+
+===== Aspect: How to associate files to tasks
+* **Alternative 1 (current choice):** Saves the path of the file.
+** Pros: Easy to implement. Reduces storage footprint.
+** Cons: Associated file can cease to exist, due to it being renamed, moved or deleted.
+
+* **Alternative 2:** Copies the entire file to a user specified directory.
+** Pros: Deletion of the associated file (in its original location) will not affect the application.
+** Cons: Harder to implement file management system on the file system. Uses more storage space. User will not be able to update the attachment without deleting and re-adding the file.
+
+===== Aspect: How to identify attachments within a task
+
+* **Alternative 1 (current choice):** Use the file name as an identifier.
+** Pros: More user friendly as there is less words to type.
+** Cons: Cannot have more than one attachment with the same file name in the same task. For example: `folder1/Template.docx` and `folder2/Template.docx` cannot be simultaneously added as attachments to the same task.
+* **Alternative 2:** Use the path to the file as an identifier.
+** Pros: Allows for more than one attachments with the same file name to be associated with the same task. For example: `folder1/Template.docx` and `folder2/Template.docx` can be added to the same task as attachments.
+** Cons: Cumbersome for the user to type the full path to identify the file.
+* **Alternative 3:** Prompt the user for an identifier for each attachment added.
+** Pros: Can be customized by the user to manage multiple files with the same file name in the same task.
+** Cons: Cumbersome for the user to type the identifier for every time they want to add attachments to a task.
