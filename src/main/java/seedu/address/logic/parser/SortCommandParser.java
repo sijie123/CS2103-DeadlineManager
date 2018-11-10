@@ -113,10 +113,16 @@ public class SortCommandParser implements Parser<SortCommand> {
             }
             case "t": // fallthrough
             case "tag": {
-                String tags = splittedComparator[1];
-                if (tags.isEmpty() || tags.length() < 2) {
+                if (splittedComparator.length < 2) {
                     throw new SimpleParseException(
-                            String.format(MESSAGE_INVALID_COMMAND_FORMAT, SortCommand.MESSAGE_USAGE));
+                            String.format(MESSAGE_INVALID_KEY_FORMAT, element));
+                }
+
+                String tags = splittedComparator[1];
+
+                if (tags.isEmpty() || tags.length() < 2 || tags.charAt(0) != '{' || tags.charAt(tags.length() - 1) != '}') {
+                    throw new SimpleParseException(
+                            String.format(MESSAGE_INVALID_COMMAND_FORMAT, element));
                 }
 
                 tags = tags.substring(1, tags.length() - 1); // removing '{' and '}'
