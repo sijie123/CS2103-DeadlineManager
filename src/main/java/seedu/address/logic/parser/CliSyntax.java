@@ -19,9 +19,6 @@ public class CliSyntax {
     /* Prefix definitions for import and export command */
     public static final Prefix PREFIX_RESOLVER = new Prefix("r/");
 
-    /* Prefix definitions for export command */
-    public static final Prefix PREFIX_EXPORT_FORMAT = new Prefix("e/");
-
     public static final String KEY_NAME_SHORT = "n";
     public static final String KEY_NAME_LONG = "name";
     public static final String KEY_DEADLINE_SHORT = "d";
