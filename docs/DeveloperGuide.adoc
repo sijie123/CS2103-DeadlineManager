@@ -163,13 +163,11 @@ The *_Architecture Diagram_* given above shows the high-level design of the Dead
 
 The Deadline Manager consists of two shared components and four core components.
 
-[Discrete]
 ==== Shared components
 
 * `Main`: The entry point of the App.
 * `Commons`: A collection of classes used by the other components in the App.
 
-[Discrete]
 ==== Core components
 
 * <<Design-Ui,*`UI`*>>: The UI of the App.
@@ -902,7 +900,7 @@ In total, there are around 15 distinct kinds of error conditions when parsing a 
 The attachment feature aims to help users organise and keep track of important files needed for the respective tasks. It allows users to associate files in their computer with a particular task. When the user subsequently decides to perform a particular task, this feature provides functionality to identify files previously associated with the task and facilitates exporting it to an appropriate location.
 
 ==== Current Implementation
-The attachment feature is mainly implemented by `AttachmentCommand`. As `AttachmentCommand` is an all-purpose command involving numerous actions, a nested abstract class `AttachmentAction` is defined within `AttachmentCommand` in order to facilitate this. There are 4 classes that extend `AttachmentAction` in order to implement the various actions of the attachment feature. The command line arguments for the attachment command is parsed by `AttachmentCommandParser`.
+The attachment feature is mainly implemented by `AttachmentCommand`. As `AttachmentCommand` is an all-purpose command involving numerous actions, an interface `AttachmentAction` is defined within `AttachmentCommand` in order to facilitate this. There are 4 classes that implements `AttachmentAction` in order to implement the various actions of the attachment feature. The command line arguments for the attachment command is parsed by `AttachmentCommandParser`.
 
 ==== Sequence Flow
 Given below is a sequence of steps, illustrating the interaction between `AttachmentCommandParser`, `AttachmentCommand` and classes that implement `AttachmentAction` after a user enters a relevant command.
@@ -931,9 +929,43 @@ Step 4. The `Model` is updated with the `Task` object retrieved from the returne
 Step 5. The message to be shown to the user is retrieved from the returned `ActionResult`. Then, it is used to create a `CommandResult` object which is to be returned to the the `LogicManager`.
 
 ==== AttachmentAction and Implementing Classes
-`AttachmentAction` is an abstract static class nested within `AttachmentCommand`. It defines and requires implementing classes to implement the following method:
+`AttachmentAction` is an interface nested within `AttachmentCommand`. It defines and requires implementing classes to implement a `perform` method. The implementation for `AttachmentAction` is shown below:
+[source,java]
+----
+public interface AttachmentAction {
 
-* `public abstract ActionResult perform(Task taskToEdit)` This method is invoked by `AttachmentCommand` to perform the action on the task provided. `ActionResult` is immutable and contains two properties: a `Task` and a `message` which can be used by implementing classes to return the updated `Task` together with any `message` that should be displayed to the user. Since `Task` is immutable, a new task with the modified values should be returned by the method, instead of modifying `taskToEdit`. Since this is an abstract method,implementing classes would be required to implement this method with the logic for the respective actions.
+    ActionResult perform(Task taskToEdit) throws CommandException;
+
+}
+----
+
+
+* The `perform` method is invoked by `AttachmentCommand` to perform the action on the task provided. `ActionResult` is immutable and contains two properties: a `Task` and a `message` which can be used by implementing classes to return the updated `Task` together with any `message` that should be displayed to the user. Since `Task` is immutable, a new task with the modified values should be returned by the method, instead of modifying `taskToEdit`.
+
+The contents of `ActionResult` is shown below:
+[source,java]
+----
+private static class ActionResult {
+    public final String resultMessage;
+    public final Task updatedTask;
+
+    public ActionResult(Task updatedTask, String resultMessage) {
+        this.updatedTask = updatedTask;
+        this.resultMessage = resultMessage;
+    }
+
+    /**
+     * Returns the task
+     */
+    public Task getTask() { return updatedTask; }
+
+    /**
+     * Returns the result message
+     */
+    public String getMessage() { return resultMessage; }
+}
+----
+
 
 ===== AddAttachmentAction
 `AddAttachmentAction` implements `AttachmentAction` and provides the implementations required for the user to associate a file with a task. In other words, it adds an attachment to a task. The constructor class takes in a single parameter, `filePath`, denoting the path to the file to be associated with the task. The `perform` method of `AddAttachmentAction` executes the following:
@@ -987,12 +1019,6 @@ Step 5. The message to be shown to the user is retrieved from the returned `Acti
 ** Cons: Cumbersome for the user to type the identifier for every time they want to add attachments to a task.
 // end::attachments[]
 
-// tag::dataencryption[]
-=== [Proposed] Snooze tasks
-
-_{This section is a work-in-progress. Snooze will only be implemented in v2.0 and this section will be updated in due time.}_
-
-// end::dataencryption[]
 
 === Logging
 
@@ -1515,7 +1541,6 @@ Priorities: High (must have) - `* * \*`, Medium (nice to have) - `* \*`, Low (un
 
 |`* * *` |user |find a task by name |locate details of tasks without having to go through the entire list
 
-|`* *` |user |hide <<private-contact-detail,private contact details>> by default |minimize chance of someone else seeing them by accident
 
 |`*` |user with many tasks in the deadline manager |sort tasks by name |locate a task easily
 |=======================================================================
@@ -1525,7 +1550,7 @@ _{More to be added}_
 [appendix]
 == Use Cases
 
-(For all use cases below, the *System* is the `TaskCollection` and the *Actor* is the `user`, unless specified otherwise)
+(For all use cases below, the *System* is the `DeadlineManager` and the *Actor* is the `user`, unless specified otherwise)
 
 [discrete]
 === Use case: Delete task
@@ -1535,7 +1560,7 @@ _{More to be added}_
 1.  User requests to list tasks
 2.  TaskCollection shows a list of tasks
 3.  User requests to delete a specific task in the list
-4.  TaskCollection deletes the task
+4.  DeadlineManager deletes the task
 +
 Use case ends.
 
@@ -1549,20 +1574,58 @@ Use case ends.
 * 3a. The given index is invalid.
 +
 [none]
-** 3a1. TaskCollection shows an error message.
+** 3a1. Deadline Manager shows an error message.
 +
 Use case resumes at step 2.
 
-_{More to be added}_
+[discrete]
+=== Use case: Add attachment to task
+
+*MSS*
+
+1. User requests to list tasks
+2. User requests to add a file as attachment to the specific task in the list
+3. Deadline Manager adds the file as attachment to the task
+
+Use case ends.
+
+*Extensions*
+
+[none]
+* 1a. User is presented with too many tasks.
++
+[none]
+** 1a1. User requests Deadline Manager to only show a subset of tasks or to sort them in some specified order
+** 1a2. Deadline Manager shows the requested subset of all the tasks
++
+Use case resumes at step 2.
+
+[none]
+* 2a. The file to be added does not exist on the user's file system.
++
+[none]
+** 2a1. Deadline Manager shows an error message.
++
+Use case resumes at step 2.
+
+[none]
+* 2b. There is already an existing file attached to the task, with the same file name.
++
+[none]
+** 2a2. Deadline Manager shows an error message.
++
+Use case resumes at step 2.
+
+
 
 [appendix]
 == Non Functional Requirements
 
-.  Should work on any <<mainstream-os,mainstream OS>> as long as it has Java `9` or higher installed.
-.  Should be able to hold up to 1000 tasks without a noticeable sluggishness in performance for typical usage.
-.  A user with above average typing speed for regular English text (i.e. not code, not system admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse.
+.  The application should work on any <<mainstream-os,mainstream OS>> as long as it has Java `9` or higher installed.
+.  The application should be able to hold up to 1000 tasks without a noticeable sluggishness in performance for typical usage.
+.  For a user with above average typing speed for regular English text (i.e. not code, not system admin commands), he/she should be able to accomplish most of the tasks faster using commands than using the mouse.
+.  The information about tasks should be stored in the local filesystem and are able to be persisted across different runs of the application.
 
-_{More to be added}_
 
 [appendix]
 == Glossary
@@ -1612,7 +1675,6 @@ These instructions only provide a starting point for testers to work on; testers
 .. Re-launch the app by double-clicking the jar file. +
    Expected: The most recent window size and location is retained.
 
-_{ more test cases ... }_
 
 === Deleting a task
 
@@ -1623,15 +1685,6 @@ _{ more test cases ... }_
    Expected: First contact is deleted from the list. Details of the deleted contact shown in the status message. Timestamp in the status bar is updated.
 .. Test case: `delete 0` +
    Expected: No task is deleted. Error details shown in the status message. Status bar remains the same.
-.. Other incorrect delete commands to try: `delete`, `delete x` (where x is larger than the list size) _{give more}_ +
+.. Other incorrect delete commands to try: `delete`, `delete x` (where x is larger than the list size)
+ +
    Expected: Similar to previous.
-
-_{ more test cases ... }_
-
-=== Saving data
-
-. Dealing with missing/corrupted data files
-
-.. _{explain how to simulate a missing/corrupted file and the expected behavior}_
-
-_{ more test cases ... }_

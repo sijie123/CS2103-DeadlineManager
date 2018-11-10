@@ -243,9 +243,9 @@ public class AttachmentCommand extends Command {
     /**
      * Stores the actions to perform on a task's attachment with.
      */
-    public abstract static class AttachmentAction {
+    public interface AttachmentAction {
 
-        public abstract ActionResult perform(Task taskToEdit) throws CommandException;
+        ActionResult perform(Task taskToEdit) throws CommandException;
 
     }
 
@@ -253,7 +253,7 @@ public class AttachmentCommand extends Command {
     /**
      * Action to add attachment
      */
-    public static class AddAttachmentAction extends AttachmentAction {
+    public static class AddAttachmentAction implements AttachmentAction {
         public static final String MESSAGE_ADD_NOT_A_FILE = "%1$s is not a valid file.";
         public static final String MESSAGE_SUCCESS = "%1$s added as attachment.";
 
@@ -318,7 +318,7 @@ public class AttachmentCommand extends Command {
     /**
      * Action to list all attachments.
      */
-    public static class ListAttachmentAction extends AttachmentAction {
+    public static class ListAttachmentAction implements AttachmentAction {
 
         public static final String MESSAGE_TOTAL_ATTACHMENTS = "%d attachment(s) in total.\n";
         public static final String MESSAGE_LIST_ATTACHMENT_DETAILS = "%d) %s\n";
@@ -364,7 +364,7 @@ public class AttachmentCommand extends Command {
     /**
      * Action to delete all attachment.
      */
-    public static class DeleteAttachmentAction extends AttachmentAction {
+    public static class DeleteAttachmentAction implements AttachmentAction {
         public static final String MESSAGE_SUCCESS = "%1$s deleted from attachments.";
 
         private final String nameToDelete;
@@ -415,7 +415,7 @@ public class AttachmentCommand extends Command {
     /**
      * Action to get/retrieve attachment.
      */
-    public static class GetAttachmentAction extends AttachmentAction {
+    public static class GetAttachmentAction implements AttachmentAction {
         public static final String MESSAGE_GET_FAILED = "Failed to save to %1$s.";
         public static final String MESSAGE_SUCCESS = "%1$s is now saved to %2$s.";
         public static final String MESSAGE_GET_NOT_A_FILE = "%1$s is not a valid file."
