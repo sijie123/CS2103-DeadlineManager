@@ -433,7 +433,17 @@ In case a task contains more than one tag specified in the comparator, then it w
 Allows the user to add, list, delete and retrieve files associated with a specific task. +
 Deadline manager does not make a copy or backup the files added. Only the location of the files are stored by Deadline Manager. Hence, it is possible that the file might have been modified, renamed, moved or deleted without Deadline Manager's knowledge. As such, there is no guarantee for a file associated with a specific task to always exist.  +
 After the command is successfully executed, all the tasks in Deadline Manager will be listed. +
-Format: `INDEX ACTION [p/"FILEPATH"] [n/"FILENAME"]`
+Format (in general): `INDEX ACTION [p/"FILEPATH"] [n/"FILENAME"]`
+
+More specific formats for each actions are listed below.
+
+* Format for *Add* Action: `attachment INDEX add p/"FILEPATH"`
+
+* Format for *Delete* Action: `attachment INDEX delete n/"FILENAME"`
+
+* Format for *List* Action: `attachment INDEX list`
+
+* Format for *Get* Action: `attachment INDEX get n/"FILENAME" p/"FILEPATH"`
 [TIP]
 The application does not allow adding more than one file with the same filename to the same task, even if they are in different locations on the computer. For this application, filename includes the file extension as well.
 ****
@@ -821,6 +831,8 @@ e.g. `add n/CS2103 Tutorial d/11/10/2018 f/7 p/2 t/java t/hard`
 e.g. `attachment 2 get p/"C:\Documents\TaskAttachments.zip" n/"Assignment.zip"`
 
 * *Clear* : `clear`
+
+* *Complete*: `complete INDEX`
 
 * *Delete* : `delete INDEX` +
 e.g. `delete 3`
