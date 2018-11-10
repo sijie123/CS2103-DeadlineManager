@@ -770,6 +770,9 @@ For fields that are intrinsically ordered (i.e. deadline, priority and frequency
 
 For textual fields (e.g. name, tag), the `<`, `=`, `>` operators represent _substring_, _equivalence_, and _superstring_ relations respectively.
 
+[NOTE]
+For all fields, `=` is equivalent to the intersection of `<` and `>`.
+
 As most users do not usually require such fine-grained control over the filter operator, the `:` operator, known as the _convenience_ operator, is provided as well.  The convenience operator is an alias for one of the other filter operators, and the choice of filter operator depends on the field identifier.  For each field, the filter operator that is expected to be most commonly used is chosen as the target for the convenience operator.
 
 The following list shows what the convenience operator means, in the context of each field:
@@ -842,7 +845,7 @@ In the diagram above, the blue classes are exceptions thrown by `StringTokenizer
 
 `TokenizationInvalidPredicateException` is a wrapper class for `InvalidPredicateException`, which is thrown when the field-specific parser or set parser encounters an error.  The diagram below shows the different exceptions that may be thrown to indicate the types of issues that may be encountered when parsing a filter unit, and how they may be propagated to `FilterCommandParser` via wrapping by `TokenizationInvalidPredicateException`:
 
-image::FilterParserErrorPredicateInheritanceDiagram.png[width="800"]
+image::FilterParserErrorPredicateInheritanceDiagram.png[width="500"]
 
 The filter unit parser is responsible for constructing a `TokenizationInvalidPredicateException` from any thrown `InvalidPredicateException` and associating the `TokenizationInvalidPredicateException` with the offending character range (which will be one of the three parts (or four, if using the extended set syntax) of the filter unit).
 

@@ -4,6 +4,7 @@
 :toc-title:
 :toc-placement: preamble
 :sectnums:
+:sectnumlevels: 6
 :imagesDir: images
 :stylesDir: stylesheets
 :xrefstyle: full
@@ -62,7 +63,7 @@ e.g. typing *`help`* and pressing kbd:[Enter] will open the help window.
 Most commands follow the following format (characterized by `X/` parameter prefixes, where `X` is a single alphabet).  For these commands, unless otherwise specified, the following apply:
 
 * Parameters can be in any order e.g. if the command specifies `n/NAME d/DEADLINE`, `d/DEADLINE n/NAME` is also acceptable.
-* Parameters that contain spaces or `/` should be placed within quotes (either `'` or `"` are okay, but the opening and closing quotes should match) in order to prevent any ambiguity with other parameter prefixes.  (Deadlines need not be quoted because they do not contain any spaces and letters, and hence will never be interpreted as a parameter prefix.)  While it will work when not quoted as long as there is no ambiguity, this is not recommended as future versions of Deadline Manager may introduce new prefixes.
+* Parameters that contain spaces and `/` should be placed within quotes (either `'` or `"` are okay, but the opening and closing quotes must match) in order to prevent any ambiguity with other parameter prefixes.  (When there is no ambiguity then quotes are not necessary; however, this is not recommended.)
 * Parameters containing `'` or `"` *must* be placed within the other kind of quote (i.e. parameters containing `'` must be placed within `"`, and vice-versa).  It is not possible to use both `'` and `"` in the same parameter.
 ====
 
@@ -170,7 +171,7 @@ Filter predicates are the core of the `filter` command.  Each filter predicate s
 [NOTE]
 Filter predicates are indivisible because each filter predicate represents a single rule for filtering - for example, a specified field (e.g. deadline) is compared against some specified value (e.g. 1/10/2018).  There is no way to decompose a filter predicate into smaller testable conditions.
 
-*Most of the time, the simplified filter syntax is sufficient to find the needed task(s) -- reading only the _Simplified filter syntax_ section is sufficient for most basic use cases.  We recommended that you read that section first and then determine if you still need greater expressiveness.*
+*Most of the time, the simplified filter syntax is sufficient to find the needed task(s) -- reading only the _Simplified filter syntax_ section is sufficient for most basic use cases.  We recommended that you read that section first and determine if you still need greater expressiveness, before reading the reset of the documentation contained in this guide.*
 
 However, when there are many tasks in the deadline manager and the simplified syntax returns too many results, or when an exact subset of tasks are required for exporting (see the `export` command), the simplified syntax becomes may be too imprecise to use.  For these use cases, the `filter` command also supports a fully-featured expression parser that is extremely expressive.
 
@@ -230,19 +231,102 @@ The `<` and `>` operators are non-strict: Every task that will be shown using `=
 [TIP]
 This full predicate syntax can be mixed arbitrary with the keyword syntax described in the previous section.  For example, `badminton n:utown 3/10/2018` is allowed.
 
-****
+The following subsections explain the meaning of the operators for each valid key:
 
-Meaning of the operators for each valid key:
+===== Name
 
-* When `key` is `n` or `name`, the task name is compared.  Comparison is case-insensitive.  The operator `>` tests if the search phrase is contained within the task name.  The operator `<` tests if the task name is contained within the search phrase.  The operator `=` tests if the search phrase is exactly the same as the task name.  The convenience operator is an alias for `>`.
-* When `key` is `d`, `due` or `deadline`, the task's due date is compared, and the search phrase is interpreted as a date.  Dates must be in `d/m/y` format.  The operator `>` tests if the task's due date is on or after the specified due date.  The operator `<` tests if the task's due date is on or before the specified due date.  The operator `=` tests if the task's due date is exactly equal to the specified due date.  The convenience operator is an alias for `<`.
-* When `key` is `p` or `priority`, the task's priority is compared, and the search phrase is interpreted as an integer, representing the priority to be searched.  A priority of zero matches all the tasks with no priority set.  The operator `>` tests if the task has priority at least as high as the specified priority.  The operator `<` tests if the task has priority at most as high as the specified priority.  The operator `=` tests if the task's priority is exactly equal to the specified priority.  The convenience operator is an alias for `>`.  Note that priority 1 is the highest priority, priority 4 is the lowest priority, and tasks without any priority are considered to be of lower priority than priority 4.  In other words, `1 > 2 > 3 > 4 > (no priority)`.
-* When `key` is `f` or `frequency`, the task's frequency (i.e. the number of days between consecutive occurrences of that task) is compared, and the search phrase is interpreted as an integer, representing the frequency to be searched.  A non-recurring task is treated as if it has a frequency that is infinitely large (i.e. `f>100` also includes all non-recurring tasks).  The operator `>` tests if the task has a recurrence interval larger than or equal to the specified number of days.  The operator `<` tests if the task has a recurrence interval smaller than or equal to the specified number of days.  The operator `=` tests if the task has a recurrence interval exactly equal to the specified number of days.  The convenience operator is an alias for `<`.
-* When `key` is `t` or `tag`, the task's tags are compared, and the search phrase is interpreted as a (unordered) set of (substrings of) tags.  Comparison is case-insensitive.  Multiple tags are separated by commas (see examples below).  The operator `>` tests if every specified tag is a substring of a tag of the given task.  The operator `<` tests if every specified tag is a superstring of a tag of the given task.  The operator `=` tests if every specified tag exactly matches a tag of the given task.  The convenience operator is an alias for `>`.
-* When `key` is `a` or `attachment`, the task's attachments are compared, and the search phrase is interpreted as a (unordered) set of (substrings of) filenames.  Comparison is case-insensitive.  Multiple filenames are separated by commas, in the same way as tags.  The operator `>` tests if every specified filename is a substring of an attachment filename (of the given task).  The operator `<` tests if every specified tag is a superstring of an attachment filename.  The operator `=` tests if every specified tag exactly matches an attachment filename.  The convenience operator is an alias for `>`.
+When `key` is `n` or `name`, the task name is compared.  Comparison is case-insensitive.  The operator `>` tests if the search phrase is contained within the task name.  The operator `<` tests if the task name is contained within the search phrase.  The operator `=` tests if the search phrase is exactly the same as the task name.  The convenience operator is an alias for `>`.
+
+Examples to demonstrate each operator type:
+
+[width="100%",options="header,autowidth"]
+|=========================================================
+|Task name |Test phrase |Matches ">" |Matches "=" | Matches "<"| Matches ":"
+|homework assignment |assign |Yes |No |No |Yes
+|exam |exam |Yes |Yes |Yes |Yes
+|assignment |homework assignment |No |No |Yes |No
+|assignment |homework |No |No |No |No
+|Homework Assignment |assign |Yes |No |No |Yes
+|Exam |exam |Yes |Yes |Yes |Yes
+|Assignment |homework assignment |No |No |Yes |No
+|=========================================================
+
+===== Deadline
+
+When `key` is `d`, `due` or `deadline`, the task's due date is compared, and the search phrase is interpreted as a date.  Dates must in the format specified in the _Deadline Format_ section.  The operator `>` tests if the task's due date is on or after the specified due date.  The operator `<` tests if the task's due date is on or before the specified due date.  The operator `=` tests if the task's due date is exactly equal to the specified due date.  The convenience operator is an alias for `<`.
+
+Examples to demonstrate each operator type:
+
+[width="100%",options="header,autowidth"]
+|=========================================================
+|Task deadline |Test phrase |Matches ">" |Matches "=" | Matches "<"| Matches ":"
+|1/10/2018 |20/9/2018 |Yes |No |No |No
+|1/10/2018 |1/10/2018 |Yes |Yes |Yes |Yes
+|1/10/2018 |15/10/2018 |No |No |Yes |Yes
+|=========================================================
+
+===== Priority
+
+When `key` is `p` or `priority`, the task's priority is compared, and the search phrase is interpreted as an integer, representing the priority to be searched.  A priority of zero matches all the tasks with no priority set.  The operator `>` tests if the task has priority at least as high as the specified priority.  The operator `<` tests if the task has priority at most as high as the specified priority.  The operator `=` tests if the task's priority is exactly equal to the specified priority.  The convenience operator is an alias for `>`.  Note that priority 1 is the highest priority, priority 4 is the lowest priority, and tasks without any priority are considered to be of lower priority than priority 4.  In other words, `1 > 2 > 3 > 4 > (no priority)`.
+
+Examples to demonstrate each operator type:
+
+[width="100%",options="header,autowidth"]
+|=========================================================
+|Task priority |Test phrase |Matches ">" |Matches "=" | Matches "<"| Matches ":"
+|2 |4 |Yes |No |No |Yes
+|2 |2 |Yes |Yes |Yes |Yes
+|2 |1 |No |No |Yes |No
+|=========================================================
+
+===== Frequency
+
+When `key` is `f` or `frequency`, the task's frequency (i.e. the number of days between consecutive occurrences of that task) is compared, and the search phrase is interpreted as an integer, representing the frequency to be searched.  A non-recurring task is treated as if it has a frequency that is infinitely large (i.e. `f>100` also includes all non-recurring tasks).  The operator `>` tests if the task has a recurrence interval larger than or equal to the specified number of days.  The operator `<` tests if the task has a recurrence interval smaller than or equal to the specified number of days.  The operator `=` tests if the task has a recurrence interval exactly equal to the specified number of days.  The convenience operator is an alias for `<`.
+
+Examples to demonstrate each operator type:
+
+[width="100%",options="header,autowidth"]
+|=========================================================
+|Task frequency |Test phrase |Matches ">" |Matches "=" | Matches "<"| Matches ":"
+|7 |4 |Yes |No |No |No
+|7 |7 |Yes |Yes |Yes |Yes
+|7 |14 |No |No |Yes |Yes
+|=========================================================
+
+===== Tag
+
+When `key` is `t` or `tag`, the task's tags are compared, and the search phrase is interpreted as a (unordered) set of (substrings of) tags.  Comparison is case-insensitive.  Multiple tags are separated by commas (see examples below).  The operator `>` tests if every specified tag is a substring of a tag of the given task.  The operator `<` tests if every specified tag is a superstring of a tag of the given task.  The operator `=` tests if every specified tag exactly matches a tag of the given task.  The convenience operator is an alias for `>`.
+
+Examples to demonstrate each operator type:
+
+[width="100%",options="header,autowidth"]
+|=========================================================
+|Task tags |Test phrase |Matches ">" |Matches "=" | Matches "<"| Matches ":"
+|easy,CS2103,homework |CS |Yes |No |No |Yes
+|easy,CS2103,homework |CS2103 |Yes |Yes |Yes |Yes
+|easy,CS2103,homework |CS2103,homework,easy |Yes |Yes |Yes |Yes
+|easy,CS2103,homework |CS2103T |No |No |Yes |No
+|easy,CS2103,homework |cs |Yes |No |No |Yes
+|easy,CS2103,homework |cs2103 |Yes |Yes |Yes |Yes
+|=========================================================
+
+===== Attachment
+
+When `key` is `a` or `attachment`, the task's attachments are compared, and the search phrase is interpreted as a (unordered) set of (substrings of) filenames.  Comparison is case-insensitive.  Multiple filenames are separated by commas, in the same way as tags.  The operator `>` tests if every specified filename is a substring of an attachment filename (of the given task).  The operator `<` tests if every specified tag is a superstring of an attachment filename.  The operator `=` tests if every specified tag exactly matches an attachment filename.  The convenience operator is an alias for `>`.
 * Any other `key` will cause Deadline Manager to produce an error.
 
-****
+Examples to demonstrate each operator type:
+
+[width="100%",options="header,autowidth"]
+|=========================================================
+|Task tags |Test phrase |Matches ">" |Matches "=" | Matches "<"| Matches ":"
+|"file.txt","Test.java" |Test |Yes |No |No |Yes
+|"file.txt","Test.java" |Test.java |Yes |Yes |Yes |Yes
+|"file.txt","Test.java" |Test.java,file.txt |Yes |Yes |Yes |Yes
+|"file.txt","Test.java" |betterfile.txt |No |No |Yes |No
+|"file.txt","Test.java" |test |Yes |No |No |Yes
+|"file.txt","Test.java" |test.java |Yes |Yes |Yes |Yes
+|=========================================================
 
 [NOTE]
 For set-based filter predicates (i.e. tags and attachments), an extension is available to specify that the set of tags (or attachments) in the task must be _exactly_ those tags (or attachments) in the filter predicate (i.e. there should be no extra tags (or attachments) in the task).  See the _Set-based extensions for filter predicates_ section for more details.
@@ -320,7 +404,7 @@ When it is unambiguous, whitespace between the operators and filter expressions 
 
 ****
 
-[NOTE]
+[TIP]
 Intuitively, the syntax for filter expressions mirrors that of arithmetic expressions such as `1+3*4` and `(1+4+6)*2`.
 
 Examples:
@@ -358,6 +442,22 @@ Meaning of the set operator:
 
 [TIP]
 When comparing a set-based field without using this dual-operator syntax, the set based operator used is effectively the convenience operator.  (In other words, `<key><operator><phrase>` is equivalent to `<key>:<operator><phrase>`.)
+
+Examples to demonstrate each operator type (using the tag field):
+
+[width="100%",options="header,autowidth"]
+|=========================================================
+|Task tags |Test phrase |Matches ">:" |Matches "=:" | Matches "<:"| Matches "::"
+|easy,CS2103,homework |CS2103 |Yes |No |No |Yes
+|easy,CS2103,homework |easy,CS2103,homework |Yes |Yes |Yes |Yes
+|easy,CS2103,homework |CS2103,homework,easy |Yes |Yes |Yes |Yes
+|CS2103 |CS2103,homework |No |No |Yes |No
+|easy,CS2103,homework |cs2103 |Yes |No |No |Yes
+|easy,CS2103,homework |cs |Yes |No |No |Yes
+|=========================================================
+
+[TIP]
+The set operator works in the same way as the above table for the attachment field as well.
 
 Examples:
 
