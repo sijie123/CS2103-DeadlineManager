@@ -2,8 +2,10 @@ package seedu.address.logic.parser;
 
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import seedu.address.logic.commands.SortCommand;
 import seedu.address.logic.parser.exceptions.SimpleParseException;
@@ -129,6 +131,13 @@ public class SortCommandParser implements Parser<SortCommand> {
                 tags = tags.substring(1, tags.length() - 1); // removing '{' and '}'
 
                 String[] tagsOrder = tags.split("~+");
+                tagsOrder = Arrays.asList(tagsOrder)
+                        .stream()
+                        .filter(str -> !str.isEmpty())
+                        .collect(Collectors.toList())
+                        .toArray(new String[0]);
+                // ^to remove empty strings
+
                 if (comparisonCharacter == '>') {
                     tagsOrder = reverseString(tagsOrder);
                 }
