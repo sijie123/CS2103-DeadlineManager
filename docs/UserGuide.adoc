@@ -171,7 +171,7 @@ Filter predicates are the core of the `filter` command.  Each filter predicate s
 [NOTE]
 Filter predicates are indivisible because each filter predicate represents a single rule for filtering - for example, a specified field (e.g. deadline) is compared against some specified value (e.g. 1/10/2018).  There is no way to decompose a filter predicate into smaller testable conditions.
 
-*Most of the time, the simplified filter syntax is sufficient to find the needed task(s) -- reading only the _Simplified filter syntax_ section is sufficient for most basic use cases.  We recommended that you read that section first and determine if you still need greater expressiveness, before reading the reset of the documentation contained in this guide.*
+*Most of the time, the simplified filter syntax (<<Simplified filter syntax>>) is sufficient to find the needed task(s) for most basic use cases.  We recommended that you read that section first and determine if you still need greater expressiveness, before reading the reset of the documentation contained in this guide.*
 
 However, when there are many tasks in the deadline manager and the simplified syntax returns too many results, or when an exact subset of tasks are required for exporting (see the `export` command), the simplified syntax becomes may be too imprecise to use.  For these use cases, the `filter` command also supports a fully-featured expression parser that is extremely expressive.
 
@@ -179,7 +179,7 @@ However, when there are many tasks in the deadline manager and the simplified sy
 
 Tasks can be filtered by typing `filter` followed by one or more space-separated keywords (e.g. `filter homework`, `filter assignment CS2103`, or `filter badminton utown 3/10/2018`).  Such a filter expression would display only those tasks that contain textual or date fields (i.e. name, deadline, tags, and attachments) that matches **every** keyword (e.g. `filter assignment CS2103` will match a task with name `Assignment 1` **and** tags `CS2103` and `easy`).
 
-Numeric fields such as priority and frequency are not matched because the integer values used for priority and frequency often match many task names and tags too.  To filter by priority and frequency, the field must be specified explicitly (see the section on _Controlling the field being matched_ below).
+Numeric fields such as priority and frequency are not matched because the integer values used for priority and frequency often match many task names and tags too.  To filter by priority and frequency, the field must be specified explicitly (see <<Controlling the field being matched>> below).
 
 [NOTE]
 An unquoted keyword can contain only alphanumeric characters, `_`, `-`, `/`, `\`, `.`, and `,`.  To use other characters (including whitespace), the keyword must be placed in quotes (both single (`'`) and double (`"`) quotes work, but the opening and closing quotes must match).
