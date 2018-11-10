@@ -427,22 +427,6 @@ In case a task contains more than one tag specified in the comparator, then it w
 // end::sort[]
 
 
-//TODO: Sidhant
-=== Snoozing tasks : `snooze` (coming in v2.0)
-Hides a specified task from the deadline manager until the time specified in the parameter has elapsed. The index refers to the entries of a previous call to list or search. +
-Format: `snooze INDEX d/DEADLINE`
-
-****
-* Modifies the contents of the task at the specified by INDEX to a new date `DEADLINE`. The index referes to the index number shown in the displayed task list. The index must be a positive integer 1, 2, 3, …​
-****
-
-Examples:
-
-* `snooze 1 d/20/09/2018` +
-A task is 'snoozed' as its deadline is now shifted backwards to 20th September 2018.
-
-
-
 //TODO: Ranald
 // tag::attachment[]
 === Managing attachments of a task : `attachment`
@@ -866,9 +850,6 @@ e.g. `search due<1/10/2018`
 
 * *Select* : `select INDEX` +
 e.g.`select 2`
-
-* *Snooze* : `snooze INDEX d/DEADLINE` +
-e.g.  `snooze 1 d/31/06/2018`
 
 * *Sort* : `sort SORT_COMPARATOR [SORT_COMPARATORS]` +
 e.g. `sort due< name>`
