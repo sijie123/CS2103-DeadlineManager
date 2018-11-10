@@ -43,7 +43,8 @@ For more information, the Github page with the full source can be found: [https:
 *** Contributed to 11 user stories on GitHub Issue Tracker (https://github.com/CS2103-AY1819S1-W17-4/main/issues?utf8=%E2%9C%93&q=is%3Aissue+author%3Aranaldmiao+label%3Atype.Story[User Stories])
 
 *** Reported bugs in Deadline Manager: https://github.com/CS2103-AY1819S1-W17-4/main/issues/149[#149], https://github.com/CS2103-AY1819S1-W17-4/main/issues/178[#178], https://github.com/CS2103-AY1819S1-W17-4/main/issues/179[#179]
-Reviewed Pull Requests (with non-trivial review comments): https://github.com/CS2103-AY1819S1-W17-4/main/pull/143[#143], https://github.com/CS2103-AY1819S1-W17-4/main/pull/154[#154], https://github.com/CS2103-AY1819S1-W17-4/main/pull/112/[#112]
+
+*** Reviewed Pull Requests (with non-trivial review comments): https://github.com/CS2103-AY1819S1-W17-4/main/pull/143[#143], https://github.com/CS2103-AY1819S1-W17-4/main/pull/154[#154], https://github.com/CS2103-AY1819S1-W17-4/main/pull/112/[#112]
 
 *** Integrated AppVeyor and Coveralls to the team repository.
 ** Significant modification of Address Book's code base for use in Deadline Manager:
@@ -121,23 +122,23 @@ Lists all attachments currently associated with the 1st task in the deadline man
 image::userguide/attachmentdemo_3.png[AttachmentDemo3, width="200"]
 Figure 3.10.3 above shows an expected result message if the command is successfully executed by Deadline Manager for the above command with the List Action.
 
-
-* Get: `attachment 2 get p/"D:\Documents\TaskAttachments.zip" n/"Assignment.zip"` +
-Saves an attachment named "Assignment.zip" of the 2nd task in the deadline manager to "D:\Documents\TaskAttachments.zip"
-
-
-[attachmentdemo4]
-.Result of Attachment Command with Get Action
-[#img-attachmentdemo4]
-[caption="Figure 3.10.4: "]
-image::userguide/attachmentdemo_4.png[AttachmentDemo4, width="400"]
-Figure 3.10.4 above shows an expected result message if the command is successfully executed by Deadline Manager for the above command with the Get action.
+//
+//* Get: `attachment 2 get p/"D:\Documents\TaskAttachments.zip" n/"Assignment.zip"` +
+//Saves an attachment named "Assignment.zip" of the 2nd task in the deadline manager to "D:\Documents\TaskAttachments.zip"
+//
+//
+//[attachmentdemo4]
+//.Result of Attachment Command with Get Action
+//[#img-attachmentdemo4]
+//[caption="Figure 3.10.4: "]
+//image::userguide/attachmentdemo_4.png[AttachmentDemo4, width="400"]
+//Figure 3.10.4 above shows an expected result message if the command is successfully executed by Deadline Manager for the above command with the Get action.
 
 
 _{Truncated. For the full text, please do refer to the https://cs2103-ay1819s1-w17-4.github.io/main/UserGuide.html[User Guide]}_
 
-=== FAQ
-include::../UserGuide.adoc[tag=faqfilepath]
+//=== FAQ
+//include::../UserGuide.adoc[tag=faqfilepath]
 
 == Contributions to the Developer Guide
 
@@ -182,12 +183,9 @@ Step 5. The message to be shown to the user is retrieved from the returned `Acti
 [source,java]
 ----
 public interface AttachmentAction {
-
     ActionResult perform(Task taskToEdit) throws CommandException;
-
 }
 ----
-
 
 * The `perform` method is invoked by `AttachmentCommand` to perform the action on the task provided. `ActionResult` is immutable and contains two properties: a `Task` and a `message` which can be used by implementing classes to return the updated `Task` together with any `message` that should be displayed to the user. Since `Task` is immutable, a new task with the modified values should be returned by the method, instead of modifying `taskToEdit`.
 
@@ -203,18 +201,13 @@ private static class ActionResult {
         this.resultMessage = resultMessage;
     }
 
-    /**
-     * Returns the task
-     */
+    // Returns the task
     public Task getTask() { return updatedTask; }
 
-    /**
-     * Returns the result message
-     */
+    // Returns the result message
     public String getMessage() { return resultMessage; }
 }
 ----
-
 
 ===== AddAttachmentAction
 `AddAttachmentAction` implements `AttachmentAction` and provides the implementations required for the user to associate a file with a task. In other words, it adds an attachment to a task. The constructor class takes in a single parameter, `filePath`, denoting the path to the file to be associated with the task. The `perform` method of `AddAttachmentAction` executes the following:
