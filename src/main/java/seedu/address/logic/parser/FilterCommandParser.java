@@ -1,19 +1,19 @@
 package seedu.address.logic.parser;
 
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-import static seedu.address.logic.parser.CliSyntax.KEY_NAME_SHORT;
-import static seedu.address.logic.parser.CliSyntax.KEY_NAME_LONG;
-import static seedu.address.logic.parser.CliSyntax.KEY_DEADLINE_SHORT;
-import static seedu.address.logic.parser.CliSyntax.KEY_DEADLINE_MEDIUM;
-import static seedu.address.logic.parser.CliSyntax.KEY_DEADLINE_LONG;
-import static seedu.address.logic.parser.CliSyntax.KEY_PRIORITY_SHORT;
-import static seedu.address.logic.parser.CliSyntax.KEY_PRIORITY_LONG;
-import static seedu.address.logic.parser.CliSyntax.KEY_FREQUENCY_SHORT;
-import static seedu.address.logic.parser.CliSyntax.KEY_FREQUENCY_LONG;
-import static seedu.address.logic.parser.CliSyntax.KEY_TAG_SHORT;
-import static seedu.address.logic.parser.CliSyntax.KEY_TAG_LONG;
-import static seedu.address.logic.parser.CliSyntax.KEY_ATTACHMENT_SHORT;
 import static seedu.address.logic.parser.CliSyntax.KEY_ATTACHMENT_LONG;
+import static seedu.address.logic.parser.CliSyntax.KEY_ATTACHMENT_SHORT;
+import static seedu.address.logic.parser.CliSyntax.KEY_DEADLINE_LONG;
+import static seedu.address.logic.parser.CliSyntax.KEY_DEADLINE_MEDIUM;
+import static seedu.address.logic.parser.CliSyntax.KEY_DEADLINE_SHORT;
+import static seedu.address.logic.parser.CliSyntax.KEY_FREQUENCY_LONG;
+import static seedu.address.logic.parser.CliSyntax.KEY_FREQUENCY_SHORT;
+import static seedu.address.logic.parser.CliSyntax.KEY_NAME_LONG;
+import static seedu.address.logic.parser.CliSyntax.KEY_NAME_SHORT;
+import static seedu.address.logic.parser.CliSyntax.KEY_PRIORITY_LONG;
+import static seedu.address.logic.parser.CliSyntax.KEY_PRIORITY_SHORT;
+import static seedu.address.logic.parser.CliSyntax.KEY_TAG_LONG;
+import static seedu.address.logic.parser.CliSyntax.KEY_TAG_SHORT;
 import static seedu.address.ui.ResultDisplay.TEXT_STYLE_CLASS_DEFAULT;
 import static seedu.address.ui.ResultDisplay.TEXT_STYLE_CLASS_ERROR;
 
