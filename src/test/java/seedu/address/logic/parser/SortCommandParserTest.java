@@ -28,6 +28,7 @@ public class SortCommandParserTest {
         assertParseSuccess(parser, "d> d<");
         assertParseSuccess(parser, "p< due>");
         assertParseSuccess(parser, "p< tag<{cs2103t  cs2030 easy}");
+        assertParseSuccess(parser, "p< tag<{ cs2103t  cs2030 easy }");
         assertParseSuccess(parser, "f< n>");
     }
 
@@ -38,8 +39,9 @@ public class SortCommandParserTest {
         assertParseThrowsException(parser, "name>>");
         assertParseThrowsException(parser, "name>>  due<");
         assertParseThrowsException(parser, "name~");
-        assertParseThrowsException(parser, "p< tag<{ cs2103t  cs2030 easy}");
         assertParseThrowsException(parser, "p< tag<{ cs2103t  cs2030 easy}}");
+        assertParseThrowsException(parser, "p< tag<");
+        assertParseThrowsException(parser, "p< tag<{");
         assertParseThrowsException(parser, "frequencies<");
     }
 

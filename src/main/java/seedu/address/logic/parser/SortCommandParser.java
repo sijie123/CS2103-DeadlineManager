@@ -131,11 +131,12 @@ public class SortCommandParser implements Parser<SortCommand> {
                 tags = tags.substring(1, tags.length() - 1); // removing '{' and '}'
 
                 String[] tagsOrder = tags.split("~+");
-                tagsOrder = Arrays.asList(tagsOrder)    // to remove empty strings
+                tagsOrder = Arrays.asList(tagsOrder)
                         .stream()
                         .filter(str -> !str.isEmpty())
                         .collect(Collectors.toList())
                         .toArray(new String[0]);
+                // ^to remove empty strings
 
                 if (comparisonCharacter == '>') {
                     tagsOrder = reverseString(tagsOrder);
