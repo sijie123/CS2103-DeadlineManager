@@ -1,5 +1,8 @@
 package seedu.address.logic.parser.exceptions;
 
+import static java.util.Objects.checkIndex;
+import static java.util.Objects.requireNonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +34,7 @@ public class ParseException extends IllegalValueException {
     }
 
     private static String getTextMessage(List<ResultDisplay.StyledText> message) {
+        requireNonNull(message);
         StringBuilder sb = new StringBuilder();
         for (ResultDisplay.StyledText styledText : message) {
             sb.append(styledText.text);
@@ -43,8 +47,12 @@ public class ParseException extends IllegalValueException {
      */
     private static List<ResultDisplay.StyledText> makeMessage(String[] parts) {
         assert parts.length % 2 == 0;
+        assert parts.length % 2 == 0;
         List<ResultDisplay.StyledText> result = new ArrayList<>();
         for (int i = 0; i < parts.length; i += 2) {
+            requireNonNull(parts[i]);
+            checkIndex(i + 1, parts.length);
+            requireNonNull(parts[i + 1]);
             result.add(new ResultDisplay.StyledText(parts[i], parts[i + 1]));
         }
         return result;
