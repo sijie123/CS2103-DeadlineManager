@@ -26,7 +26,7 @@ Deadline Manager is a desktop deadline manager application designed for students
 ** What it does: The deadline attribute contains the due date of the task, and this is essential to the core functionality of the deadline manager.
 ** Highlights: The implementation deals with the parsing and validating of dates.  Furthermore, it integrates into other commands that need to specify a deadline.  This attribute was also integrated throughout the storage-related code so that the deadline can be exported to a file and imported into another instance of Deadline Manager.
 
-* *Code contributed*: https://github.com/CS2103-AY1819S1-W17-4/main/commits?author=btzy[Commits]
+* *Code contributed*: https://github.com/CS2103-AY1819S1-W17-4/main/commits?author=btzy[Commits on GitHub], https://nus-cs2103-ay1819s1.github.io/cs2103-dashboard/#=undefined&search=btzy[CS2103T Project Code Dashboard]
 
 * *Other contributions*:
 
