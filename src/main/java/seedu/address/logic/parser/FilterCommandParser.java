@@ -1,6 +1,19 @@
 package seedu.address.logic.parser;
 
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+import static seedu.address.logic.parser.CliSyntax.KEY_NAME_SHORT;
+import static seedu.address.logic.parser.CliSyntax.KEY_NAME_LONG;
+import static seedu.address.logic.parser.CliSyntax.KEY_DEADLINE_SHORT;
+import static seedu.address.logic.parser.CliSyntax.KEY_DEADLINE_MEDIUM;
+import static seedu.address.logic.parser.CliSyntax.KEY_DEADLINE_LONG;
+import static seedu.address.logic.parser.CliSyntax.KEY_PRIORITY_SHORT;
+import static seedu.address.logic.parser.CliSyntax.KEY_PRIORITY_LONG;
+import static seedu.address.logic.parser.CliSyntax.KEY_FREQUENCY_SHORT;
+import static seedu.address.logic.parser.CliSyntax.KEY_FREQUENCY_LONG;
+import static seedu.address.logic.parser.CliSyntax.KEY_TAG_SHORT;
+import static seedu.address.logic.parser.CliSyntax.KEY_TAG_LONG;
+import static seedu.address.logic.parser.CliSyntax.KEY_ATTACHMENT_SHORT;
+import static seedu.address.logic.parser.CliSyntax.KEY_ATTACHMENT_LONG;
 import static seedu.address.ui.ResultDisplay.TEXT_STYLE_CLASS_DEFAULT;
 import static seedu.address.ui.ResultDisplay.TEXT_STYLE_CLASS_ERROR;
 
@@ -51,22 +64,7 @@ import seedu.address.ui.ResultDisplay;
  */
 public class FilterCommandParser implements Parser<FilterCommand> {
 
-    private static final String KEY_NAME_SHORT = "n";
-    private static final String KEY_NAME_LONG = "name";
-    private static final String KEY_DEADLINE_SHORT = "d";
-    private static final String KEY_DEADLINE_MEDIUM = "due";
-    private static final String KEY_DEADLINE_LONG = "deadline";
-    private static final String KEY_PRIORITY_SHORT = "p";
-    private static final String KEY_PRIORITY_LONG = "priority";
-    private static final String KEY_FREQUENCY_SHORT = "f";
-    private static final String KEY_FREQUENCY_LONG = "frequency";
-    private static final String KEY_TAG_SHORT = "t";
-    private static final String KEY_TAG_LONG = "tag";
-    private static final String KEY_ATTACHMENT_SHORT = "a";
-    private static final String KEY_ATTACHMENT_LONG = "attachment";
-
     private static final Predicate<Task> ALWAYS_FALSE = task -> false;
-
 
     // used to match things like:
     // due=1/10/2018
@@ -215,7 +213,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
         case KEY_NAME_LONG:
             return createNamePredicate(operator, testPhrase);
         case KEY_DEADLINE_SHORT: // fallthrough
-        case KEY_DEADLINE_MEDIUM:
+        case KEY_DEADLINE_MEDIUM: // fallthrough
         case KEY_DEADLINE_LONG:
             return createDeadlinePredicate(operator, testPhrase);
         case KEY_PRIORITY_SHORT: // fallthrough

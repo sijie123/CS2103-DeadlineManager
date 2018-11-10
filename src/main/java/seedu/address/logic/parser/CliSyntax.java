@@ -21,4 +21,18 @@ public class CliSyntax {
 
     /* Prefix definitions for export command */
     public static final Prefix PREFIX_EXPORT_FORMAT = new Prefix("e/");
+
+    public static final String KEY_NAME_SHORT = "n";
+    public static final String KEY_NAME_LONG = "name";
+    public static final String KEY_DEADLINE_SHORT = "d";
+    public static final String KEY_DEADLINE_MEDIUM = "due";
+    public static final String KEY_DEADLINE_LONG = "deadline";
+    public static final String KEY_PRIORITY_SHORT = "p";
+    public static final String KEY_PRIORITY_LONG = "priority";
+    public static final String KEY_FREQUENCY_SHORT = "f";
+    public static final String KEY_FREQUENCY_LONG = "frequency";
+    public static final String KEY_TAG_SHORT = "t";
+    public static final String KEY_TAG_LONG = "tag";
+    public static final String KEY_ATTACHMENT_SHORT = "a";
+    public static final String KEY_ATTACHMENT_LONG = "attachment";
 }
