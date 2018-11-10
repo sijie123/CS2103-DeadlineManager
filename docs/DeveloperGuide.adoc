@@ -726,6 +726,7 @@ The above diagram demonstrates how each of the three possible ways are distingui
 * A non-quoted field identifier only matches alphabets.  There is never a need to use any other kind of character for the field identifier (see the _Field identifier_ section below).
 * A non-quoted test phrase only allows alphanumeric characters and the characters `_`, `-`, `/`, `\`, `,`, and `.`.  (The `/` character allows dates to work, and the `,` character allows tag lists to work.)  The string tokenizer provides the bindings to facilitate this check.  If other characters are required, then the test phrase must be placed in quotes (either single or double quotes are acceptable, but they must match).
 * An operator (both the field and set operators) only matches `<`, `=`, `>`, and `:`.
+* The "save tokenizer position" action saves the current read position (of the string tokenizer) into a local variable, so that the position may be restored (thus "rewinding" the string tokenizer) if the "restore tokenizer position" action is encountered.
 
 The four parts of a filter unit are described in the following sections.
 
