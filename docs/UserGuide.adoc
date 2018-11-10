@@ -439,7 +439,7 @@ In case a task contains more than one tag specified in the comparator, then it w
 //TODO: Sidhant
 //Not sure if this is implemented
 ===  Resolving tasks : `resolve` (coming in v2.0)
-Deletes a specified task from the deadline manager. The index refers to the entries of a previous call to list or search. +
+Deletes a specified task from the deadline manager. The index refers to the entries of a previous call to list or filter. +
 Format: `resolve INDEX`
 
 ****
@@ -454,7 +454,7 @@ The 1st task displayed by the deadline manager will be deleted.
 
 //TODO: Sidhant
 === Snoozing tasks : `snooze` (coming in v2.0)
-Hides a specified task from the deadline manager until the time specified in the parameter has elapsed. The index refers to the entries of a previous call to list or search. +
+Hides a specified task from the deadline manager until the time specified in the parameter has elapsed. The index refers to the entries of a previous call to list or filter. +
 Format: `snooze INDEX d/DEADLINE`
 
 ****
@@ -888,9 +888,6 @@ e.g. `filter due<1/10/2018`
 
 * *Resolve* : `resolve INDEX` +
 e.g. `resolve 1`
-
-* *Search* : `search FILTER_EXPRESSION`
-e.g. `search due<1/10/2018`
 
 * *Select* : `select INDEX` +
 e.g.`select 2`
