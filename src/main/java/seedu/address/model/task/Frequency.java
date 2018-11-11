@@ -63,10 +63,6 @@ public class Frequency implements Comparable<Frequency> {
         BigInteger bigInt = new BigInteger(test);
         BigInteger bigFreqLimit = new BigInteger(FREQUENCY_LIMIT.toString());
 
-        // If less than 0 --> false
-        if (bigInt.compareTo(BigInteger.ZERO) < 0) {
-            return false;
-        }
         // If more than equal to frequency limit --> false
         if (bigInt.compareTo(bigFreqLimit) >= 0) {
             return false;
