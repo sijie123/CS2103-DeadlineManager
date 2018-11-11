@@ -27,8 +27,7 @@ public class SelectCommandSystemTest extends TaskCollectionSystemTest {
         /* Case: select the first card in the task list, command with leading spaces and trailing spaces
          * -> selected
          */
-        String command =
-            "   " + SelectCommand.COMMAND_WORD + " " + INDEX_FIRST_TASK.getOneBased() + "   ";
+        String command = "   " + SelectCommand.COMMAND_WORD + " " + INDEX_FIRST_TASK.getOneBased() + "   ";
         assertCommandSuccess(command, INDEX_FIRST_TASK);
 
         /* Case: select the last card in the task list -> selected */
@@ -62,7 +61,7 @@ public class SelectCommandSystemTest extends TaskCollectionSystemTest {
         showTasksWithName(KEYWORD_MATCHING_MEIER);
         int invalidIndex = getModel().getTaskCollection().getTaskList().size();
         assertCommandFailure(SelectCommand.COMMAND_WORD + " " + invalidIndex,
-            MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
+                MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
 
         /* Case: filtered task list, select index within bounds of deadline manager and task list -> selected */
         Index validIndex = Index.fromOneBased(1);
@@ -74,24 +73,24 @@ public class SelectCommandSystemTest extends TaskCollectionSystemTest {
 
         /* Case: invalid index (0) -> rejected */
         assertCommandFailure(SelectCommand.COMMAND_WORD + " " + 0,
-            String.format(MESSAGE_INVALID_COMMAND_FORMAT, SelectCommand.MESSAGE_USAGE));
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, SelectCommand.MESSAGE_USAGE));
 
         /* Case: invalid index (-1) -> rejected */
         assertCommandFailure(SelectCommand.COMMAND_WORD + " " + -1,
-            String.format(MESSAGE_INVALID_COMMAND_FORMAT, SelectCommand.MESSAGE_USAGE));
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, SelectCommand.MESSAGE_USAGE));
 
         /* Case: invalid index (size + 1) -> rejected */
         invalidIndex = getModel().getFilteredTaskList().size() + 1;
         assertCommandFailure(SelectCommand.COMMAND_WORD + " " + invalidIndex,
-            MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
+                MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
 
         /* Case: invalid arguments (alphabets) -> rejected */
         assertCommandFailure(SelectCommand.COMMAND_WORD + " abc",
-            String.format(MESSAGE_INVALID_COMMAND_FORMAT, SelectCommand.MESSAGE_USAGE));
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, SelectCommand.MESSAGE_USAGE));
 
         /* Case: invalid arguments (extra argument) -> rejected */
         assertCommandFailure(SelectCommand.COMMAND_WORD + " 1 abc",
-            String.format(MESSAGE_INVALID_COMMAND_FORMAT, SelectCommand.MESSAGE_USAGE));
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, SelectCommand.MESSAGE_USAGE));
 
         /* Case: mixed case command word -> rejected */
         assertCommandFailure("SeLeCt 1", MESSAGE_UNKNOWN_COMMAND);
@@ -99,7 +98,7 @@ public class SelectCommandSystemTest extends TaskCollectionSystemTest {
         /* Case: select from empty deadline manager -> rejected */
         deleteAllTests();
         assertCommandFailure(SelectCommand.COMMAND_WORD + " " + INDEX_FIRST_TASK.getOneBased(),
-            MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
+                MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
     }
 
     /**
@@ -118,7 +117,7 @@ public class SelectCommandSystemTest extends TaskCollectionSystemTest {
     private void assertCommandSuccess(String command, Index expectedSelectedCardIndex) {
         Model expectedModel = getModel();
         String expectedResultMessage = String.format(
-            MESSAGE_SELECT_TASK_SUCCESS, expectedSelectedCardIndex.getOneBased());
+                MESSAGE_SELECT_TASK_SUCCESS, expectedSelectedCardIndex.getOneBased());
         int preExecutionSelectedCardIndex = getPersonListPanel().getSelectedCardIndex();
 
         executeCommand(command);

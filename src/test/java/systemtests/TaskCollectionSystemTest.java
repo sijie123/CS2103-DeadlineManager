@@ -45,10 +45,9 @@ public abstract class TaskCollectionSystemTest {
     @ClassRule
     public static ClockRule clockRule = new ClockRule();
 
-    private static final List<String> COMMAND_BOX_DEFAULT_STYLE = Arrays
-        .asList("text-input", "text-field");
+    private static final List<String> COMMAND_BOX_DEFAULT_STYLE = Arrays.asList("text-input", "text-field");
     private static final List<String> COMMAND_BOX_ERROR_STYLE =
-        Arrays.asList("text-input", "text-field", CommandBox.ERROR_STYLE_CLASS);
+            Arrays.asList("text-input", "text-field", CommandBox.ERROR_STYLE_CLASS);
 
     private MainWindowHandle mainWindowHandle;
     private TestApp testApp;
@@ -132,7 +131,7 @@ public abstract class TaskCollectionSystemTest {
     protected void showAllTasks() {
         executeCommand(ListCommand.COMMAND_WORD);
         assertEquals(getModel().getTaskCollection().getTaskList().size(),
-            getModel().getFilteredTaskList().size());
+                getModel().getFilteredTaskList().size());
     }
 
     /**
@@ -142,7 +141,7 @@ public abstract class TaskCollectionSystemTest {
     protected void showTasksWithName(String keyword) {
         executeCommand(FilterCommand.COMMAND_WORD + " " + keyword);
         assertTrue(getModel().getFilteredTaskList().size() < getModel().getTaskCollection()
-            .getTaskList().size());
+                .getTaskList().size());
     }
 
     /**
@@ -173,7 +172,7 @@ public abstract class TaskCollectionSystemTest {
         assertEquals(expectedCommandInput, getCommandBox().getInput());
         assertEquals(expectedResultMessage, getResultDisplay().getText());
         assertEquals(new TaskCollection(expectedModel.getTaskCollection()),
-            testApp.readStorageTaskCollection());
+                testApp.readStorageTaskCollection());
         assertListMatching(getPersonListPanel(), expectedModel.getFilteredTaskList());
     }
 
@@ -205,7 +204,7 @@ public abstract class TaskCollectionSystemTest {
     protected void assertSelectedCardChanged(Index expectedSelectedCardIndex) {
         getPersonListPanel().navigateToCard(getPersonListPanel().getSelectedCardIndex());
         assertEquals(expectedSelectedCardIndex.getZeroBased(),
-            getPersonListPanel().getSelectedCardIndex());
+                getPersonListPanel().getSelectedCardIndex());
     }
 
     /**
@@ -261,7 +260,7 @@ public abstract class TaskCollectionSystemTest {
         assertEquals("", getResultDisplay().getText());
         assertListMatching(getPersonListPanel(), getModel().getFilteredTaskList());
         assertEquals(Paths.get(".").resolve(testApp.getStorageSaveLocation()).toString(),
-            getStatusBarFooter().getSaveLocation());
+                getStatusBarFooter().getSaveLocation());
         assertEquals(SYNC_STATUS_INITIAL, getStatusBarFooter().getSyncStatus());
     }
 
