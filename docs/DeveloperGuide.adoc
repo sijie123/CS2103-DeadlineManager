@@ -308,8 +308,8 @@ The `Storage` component
 * can save `UserPref` objects in json format and read it back.
 * can save the deadline manager data in xml format and read it back.
 * can export the last view in xml format and import it back.
-* is event-based. Methods are executed by listening to events such as TaskCollectionChangedEvent.
-Return data and errors are also passed back by firing events.
+* can export the last view in csv format.
+* can handle requests and return output through event-driven architecture. Methods are executed by listening to events such as TaskCollectionChangedEvent.
 
 
 == Implementation
@@ -420,8 +420,11 @@ image::UndoRedoActivityDiagram.png[width="650"]
 //==== Current implementation
 
 The deadline manager supports import and export features. This feature uses 2 components: `Storage` and `Model`.
+This section will first provide an overview into the components and API involved, before focusing on interactions between the components.
 
 ==== Current Implementation
+
+This section will give an overview of how the import and export features work with `Model` and `Storage`.
 
 ===== Overview of components
 Internally, `StorageManager` implements the following APIs from `ImportExportStorage` interface:
@@ -429,19 +432,18 @@ Internally, `StorageManager` implements the following APIs from `ImportExportSto
 * `importTaskCollection`:  Given a filename, imports and returns a `TaskCollection`.
 * `exportTaskCollection`: Given a `TaskCollection`, exports and writes to a specified file.
 
-Internally, it uses the same API as reading and saving the working taskCollection file.
-However, additional checks are performed to ensure that the user does not inadvertently overwrite the current working file, or import and corrupt the current working file.
-`StorageManager` only handles the I/O from file, and the data read and written is handled by `Model`.
+Import/Export uses the same API as reading and saving the working `TaskCollection` file when exporting. However, additional checks are performed to ensure that the user does not inadvertently overwrite files, or corrupt the Deadline Manager.
+`StorageManager` only handles writing to and reading from file, and relies on `ModelManager` to decide what data should be read or written.
 
 [NOTE]
-An ImportExportExceptionEvent is raised if I/O fails for any reason.
+An ImportExportExceptionEvent is raised if Deadline Manager fails to read or write files for any reason.
 
-ModelManager implements the following APIs necessary for Import and Export:
+The complementary `ModelManager` implements the following APIs necessary for Import and Export:
 
 * `importTaskCollection`: Creates and posts a new import request event
 * `exportTaskCollection`: Creates and posts a new export request event.
 
-The request events are posted to the `EventCenter`, which will dispatch to all subscribed methods.
+The request events are posted to the `EventCenter`, which will dispatch to all subscribed components, such as `Storage`.
 
 ===== Inter-component communication
 
@@ -473,7 +475,7 @@ Similarly, `StorageManager` returns the result of imports and errors with the fo
 * `handleImportRequestEvent`: Processes an import event and reads from file.
 * `handleExportRequestEvent`: Processes an export event and writes to file.
 
-===== Sequence Flow
+==== Sequence Flow
 
 Given below is a sequence diagram illustrating the interactions between `Model` and `Storage` when exporting.
 
@@ -505,16 +507,42 @@ Step 5. The `EventsCenter` will dispatch the `ImportDataAvailableEvent` back to 
 
 Step 6. `ModelManager` will take the imported data and de-conflict the merged entries.
 
-===== Import Conflict Resolver
+==== Import Conflict Resolver
 
 An imported task is deemed conflicting with an existing task if the two tasks compare `equal` with the internal implementation of Task's `equal` method.
 If the user attempts to import a new task that conflicts with an existing task, the task needs to be de-conflicted with one of the following resolver:
 
-* `IgnoreResolver`: Discards the incoming task in favour of the existing task.
-* `OverwriteResolver`: Updates the existing task to reflect the values of the incoming task.
-* `DuplicateResolver`: Keep both copies.
+* `IgnoreImportConflictResolver`: Discards the incoming task in favour of the existing task.
+* `OverwriteImportConflictResolver`: Updates the existing task to reflect the values of the incoming task.
+* `DuplicateImportConflictResolver`: Keep both copies.
 
 The user can specify the deconflict algorithm with flags. By default, the `IgnoreResolver` is used.
+
+image::ImportConflictResolverSequenceDiagram.png[width="800"]
+
+Given above is a sequence diagram for the Import Conflict Resolver, illustrating the interactions between ModelManager and ImportConflictResolver. The OverwriteImportConflictResolver is used as an example.
+
+Step 1. After requesting for import, Storage communicates the model serialised from file by firing a `handleImportDataAvailableEvent(event)`.
+
+Step 2. `ModelManager` retrieves the TaskCollection, and for each task, `ModelManager` decides whether the task already exists in the Model.
+
+Step 2a. If the task already exists, the functional method `resolve(() -> add(), () -> delete(), task)` of `OverwriteImportConflictResolver` is invoked. By passing in a reference to ModelManager's `add` and `delete` methods, the Functional Programming style is used here. `OverwriteImportConflictResolver` will first `delete()` the existing task, before it calls `add()` on the new one.
+
+Step 2b. Otherwise, the task doesn't exist, so `ModelManager` adds the task to the model.
+
+==== CSV Format support
+
+The discussion above has been format-agnostic, abstracting away details about the file formats. Deadline Manager supports both eXtensible Markup Language (XML) and Comma Separated Values (CSV) format. Currently, while XML format can be freely used to import and export data, CSV format can only be used to export data.
+
+The CSV/XML format support is implemented using the respective `{*}TaskCollectionStorage` class. `XMLTaskCollectionStorage` is able to import and export data, so it implements both `TaskCollectionReadStorage` and `TaskCollectionWriteStorage` interface. On the other hand, `CSVTaskCollectionStorage` can only export data, so it implements only the `TaskCollectionWriteStorage` interface.
+
+The `TaskCollectionReadStorage` specifies APIs that is responsible for reading from a file and serialising data into `Tasks` usable by `Model`. Classes that implement `TaskCollectionReadStorage` should support:
+
+* `readTaskCollection`: Reads a file and returns a `TaskCollection` serialised based on the contents of the file.
+
+The `TaskCollectionWriteStorage` specifies APIs that is responsible for de-serialising `Tasks` into a text format to be written to a file. Classes that implement `TaskCollectionWriteStorage` should support:
+
+* `saveTaskCollection`: De-serialises the `TaskCollection` and saves the data into a file at `filePath`.
 
 ==== Design Considerations
 
@@ -539,6 +567,18 @@ As described in <<Import Deconflict, Import Deconflict>>, an import conflict ari
 * **Alternative 2:** Use an `enum` to implement ImportConflictResolver. The `ImportConflictResolver` enum provides a pre-defined selection of algorithms that the user can specify.
 ** Pros: There is no need to implement separate classes. Since the `ImportConflictResolver` enum is only useful within Model, it reside within Model as a private variable.
 ** Cons: If/else statements are required to determine which algorithm should be used. Additionally, an `ImportConflictResolver` implemented this way cannot be easily reused or extended.
+
+===== Aspect: How to support different file formats
+
+As Deadline Manager supports multiple file formats, it is essential to consider how to modularise the file formatting component so that `Storage` can seamlessly process different types of supported files. Furthermore,  some formats such as CSV may not support importing, so it is necessary to distinguish between reading and writing operations.
+
+* **Alternative 1 (current choice):** Maintain separate `TaskCollectionReadStorage` and `TaskCollectionWriteStorage` interfaces. Classes that support import/export can choose to support `ReadStorage`, `WriteStorage`, or both. This is written in an OOP style, and `StorageManager` is agnostic to the export format.
+** Pros: This provides more flexibility that could support more file formats in the future. With the required API in place, future implementations only need to ensure that they support reading and/or writing. Furthermore, this allows implementations to have the option of supporting either reading or writing, instead of having to support both. This could be a more sensible option for formats like CSV, where importing from CSV might not be as useful as exporting to one.
+** Cons: The behaviour might be a little harder to understand from an end-user's perspective. For example, in the current implementation, a user can export to CSV, but cannot import from one as only TaskCollectionWriteStorage is implemented.
+* **Alternative 2:** Combine TaskCollectionReadStorage and TaskCollectionWriteStorage into a single interface, so that implementations that support import/export must support both at once. 
+** Pros: It is more intuitive for the user, as they can freely import from and export to any format.
+** Cons: It is more difficult to support a new format, as both the reading and writing features need to be supported at once. If a developer wants to implement only either reading or writing, they would violate the Liskov Substitution Principle. Thus, combining the interfaces would make implementation less flexible.
+
 // end::importexport[]
 
 // tag::sort[]
@@ -1711,18 +1751,23 @@ These instructions only provide a starting point for testers to work on; testers
 .. Re-launch the app by double-clicking the jar file. +
    Expected: The most recent window size and location is retained.
 
+=== Adding a task
+. Add a new task
+.. Run the `add n/New Program d/01/02/2018` command. +
+   Expected: A new task is added to Deadline Manager with name: New Program, deadline: 01/02/2018, priority: 0, frequency: 0, no tags and no attachments.
+.. Run the add n/New Program d/01/02/2018` command again. +
+   Expected: Another new task is added to Deadline Manager with the same parameters as (a) above.
 
 === Deleting a task
 
 . Deleting a task while all tasks are listed
 
-.. Prerequisites: List all tasks using the `list` command. Multiple tasks in the list.
-.. Test case: `delete 1` +
-   Expected: First contact is deleted from the list. Details of the deleted contact shown in the status message. Timestamp in the status bar is updated.
+.. List all tasks using the `list` command.
+.. Ensure that there is at least 1 task, otherwise follow <<Adding a task, adding a task>> to add a task first.
+.. Run the `delete 1` command +
+   Expected: First task is deleted from Deadline Manager. Details of the deleted task shown in the status message. Timestamp in the status bar is updated.
 .. Test case: `delete 0` +
    Expected: No task is deleted. Error details shown in the status message. Status bar remains the same.
-.. Other incorrect delete commands to try: `delete`, `delete x` (where x is larger than the list size) +
-   Expected: Similar to previous.
 
 === Attachments
 . Adding an attachment to a task
@@ -1776,3 +1821,40 @@ These instructions only provide a starting point for testers to work on; testers
 .. Test case: `attachment 1 get n/"nothere.txt" p/"hello2.txt"` +
    Expected: Error details saying that `nothere.txt` is not an attachment would be displayed as the status message. No file is copied.
 
+   
+=== Adding a task
+. Add a new task
+.. Run the `add n/New Program d/01/02/2018` command. +
+   Expected: A new task is added to Deadline Manager with name: New Program, deadline: 01/02/2018, priority: 0, frequency: 0, no tags and no attachments.
+.. Run the add n/New Program d/01/02/2018` command again. +
+   Expected: Another new task is added to Deadline Manager with the same parameters as (a) above.
+   
+=== Exporting tasks
+. Export in XML format
+.. List all tasks using the `list` command.
+.. Ensure that there is at least 1 task, otherwise follow <<Adding a task>> to add a task first.
+.. Ensure that you can write to the directory that Deadline Manager is running from, and that you don't already have a file named `tasks.xml`, then run the `export p/"tasks.xml"` command. +
+   Expected: A new file, tasks.xml, is created in the same directory from where Deadline Manager is run. A success message is displayed, indicating that export completed successfully.
+.. Run the `export p/"tasks.xml"` command again. +
+   Expected: An error message is displayed indicating that export failed. This is because tasks.xml already exists, and Deadline Manager will refuse to export in order to protect your data.
+.. Run the `export p/"tasks.xml" r/overwrite` command. +
+   Expected: Expected: A new file, tasks.xml, is created in the same directory from where Deadline Manager is run, and overwrites the existing file. A success message is displayed, indicating that export completed  successfully.
+
+. Export in CSV format
+.. List all tasks using the `list` command.
+.. Ensure that there is at least 1 task, otherwise follow <<Adding a task, adding a task>> to add a task first.
+.. Ensure that you can write to the directory that Deadline Manager is running from, and that you don't already have a file named `tasks.csv`, then run the `export csv p/"tasks.csv"` command. +
+   Expected: A new file, tasks.csv, is created in the same directory from where Deadline Manager is run. A success message is displayed, indicating that export completed successfully.
+
+=== Importing tasks
+. Import tasks in XML format
+.. Follow <<Exporting tasks, exporting tasks>> first to ensure that you have already exported a set of tasks into a readable `tasks.xml` file in the same directory that Deadline Manager is running from.
+.. Run the `clear` command to remove all existing tasks.
+.. Run the `import p/"tasks.xml"` command to import tasks from `tasks.xml` into Deadline Manager. +
+   Expected: Deadline Manager is re-populated with all the tasks in tasks.xml. Additionally, a success message is displayed, indicating that import completed successfully.
+.. Run the `import p/"tasks.xml"` command again. +
+   Expected: A success message is displayed, indicating that import completed successfully. However, no new tasks are imported, because by default, Deadline Manager skips tasks that already exist in Deadline Manager.
+.. Run the `import p/"tasks.xml r/all"` command. +
+   Expected: A success message is displayed, indicating that import completed successfully. All the tasks from `tasks.xml` are imported again, creating duplicate entries.
+.. Run the `import p/"non_existent_file.xml"` command, where `non_existent_file.xml` refers to any file that does not exist. +
+   Expected: An error message is displayed, indicating that Deadline Manager is unable to import the xml file specified.
