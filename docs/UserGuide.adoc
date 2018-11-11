@@ -83,32 +83,52 @@ Displays the list of available functions for the user to use. It acts as a guide
 Format: `help`
 
 === Adding a task: `add`
-Adds a task to the deadline manager +
+Adds a task to Deadline Manager +
 Format: `add n/NAME [p/PRIORITY] [f/FREQUENCY] d/DEADLINE [t/TAG]...`
 
 [TIP]
 A task can have any number of tags (including 0)
 
 ****
-* `DEADLINE` should be a date in the format DD/MM/YYYY. Examples of valid
-dates are: 29/03/2018, 29/3/2018, 1/1/2018.
+
+* `DEADLINE` should be a date in the format DD/MM/YYYY.
+Examples of valid dates are:
+29/03/2018, 29/3/2018, 1/1/2018.
+`DEADLINE` is a mandatory parameter.
+
 * `PRIORITY` should only be 0, 1, 2, 3, or 4.
 The lower the number, the higher the priority of the task.
-(1 = Highest Priority, 4 = Lowest Priority)
-* `FREQUENCY` should be a non-negative integer (number of days).
+Priority 0 denotes a task with no priority.
+`PRIORITY` is an optional parameter.
+If `PRIORITY` is not given, priority 0 is assumed.
+
+* `FREQUENCY` should be a non-negative integer between 0 and 999 (number of days).
 Zero frequency denotes a non-recurring task.
 Non-zero frequency denotes a recurring task.
+`FREQUENCY` is an optional parameter.
+If `FREQUENCY` is not given, frequency 0 is assumed.
 ****
+
+[TIP]
+Priority 1 (highest priority) > Priority 2 > Priority 3 > Priority 4 > Priority 0 (lowest priority)
 
 [TIP]
 You can have two tasks with the same attributes!
 
 Examples:
 
+* `add n/Homework d/01/01/2018` +
+Adds a task with name `Homework` with a deadline on 1st January 2018.
+Because `PRIORITY` and `FREQUENCY` are omitted, this task has priority 0 (no priority/lowest priority) and frequency 0 (non-recurring task).
+
 * `add n/Assignment 2 d/1/1/2018 p/1` +
 Adds a task with name `Assignment 2` with a deadline on 1st January 2018 with priority 1 (highest priority).
+
 * `add n/v1 milestone d/9/10/2018 t/CS2103T t/Project p/2` +
 Adds a task with name `v1 milestone` with a deadline on 9th October 2018 with priority 2 (second highest priority). It is additionally tagged with 2 tags: `CS2103T` and `Project`.
+
+* `add n/Clean the house d/01/01/2018 f/7` +
+Adds a task with name `Clean the house` with a deadline on 1st January 2018 with frequency 7 (this is a recurring task).
 
 === Completing a task : `complete`
 Completes an existing task in the deadline manager.
@@ -125,8 +145,23 @@ The index *must be a positive integer* 1, 2, 3, ...
 
 Examples:
 
-* `complete 1` +
-Completes the first task in the displayed task list.
+* `clear` +
+Starts with an empty task list +
+`add n/Homework d/01/01/2018` +
+Adds a non-recurring task. +
+`add n/Clean the house d/01/01/2018 f/7`
+Adds a recurring task with frequency 7.
+See Figure X.X below. +
+`complete 2` +
+Completes the second task in the task list.
+Because the task is a recurring task, the deadline will be changed to 08/01/2018.
+See Figure X.X below. +
+`complete 1`
+Completes the first task in the task list.
+Because the task is a non-recurring task, it will be deleted.
+See Figure X.X below.
+
+TODO: Insert figures.
 
 === Listing all tasks : `list`
 
