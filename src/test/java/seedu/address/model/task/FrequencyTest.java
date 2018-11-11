@@ -1,6 +1,7 @@
 package seedu.address.model.task;
 
 import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
@@ -12,6 +13,13 @@ public class FrequencyTest {
     @Test
     public void constructor_null_throwsNullPointerException() {
         Assert.assertThrows(NullPointerException.class, () -> new Frequency((String) null));
+    }
+
+    @Test
+    public void constructor_success_returnFrequency() {
+        assertEquals(new Frequency("0").value, new Frequency(0).value);
+        assertEquals(new Frequency(((Integer) (Frequency.FREQUENCY_LIMIT - 1)).toString()).value,
+            new Frequency(Frequency.FREQUENCY_LIMIT - 1).value);
     }
 
     @Test
@@ -47,6 +55,16 @@ public class FrequencyTest {
         assertTrue(Frequency.isValidFrequency(0));
         assertTrue(Frequency.isValidFrequency(1));
         assertTrue(Frequency.isValidFrequency(Frequency.FREQUENCY_LIMIT - 1));
+    }
+
+    @Test
+    public void isZero_frequencyZero_returnTrue() {
+        assertTrue(new Frequency(0).isZero());
+    }
+
+    @Test
+    public void isZero_frequencyOne_returnFalse() {
+        assertFalse(new Frequency(1).isZero());
     }
 
 
