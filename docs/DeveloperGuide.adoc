@@ -325,7 +325,10 @@ The user can also provide additional information including priority, frequency a
 
 Given below is a sequence of steps, illustrating the interaction between `AddCommandParser`, `AddCommand` and `Model`:
 
-Step 1. The user enters an `add` command with the index of a task in the task list.
+.Sequence diagram for adding a task
+image::AddOperationSequenceDiagram.png[width="800"]
+
+Step 1. The user enters an `add` command.
 
 Step 2. The `AddCommandParser#parse` method is invoked.
 The `AddCommandParser` receives the command with the arguments given as a string.
@@ -336,13 +339,9 @@ Step 4. The `AddCommand` with a `Task` specified by the user is returned.
 
 Step 5. The `AddCommand#execute` method is invoked.
 
-Step 6. The task identified by the user is retrieved from the `Model`.
+Step 6. The `Model` is updated: The `Model#addTask` method and the `Model#commitTaskCollection` method are invoked.
 
-Step 7. The `Model` is updated: The `Model#addTask` method and the `Model#commitTaskCollection` method are invoked.
-
-Step 8. A `CommandResult` object is returned.
-
-TODO: KIEN: Add figures
+Step 7. A `CommandResult` object is returned.
 
 === Complete feature
 
@@ -362,11 +361,12 @@ After the task specified by the user is retrieved, the `CompleteCommand` will co
 
 ==== Sequence Flow
 
-TODO: KIEN: Add Figure
-
 Given below is a sequence of steps, illustrating the interaction between `CompleteCommandParser`, `CompleteCommand` and `Model`:
 
-Step 1. The user enters a complete command with the index of a task in the task list.
+.Sequence diagram for completing a task
+image::CompleteOperationSequenceDiagram.png[width="800"]
+
+Step 1. The user enters a `complete` command with the index of a task in the task list.
 
 Step 2. The `CompleteCommandParser#parse` method is invoked.
 The `CompleteCommandParser` receives the command with the arguments given as a string.
@@ -381,9 +381,12 @@ Step 6. The task identified by the user is retrieved from the `Model`.
 
 Step 7. The `Model` is updated:
 If the task is not recurred, `Model#deleteTask` is invoked to delete the task.
-Otherwise, `Model#updateTask` is invoked with a new `Task` where the deadline is updated.
+Otherwise, `Model#updateTask` (followed by `Model#updateFilteredTaskList`) is invoked
+with a new `Task` where the deadline is updated.
 
-Step 8. A `CommandResult` object is returned.
+Step 8. The `Model#commitTaskCollection` method is invoked.
+
+Step 9. A `CommandResult` object is returned.
 
 === Undo/Redo feature
 
