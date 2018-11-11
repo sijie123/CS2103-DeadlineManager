@@ -16,7 +16,7 @@ import seedu.address.storage.csvstorage.CsvTaskCollectionWriteStorage;
 public class CsvTaskCollectionWriteStorageTest {
 
     private static final Path TEST_DATA_FOLDER = Paths
-        .get("src", "test", "data", "CsvTaskCollectionStorageTest");
+            .get("src", "test", "data", "CsvTaskCollectionStorageTest");
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -32,8 +32,8 @@ public class CsvTaskCollectionWriteStorageTest {
 
     private Path addToTestDataPathIfNotNull(String prefsFileInTestDataFolder) {
         return prefsFileInTestDataFolder != null
-            ? TEST_DATA_FOLDER.resolve(prefsFileInTestDataFolder)
-            : null;
+                ? TEST_DATA_FOLDER.resolve(prefsFileInTestDataFolder)
+                : null;
     }
 
     /**
@@ -42,7 +42,7 @@ public class CsvTaskCollectionWriteStorageTest {
     private void saveTaskCollection(ReadOnlyTaskCollection taskCollection, String filePath) {
         try {
             new CsvTaskCollectionWriteStorage(Paths.get(filePath))
-                .saveTaskCollection(taskCollection, addToTestDataPathIfNotNull(filePath));
+                    .saveTaskCollection(taskCollection, addToTestDataPathIfNotNull(filePath));
         } catch (IOException ioe) {
             throw new AssertionError("There should not be an error writing to the file.", ioe);
         }

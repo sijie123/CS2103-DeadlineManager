@@ -42,22 +42,28 @@ public class ImportConflictResolverTest {
     class ResolverTester {
         private boolean hasAdded;
         private boolean hasRemoved;
+
         public ResolverTester() {
             this.hasAdded = false;
             this.hasRemoved = false;
         }
+
         public void addTask(Task task) {
             this.hasAdded = true;
         }
+
         public void removeTask(Task task) {
             this.hasRemoved = true;
         }
+
         public boolean didAddTask() {
             return this.hasAdded;
         }
+
         public boolean didRemoveTask() throws AssertionError {
             return this.hasRemoved;
         }
+
         public boolean didIgnoreTask() throws AssertionError {
             return (!this.hasAdded) && (!this.hasRemoved);
         }

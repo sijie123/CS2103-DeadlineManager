@@ -19,11 +19,11 @@ import seedu.address.testutil.TaskManagerBuilder;
 public class VersionedTaskCollectionTest {
 
     private final ReadOnlyTaskCollection taskCollectionsWithAmy = new TaskManagerBuilder().withPerson(AMY)
-        .build();
+            .build();
     private final ReadOnlyTaskCollection taskCollectionWithBob = new TaskManagerBuilder().withPerson(BOB)
-        .build();
+            .build();
     private final ReadOnlyTaskCollection taskCollectionWithCarl = new TaskManagerBuilder()
-        .withPerson(CARL).build();
+            .withPerson(CARL).build();
     private final ReadOnlyTaskCollection emptyTaskCollection = new TaskManagerBuilder().build();
 
     @Test
@@ -32,40 +32,40 @@ public class VersionedTaskCollectionTest {
 
         versionedTaskCollection.commit();
         assertTaskCollectionListStatus(versionedTaskCollection,
-            Collections.singletonList(emptyTaskCollection),
-            emptyTaskCollection,
-            Collections.emptyList());
+                Collections.singletonList(emptyTaskCollection),
+                emptyTaskCollection,
+                Collections.emptyList());
     }
 
     @Test
     public void commit_multipleTaskCollectionPointerAtEndOfStateList_noStatesRemovedCurrentStateSaved() {
         VersionedTaskCollection versionedTaskCollection = prepareTaskCollectionList(
-            emptyTaskCollection, taskCollectionsWithAmy, taskCollectionWithBob);
+                emptyTaskCollection, taskCollectionsWithAmy, taskCollectionWithBob);
 
         versionedTaskCollection.commit();
         assertTaskCollectionListStatus(versionedTaskCollection,
-            Arrays.asList(emptyTaskCollection, taskCollectionsWithAmy, taskCollectionWithBob),
-            taskCollectionWithBob,
-            Collections.emptyList());
+                Arrays.asList(emptyTaskCollection, taskCollectionsWithAmy, taskCollectionWithBob),
+                taskCollectionWithBob,
+                Collections.emptyList());
     }
 
     @Test
     public void commit_multipleTaskCollectionPointerNotAtEndOfStateList_statesAfterPointerRemovedCurrentStateSaved() {
         VersionedTaskCollection versionedTaskCollection = prepareTaskCollectionList(
-            emptyTaskCollection, taskCollectionsWithAmy, taskCollectionWithBob);
+                emptyTaskCollection, taskCollectionsWithAmy, taskCollectionWithBob);
         shiftCurrentStatePointerLeftwards(versionedTaskCollection, 2);
 
         versionedTaskCollection.commit();
         assertTaskCollectionListStatus(versionedTaskCollection,
-            Collections.singletonList(emptyTaskCollection),
-            emptyTaskCollection,
-            Collections.emptyList());
+                Collections.singletonList(emptyTaskCollection),
+                emptyTaskCollection,
+                Collections.emptyList());
     }
 
     @Test
     public void canUndo_multipleTaskCollectionPointerAtEndOfStateList_returnsTrue() {
         VersionedTaskCollection versionedTaskCollection = prepareTaskCollectionList(
-            emptyTaskCollection, taskCollectionsWithAmy, taskCollectionWithBob);
+                emptyTaskCollection, taskCollectionsWithAmy, taskCollectionWithBob);
 
         assertTrue(versionedTaskCollection.canUndo());
     }
@@ -73,7 +73,7 @@ public class VersionedTaskCollectionTest {
     @Test
     public void canUndo_multipleTaskCollectionPointerAtStartOfStateList_returnsTrue() {
         VersionedTaskCollection versionedTaskCollection = prepareTaskCollectionList(
-            emptyTaskCollection, taskCollectionsWithAmy, taskCollectionWithBob);
+                emptyTaskCollection, taskCollectionsWithAmy, taskCollectionWithBob);
         shiftCurrentStatePointerLeftwards(versionedTaskCollection, 1);
 
         assertTrue(versionedTaskCollection.canUndo());
@@ -89,7 +89,7 @@ public class VersionedTaskCollectionTest {
     @Test
     public void canUndo_multipleTaskCollectionPointerAtStartOfStateList_returnsFalse() {
         VersionedTaskCollection versionedTaskCollection = prepareTaskCollectionList(
-            emptyTaskCollection, taskCollectionsWithAmy, taskCollectionWithBob);
+                emptyTaskCollection, taskCollectionsWithAmy, taskCollectionWithBob);
         shiftCurrentStatePointerLeftwards(versionedTaskCollection, 2);
 
         assertFalse(versionedTaskCollection.canUndo());
@@ -98,7 +98,7 @@ public class VersionedTaskCollectionTest {
     @Test
     public void canRedo_multipleTaskCollectionPointerNotAtEndOfStateList_returnsTrue() {
         VersionedTaskCollection versionedTaskCollection = prepareTaskCollectionList(
-            emptyTaskCollection, taskCollectionsWithAmy, taskCollectionWithBob);
+                emptyTaskCollection, taskCollectionsWithAmy, taskCollectionWithBob);
         shiftCurrentStatePointerLeftwards(versionedTaskCollection, 1);
 
         assertTrue(versionedTaskCollection.canRedo());
@@ -107,7 +107,7 @@ public class VersionedTaskCollectionTest {
     @Test
     public void canRedo_multipleTaskCollectionPointerAtStartOfStateList_returnsTrue() {
         VersionedTaskCollection versionedTaskCollection = prepareTaskCollectionList(
-            emptyTaskCollection, taskCollectionsWithAmy, taskCollectionWithBob);
+                emptyTaskCollection, taskCollectionsWithAmy, taskCollectionWithBob);
         shiftCurrentStatePointerLeftwards(versionedTaskCollection, 2);
 
         assertTrue(versionedTaskCollection.canRedo());
@@ -123,7 +123,7 @@ public class VersionedTaskCollectionTest {
     @Test
     public void canRedo_multipleTaskCollectionPointerAtEndOfStateList_returnsFalse() {
         VersionedTaskCollection versionedTaskCollection = prepareTaskCollectionList(
-            emptyTaskCollection, taskCollectionsWithAmy, taskCollectionWithBob);
+                emptyTaskCollection, taskCollectionsWithAmy, taskCollectionWithBob);
 
         assertFalse(versionedTaskCollection.canRedo());
     }
@@ -131,26 +131,26 @@ public class VersionedTaskCollectionTest {
     @Test
     public void undo_multipleTaskCollectionPointerAtEndOfStateList_success() {
         VersionedTaskCollection versionedTaskCollection = prepareTaskCollectionList(
-            emptyTaskCollection, taskCollectionsWithAmy, taskCollectionWithBob);
+                emptyTaskCollection, taskCollectionsWithAmy, taskCollectionWithBob);
 
         versionedTaskCollection.undo();
         assertTaskCollectionListStatus(versionedTaskCollection,
-            Collections.singletonList(emptyTaskCollection),
-            taskCollectionsWithAmy,
-            Collections.singletonList(taskCollectionWithBob));
+                Collections.singletonList(emptyTaskCollection),
+                taskCollectionsWithAmy,
+                Collections.singletonList(taskCollectionWithBob));
     }
 
     @Test
     public void undo_multipleTaskCollectionPointerNotAtStartOfStateList_success() {
         VersionedTaskCollection versionedTaskCollection = prepareTaskCollectionList(
-            emptyTaskCollection, taskCollectionsWithAmy, taskCollectionWithBob);
+                emptyTaskCollection, taskCollectionsWithAmy, taskCollectionWithBob);
         shiftCurrentStatePointerLeftwards(versionedTaskCollection, 1);
 
         versionedTaskCollection.undo();
         assertTaskCollectionListStatus(versionedTaskCollection,
-            Collections.emptyList(),
-            emptyTaskCollection,
-            Arrays.asList(taskCollectionsWithAmy, taskCollectionWithBob));
+                Collections.emptyList(),
+                emptyTaskCollection,
+                Arrays.asList(taskCollectionsWithAmy, taskCollectionWithBob));
     }
 
     @Test
@@ -158,43 +158,43 @@ public class VersionedTaskCollectionTest {
         VersionedTaskCollection versionedTaskCollection = prepareTaskCollectionList(emptyTaskCollection);
 
         assertThrows(VersionedTaskCollection.NoUndoableStateException.class,
-            versionedTaskCollection::undo);
+                versionedTaskCollection::undo);
     }
 
     @Test
     public void undo_multipleTaskCollectionPointerAtStartOfStateList_throwsNoUndoableStateException() {
         VersionedTaskCollection versionedTaskCollection = prepareTaskCollectionList(
-            emptyTaskCollection, taskCollectionsWithAmy, taskCollectionWithBob);
+                emptyTaskCollection, taskCollectionsWithAmy, taskCollectionWithBob);
         shiftCurrentStatePointerLeftwards(versionedTaskCollection, 2);
 
         assertThrows(VersionedTaskCollection.NoUndoableStateException.class,
-            versionedTaskCollection::undo);
+                versionedTaskCollection::undo);
     }
 
     @Test
     public void redo_multipleTaskCollectionPointerNotAtEndOfStateList_success() {
         VersionedTaskCollection versionedTaskCollection = prepareTaskCollectionList(
-            emptyTaskCollection, taskCollectionsWithAmy, taskCollectionWithBob);
+                emptyTaskCollection, taskCollectionsWithAmy, taskCollectionWithBob);
         shiftCurrentStatePointerLeftwards(versionedTaskCollection, 1);
 
         versionedTaskCollection.redo();
         assertTaskCollectionListStatus(versionedTaskCollection,
-            Arrays.asList(emptyTaskCollection, taskCollectionsWithAmy),
-            taskCollectionWithBob,
-            Collections.emptyList());
+                Arrays.asList(emptyTaskCollection, taskCollectionsWithAmy),
+                taskCollectionWithBob,
+                Collections.emptyList());
     }
 
     @Test
     public void redo_multipleTaskCollectionPointerAtStartOfStateList_success() {
         VersionedTaskCollection versionedTaskCollection = prepareTaskCollectionList(
-            emptyTaskCollection, taskCollectionsWithAmy, taskCollectionWithBob);
+                emptyTaskCollection, taskCollectionsWithAmy, taskCollectionWithBob);
         shiftCurrentStatePointerLeftwards(versionedTaskCollection, 2);
 
         versionedTaskCollection.redo();
         assertTaskCollectionListStatus(versionedTaskCollection,
-            Collections.singletonList(emptyTaskCollection),
-            taskCollectionsWithAmy,
-            Collections.singletonList(taskCollectionWithBob));
+                Collections.singletonList(emptyTaskCollection),
+                taskCollectionsWithAmy,
+                Collections.singletonList(taskCollectionWithBob));
     }
 
     @Test
@@ -202,22 +202,22 @@ public class VersionedTaskCollectionTest {
         VersionedTaskCollection versionedTaskCollection = prepareTaskCollectionList(emptyTaskCollection);
 
         assertThrows(VersionedTaskCollection.NoRedoableStateException.class,
-            versionedTaskCollection::redo);
+                versionedTaskCollection::redo);
     }
 
     @Test
     public void redo_multipleTaskCollectionPointerAtEndOfStateList_throwsNoRedoableStateException() {
         VersionedTaskCollection versionedTaskCollection = prepareTaskCollectionList(
-            emptyTaskCollection, taskCollectionsWithAmy, taskCollectionWithBob);
+                emptyTaskCollection, taskCollectionsWithAmy, taskCollectionWithBob);
 
         assertThrows(VersionedTaskCollection.NoRedoableStateException.class,
-            versionedTaskCollection::redo);
+                versionedTaskCollection::redo);
     }
 
     @Test
     public void equals() {
         VersionedTaskCollection versionedTaskCollection = prepareTaskCollectionList(taskCollectionsWithAmy,
-            taskCollectionWithBob);
+                taskCollectionWithBob);
 
         // same values -> returns true
         VersionedTaskCollection copy = prepareTaskCollectionList(taskCollectionsWithAmy, taskCollectionWithBob);
@@ -234,12 +234,12 @@ public class VersionedTaskCollectionTest {
 
         // different state list -> returns false
         VersionedTaskCollection differentTaskCollectionList = prepareTaskCollectionList(taskCollectionWithBob,
-            taskCollectionWithCarl);
+                taskCollectionWithCarl);
         assertFalse(versionedTaskCollection.equals(differentTaskCollectionList));
 
         // different current pointer index -> returns false
         VersionedTaskCollection differentCurrentStatePointer = prepareTaskCollectionList(
-            taskCollectionsWithAmy, taskCollectionWithBob);
+                taskCollectionsWithAmy, taskCollectionWithBob);
         shiftCurrentStatePointerLeftwards(versionedTaskCollection, 1);
         assertFalse(versionedTaskCollection.equals(differentCurrentStatePointer));
     }
@@ -251,9 +251,9 @@ public class VersionedTaskCollectionTest {
      * versionedTaskCollection#currentStatePointer} is equal to {@code expectedStatesAfterPointer}.
      */
     private void assertTaskCollectionListStatus(VersionedTaskCollection versionedTaskCollection,
-                                             List<ReadOnlyTaskCollection> expectedStatesBeforePointer,
-                                             ReadOnlyTaskCollection expectedCurrentState,
-                                             List<ReadOnlyTaskCollection> expectedStatesAfterPointer) {
+                                                List<ReadOnlyTaskCollection> expectedStatesBeforePointer,
+                                                ReadOnlyTaskCollection expectedCurrentState,
+                                                List<ReadOnlyTaskCollection> expectedStatesAfterPointer) {
         // check state currently pointing at is correct
         assertEquals(new TaskCollection(versionedTaskCollection), expectedCurrentState);
 

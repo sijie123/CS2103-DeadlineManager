@@ -127,11 +127,11 @@ public class LogicManagerTest {
         try {
             CommandResult result = logic.execute(HistoryCommand.COMMAND_WORD);
             String expectedMessage = String.format(
-                HistoryCommand.MESSAGE_SUCCESS, String.join("\n", expectedCommands));
+                    HistoryCommand.MESSAGE_SUCCESS, String.join("\n", expectedCommands));
             assertEquals(expectedMessage, result.feedbackToUser);
         } catch (CommandException | ParseException e) {
             throw new AssertionError(
-                "Parsing and execution of HistoryCommand.COMMAND_WORD should succeed.", e);
+                    "Parsing and execution of HistoryCommand.COMMAND_WORD should succeed.", e);
         }
     }
 }

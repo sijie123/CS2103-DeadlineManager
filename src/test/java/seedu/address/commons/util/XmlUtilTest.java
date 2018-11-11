@@ -31,12 +31,12 @@ public class XmlUtilTest {
     private static final Path MISSING_FILE = TEST_DATA_FOLDER.resolve("missing.xml");
     private static final Path VALID_FILE = TEST_DATA_FOLDER.resolve("validTaskCollection.xml");
     private static final Path MISSING_PERSON_FIELD_FILE = TEST_DATA_FOLDER
-        .resolve("missingTaskField.xml");
+            .resolve("missingTaskField.xml");
     private static final Path INVALID_PERSON_FIELD_FILE = TEST_DATA_FOLDER
-        .resolve("invalidTaskField.xml");
+            .resolve("invalidTaskField.xml");
     private static final Path VALID_PERSON_FILE = TEST_DATA_FOLDER.resolve("validTask.xml");
     private static final Path TEMP_FILE = TestUtil
-        .getFilePathInSandboxFolder("tempTaskCollection.xml");
+            .getFilePathInSandboxFolder("tempTaskCollection.xml");
 
     private static final String INVALID_PRIORITY = "a";
     private static final String INVALID_FREQUENCY = "b";
@@ -46,9 +46,9 @@ public class XmlUtilTest {
     private static final String VALID_FREQUENCY = "7";
     private static final String VALID_DEADLINE = "10/1/2019";
     private static final List<XmlAdaptedTag> VALID_TAGS = Collections
-        .singletonList(new XmlAdaptedTag("friends"));
+            .singletonList(new XmlAdaptedTag("friends"));
     private static final List<XmlAdaptedAttachment> VALID_ATTACHMENTS = Collections
-        .singletonList(new XmlAdaptedAttachment("hello.txt"));
+            .singletonList(new XmlAdaptedAttachment("hello.txt"));
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -80,34 +80,34 @@ public class XmlUtilTest {
     @Test
     public void getDataFromFile_validFile_validResult() throws Exception {
         TaskCollection dataFromFile = XmlUtil
-            .getDataFromFile(VALID_FILE, XmlSerializableTaskCollection.class).toModelType();
+                .getDataFromFile(VALID_FILE, XmlSerializableTaskCollection.class).toModelType();
         assertEquals(9, dataFromFile.getTaskList().size());
     }
 
     @Test
     public void xmlAdaptedPersonFromFile_fileWithMissingPersonField_validResult() throws Exception {
         XmlAdaptedTask actualPerson = XmlUtil.getDataFromFile(
-            MISSING_PERSON_FIELD_FILE, XmlAdaptedTaskWithRootElement.class);
+                MISSING_PERSON_FIELD_FILE, XmlAdaptedTaskWithRootElement.class);
         XmlAdaptedTask expectedPerson = new XmlAdaptedTask(
-            null, VALID_PRIORITY, VALID_FREQUENCY, VALID_DEADLINE, VALID_TAGS, VALID_ATTACHMENTS);
+                null, VALID_PRIORITY, VALID_FREQUENCY, VALID_DEADLINE, VALID_TAGS, VALID_ATTACHMENTS);
         assertEquals(expectedPerson, actualPerson);
     }
 
     @Test
     public void xmlAdaptedPersonFromFile_fileWithInvalidPersonField_validResult() throws Exception {
         XmlAdaptedTask actualPerson = XmlUtil.getDataFromFile(
-            INVALID_PERSON_FIELD_FILE, XmlAdaptedTaskWithRootElement.class);
+                INVALID_PERSON_FIELD_FILE, XmlAdaptedTaskWithRootElement.class);
         XmlAdaptedTask expectedPerson = new XmlAdaptedTask(
-            VALID_NAME, INVALID_PRIORITY, INVALID_FREQUENCY, VALID_DEADLINE, VALID_TAGS, VALID_ATTACHMENTS);
+                VALID_NAME, INVALID_PRIORITY, INVALID_FREQUENCY, VALID_DEADLINE, VALID_TAGS, VALID_ATTACHMENTS);
         assertEquals(expectedPerson, actualPerson);
     }
 
     @Test
     public void xmlAdaptedPersonFromFile_fileWithValidPerson_validResult() throws Exception {
         XmlAdaptedTask actualPerson = XmlUtil.getDataFromFile(
-            VALID_PERSON_FILE, XmlAdaptedTaskWithRootElement.class);
+                VALID_PERSON_FILE, XmlAdaptedTaskWithRootElement.class);
         XmlAdaptedTask expectedPerson = new XmlAdaptedTask(
-            VALID_NAME, VALID_PRIORITY, VALID_FREQUENCY, VALID_DEADLINE, VALID_TAGS, VALID_ATTACHMENTS);
+                VALID_NAME, VALID_PRIORITY, VALID_FREQUENCY, VALID_DEADLINE, VALID_TAGS, VALID_ATTACHMENTS);
         assertEquals(expectedPerson, actualPerson);
     }
 
@@ -135,12 +135,12 @@ public class XmlUtilTest {
         XmlSerializableTaskCollection dataToWrite = new XmlSerializableTaskCollection(new TaskCollection());
         XmlUtil.saveDataToFile(TEMP_FILE, dataToWrite);
         XmlSerializableTaskCollection dataFromFile = XmlUtil
-            .getDataFromFile(TEMP_FILE, XmlSerializableTaskCollection.class);
+                .getDataFromFile(TEMP_FILE, XmlSerializableTaskCollection.class);
         assertEquals(dataToWrite, dataFromFile);
 
         TaskManagerBuilder builder = new TaskManagerBuilder(new TaskCollection());
         dataToWrite = new XmlSerializableTaskCollection(
-            builder.withPerson(new TaskBuilder().build()).build());
+                builder.withPerson(new TaskBuilder().build()).build());
 
         XmlUtil.saveDataToFile(TEMP_FILE, dataToWrite);
         dataFromFile = XmlUtil.getDataFromFile(TEMP_FILE, XmlSerializableTaskCollection.class);

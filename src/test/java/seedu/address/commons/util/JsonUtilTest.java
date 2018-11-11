@@ -16,7 +16,7 @@ import seedu.address.testutil.TestUtil;
 public class JsonUtilTest {
 
     private static final Path SERIALIZATION_FILE = TestUtil
-        .getFilePathInSandboxFolder("serialize.json");
+            .getFilePathInSandboxFolder("serialize.json");
 
     @Test
     public void serializeObjectToJsonFile_noExceptionThrown() throws IOException {
@@ -26,7 +26,7 @@ public class JsonUtilTest {
         JsonUtil.serializeObjectToJsonFile(SERIALIZATION_FILE, serializableTestClass);
 
         assertEquals(FileUtil.readFromFile(SERIALIZATION_FILE),
-            SerializableTestClass.JSON_STRING_REPRESENTATION);
+                SerializableTestClass.JSON_STRING_REPRESENTATION);
     }
 
     @Test
@@ -34,13 +34,13 @@ public class JsonUtilTest {
         FileUtil.writeToFile(SERIALIZATION_FILE, SerializableTestClass.JSON_STRING_REPRESENTATION);
 
         SerializableTestClass serializableTestClass = JsonUtil
-            .deserializeObjectFromJsonFile(SERIALIZATION_FILE, SerializableTestClass.class);
+                .deserializeObjectFromJsonFile(SERIALIZATION_FILE, SerializableTestClass.class);
 
         assertEquals(serializableTestClass.getName(), SerializableTestClass.getNameTestValue());
         assertEquals(serializableTestClass.getListOfLocalDateTimes(),
-            SerializableTestClass.getListTestValues());
+                SerializableTestClass.getListTestValues());
         assertEquals(serializableTestClass.getMapOfIntegerToString(),
-            SerializableTestClass.getHashMapTestValues());
+                SerializableTestClass.getHashMapTestValues());
     }
 
     //TODO: @Test jsonUtil_readJsonStringToObjectInstance_correctObject()

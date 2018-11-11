@@ -19,7 +19,7 @@ import seedu.address.model.UserPrefs;
 public class JsonUserPrefsStorageTest {
 
     private static final Path TEST_DATA_FOLDER = Paths
-        .get("src", "test", "data", "JsonUserPrefsStorageTest");
+            .get("src", "test", "data", "JsonUserPrefsStorageTest");
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -29,13 +29,13 @@ public class JsonUserPrefsStorageTest {
 
     @Test
     public void readUserPrefs_nullFilePath_throwsNullPointerException()
-        throws DataConversionException {
+            throws DataConversionException {
         thrown.expect(NullPointerException.class);
         readUserPrefs(null);
     }
 
     private Optional<UserPrefs> readUserPrefs(String userPrefsFileInTestDataFolder)
-        throws DataConversionException {
+            throws DataConversionException {
         Path prefsFilePath = addToTestDataPathIfNotNull(userPrefsFileInTestDataFolder);
         return new JsonUserPrefsStorage(prefsFilePath).readUserPrefs(prefsFilePath);
     }
@@ -57,8 +57,8 @@ public class JsonUserPrefsStorageTest {
 
     private Path addToTestDataPathIfNotNull(String userPrefsFileInTestDataFolder) {
         return userPrefsFileInTestDataFolder != null
-            ? TEST_DATA_FOLDER.resolve(userPrefsFileInTestDataFolder)
-            : null;
+                ? TEST_DATA_FOLDER.resolve(userPrefsFileInTestDataFolder)
+                : null;
     }
 
     @Test
@@ -70,14 +70,14 @@ public class JsonUserPrefsStorageTest {
 
     @Test
     public void readUserPrefs_valuesMissingFromFile_defaultValuesUsed()
-        throws DataConversionException {
+            throws DataConversionException {
         UserPrefs actual = readUserPrefs("EmptyUserPrefs.json").get();
         assertEquals(new UserPrefs(), actual);
     }
 
     @Test
     public void readUserPrefs_extraValuesInFile_extraValuesIgnored()
-        throws DataConversionException {
+            throws DataConversionException {
         UserPrefs expected = getTypicalUserPrefs();
         UserPrefs actual = readUserPrefs("ExtraValuesUserPref.json").get();
 
@@ -109,7 +109,7 @@ public class JsonUserPrefsStorageTest {
     private void saveUserPrefs(UserPrefs userPrefs, String prefsFileInTestDataFolder) {
         try {
             new JsonUserPrefsStorage(addToTestDataPathIfNotNull(prefsFileInTestDataFolder))
-                .saveUserPrefs(userPrefs);
+                    .saveUserPrefs(userPrefs);
         } catch (IOException ioe) {
             throw new AssertionError("There should not be an error writing to the file", ioe);
         }

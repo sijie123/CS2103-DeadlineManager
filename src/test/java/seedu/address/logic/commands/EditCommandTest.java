@@ -41,8 +41,8 @@ public class EditCommandTest {
     public void execute_allFieldsSpecifiedUnfilteredList_success() {
         // Preserve attachments as editedTask should have the same attachment
         Task editedTask = new TaskBuilder()
-            .withAttachments(model.getFilteredTaskList().get(0).getAttachments())
-            .build();
+                .withAttachments(model.getFilteredTaskList().get(0).getAttachments())
+                .build();
 
         EditTaskDescriptor descriptor = new EditTaskDescriptorBuilder(editedTask).build();
         EditCommand editCommand = new EditCommand(INDEX_FIRST_TASK, descriptor);
@@ -50,7 +50,7 @@ public class EditCommandTest {
         String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_TASK_SUCCESS, editedTask);
 
         Model expectedModel = new ModelManager(new TaskCollection(model.getTaskCollection()),
-            new UserPrefs());
+                new UserPrefs());
         expectedModel.updateTask(model.getFilteredTaskList().get(0), editedTask);
         expectedModel.commitTaskCollection();
 
@@ -64,16 +64,16 @@ public class EditCommandTest {
 
         TaskBuilder taskInList = new TaskBuilder(lastTask);
         Task editedTask = taskInList.withName(VALID_NAME_BOB)
-            .withTags(VALID_TAG_HUSBAND).build();
+                .withTags(VALID_TAG_HUSBAND).build();
 
         EditCommand.EditTaskDescriptor descriptor = new EditTaskDescriptorBuilder().withName(VALID_NAME_BOB)
-            .withTags(VALID_TAG_HUSBAND).build();
+                .withTags(VALID_TAG_HUSBAND).build();
         EditCommand editCommand = new EditCommand(indexLastTask, descriptor);
 
         String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_TASK_SUCCESS, editedTask);
 
         Model expectedModel = new ModelManager(new TaskCollection(model.getTaskCollection()),
-            new UserPrefs());
+                new UserPrefs());
         expectedModel.updateTask(lastTask, editedTask);
         expectedModel.commitTaskCollection();
 
@@ -88,7 +88,7 @@ public class EditCommandTest {
         String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_TASK_SUCCESS, editedTask);
 
         Model expectedModel = new ModelManager(new TaskCollection(model.getTaskCollection()),
-            new UserPrefs());
+                new UserPrefs());
         expectedModel.commitTaskCollection();
 
         assertCommandSuccess(editCommand, model, commandHistory, expectedMessage, expectedModel);
@@ -99,15 +99,15 @@ public class EditCommandTest {
         showTaskAtIndex(model, INDEX_FIRST_TASK);
 
         Task taskInFilteredList = model.getFilteredTaskList()
-            .get(INDEX_FIRST_TASK.getZeroBased());
+                .get(INDEX_FIRST_TASK.getZeroBased());
         Task editedTask = new TaskBuilder(taskInFilteredList).withName(VALID_NAME_BOB).build();
         EditCommand editCommand = new EditCommand(INDEX_FIRST_TASK,
-            new EditTaskDescriptorBuilder().withName(VALID_NAME_BOB).build());
+                new EditTaskDescriptorBuilder().withName(VALID_NAME_BOB).build());
 
         String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_TASK_SUCCESS, editedTask);
 
         Model expectedModel = new ModelManager(new TaskCollection(model.getTaskCollection()),
-            new UserPrefs());
+                new UserPrefs());
         expectedModel.updateTask(model.getFilteredTaskList().get(0), editedTask);
         expectedModel.commitTaskCollection();
 
@@ -121,26 +121,26 @@ public class EditCommandTest {
         EditCommand editCommand = new EditCommand(INDEX_SECOND_TASK, descriptor);
 
         String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_TASK_SUCCESS,
-            model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased()));
+                model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased()));
 
         Model expectedModel = new ModelManager(new TaskCollection(model.getTaskCollection()),
-            new UserPrefs());
+                new UserPrefs());
         expectedModel.updateTask(model.getFilteredTaskList().get(1), firstTask);
         expectedModel.commitTaskCollection();
 
         assertCommandSuccess(editCommand, model, commandHistory,
-            expectedMessage, expectedModel);
+                expectedMessage, expectedModel);
     }
 
     @Test
     public void execute_invalidTaskIndexUnfilteredList_failure() {
         Index outOfBoundIndex = Index.fromOneBased(model.getFilteredTaskList().size() + 1);
         EditTaskDescriptor descriptor = new EditTaskDescriptorBuilder().withName(VALID_NAME_BOB)
-            .build();
+                .build();
         EditCommand editCommand = new EditCommand(outOfBoundIndex, descriptor);
 
         assertCommandFailure(editCommand, model, commandHistory,
-            Messages.MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
+                Messages.MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
     }
 
     /**
@@ -155,22 +155,22 @@ public class EditCommandTest {
         assertTrue(outOfBoundIndex.getZeroBased() < model.getTaskCollection().getTaskList().size());
 
         EditCommand editCommand = new EditCommand(outOfBoundIndex,
-            new EditTaskDescriptorBuilder().withName(VALID_NAME_BOB).build());
+                new EditTaskDescriptorBuilder().withName(VALID_NAME_BOB).build());
 
         assertCommandFailure(editCommand, model, commandHistory,
-            Messages.MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
+                Messages.MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
     }
 
     @Test
     public void executeUndoRedo_validIndexUnfilteredList_success() throws Exception {
         Task taskToEdit = model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased());
         Task editedTask = new TaskBuilder()
-            .withAttachments(taskToEdit.getAttachments())
-            .build();
+                .withAttachments(taskToEdit.getAttachments())
+                .build();
         EditTaskDescriptor descriptor = new EditTaskDescriptorBuilder(editedTask).build();
         EditCommand editCommand = new EditCommand(INDEX_FIRST_TASK, descriptor);
         Model expectedModel = new ModelManager(new TaskCollection(model.getTaskCollection()),
-            new UserPrefs());
+                new UserPrefs());
         expectedModel.updateTask(taskToEdit, editedTask);
         expectedModel.commitTaskCollection();
 
@@ -180,24 +180,24 @@ public class EditCommandTest {
         // undo -> reverts taskcollection back to previous state and filtered task list to show all tasks
         expectedModel.undoTaskCollection();
         assertCommandSuccess(new UndoCommand(), model, commandHistory, UndoCommand.MESSAGE_SUCCESS,
-            expectedModel);
+                expectedModel);
 
         // redo -> same first task edited again
         expectedModel.redoTaskCollection();
         assertCommandSuccess(new RedoCommand(), model, commandHistory, RedoCommand.MESSAGE_SUCCESS,
-            expectedModel);
+                expectedModel);
     }
 
     @Test
     public void executeUndoRedo_invalidIndexUnfilteredList_failure() {
         Index outOfBoundIndex = Index.fromOneBased(model.getFilteredTaskList().size() + 1);
         EditTaskDescriptor descriptor = new EditTaskDescriptorBuilder().withName(VALID_NAME_BOB)
-            .build();
+                .build();
         EditCommand editCommand = new EditCommand(outOfBoundIndex, descriptor);
 
         // execution failed -> deadline manager state not added into model
         assertCommandFailure(editCommand, model, commandHistory,
-            Messages.MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
+                Messages.MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
 
         // single deadline manager state in model -> undoCommand and redoCommand fail
         assertCommandFailure(new UndoCommand(), model, commandHistory, UndoCommand.MESSAGE_FAILURE);
@@ -215,12 +215,12 @@ public class EditCommandTest {
         showTaskAtIndex(model, INDEX_SECOND_TASK);
         Task taskToEdit = model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased());
         Task editedTask = new TaskBuilder()
-            .withAttachments(taskToEdit.getAttachments())
-            .build();
+                .withAttachments(taskToEdit.getAttachments())
+                .build();
         EditCommand.EditTaskDescriptor descriptor = new EditTaskDescriptorBuilder(editedTask).build();
         EditCommand editCommand = new EditCommand(INDEX_FIRST_TASK, descriptor);
         Model expectedModel = new ModelManager(new TaskCollection(model.getTaskCollection()),
-            new UserPrefs());
+                new UserPrefs());
 
         expectedModel.updateTask(taskToEdit, editedTask);
         expectedModel.commitTaskCollection();
@@ -231,14 +231,14 @@ public class EditCommandTest {
         // undo -> reverts taskcollection back to previous state and filtered task list to show all tasks
         expectedModel.undoTaskCollection();
         assertCommandSuccess(new UndoCommand(), model, commandHistory, UndoCommand.MESSAGE_SUCCESS,
-            expectedModel);
+                expectedModel);
 
         assertNotEquals(model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased()),
-            taskToEdit);
+                taskToEdit);
         // redo -> edits same second task in unfiltered task list
         expectedModel.redoTaskCollection();
         assertCommandSuccess(new RedoCommand(), model, commandHistory, RedoCommand.MESSAGE_SUCCESS,
-            expectedModel);
+                expectedModel);
     }
 
     @Test

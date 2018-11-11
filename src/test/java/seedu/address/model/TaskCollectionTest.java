@@ -52,10 +52,10 @@ public class TaskCollectionTest {
     public void resetData_withDuplicateTasks_doesNotThrow() {
         // Two tasks with the same identity fields
         Task editedAlice = new TaskBuilder(ALICE)
-            .withPriority(VALID_PRIORITY_BOB)
-            .withFrequency(VALID_FREQUENCY_BOB)
-            .withTags(VALID_TAG_HUSBAND)
-            .build();
+                .withPriority(VALID_PRIORITY_BOB)
+                .withFrequency(VALID_FREQUENCY_BOB)
+                .withTags(VALID_TAG_HUSBAND)
+                .build();
         List<Task> newTasks = Arrays.asList(ALICE, editedAlice);
         TaskCollectionStub newData = new TaskCollectionStub(newTasks);
 

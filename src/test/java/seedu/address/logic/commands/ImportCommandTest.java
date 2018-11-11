@@ -45,11 +45,13 @@ public class ImportCommandTest {
     }
 
     private class ModelStubWithImportTaskCollection extends ModelStub {
-        private String filename = "";
+        private String filename;
         private ImportCommand testCommand = null;
+
         public ModelStubWithImportTaskCollection(String defaultFile) {
             filename = defaultFile;
         }
+
         public ModelStubWithImportTaskCollection(String defaultFile, ImportCommand importCommand) {
             this(defaultFile);
             testCommand = importCommand;

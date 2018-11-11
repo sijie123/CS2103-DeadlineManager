@@ -99,7 +99,7 @@ public class ModelManagerTest {
     @Test
     public void equals() {
         TaskCollection taskCollection = new TaskManagerBuilder().withPerson(ALICE).withPerson(BENSON)
-            .build();
+                .build();
         TaskCollection differentTaskCollection = new TaskCollection();
         UserPrefs userPrefs = new UserPrefs();
 
@@ -123,7 +123,7 @@ public class ModelManagerTest {
         // different filteredList -> returns false
         String[] keywords = ALICE.getName().value.split("\\s+");
         modelManager.updateFilteredTaskList(
-            new NameContainsKeywordsPredicate(Arrays.asList(keywords)));
+                new NameContainsKeywordsPredicate(Arrays.asList(keywords)));
         assertFalse(modelManager.equals(new ModelManager(taskCollection, userPrefs)));
 
         // resets modelManager to initial state for upcoming tests

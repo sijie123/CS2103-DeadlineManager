@@ -19,20 +19,20 @@ public class CsvAdaptedTaskTest {
     @Test
     public void constructor_validData_success() {
         CsvAdaptedTask taskValidNameInvalidDeadline =
-            new CsvAdaptedTask(VALID_NAME, INVALID_DEADLINE);
+                new CsvAdaptedTask(VALID_NAME, INVALID_DEADLINE);
         CsvAdaptedTask taskValidNameInvalidDeadline2 =
-            new CsvAdaptedTask(VALID_NAME, INVALID_DEADLINE);
+                new CsvAdaptedTask(VALID_NAME, INVALID_DEADLINE);
         CsvAdaptedTask taskValidNameValidDeadline =
-            new CsvAdaptedTask(VALID_NAME, VALID_DEADLINE);
+                new CsvAdaptedTask(VALID_NAME, VALID_DEADLINE);
         CsvAdaptedTask taskInvalidNameValidDeadline =
-            new CsvAdaptedTask(INVALID_NAME, VALID_DEADLINE);
+                new CsvAdaptedTask(INVALID_NAME, VALID_DEADLINE);
 
         assertEquals(taskValidNameInvalidDeadline,
-            taskValidNameInvalidDeadline2);
+                taskValidNameInvalidDeadline2);
         assertNotEquals(taskValidNameInvalidDeadline,
-            taskValidNameValidDeadline);
+                taskValidNameValidDeadline);
         assertNotEquals(taskValidNameInvalidDeadline2,
-            taskInvalidNameValidDeadline);
+                taskInvalidNameValidDeadline);
     }
 
     @Test
