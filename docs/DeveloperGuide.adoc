@@ -943,7 +943,7 @@ In total, there are around 15 distinct kinds of error conditions when parsing a 
 ** Pros: Easier to implement because there are less cases to consider.  Also, we can display an error if the user accidentally omits a boolean operator or field identifier.
 ** Cons: More verbose filter expressions which may require higher cognitive overhead.
 
-// tag::filter-design-considerations-extract[]
+// tag::filter-design-considerations-convenience[]
 ===== Aspect: What the convenience operator should do
 
 * **Alternative 1 (current choice):** Support a convenience operator that is an alias of the most common filter operator for each field.
@@ -952,10 +952,12 @@ In total, there are around 15 distinct kinds of error conditions when parsing a 
 * **Alternative 2:** Support a convenience operator that is an alias of a fixed operator regardless of field.
 ** Pros: Easier for users to remember what the convenience operator does.
 ** Cons: Convenience operator is not really _convenient_ -- the behaviour might be surprising or awkward for some fields.
+// end::filter-design-considerations-convenience[]
 * **Alternative 3:** Don't support the convenience operator at all.
 ** Pros: Least amount of implementation work.
 ** Cons: Additional cognitive overhead as users need to figure out which of the available operators they actually want.
 
+// tag::filter-design-considerations-exceptions[]
 ===== Aspect: How to signal exceptional conditions when parsing filter expressions
 
 * **Alternative 1 (current choice):** Use a different type of checked exception for every possible type of failure condition.
@@ -968,7 +970,7 @@ In total, there are around 15 distinct kinds of error conditions when parsing a 
 ** Pros: Simplest method signatures.
 ** Cons: Easy to overlook possible failure conditions when modifying the code, so future developers might inadvertently introduce bugs.
 
-// end::filter-design-considerations-extract[]
+// end::filter-design-considerations-exceptions[]
 // end::filter[]
 
 // tag::attachments[]

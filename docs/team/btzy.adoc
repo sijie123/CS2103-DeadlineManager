@@ -90,7 +90,9 @@ include::../DeveloperGuide.adoc[tag=filter-unit-parser]
 
 include::../DeveloperGuide.adoc[tag=filter-design-considerations-header]
 
-include::../DeveloperGuide.adoc[tag=filter-design-considerations-extract]
+include::../DeveloperGuide.adoc[tag=filter-design-considerations-convenience]
+
+include::../DeveloperGuide.adoc[tag=filter-design-considerations-exceptions]
 
 |===
 |_Some of my contributions to the user guide have been omitted for brevity.  Please visit https://cs2103-ay1819s1-w17-4.github.io/main/DeveloperGuide.html#filter-feature[this link] for the full developer guide._
