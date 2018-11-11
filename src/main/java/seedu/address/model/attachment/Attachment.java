@@ -115,6 +115,7 @@ public class Attachment {
         case LESS:
             return attachment -> StringUtil.containsFragmentIgnoreCase(testPhrase, attachment.getName());
         case CONVENIENCE: // convenience operator, works the same as ">"
+            //Fallthrough
         case GREATER:
             return attachment -> StringUtil.containsFragmentIgnoreCase(attachment.getName(), testPhrase);
         default:

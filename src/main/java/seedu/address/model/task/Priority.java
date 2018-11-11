@@ -72,6 +72,7 @@ public class Priority implements Comparable<Priority> {
         case LESS:
             return priority -> priority.compareTo(tmpPriority) <= 0;
         case CONVENIENCE: // convenience operator, works the same as ">"
+            //Fallthrough
         case GREATER:
             return priority -> priority.compareTo(tmpPriority) >= 0;
         default:
@@ -88,7 +89,7 @@ public class Priority implements Comparable<Priority> {
     public boolean equals(Object other) {
         return other == this // short circuit if same object
                 || (other instanceof Priority // instanceof handles nulls
-                    && value == ((Priority) other).value); // state check
+                && value == ((Priority) other).value); // state check
     }
 
     @Override

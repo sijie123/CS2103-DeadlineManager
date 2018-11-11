@@ -35,8 +35,8 @@ public class EditCommand extends Command {
 
     public static final String COMMAND_WORD = "edit";
 
-    public static final String MESSAGE_USAGE =
-        COMMAND_WORD + ": Edits the details of the task identified "
+    public static final String MESSAGE_USAGE = COMMAND_WORD
+            + ": Edits the details of the task identified "
             + "by the index number used in the displayed task list. "
             + "Existing values will be overwritten by the input values.\n"
             + "Parameters: INDEX (must be a positive integer) "
@@ -85,7 +85,7 @@ public class EditCommand extends Command {
         Set<Attachment> updatedAttachments = taskToEdit.getAttachments();
 
         return new Task(updatedName, updatedPriority, updatedFrequency, updatedDeadline, updatedTags,
-            updatedAttachments);
+                updatedAttachments);
     }
 
     @Override
@@ -121,14 +121,14 @@ public class EditCommand extends Command {
         // state check
         EditCommand e = (EditCommand) other;
         return index.equals(e.index)
-            && editTaskDescriptor.equals(e.editTaskDescriptor);
+                && editTaskDescriptor.equals(e.editTaskDescriptor);
     }
 
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
         builder.append("index: ").append(index)
-            .append(" editTaskDescriptor: ").append(editTaskDescriptor);
+                .append(" editTaskDescriptor: ").append(editTaskDescriptor);
         return builder.toString();
     }
 
@@ -204,7 +204,7 @@ public class EditCommand extends Command {
          */
         public Optional<Set<Tag>> getTags() {
             return (tags != null) ? Optional.of(Collections.unmodifiableSet(tags))
-                : Optional.empty();
+                    : Optional.empty();
         }
 
         /**
@@ -231,22 +231,22 @@ public class EditCommand extends Command {
             EditTaskDescriptor e = (EditTaskDescriptor) other;
 
             return getName().equals(e.getName())
-                && getPriority().equals(e.getPriority())
-                && getFrequency().equals(e.getFrequency())
-                && getDeadline().equals(e.getDeadline())
-                && getTags().equals(e.getTags());
+                    && getPriority().equals(e.getPriority())
+                    && getFrequency().equals(e.getFrequency())
+                    && getDeadline().equals(e.getDeadline())
+                    && getTags().equals(e.getTags());
         }
 
         @Override
         public String toString() {
             final StringBuilder builder = new StringBuilder();
             builder.append(getName())
-                .append(" Priority: ")
-                .append(getPriority())
-                .append(" Frequency: ")
-                .append(getFrequency())
-                .append(" Deadline: ")
-                .append(getDeadline());
+                    .append(" Priority: ")
+                    .append(getPriority())
+                    .append(" Frequency: ")
+                    .append(getFrequency())
+                    .append(" Deadline: ")
+                    .append(getDeadline());
             return builder.toString();
         }
     }
