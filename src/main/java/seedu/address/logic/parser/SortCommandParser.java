@@ -125,7 +125,7 @@ public class SortCommandParser implements Parser<SortCommand> {
                 if (tags.isEmpty() || tags.length() < 2 || tags.charAt(0) != '{'
                         || tags.charAt(tags.length() - 1) != '}') {
                     throw new SimpleParseException(
-                            String.format(MESSAGE_INVALID_COMMAND_FORMAT, element));
+                            String.format(MESSAGE_INVALID_KEY_FORMAT, element));
                 }
 
                 tags = tags.substring(1, tags.length() - 1); // removing '{' and '}'
@@ -148,7 +148,7 @@ public class SortCommandParser implements Parser<SortCommand> {
                         tagsArray[i] = new Tag(tagsOrder[i]);
                     } catch (IllegalArgumentException e) {
                         throw new SimpleParseException(
-                                String.format(MESSAGE_INVALID_COMMAND_FORMAT, SortCommand.MESSAGE_USAGE));
+                                String.format(MESSAGE_INVALID_KEY_FORMAT, element));
                     }
                 }
 
