@@ -628,7 +628,7 @@ Step 4. The `SortCommand` calls the `updateSortedTaskList` API method of `ModelM
 
 Step 5. The method `updateSortedTaskList` sorts the `versionTaskCollection` using JavaFx sort method
 
-==== Implementing Sort Parser
+==== Implementation of Sort Parser
 `SortCommandParser` implements `Parser<>` interface. The most essential portion of `SortCommandParser`, which is chaining of comparators is shown below:
 [source,java]
 ----

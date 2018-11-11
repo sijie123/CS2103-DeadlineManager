@@ -27,10 +27,10 @@ My key contributions to the project includes:
 ** Highlights: The sort functionality supports chaining of comparators, which enables the user to fine-tune how they want to order the tasks. Example - If a user has a lot of tasks with the very close due dates, the sort function allows them to first sort by due date and then by priority. This sorts all the tasks by due date first and all those tasks with the same due date are sorted by priority within themselves.
 ** Credits: Referenced https://www.codejava.net/java-core/collections/sorting-a-list-by-multiple-attributes-example[Java Comparator Chaining] and https://stackoverflow.com/questions/25451331/how-to-remove-empty-results-after-splitting-with-regex-in-java/31005313[Regex fine-tuning]
 
-* *Minor enhancement*: Implemented natural comparison for some of the attributes of the task (Ex. Priority, Name)
+* *Minor enhancement*: Implemented *natural comparison for some of the attributes of the task* (Ex. Priority, Name)
 ** What it does: Allows comparison for the different attributes of the task. Primarily used for filtering and sorting of the tasks.
 
-* *Code contributed*: [https://github.com/CS2103-AY1819S1-W17-4/main/commits?author=sidhant007[Commits]]
+* *Code contributed*: [https://nus-cs2103-ay1819s1.github.io/cs2103-dashboard/#=undefined&search=sidhant007&sort=displayName&since=2018-09-12&until=2018-11-11&timeframe=day&reverse=false&repoSort=true[Commits]]
 
 * *Other contributions*:
 
