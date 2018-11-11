@@ -373,6 +373,7 @@ If the `currentStatePointer` is at index 0, pointing to the initial deadline man
 
 The following sequence diagram shows how the undo operation works:
 
+.Sequence diagram for `undo`
 image::UndoRedoSequenceDiagram.png[width="800"]
 
 The `redo` command does the opposite -- it calls `Model#redoTaskCollection()`, which shifts the `currentStatePointer` once to the right, pointing to the previously undone state, and restores the deadline manager to that state.
@@ -390,6 +391,7 @@ image::UndoRedoNewCommand4StateListDiagram.png[width="800"]
 
 The following activity diagram summarizes what happens when a user executes a new command:
 
+.Activity diagram when a command is executed
 image::UndoRedoActivityDiagram.png[width="650"]
 
 ==== Design Considerations
@@ -475,6 +477,7 @@ Similarly, `StorageManager` returns the result of imports and errors with the fo
 
 Given below is a sequence diagram illustrating the interactions between `Model` and `Storage` when exporting.
 
+.Sequence diagram for exporting tasks
 image::ExportSequenceDiagram.png[width="800"]
 
 Step 1. The user executes export to file `dataFile`. The export command calls ModelManager's `exportTaskCollection`.
@@ -487,6 +490,7 @@ Step 4. `Storage` will handle the `ExportRequestEvent` and write to file.
 
 Given below is a sequence diagram illustrating the interactions between `Model` and `Storage` when importing.
 
+.Sequence diagram for importing tasks
 image::ImportSequenceDiagram.png[width="800"]
 
 Step 1. The user executes import from file `dataFile`. The import command calls ModelManager's `importTaskCollection`.
@@ -564,8 +568,10 @@ Step 2. The `SortCommandParser` receives the command with the user comparator gi
 
 Step 3. The `SortCommandParser` parses the string into a valid comparator and calls the `SortCommand` with this comparator provided.
 
+.Sequence diagram for `sort` command
 image::SortOperationSequenceDiagram.png[width="800"]
-Figure 10 illustrates the sequence diagram for Sort Command
+
+The above sequence diagram illustrates the Sort Command
 
 Step 4. The `SortCommand` calls the `updateSortedTaskList` API method of `ModelManager`
 
@@ -642,6 +648,7 @@ The second component in the list above also accepts a filter unit that contains 
 
 A general string tokenizer (this is the `StringTokenizer` class in the `parser` subdirectory) is shared by parts 1 and 2 to split the filter expression into tokens.
 
+.Sequence diagram for parsing a filter command (for non-set-based fields)
 image::FilterOperationSequenceDiagram.png[width="800"]
 
 The above diagram shows the simplified sequence of operations to parse a filter expression into a predicate for non-set-based fields.  Take note of the following simplifications in the sequence diagram above:
@@ -714,10 +721,12 @@ There are three possible ways to express a filter unit:
 
 The following diagram is describes a filter unit that is specified using the full syntax:
 
+.Structure of a filter unit that uses the full syntax
 image::FilterUnitDiagram.png[width="200"]
 
 The following diagram is describes a filter unit that is specified using the extended full syntax for sets:
 
+.Structure of a filter unit that uses the extended full syntax for sets
 image::FilterUnitDiagramSet.png[width="250"]
 
 As shown in the diagram above, a filter unit (using the full syntax or extended syntax) consists of these parts:
@@ -732,6 +741,7 @@ The simplified syntax only contains the test phrase, and is explained in a separ
 
 The filter unit parser distinguishes between the three possible ways to express a filter unit, as per the activity diagram below:
 
+.Activity diagram for parsing a filter unit
 image::FilterUnitActivityDiagram.png[width="800"]
 
 // end::filter-unit-parser[]
@@ -740,7 +750,7 @@ The above diagram demonstrates how each of the three possible ways are distingui
 
 * A non-quoted field identifier only matches alphabets.  There is never a need to use any other kind of character for the field identifier (see <<Field identifier>> below).
 * A non-quoted test phrase only allows alphanumeric characters and the characters `_`, `-`, `/`, `\`, `,`, and `.`.  (The `/` character allows dates to work, and the `,` character allows tag lists to work.)  The string tokenizer provides the bindings to facilitate this check.  If other characters are required, then the test phrase must be placed in quotes (either single or double quotes are acceptable, but they must match).
-* An operator (both the field and set operators) only matches `<`, `=`, `>`, and `:`.
+* An operator (both the filter operator and set operator) only matches `<`, `=`, `>`, and `:`.
 * The "save tokenizer position" action saves the current read position (of the string tokenizer) into a local variable, so that the position may be restored (thus "rewinding" the string tokenizer) if the "restore tokenizer position" action is encountered.
 
 The four parts of a filter unit are described in the following sections.
@@ -827,6 +837,7 @@ The set operator is orthogonal to the filter operator, and hence they may be com
 
 The set parser is implemented in the `makeFilter()` method of the `seedu.address.model.util.SetUtil` class.  It parses the comma-separated list (i.e. the test phrase) using a new instance of `StringTokenizer`, and then uses reflection to invoke the relevant field-specific parser for each item in the comma-separated list.  This is illustrated in the sequence diagram below:
 
+.Sequence diagram for parsing a filter command (for set-based fields)
 image::FilterOperationSequenceDiagramSet.png[width="800"]
 
 As with the sequence diagram for non-set-based fields, the above diagram is simplified and omits details about how the test phrase is split into tokens using a new `StringTokenizer` instance.  "Field" represents any filterable set-based field -- `Tag` or `Attachment`.
@@ -853,12 +864,14 @@ Error conditions are signalled via checked exceptions that inherit from `seedu.a
 
 The following inheritance diagram shows the inheritance hierarchy of each kind of exception that can be thrown from parsing a filter expression:
 
+.Inheritance tree for exceptions that may be thrown from parsing a filter expression
 image::FilterParserErrorInheritanceDiagram.png[width="800"]
 
-In the diagram above, the blue classes are exceptions thrown by `StringTokenizer`, while the red classes are exceptions thrown by `BooleanExpressionParser`.  In order to reduce coupling between `StringTokenizer` and `BooleanExpressionParser`, and to be able to distinguish (by type-based `catch` clauses) the end-of-string exceptions of those components, they do not shared the same class for end-of-string exceptions.
+In the diagram above, the [blue]#*blue*# classes are exceptions thrown by `StringTokenizer`, while the [red]#*red*# classes are exceptions thrown by `BooleanExpressionParser`.  In order to reduce coupling between `StringTokenizer` and `BooleanExpressionParser`, and to be able to distinguish (by type-based `catch` clauses) the end-of-string exceptions of those components, they do not shared the same class for end-of-string exceptions.
 
 `TokenizationInvalidPredicateException` is a wrapper class for `InvalidPredicateException`, which is thrown when the field-specific parser or set parser encounters an error.  The diagram below shows the different exceptions that may be thrown to indicate the types of issues that may be encountered when parsing a filter unit, and how they may be propagated to `FilterCommandParser` via wrapping by `TokenizationInvalidPredicateException`:
 
+.Inheritance tree for exceptions that may be thrown from parsing a filter unit
 image::FilterParserErrorPredicateInheritanceDiagram.png[width="500"]
 
 The filter unit parser is responsible for constructing a `TokenizationInvalidPredicateException` from any thrown `InvalidPredicateException` and associating the `TokenizationInvalidPredicateException` with the offending character range (which will be one of the three parts (or four, if using the extended set syntax) of the filter unit).
@@ -883,11 +896,11 @@ In total, there are around 15 distinct kinds of error conditions when parsing a 
 
 ===== Aspect: Whether to support simplified filter semantics
 
-* **Alternative 1 (current choice):** Support simplified filter semantics (implicit-AND and any-match).
+* **Alternative 1 (current choice):** Support simplified filter semantics (implicitly inserting `&` between adjacent predicates, and the simplified filter unit syntax).
 ** Pros: Reduces cognitive overhead and typing time for most common cases, and makes `filter` feel like a standard keyword search function.
-** Cons: Not possible to detect when user accidentally omits the boolean operator or filter field.
-* **Alternative 2:** Only support the unsimplified version.
-** Pros: Easier to implement, can display an error if the user accidentally omits a boolean operator or filter field.
+** Cons: It is not possible to detect when user accidentally omits the boolean operator or filter field, so the displayed tasks may not be what the user intended to view.
+* **Alternative 2:** Only support the unsimplified semantics.
+** Pros: Easier to implement because there are less cases to consider.  Also, we can display an error if the user accidentally omits a boolean operator or field identifier.
 ** Cons: More verbose filter expressions which may require higher cognitive overhead.
 
 // tag::filter-design-considerations-extract[]
@@ -899,18 +912,21 @@ In total, there are around 15 distinct kinds of error conditions when parsing a 
 * **Alternative 2:** Support a convenience operator that is an alias of a fixed operator regardless of field.
 ** Pros: Easier for users to remember what the convenience operator does.
 ** Cons: Convenience operator is not really _convenient_ -- the behaviour might be surprising or awkward for some fields.
+* **Alternative 3:** Don't support the convenience operator at all.
+** Pros: Least amount of implementation work.
+** Cons: Additional cognitive overhead as users need to figure out which of the available operators they actually want.
 
 ===== Aspect: How to signal exceptional conditions when parsing filter expressions
 
 * **Alternative 1 (current choice):** Use a different type of checked exception for every possible type of failure condition.
 ** Pros: Every possible failure condition is listed in the `throws` clause of all methods -- developers can easily tell how exactly each aspect of parsing could fail, and Java will statically check that every possible failure condition is handled (which makes it impossible to overlook any failure conditions).
-** Cons: Method signatures are more verbose.
+** Cons: More verbose method signatures.
 * **Alternative 2:** Use a single checked exception for all possible failure conditions, and distinguish errors by the message string instead.
 ** Pros: Less verbose method signatures, and yet the benefit of checked exceptions is retained.
 ** Cons: Developers can only tell what exact failure conditions are possible by inspecting the whole call graph of the method.  Furthermore, it is difficult to distinguish different error conditions in order to customize and show relevant messages to the user.
 * **Alternative 3:** Use unchecked exceptions.
 ** Pros: Simplest method signatures.
-** Cons: Easy to overlook possible failure conditions when modifying the code.
+** Cons: Easy to overlook possible failure conditions when modifying the code, so future developers might inadvertently introduce bugs.
 
 // end::filter-design-considerations-extract[]
 // end::filter[]
