@@ -935,7 +935,7 @@ Step 4. An `AttachmentCommand` is constructed and initialized with the `Attachme
 
 Given below is another sequence of steps, also illustrated by the sequence diagram. They describe the interaction between `AttachmentCommand` and classes that implement `AttachmentAction` after the `AttachmentCommand#execute` method is invoked by the `LogicManager`.
 
-.Sequence Diagram for performing the `execute` method of an `AttachmentCommand`
+.Sequence Diagram for performing the `execute` method of an `AttachmentCommand`.
 image::AttachmentExecuteSequenceDiagram.png[width="800"]
 
 Step 1. The task identified by the user is retrieved from the `Model`.
@@ -1705,6 +1705,58 @@ These instructions only provide a starting point for testers to work on; testers
    Expected: First contact is deleted from the list. Details of the deleted contact shown in the status message. Timestamp in the status bar is updated.
 .. Test case: `delete 0` +
    Expected: No task is deleted. Error details shown in the status message. Status bar remains the same.
-.. Other incorrect delete commands to try: `delete`, `delete x` (where x is larger than the list size)
- +
+.. Other incorrect delete commands to try: `delete`, `delete x` (where x is larger than the list size) +
    Expected: Similar to previous.
+
+=== Attachments
+. Adding an attachment to a task
+
+.. Prerequisites:
+... List all tasks using the `list` command. There should be at least one task in the Deadline Manager.
+... Create a file named `hello.txt` in the same directory as the Deadline Manager's jar file. You must have read permission for that file.
+... The first task listed in the application does not have any attachments yet.
+... Ensure that there isn't a file named `nothere.txt` in the same directory as the Deadline Manager's jar file.
+
+.. Test case: `attachment 1 add p/"hello.txt"` +
+   Expected: `hello.txt` is added to the first task as attachment. A gray label containing `hello.txt` should appear in the Task card of the first task. All tasks should be listed.
+
+.. Test case: `attachment 1 add p/"nothere.txt"` +
+   Expected: `nothere.txt` is not added as attachment as the file does not exist. Error details is shown in the status message.
+
+. Deleting an attachment from a task
+.. Prerequisites:
+... List all tasks using the `list` command. There should be at least one task in the Deadline Manager.
+... An attachment named `hello.txt` in the same directory as the Deadline Manager's jar file is already added to the first task listed in the application. (To do so, you may refer to the previous section.)
+... The first task listed has only 1 single attachment: `hello.txt`.
+
+.. Test case: `attachment 1 delete n/"hello.txt"` +
+   Expected: `hello.txt` is unassociated with the first task. It should still remain in the filesystem. The gray label containing `hello.txt` in the Task card of the first task is removed. All tasks should now be listed.
+
+.. Test case: `attachment 1 delete n/"nothere.txt"` +
+   Expected: No attachment is unassociated from the first task. Error details is shown in the status message.
+
+. Listing attachments of a task
+.. Prerequisites:
+... List all tasks using the `list` command. There should be at least two tasks in the Deadline Manager.
+... The first task listed should already have some number of attachments.
+... The second task listed should have no attachments.
+
+.. Test case: `attachment 1 list` +
+   Expected: The status message is updated with a listing of all the attachments of the first task. The attachments are identified by their filename, not filepath.
+
+.. Test case: `attachment 2 list` +
+   Expected: The list command should still be successful but it should just indicate `0 attachment(s) in total.`
+
+. Retrieving attachments from a task
+.. Prerequisites:
+... List all tasks using the `list` command. There should be at least 1 task in Deadline Manager.
+... Create a file named `hello.txt` in the same directory as the Deadline Manager's jar file. You must have read permission for that file.
+... Add `hello.txt` as an attachment to the first task. (You may refer to the previous sections on how to do so.)
+... Ensure that you have write permissions to the file/location `hello2.txt` in the same directory as the Deadline Manager's jar file.
+
+.. Test case: `attachment 1 get n/"hello.txt" p/"hello2.txt"` +
+   Expected: The file contents of `hello.txt` is copied to `hello2.txt` in the same directory as the Deadline Manager's jar file. If `hello2.txt` is previously another file, it would have been overwritten by the command.
+
+.. Test case: `attachment 1 get n/"nothere.txt" p/"hello2.txt"` +
+   Expected: Error details saying that `nothere.txt` is not an attachment would be displayed as the status message. No file is copied.
+
