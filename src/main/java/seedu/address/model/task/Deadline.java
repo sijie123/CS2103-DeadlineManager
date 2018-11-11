@@ -82,6 +82,7 @@ public class Deadline implements Comparable<Deadline> {
         case EQUAL:
             return deadline -> deadline.equals(testDeadline);
         case CONVENIENCE: // convenience operator, works the same as "<"
+            //Fallthrough
         case LESS:
             return deadline -> deadline.compareTo(testDeadline) <= 0;
         case GREATER:
@@ -100,7 +101,7 @@ public class Deadline implements Comparable<Deadline> {
     public boolean equals(Object other) {
         return other == this // short circuit if same object
                 || (other instanceof Deadline // instanceof handles nulls
-                    && value.equals(((Deadline) other).value)); // state check
+                && value.equals(((Deadline) other).value)); // state check
     }
 
     @Override

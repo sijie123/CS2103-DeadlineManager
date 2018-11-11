@@ -77,7 +77,7 @@ public class StatusBarFooter extends UiPart<Region> {
         long now = clock.millis();
         String lastUpdated = new Date(now).toString();
         logger.info(LogsCenter
-            .getEventHandlingLogMessage(abce, "Setting last updated status to " + lastUpdated));
+                .getEventHandlingLogMessage(abce, "Setting last updated status to " + lastUpdated));
         setSyncStatus(String.format(SYNC_STATUS_UPDATED, lastUpdated));
     }
 }

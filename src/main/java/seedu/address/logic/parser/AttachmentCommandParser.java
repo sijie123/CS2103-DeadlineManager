@@ -32,11 +32,10 @@ public class AttachmentCommandParser implements Parser<AttachmentCommand> {
         ArgumentMultimap argMultimap;
         try {
             argMultimap =
-                ArgumentTokenizer
-                    .tokenize(args, PREFIX_FILEPATH, PREFIX_FILENAME);
+                    ArgumentTokenizer.tokenize(args, PREFIX_FILEPATH, PREFIX_FILENAME);
         } catch (TokenizationException ime) {
             throw new SimpleParseException(
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, AttachmentCommand.MESSAGE_USAGE), ime);
+                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, AttachmentCommand.MESSAGE_USAGE), ime);
         }
 
         Index index;
@@ -47,14 +46,13 @@ public class AttachmentCommandParser implements Parser<AttachmentCommand> {
             actionWord = indexAndCommand[1].trim();
         } catch (SimpleParseException pe) {
             throw new SimpleParseException(
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, AttachmentCommand.MESSAGE_USAGE), pe);
+                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, AttachmentCommand.MESSAGE_USAGE), pe);
         } catch (ArrayIndexOutOfBoundsException ae) {
             throw new SimpleParseException(
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, AttachmentCommand.MESSAGE_USAGE), ae);
+                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, AttachmentCommand.MESSAGE_USAGE), ae);
         }
 
         switch (actionWord) {
-
         case COMMAND_ADD_ACTION:
             return parseAddAction(index, argMultimap);
         case COMMAND_LIST_ACTION:
@@ -65,7 +63,7 @@ public class AttachmentCommandParser implements Parser<AttachmentCommand> {
             return parseGetAction(index, argMultimap);
         default:
             throw new SimpleParseException(
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, AttachmentCommand.MESSAGE_USAGE));
+                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, AttachmentCommand.MESSAGE_USAGE));
         }
     }
 

@@ -15,7 +15,7 @@ import seedu.address.model.task.exceptions.InvalidPredicateOperatorException;
 public class Name implements Comparable<Name> {
 
     public static final String MESSAGE_NAME_CONSTRAINTS =
-        "Names should only contain alphanumeric characters and spaces, and it should not be blank";
+            "Names should only contain alphanumeric characters and spaces, and it should not be blank";
 
     /*
      * The first character of the address must not be a whitespace,
@@ -57,6 +57,7 @@ public class Name implements Comparable<Name> {
         case LESS:
             return name -> StringUtil.containsFragmentIgnoreCase(testPhrase, name.value);
         case CONVENIENCE: // convenience operator, works the same as ">"
+            //Fallthrough
         case GREATER:
             return name -> StringUtil.containsFragmentIgnoreCase(name.value, testPhrase);
         default:
@@ -73,8 +74,8 @@ public class Name implements Comparable<Name> {
     @Override
     public boolean equals(Object other) {
         return other == this // short circuit if same object
-            || (other instanceof Name // instanceof handles nulls
-            && value.equals(((Name) other).value)); // state check
+                || (other instanceof Name // instanceof handles nulls
+                && value.equals(((Name) other).value)); // state check
     }
 
     @Override

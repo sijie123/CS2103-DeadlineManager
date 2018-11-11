@@ -45,8 +45,7 @@ public class ModelManager extends ComponentManager implements Model {
         super();
         requireAllNonNull(taskCollection, userPrefs);
 
-        logger.fine(
-                "Initializing with deadline manager: " + taskCollection + " and user prefs " + userPrefs);
+        logger.fine("Initializing with deadline manager: " + taskCollection + " and user prefs " + userPrefs);
 
         versionedTaskCollection = new VersionedTaskCollection(taskCollection);
         filteredTasks = new FilteredList<>(versionedTaskCollection.getTaskList());

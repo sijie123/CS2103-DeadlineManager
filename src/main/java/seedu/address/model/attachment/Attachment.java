@@ -21,7 +21,7 @@ import seedu.address.model.task.exceptions.InvalidPredicateOperatorException;
  */
 public class Attachment {
     public static final String MESSAGE_DUPLICATE_ATTACHMENT_NAME = "There cannot be more than one attachment"
-            + "with the same file name. Please rename one of them.";
+            + " with the same file name. Please rename one of them.";
     private static final Logger logger = LogsCenter.getLogger(Attachment.class);
 
     public final File file;
@@ -115,6 +115,7 @@ public class Attachment {
         case LESS:
             return attachment -> StringUtil.containsFragmentIgnoreCase(testPhrase, attachment.getName());
         case CONVENIENCE: // convenience operator, works the same as ">"
+            //Fallthrough
         case GREATER:
             return attachment -> StringUtil.containsFragmentIgnoreCase(attachment.getName(), testPhrase);
         default:

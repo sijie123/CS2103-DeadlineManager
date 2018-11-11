@@ -34,8 +34,7 @@ public class XmlSerializableTaskCollection {
      */
     public XmlSerializableTaskCollection(ReadOnlyTaskCollection src) {
         this();
-        tasks.addAll(
-                src.getTaskList().stream().map(XmlAdaptedTask::new).collect(Collectors.toList()));
+        tasks.addAll(src.getTaskList().stream().map(XmlAdaptedTask::new).collect(Collectors.toList()));
     }
 
     /**

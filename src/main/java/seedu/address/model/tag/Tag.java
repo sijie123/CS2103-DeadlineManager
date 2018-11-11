@@ -43,7 +43,7 @@ public class Tag {
     public boolean equals(Object other) {
         return other == this // short circuit if same object
                 || (other instanceof Tag // instanceof handles nulls
-                    && tagName.equals(((Tag) other).tagName)); // state check
+                && tagName.equals(((Tag) other).tagName)); // state check
     }
 
     @Override
@@ -75,6 +75,7 @@ public class Tag {
         case LESS:
             return tag -> StringUtil.containsFragmentIgnoreCase(testPhrase, tag.tagName);
         case CONVENIENCE: // convenience operator, works the same as ">"
+            //Fallthrough
         case GREATER:
             return tag -> StringUtil.containsFragmentIgnoreCase(tag.tagName, testPhrase);
         default:
