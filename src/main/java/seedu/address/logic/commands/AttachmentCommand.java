@@ -417,8 +417,8 @@ public class AttachmentCommand extends Command {
      * Action to get/retrieve attachment.
      */
     public static class GetAttachmentAction implements AttachmentAction {
-        public static final String MESSAGE_GET_FAILED = "Failed to save to %1$s. " +
-            "Do note that FILEPATH should be a file to a path, not a directory/folder.";
+        public static final String MESSAGE_GET_FAILED = "Failed to save to %1$s. "
+            + "Do note that FILEPATH should be a file to a path, not a directory/folder.";
         public static final String MESSAGE_SUCCESS = "%1$s is now saved to %2$s.";
         public static final String MESSAGE_GET_NOT_A_FILE = "%1$s is not a valid file. "
             + "It might have been deleted, moved or Deadline Manager does not have permissions to read from it.";
