@@ -112,8 +112,8 @@ public class TaskCollection implements ReadOnlyTaskCollection {
     @Override
     public boolean equals(Object other) {
         return other == this // short circuit if same object
-            || (other instanceof TaskCollection // instanceof handles nulls
-            && tasks.equals(((TaskCollection) other).tasks));
+                || (other instanceof TaskCollection // instanceof handles nulls
+                && tasks.equals(((TaskCollection) other).tasks));
     }
 
     @Override

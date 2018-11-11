@@ -13,8 +13,7 @@ public class CsvFileStorage {
     /**
      * Saves the given deadline manager data to the specified file.
      */
-    public static void saveDataToFile(Path file, CsvSerializableTaskCollection taskCollection)
-        throws IOException {
+    public static void saveDataToFile(Path file, CsvSerializableTaskCollection taskCollection) throws IOException {
         try {
             FileUtil.writeToFile(file, taskCollection.toString());
         } catch (IOException e) {

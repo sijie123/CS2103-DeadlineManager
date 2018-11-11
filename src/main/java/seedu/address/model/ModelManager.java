@@ -46,7 +46,7 @@ public class ModelManager extends ComponentManager implements Model {
         requireAllNonNull(taskCollection, userPrefs);
 
         logger.fine(
-            "Initializing with deadline manager: " + taskCollection + " and user prefs " + userPrefs);
+                "Initializing with deadline manager: " + taskCollection + " and user prefs " + userPrefs);
 
         versionedTaskCollection = new VersionedTaskCollection(taskCollection);
         filteredTasks = new FilteredList<>(versionedTaskCollection.getTaskList());
@@ -169,7 +169,7 @@ public class ModelManager extends ComponentManager implements Model {
         // state check
         ModelManager other = (ModelManager) obj;
         return versionedTaskCollection.equals(other.versionedTaskCollection)
-            && filteredTasks.equals(other.filteredTasks);
+                && filteredTasks.equals(other.filteredTasks);
     }
 
     //==========Import/Export===================================================================
@@ -196,7 +196,7 @@ public class ModelManager extends ComponentManager implements Model {
     public void handleImportDataAvailableEvent(ImportDataAvailableEvent event) {
         //Handle merge conflict and what not
         ReadOnlyTaskCollection importData = event.data;
-        for (Task task: importData.getTaskList()) {
+        for (Task task : importData.getTaskList()) {
             resolveImportConflict(task);
         }
         commitTaskCollection();
@@ -207,6 +207,7 @@ public class ModelManager extends ComponentManager implements Model {
     /**
      * Use the appropriate import conflict handler to resolve a conflict.
      * If there is no conflict, simply add it to the current TaskCollection.
+     *
      * @param task the task to deconflict
      */
     private void resolveImportConflict(Task task) {

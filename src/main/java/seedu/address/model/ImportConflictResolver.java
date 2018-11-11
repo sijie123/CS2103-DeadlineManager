@@ -13,5 +13,6 @@ import seedu.address.model.task.Task;
  */
 public abstract class ImportConflictResolver {
     protected static final Logger LOGGER = LogsCenter.getLogger(ImportConflictResolver.class);
+
     abstract void resolve(Consumer<Task> addTask, Consumer<Task> removeTask, Task task);
 }

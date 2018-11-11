@@ -30,7 +30,6 @@ public interface TaskCollectionReadStorage {
     /**
      * @see #getTaskCollectionFilePath()
      */
-    Optional<ReadOnlyTaskCollection> readTaskCollection(Path filePath)
-        throws DataConversionException, IOException;
+    Optional<ReadOnlyTaskCollection> readTaskCollection(Path filePath) throws DataConversionException, IOException;
 
 }

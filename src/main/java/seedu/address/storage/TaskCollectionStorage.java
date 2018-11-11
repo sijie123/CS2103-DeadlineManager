@@ -20,8 +20,7 @@ public interface TaskCollectionStorage extends TaskCollectionWriteStorage, TaskC
     Optional<ReadOnlyTaskCollection> readTaskCollection() throws DataConversionException, IOException;
 
     @Override
-    Optional<ReadOnlyTaskCollection> readTaskCollection(Path filePath)
-        throws DataConversionException, IOException;
+    Optional<ReadOnlyTaskCollection> readTaskCollection(Path filePath) throws DataConversionException, IOException;
 
     @Override
     void saveTaskCollection(ReadOnlyTaskCollection taskCollection) throws IOException;

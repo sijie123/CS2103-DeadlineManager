@@ -25,15 +25,13 @@ public class ExportCommandParser implements Parser<ExportCommand> {
     public ExportCommand parse(String args) throws SimpleParseException {
         ArgumentMultimap argMultimap;
         try {
-            argMultimap =
-                ArgumentTokenizer
-                    .tokenize(args, PREFIX_FILEPATH, PREFIX_RESOLVER);
+            argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_FILEPATH, PREFIX_RESOLVER);
         } catch (TokenizationException ime) {
             throw new SimpleParseException(
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE), ime);
+                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE), ime);
         }
         String filename = argMultimap.getValue(PREFIX_FILEPATH).orElseThrow(() -> new SimpleParseException(
-            String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE)));
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE)));
 
         String exportCsv = argMultimap.getPreamble();
         boolean isCsvFormat = false;
@@ -42,7 +40,7 @@ public class ExportCommandParser implements Parser<ExportCommand> {
                 isCsvFormat = true;
             } else {
                 throw new SimpleParseException(
-                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE));
+                        String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE));
             }
         }
 
@@ -54,7 +52,7 @@ public class ExportCommandParser implements Parser<ExportCommand> {
             return new ExportCommand(filename, true, isCsvFormat);
         } else {
             throw new SimpleParseException(
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE));
+                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExportCommand.MESSAGE_USAGE));
         }
     }
 }
