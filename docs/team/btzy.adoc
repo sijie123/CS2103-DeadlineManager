@@ -11,9 +11,9 @@
 
 == Overview
 
-This portfolio serves to document my contributions to Deadline Manager - our 2^nd^ year software engineering project.  We worked as a team of 5 people to create Deadline Manager, which is based on https://github.com/nus-cs2103-AY1819S1/addressbook-level4[Address Book (Level 4).  We were constrained to use a command line interface (CLI) and were given 6 weeks to work on our application.
+This portfolio serves to document my contributions to Deadline Manager - our 2^nd^ year software engineering project.  We worked as a team of 5 people to create Deadline Manager, which is based on https://github.com/nus-cs2103-AY1819S1/addressbook-level4[Address Book (Level 4)].  We were constrained to use a command line interface (CLI) and were given 6 weeks to work on our application.
 
-Deadline Manager is a desktop deadline manager application designed for students in NUS School of Computing.  It is optimized to be easy to use, but yet give users great control and flexibility.  It is written in Java.  Visit our project page at https://github.com/CS2103-AY1819S1-W17-4/main to try our application.
+Deadline Manager is a desktop deadline manager application designed for students in NUS School of Computing.  It is optimized to be easy to use, but yet give users great control and flexibility.  It is written in Java.  Visit our https://github.com/CS2103-AY1819S1-W17-4/main[project page] to try our application.
 
 == Summary of contributions
 
@@ -26,7 +26,7 @@ Deadline Manager is a desktop deadline manager application designed for students
 ** What it does: The deadline attribute contains the due date of the task, and this is essential to the core functionality of the deadline manager.
 ** Highlights: The implementation deals with the parsing and validating of dates.  Furthermore, it integrates into other commands that need to specify a deadline.  This attribute was also integrated throughout the storage-related code so that the deadline can be exported to a file and imported into another instance of Deadline Manager.
 
-* *Code contributed*: https://github.com/CS2103-AY1819S1-W17-4/main/commits?author=btzy[Commits on GitHub], https://nus-cs2103-ay1819s1.github.io/cs2103-dashboard/#=undefined&search=btzy[CS2103T Project Code Dashboard]
+* *Code contributed*: https://nus-cs2103-ay1819s1.github.io/cs2103-dashboard/#=undefined&search=btzy[CS2103T Project Code Dashboard]
 
 * *Other contributions*:
 
@@ -45,17 +45,53 @@ Deadline Manager is a desktop deadline manager application designed for students
 
 
 |===
-|_Given below are sections I contributed to the User Guide. They showcase my ability to write documentation targeting end-users._
+|_Given below are excerpts of sections that I contributed to the user guide. They showcase my ability to write documentation targeting end-users._
 |===
 
-include::../UserGuide.adoc[tag=filter]
+include::../UserGuide.adoc[tag=filter-overview]
+include::../UserGuide.adoc[tag=filter-field]
+
+|===
+|_Some content has been omitted here.  Please visit https://cs2103-ay1819s1-w17-4.github.io/main/UserGuide.html#filtering-a-list-of-tasks-code-filter-code[this link] for the full user guide._
+|===
+
+include::../UserGuide.adoc[tag=filter-set]
+
+|===
+|_Some of my contributions to the user guide have been omitted for brevity.  Please visit https://cs2103-ay1819s1-w17-4.github.io/main/UserGuide.html#filtering-a-list-of-tasks-code-filter-code[this link] for the full user guide._
+|===
+
+<<<
 
 == Contributions to the Developer Guide
 
 |===
-|_Given below are sections I contributed to the Developer Guide. They showcase my ability to write technical documentation and the technical depth of my contributions to the project._
+|_Given below are excerpts of sections that I contributed to the Developer Guide. They showcase my ability to write technical documentation and the technical depth of my contributions to the project._
 |===
 
-include::../DeveloperGuide.adoc[tag=filter]
+include::../DeveloperGuide.adoc[tag=filter-ppp-prefix]
+include::../DeveloperGuide.adoc[tag=filter-ppp-overview-header]
 
+|===
+|_Some content has been omitted here.  Please visit https://cs2103-ay1819s1-w17-4.github.io/main/DeveloperGuide.html#filter-feature[this link] for the full developer guide._
+|===
 
+include::../DeveloperGuide.adoc[tag=filter-overview-condensed]
+
+|===
+|_Some content has been omitted here.  Please visit https://cs2103-ay1819s1-w17-4.github.io/main/DeveloperGuide.html#filter-feature[this link] for the full developer guide._
+|===
+
+include::../DeveloperGuide.adoc[tag=filter-unit-parser]
+
+|===
+|_Some content has been omitted here.  Please visit https://cs2103-ay1819s1-w17-4.github.io/main/DeveloperGuide.html#filter-feature[this link] for the full developer guide._
+|===
+
+include::../DeveloperGuide.adoc[tag=filter-design-considerations-header]
+
+include::../DeveloperGuide.adoc[tag=filter-design-considerations-extract]
+
+|===
+|_Some of my contributions to the user guide have been omitted for brevity.  Please visit https://cs2103-ay1819s1-w17-4.github.io/main/DeveloperGuide.html#filter-feature[this link] for the full developer guide._
+|===

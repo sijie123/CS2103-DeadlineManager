@@ -593,16 +593,23 @@ Step 5. The method `updateSortedTaskList` sorts the `versionTaskCollection` usin
 // end::sort[]
 
 // tag::filter[]
+// tag::filter-ppp-prefix[]
 === Filter feature
 
 The deadline manager supports a very expressive filtering system.  The filtering system can be utilized with the `filter` command.
+
+// end::filter-ppp-prefix[]
 
 The filtering system is designed with two primary goals:
 
 * Expressiveness: Complex ways of filtering tasks can be expressed in the command format and be understood by the program.
 * Terseness: The amount of user input required to express a filter is as little as possible.
 
+// tag::filter-ppp-overview-header[]
+
 ==== Overview
+
+// end::filter-ppp-overview-header[]
 
 When a user invokes the `filter` command (e.g. `filter t:CS2101 & n:Assignment`), the following steps are taken by the program:
 
@@ -620,6 +627,8 @@ When executing any _modifying_ commands on a filtered list, the filter will be r
 The overwhelming majority of code for the filtering system comes from step 2, which is performed by the `FilterCommandParser` class.  The ability to parse complex filter descriptions into usable predicates forms the core of the filtering feature, and this ability makes the filtering system very flexible.
 
 In the rest of this guide that describes the filtering system, we use the term _filter expression_ to refer to the full filter operation that the user typed (e.g. `t:CS2101 & n:Assignment`, or even `t:CS2101 & ( n:Assignment | n:Homework) & p<3`), and the term _filter unit_ to refer to substrings of the filter expression that represent single indivisible predicates (e.g. `t:CS2101`, or `n:Homework`).
+
+// tag::filter-overview-condensed[]
 
 There are four components to parsing the filter operation:
 
@@ -641,8 +650,10 @@ The above diagram shows the simplified sequence of operations to parse a filter 
 * Strictly speaking, the "loop" is not actually a loop.  As the boolean expression parser parses the filter expression, it invokes the lambda expression whenever a filter unit is encountered.  For simplicity, the sequence diagram above hides the complexity within the boolean expression parser.
 * The construction of the `tokenizer` object is omitted so as to give focus to the interaction between the three components.  The `BooleanExpressionParser` actually constructs a `StringTokenizer` from the given `expression` (which is a `String`), before entering the loop.  This same `StringTokenizer` is fed into the lambda expression every time a filter unit is encountered.
 
+// end::filter-overview-condensed[]
+
 [NOTE]
-Set-based fields are described in the _Set parser_ section.
+Set-based fields are described in <<Set parser>>.
 
 The sections below describe the string tokenizer and the aforementioned four components in more detail.
 
@@ -686,6 +697,8 @@ The boolean expression parser functions as follows:
 
 Application of operators (i.e. `!`, `&`, `|`) is done by the boolean expression parser itself (i.e. without delegating the work to other classes).
 
+// tag::filter-unit-parser[]
+
 ==== Filter unit parser
 
 The filter unit parser is written as a lambda expression inside the `FilterCommandParser` class.  This lambda expression then calls `FilterCommandParser#createFilterUnit`, which contains most of the logic for the filter unit parser.  There are two reasons for placing the filter unit parser in the `FilterCommandParser` class:
@@ -721,9 +734,11 @@ The filter unit parser distinguishes between the three possible ways to express 
 
 image::FilterUnitActivityDiagram.png[width="800"]
 
+// end::filter-unit-parser[]
+
 The above diagram demonstrates how each of the three possible ways are distinguished.  Note that in the diagram above:
 
-* A non-quoted field identifier only matches alphabets.  There is never a need to use any other kind of character for the field identifier (see the _Field identifier_ section below).
+* A non-quoted field identifier only matches alphabets.  There is never a need to use any other kind of character for the field identifier (see <<Field identifier>> below).
 * A non-quoted test phrase only allows alphanumeric characters and the characters `_`, `-`, `/`, `\`, `,`, and `.`.  (The `/` character allows dates to work, and the `,` character allows tag lists to work.)  The string tokenizer provides the bindings to facilitate this check.  If other characters are required, then the test phrase must be placed in quotes (either single or double quotes are acceptable, but they must match).
 * An operator (both the field and set operators) only matches `<`, `=`, `>`, and `:`.
 * The "save tokenizer position" action saves the current read position (of the string tokenizer) into a local variable, so that the position may be restored (thus "rewinding" the string tokenizer) if the "restore tokenizer position" action is encountered.
@@ -787,7 +802,7 @@ The following list shows what the convenience operator means, in the context of 
 
 Set-based fields can specify an additional level of comparison - how the task's set compares with the specified set.  It is distinct from the filter operator because the filter operator is used to compare each individual item in the set (in the context of the given field), while the set operator is used to compare at the set level (which is same regardless of which field is being compared).
 
-For set-based fields (e.g. tags), the filter unit parser does not invoke the field-specific parser directly.  Instead, control goes through the set parser, which is described in the _Set parser_ section below.
+For set-based fields (e.g. tags), the filter unit parser does not invoke the field-specific parser directly.  Instead, control goes through the set parser, which is described in <<Set parser>> below.
 
 ===== Simplified filter unit syntax
 
@@ -803,7 +818,7 @@ As with the full syntax, the simplified syntax supports quoting the test phrase 
 
 The set parser tokenizes the given test phrase, and feeds each item into the field-specific parser separately.
 
-The `<`, `=`, `>` set operators represent _subset_, _equivalence_, and _superset_ relations respectively.  Each individual item is compared using the specified filter operator as specified in the previous _Filter operator_ section.
+The `<`, `=`, `>` set operators represent _subset_, _equivalence_, and _superset_ relations respectively.  Each individual item is compared using the specified filter operator as specified in <<Filter operator>>.
 
 Just like the filter operator, there is a convenience set operator (`:`), and it is an alias for `>`.
 
@@ -853,7 +868,9 @@ Each error message gets translated into a _styled_ message string (encapsulated 
 [NOTE]
 In total, there are around 15 distinct kinds of error conditions when parsing a filter expression, and each of these error conditions produce a customised message that is displayed to the user.
 
+// tag::filter-design-considerations-header[]
 ==== Design Considerations
+// end::filter-design-considerations-header[]
 
 ===== Aspect: How to parse composite filter expressions
 
@@ -873,6 +890,7 @@ In total, there are around 15 distinct kinds of error conditions when parsing a 
 ** Pros: Easier to implement, can display an error if the user accidentally omits a boolean operator or filter field.
 ** Cons: More verbose filter expressions which may require higher cognitive overhead.
 
+// tag::filter-design-considerations-extract[]
 ===== Aspect: What the convenience operator should do
 
 * **Alternative 1 (current choice):** Support a convenience operator that is an alias of the most common filter operator for each field.
@@ -894,6 +912,7 @@ In total, there are around 15 distinct kinds of error conditions when parsing a 
 ** Pros: Simplest method signatures.
 ** Cons: Easy to overlook possible failure conditions when modifying the code.
 
+// end::filter-design-considerations-extract[]
 // end::filter[]
 
 // tag::attachments[]
