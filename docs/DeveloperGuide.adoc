@@ -575,7 +575,7 @@ As Deadline Manager supports multiple file formats, it is essential to consider 
 * **Alternative 1 (current choice):** Maintain separate `TaskCollectionReadStorage` and `TaskCollectionWriteStorage` interfaces. Classes that support import/export can choose to support `ReadStorage`, `WriteStorage`, or both. This is written in an OOP style, and `StorageManager` is agnostic to the export format.
 ** Pros: This provides more flexibility that could support more file formats in the future. With the required API in place, future implementations only need to ensure that they support reading and/or writing. Furthermore, this allows implementations to have the option of supporting either reading or writing, instead of having to support both. This could be a more sensible option for formats like CSV, where importing from CSV might not be as useful as exporting to one.
 ** Cons: The behaviour might be a little harder to understand from an end-user's perspective. For example, in the current implementation, a user can export to CSV, but cannot import from one as only TaskCollectionWriteStorage is implemented.
-* **Alternative 2:** Combine TaskCollectionReadStorage and TaskCollectionWriteStorage into a single interface, so that implementations that support import/export must support both at once. 
+* **Alternative 2:** Combine TaskCollectionReadStorage and TaskCollectionWriteStorage into a single interface, so that implementations that support import/export must support both at once.
 ** Pros: It is more intuitive for the user, as they can freely import from and export to any format.
 ** Cons: It is more difficult to support a new format, as both the reading and writing features need to be supported at once. If a developer wants to implement only either reading or writing, they would violate the Liskov Substitution Principle. Thus, combining the interfaces would make implementation less flexible.
 
@@ -1821,14 +1821,13 @@ These instructions only provide a starting point for testers to work on; testers
 .. Test case: `attachment 1 get n/"nothere.txt" p/"hello2.txt"` +
    Expected: Error details saying that `nothere.txt` is not an attachment would be displayed as the status message. No file is copied.
 
-   
 === Adding a task
 . Add a new task
 .. Run the `add n/New Program d/01/02/2018` command. +
    Expected: A new task is added to Deadline Manager with name: New Program, deadline: 01/02/2018, priority: 0, frequency: 0, no tags and no attachments.
 .. Run the add n/New Program d/01/02/2018` command again. +
    Expected: Another new task is added to Deadline Manager with the same parameters as (a) above.
-   
+
 === Exporting tasks
 . Export in XML format
 .. List all tasks using the `list` command.
