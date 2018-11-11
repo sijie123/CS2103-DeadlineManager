@@ -137,7 +137,7 @@ Figure 3.10.3 above shows an expected result message if the command is successfu
 //Figure 3.10.4 above shows an expected result message if the command is successfully executed by Deadline Manager for the above command with the Get action.
 
 |===
-|_The description for `Delete` and `Get` actions are omitted for brevity. For the full text, please do refer to the https://cs2103-ay1819s1-w17-4.github.io/main/UserGuide.html[User Guide]._
+|_The description for `Delete` and `Get` actions are omitted. For the full text, please refer to the https://cs2103-ay1819s1-w17-4.github.io/main/UserGuide.html[User Guide]._
 |===
 
 //=== FAQ
@@ -171,15 +171,15 @@ Given below is a sequence of steps and a sequence diagram that corresponds to it
 .Sequence Diagram for performing the `execute` method of an `AttachmentCommand`
 image::AttachmentExecuteSequenceDiagram.png[width="750"]
 
-Step 1. The task identified by the user is retrieved from the `Model`.
+. The task identified by the user is retrieved from the `Model`.
 
-Step 2. The `perform` method of the `AttachmentAction` is invoked, with the task retrieved in Step 1 as the parameter.
+. The `perform` method of the `AttachmentAction` is invoked, with the task retrieved in Step 1 as the parameter.
 
-Step 3. The invoked `AttachmentAction` performs specific application logic which is different for each action. Then, a `ActionResult` object containing a `Task` and a message is returned to the `execute` method.
+. The invoked `AttachmentAction` performs specific application logic which is different for each action. Then, a `ActionResult` object containing a `Task` and a message is returned to the `execute` method.
 
-Step 4. The `Model` is updated with the `Task` object retrieved from the returned `ActionResult`.
+. The `Model` is updated with the `Task` object retrieved from the returned `ActionResult`.
 
-Step 5. The message to be shown to the user is retrieved from the returned `ActionResult`. Then, it is used to create a `CommandResult` object which is to be returned to the the `LogicManager`.
+. The message to be shown to the user is retrieved from the returned `ActionResult`. Then, it is used to create a `CommandResult` object which is to be returned to the the `LogicManager`.
 |===
 |_The remaining sequence flows are omitted for brevity._
 |===
