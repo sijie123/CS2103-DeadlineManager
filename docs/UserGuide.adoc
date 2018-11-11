@@ -530,6 +530,7 @@ Examples:
 
 * `sort n>` +
 Sorts the current list of tasks in view in descending order by name, where sorting is done in alphabetical order.
+
 [sortdemo1]
 .Result of "sort n<" command
 [#img-sortdemo1]
@@ -547,6 +548,7 @@ Sorts the current list of tasks in view in ascending order by tags. In this case
 before those tasks with the tag `family`, finally followed by those tasks with the tag `cs2103t`.
 * `sort n< tag<{` +
 This is invalid syntax since the curly braces have not been closed. +
+
 [sortdemo2]
 .Result of "sort n< tag<{" command
 [#img-sortdemo2]
