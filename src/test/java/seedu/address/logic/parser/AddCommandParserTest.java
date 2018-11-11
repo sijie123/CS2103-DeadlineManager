@@ -48,8 +48,7 @@ public class AddCommandParserTest {
 
     @Test
     public void parse_allFieldsPresentSomeFieldsDuplicate_failure() {
-        String expectedMessage = String
-            .format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE);
+        String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE);
 
         // multiple names
         assertParseFailure(parser, NAME_DESC_AMY + NAME_DESC_BOB
@@ -57,15 +56,15 @@ public class AddCommandParserTest {
 
         // multiple priorities
         assertParseFailure(parser, NAME_DESC_BOB + PRIORITY_DESC_AMY + PRIORITY_DESC_BOB
-            + FREQUENCY_DESC_BOB + DEADLINE_DESC_BOB + TAG_DESC_FRIEND, expectedMessage);
+                + FREQUENCY_DESC_BOB + DEADLINE_DESC_BOB + TAG_DESC_FRIEND, expectedMessage);
 
         // multiple frequencies
         assertParseFailure(parser, NAME_DESC_BOB + PRIORITY_DESC_BOB + FREQUENCY_DESC_AMY
-            + FREQUENCY_DESC_BOB + DEADLINE_DESC_BOB + TAG_DESC_FRIEND, expectedMessage);
+                + FREQUENCY_DESC_BOB + DEADLINE_DESC_BOB + TAG_DESC_FRIEND, expectedMessage);
 
         // multiple deadlines
         assertParseFailure(parser, NAME_DESC_BOB + PRIORITY_DESC_BOB + FREQUENCY_DESC_BOB
-            + DEADLINE_DESC_AMY + DEADLINE_DESC_BOB + TAG_DESC_FRIEND, expectedMessage);
+                + DEADLINE_DESC_AMY + DEADLINE_DESC_BOB + TAG_DESC_FRIEND, expectedMessage);
     }
 
     @Test
@@ -74,85 +73,85 @@ public class AddCommandParserTest {
 
         // whitespace only preamble
         assertParseSuccess(parser,
-            PREAMBLE_WHITESPACE + NAME_DESC_BOB + PRIORITY_DESC_BOB + FREQUENCY_DESC_BOB
-                + DEADLINE_DESC_BOB + TAG_DESC_FRIEND, new AddCommand(expectedTask));
+                PREAMBLE_WHITESPACE + NAME_DESC_BOB + PRIORITY_DESC_BOB + FREQUENCY_DESC_BOB
+                        + DEADLINE_DESC_BOB + TAG_DESC_FRIEND, new AddCommand(expectedTask));
 
         // multiple tags are ok - all accepted
         Task expectedTaskMultipleTags = new TaskBuilder(BOB)
-            .withTags(VALID_TAG_FRIEND, VALID_TAG_HUSBAND)
-            .build();
+                .withTags(VALID_TAG_FRIEND, VALID_TAG_HUSBAND)
+                .build();
         assertParseSuccess(parser, NAME_DESC_BOB + PRIORITY_DESC_BOB + FREQUENCY_DESC_BOB
-                + DEADLINE_DESC_BOB + TAG_DESC_HUSBAND + TAG_DESC_FRIEND,
-            new AddCommand(expectedTaskMultipleTags));
+                        + DEADLINE_DESC_BOB + TAG_DESC_HUSBAND + TAG_DESC_FRIEND,
+                new AddCommand(expectedTaskMultipleTags));
     }
 
     @Test
     public void parse_optionalFieldsMissing_success() {
         // zero tags, no priority, no frequency
         Task expectedTask = new TaskBuilder(AMY)
-            .withTags()
-            .withPriority(NO_PRIORITY)
-            .withFrequency(NO_FREQUENCY)
-            .build();
+                .withTags()
+                .withPriority(NO_PRIORITY)
+                .withFrequency(NO_FREQUENCY)
+                .build();
         assertParseSuccess(parser,
-            NAME_DESC_AMY + DEADLINE_DESC_AMY,
-            new AddCommand(expectedTask));
+                NAME_DESC_AMY + DEADLINE_DESC_AMY,
+                new AddCommand(expectedTask));
     }
 
     @Test
     public void parse_compulsoryFieldMissing_failure() {
         String expectedMessage = String
-            .format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE);
+                .format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE);
 
         // missing name prefix
         assertParseFailure(parser, VALID_NAME_BOB + PRIORITY_DESC_BOB + FREQUENCY_DESC_BOB + DEADLINE_DESC_BOB,
-            expectedMessage);
+                expectedMessage);
 
         // missing deadline prefix
         assertParseFailure(parser, NAME_DESC_BOB + PRIORITY_DESC_BOB + FREQUENCY_DESC_BOB + VALID_DEADLINE_BOB,
-            expectedMessage);
+                expectedMessage);
 
         // all prefixes missing
-        assertParseFailure(parser, VALID_NAME_BOB + VALID_PRIORITY_BOB + VALID_FREQUENCY_BOB + VALID_DEADLINE_BOB,
-            expectedMessage);
+        assertParseFailure(parser, VALID_NAME_BOB + VALID_PRIORITY_BOB + VALID_FREQUENCY_BOB
+                + VALID_DEADLINE_BOB, expectedMessage);
     }
 
     @Test
     public void parse_invalidValue_failure() {
         // invalid name
         assertParseFailure(parser,
-            INVALID_NAME_DESC + PRIORITY_DESC_BOB + FREQUENCY_DESC_BOB + DEADLINE_DESC_BOB
-                + TAG_DESC_HUSBAND + TAG_DESC_FRIEND, Name.MESSAGE_NAME_CONSTRAINTS);
+                INVALID_NAME_DESC + PRIORITY_DESC_BOB + FREQUENCY_DESC_BOB + DEADLINE_DESC_BOB
+                        + TAG_DESC_HUSBAND + TAG_DESC_FRIEND, Name.MESSAGE_NAME_CONSTRAINTS);
 
         // invalid priority
         assertParseFailure(parser,
-            NAME_DESC_BOB + INVALID_PRIORITY_DESC + FREQUENCY_DESC_BOB + DEADLINE_DESC_BOB
-                + TAG_DESC_HUSBAND + TAG_DESC_FRIEND, Priority.MESSAGE_PRIORITY_CONSTRAINTS);
+                NAME_DESC_BOB + INVALID_PRIORITY_DESC + FREQUENCY_DESC_BOB + DEADLINE_DESC_BOB
+                        + TAG_DESC_HUSBAND + TAG_DESC_FRIEND, Priority.MESSAGE_PRIORITY_CONSTRAINTS);
 
         // invalid frequency
         assertParseFailure(parser,
-            NAME_DESC_BOB + PRIORITY_DESC_BOB + INVALID_FREQUENCY_DESC + DEADLINE_DESC_BOB
-                + TAG_DESC_HUSBAND + TAG_DESC_FRIEND, Frequency.MESSAGE_FREQUENCY_CONSTRAINTS);
+                NAME_DESC_BOB + PRIORITY_DESC_BOB + INVALID_FREQUENCY_DESC + DEADLINE_DESC_BOB
+                        + TAG_DESC_HUSBAND + TAG_DESC_FRIEND, Frequency.MESSAGE_FREQUENCY_CONSTRAINTS);
 
         // invalid deadline
         assertParseFailure(parser,
-            NAME_DESC_BOB + PRIORITY_DESC_BOB + FREQUENCY_DESC_BOB + INVALID_DEADLINE_DESC
-                + TAG_DESC_HUSBAND + TAG_DESC_FRIEND, Deadline.MESSAGE_DEADLINE_CONSTRAINTS);
+                NAME_DESC_BOB + PRIORITY_DESC_BOB + FREQUENCY_DESC_BOB + INVALID_DEADLINE_DESC
+                        + TAG_DESC_HUSBAND + TAG_DESC_FRIEND, Deadline.MESSAGE_DEADLINE_CONSTRAINTS);
 
         // invalid tag
         assertParseFailure(parser,
-            NAME_DESC_BOB + PRIORITY_DESC_BOB + FREQUENCY_DESC_BOB + DEADLINE_DESC_BOB
-                + INVALID_TAG_DESC + VALID_TAG_FRIEND, Tag.MESSAGE_TAG_CONSTRAINTS);
+                NAME_DESC_BOB + PRIORITY_DESC_BOB + FREQUENCY_DESC_BOB + DEADLINE_DESC_BOB
+                        + INVALID_TAG_DESC + VALID_TAG_FRIEND, Tag.MESSAGE_TAG_CONSTRAINTS);
 
         // two invalid values, only first invalid value reported
         assertParseFailure(parser,
-            INVALID_NAME_DESC + INVALID_PRIORITY_DESC + FREQUENCY_DESC_BOB + DEADLINE_DESC_BOB,
-            Name.MESSAGE_NAME_CONSTRAINTS);
+                INVALID_NAME_DESC + INVALID_PRIORITY_DESC + FREQUENCY_DESC_BOB + DEADLINE_DESC_BOB,
+                Name.MESSAGE_NAME_CONSTRAINTS);
 
         // non-empty preamble
         assertParseFailure(parser,
-            PREAMBLE_NON_EMPTY + NAME_DESC_BOB + PRIORITY_DESC_BOB + FREQUENCY_DESC_BOB
-                + DEADLINE_DESC_BOB + TAG_DESC_HUSBAND + TAG_DESC_FRIEND,
-            String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE));
+                PREAMBLE_NON_EMPTY + NAME_DESC_BOB + PRIORITY_DESC_BOB + FREQUENCY_DESC_BOB
+                        + DEADLINE_DESC_BOB + TAG_DESC_HUSBAND + TAG_DESC_FRIEND,
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE));
     }
 }
