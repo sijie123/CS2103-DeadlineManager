@@ -935,7 +935,7 @@ Step 4. An `AttachmentCommand` is constructed and initialized with the `Attachme
 
 Given below is another sequence of steps, also illustrated by the sequence diagram. They describe the interaction between `AttachmentCommand` and classes that implement `AttachmentAction` after the `AttachmentCommand#execute` method is invoked by the `LogicManager`.
 
-.Sequence Diagram for performing the `execute` method of an `AttachmentCommand`
+.Sequence Diagram for performing the `execute` method of an `AttachmentCommand`.
 image::AttachmentExecuteSequenceDiagram.png[width="800"]
 
 Step 1. The task identified by the user is retrieved from the `Model`.
