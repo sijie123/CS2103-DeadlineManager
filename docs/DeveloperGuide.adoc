@@ -320,21 +320,76 @@ This section describes some noteworthy details on how major features are impleme
 
 === Add feature
 
-The `add` command enables the user to create
-a new task with a name and a deadline. The user can
-also provide additional information like priority,
-frequency and tags.
+The `add` command enables the user to create a new task with a name and a deadline.
+The user can also provide additional information including priority, frequency and tags.
+
+Given below is a sequence of steps, illustrating the interaction between `AddCommandParser`, `AddCommand` and `Model`:
+
+.Sequence diagram for adding a task
+image::AddOperationSequenceDiagram.png[width="800"]
+
+Step 1. The user enters an `add` command.
+
+Step 2. The `AddCommandParser#parse` method is invoked.
+The `AddCommandParser` receives the command with the arguments given as a string.
+
+Step 3. The `AddCommandParser` interprets the arguments and constructs a `AddCommand`.
+
+Step 4. The `AddCommand` with a `Task` specified by the user is returned.
+
+Step 5. The `AddCommand#execute` method is invoked.
+
+Step 6. The `Model` is updated: The `Model#addTask` method and the `Model#commitTaskCollection` method are invoked.
+
+Step 7. A `CommandResult` object is returned.
 
 === Complete feature
 
-The `complete` command allows the user
-to delete (if the task is not recurred)
-or shift the deadline to the next occurrence
-(if the task is recurred). Thanks to this command,
-the user no longer needs to decide if he/she needs
-to use `delete` command or `snooze` command.
+The `complete` command provides users a natural way to complete a task:
+either delete a task if it is not recurred or shift the deadline to the next occurrence if the task is recurred.
+
+==== Current Implementation
+
+The complete feature is implemented by `CompleteCommand` and `CompleteCommandParser`.
+
+After the task specified by the user is retrieved, the `CompleteCommand` will consider these two cases:
+
+* If the task is not recurred, it will be deleted.
+
+* Otherwise, the task will be updated using the following formula: +
+`NewDeadline = OldDeadline + Frequency`
+
+==== Sequence Flow
+
+Given below is a sequence of steps, illustrating the interaction between `CompleteCommandParser`, `CompleteCommand` and `Model`:
+
+.Sequence diagram for completing a task
+image::CompleteOperationSequenceDiagram.png[width="800"]
+
+Step 1. The user enters a `complete` command with the index of a task in the task list.
+
+Step 2. The `CompleteCommandParser#parse` method is invoked.
+The `CompleteCommandParser` receives the command with the arguments given as a string.
+
+Step 3. The `CompleteCommandParser` interprets the arguments and constructs a `CompleteCommand`.
+
+Step 4. The `CompleteCommand` with the index specified by the user is returned.
+
+Step 5. The `CompleteCommand#execute` method is invoked.
+
+Step 6. The task identified by the user is retrieved from the `Model`.
+
+Step 7. The `Model` is updated:
+If the task is not recurred, `Model#deleteTask` is invoked to delete the task.
+Otherwise, `Model#updateTask` (followed by `Model#updateFilteredTaskList`) is invoked
+with a new `Task` where the deadline is updated.
+
+Step 8. The `Model#commitTaskCollection` method is invoked.
+
+Step 9. A `CommandResult` object is returned.
 
 === Undo/Redo feature
+
 ==== Current Implementation
 
 The undo/redo mechanism is facilitated by `VersionedTaskCollection`.
