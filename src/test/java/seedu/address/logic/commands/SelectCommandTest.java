@@ -99,13 +99,11 @@ public class SelectCommandTest {
      */
     private void assertExecutionSuccess(Index index) {
         SelectCommand selectCommand = new SelectCommand(index);
-        String expectedMessage = String
-            .format(SelectCommand.MESSAGE_SELECT_TASK_SUCCESS, index.getOneBased());
+        String expectedMessage = String.format(SelectCommand.MESSAGE_SELECT_TASK_SUCCESS, index.getOneBased());
 
         assertCommandSuccess(selectCommand, model, commandHistory, expectedMessage, expectedModel);
 
-        JumpToListRequestEvent lastEvent = (JumpToListRequestEvent) eventsCollectorRule.eventsCollector
-            .getMostRecent();
+        JumpToListRequestEvent lastEvent = (JumpToListRequestEvent) eventsCollectorRule.eventsCollector.getMostRecent();
         assertEquals(index, Index.fromZeroBased(lastEvent.targetIndex));
     }
 

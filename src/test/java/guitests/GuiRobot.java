@@ -91,9 +91,9 @@ public class GuiRobot extends FxRobot {
      */
     public int getNumberOfWindowsShown(String stageTitle) {
         return (int) listTargetWindows().stream()
-            .filter(window -> window instanceof Stage && ((Stage) window).getTitle()
-                .equals(stageTitle))
-            .count();
+                .filter(window -> window instanceof Stage && ((Stage) window).getTitle()
+                        .equals(stageTitle))
+                .count();
     }
 
     /**
@@ -105,10 +105,10 @@ public class GuiRobot extends FxRobot {
      */
     public Stage getStage(String stageTitle) {
         Optional<Stage> targetStage = listTargetWindows().stream()
-            .filter(Stage.class::isInstance) // checks that the window is of type Stage
-            .map(Stage.class::cast)
-            .filter(stage -> stage.getTitle().equals(stageTitle))
-            .findFirst();
+                .filter(Stage.class::isInstance) // checks that the window is of type Stage
+                .map(Stage.class::cast)
+                .filter(stage -> stage.getTitle().equals(stageTitle))
+                .findFirst();
 
         return targetStage.orElseThrow(StageNotFoundException::new);
     }

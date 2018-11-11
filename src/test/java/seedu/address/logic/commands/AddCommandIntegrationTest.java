@@ -35,7 +35,7 @@ public class AddCommandIntegrationTest {
         expectedModel.commitTaskCollection();
 
         assertCommandSuccess(new AddCommand(validTask), model, commandHistory,
-            String.format(AddCommand.MESSAGE_SUCCESS, validTask), expectedModel);
+                String.format(AddCommand.MESSAGE_SUCCESS, validTask), expectedModel);
     }
 
     @Test
@@ -47,7 +47,7 @@ public class AddCommandIntegrationTest {
         expectedModel.commitTaskCollection();
 
         assertCommandSuccess(new AddCommand(taskInList), model, commandHistory,
-            String.format(AddCommand.MESSAGE_SUCCESS, taskInList), expectedModel);
+                String.format(AddCommand.MESSAGE_SUCCESS, taskInList), expectedModel);
     }
 
 }
