@@ -67,5 +67,25 @@ public class FrequencyTest {
         assertFalse(new Frequency(1).isZero());
     }
 
+    @Test
+    public void hashCode_sameFrequency() {
+        assertEquals(new Frequency("0").hashCode(), new Frequency(0).hashCode());
+        assertEquals(new Frequency(((Integer) (Frequency.FREQUENCY_LIMIT - 1)).toString()).hashCode(),
+            new Frequency(Frequency.FREQUENCY_LIMIT - 1).hashCode());
+    }
 
+    @Test
+    public void compareTo_differentValue() {
+        Frequency nonRepeat = new Frequency(0); //Frequency 0 is as good as 'infinite' frequency
+        Frequency repeat = new Frequency(1);
+        assertTrue(nonRepeat.compareTo(repeat) > 0);
+        assertTrue(repeat.compareTo(nonRepeat) < 0);
+        if (Frequency.FREQUENCY_LIMIT > 2) {
+            Frequency repeatMax = new Frequency(Frequency.FREQUENCY_LIMIT - 1);
+            assertTrue(nonRepeat.compareTo(repeatMax) > 0);
+            assertTrue(repeatMax.compareTo(nonRepeat) < 0);
+            assertTrue(repeat.compareTo(repeatMax) < 0);
+            assertTrue(repeatMax.compareTo(repeat) > 0);
+        }
+    }
 }
