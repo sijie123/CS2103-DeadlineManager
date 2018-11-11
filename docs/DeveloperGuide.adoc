@@ -628,6 +628,47 @@ Step 4. The `SortCommand` calls the `updateSortedTaskList` API method of `ModelM
 
 Step 5. The method `updateSortedTaskList` sorts the `versionTaskCollection` using JavaFx sort method
 
+==== Implementing Sort Parser
+`SortCommandParser` implements `Parser<>` interface. The most essential portion of `SortCommandParser`, which is chaining of comparators is shown below:
+[source,java]
+----
+public SortCommand parse(String args) throws SimpleParseException {
+
+    Comparator<Task> comparator = Comparator.comparing(Task::getClass, (a, b) -> {
+        return 0; // a default comparator which compares every task equal
+    });
+
+    // argumentsArray is an array of strings referring to all the arguments given to the sort command.
+
+    for (String arg: argumentsArray) {
+        final String taskField = arg.substring(0, arg.length() - 1);
+        final char comparisonChar = arg.charAt(arg.length() - 1);
+
+        switch(taskField) {
+        case "n":   // fallthrough
+        case "name": {
+            if (comparisonChar == '<') {
+                comparator = comparator.thenComparing(Task::getName);
+            } else {
+                comparator = comparator.thenComparing(Taks::getName, Comparator.reverseOrder());
+            }
+            break;
+        }
+        case "p":   // fallthrough
+        case "priority": {
+            if (comparisonChar == '<') {
+                comparator = comparator.thenComparaing(Task::getPriority);
+            }  else {
+                comparator = comparator.thenComparing(Task::getPriority, Comparator.reverseOrder());
+            }
+        }
+        // ... consists of case for other task fields as well
+        }
+    }
+    return new SortCommand(comparator);
+}
+----
+
 ==== Design Considerations
 
 ===== Aspect: Which task list to sort

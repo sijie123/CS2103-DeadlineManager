@@ -509,11 +509,11 @@ What this means is that in case two tasks are in tie according to the first comp
 
 ****
 
-Format: `sort SORT_COMPARATOR [SORT_COMPARATOR] [SORT_COMPARATOR] ...` +
+Format: `sort SORT_COMPARATOR [SORT_COMPARATOR]...` +
 
 ****
-* Format of a `SORT_COMPARATOR`: `(n|name|d|due|p|priority|f|frequency)(<|>)` OR `(t|tag)(<|>){TAG1 TAG2 TAG3 ...}`
-* In the above format `|` refers to an OR. `TAG1`, `TAG2` and `TAG3` are shown as example of tags that the user can input.
+* Format of a `SORT_COMPARATOR`: `(n|name|d|due|p|priority|f|frequency)(<|>)` OR `(t|tag)(<|>){TAG1 TAG2 ...}`
+* In the above format `|` refers to an OR. `TAG1` and `TAG2` are shown as example of tags that the user can input.
 * `<` stands for sorting in ascending order and `>' stands for sorting in descending order.
 * Sorts the list by the 1st comparator, in case of ties, it sorts by 2nd comparator and so on.
 * Meaning of the operators for each valid key:
@@ -535,7 +535,7 @@ Sorts the current list of tasks in view in descending order by name, where sorti
 .Result of "sort n<" command
 [#img-sortdemo1]
 [caption="Figure 3.10.1: "]
-image::userguide/sortdemo_1.png[SortDemo1, width="600"]
+image::userguide/sortdemo_1.png[SortDemo1, width="900"]
 
 * `sort due< name>` +
 Sorts the current list of tasks in view in ascending order by due date, where ties are broken by descending order of names.
