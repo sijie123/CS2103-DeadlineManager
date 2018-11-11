@@ -477,35 +477,38 @@ Similarly, `StorageManager` returns the result of imports and errors with the fo
 
 ==== Sequence Flow
 
-Given below is a sequence diagram illustrating the interactions between `Model` and `Storage` when exporting.
+The above interactions between `Model` and `Storage` can be illustrated with the following sequence diagrams.
 
 .Sequence diagram for exporting tasks
 image::ExportSequenceDiagram.png[width="800"]
+The figure above shows the sequence diagram for the interaction that happens when the user requests to export tasks.
 
-Step 1. The user executes export to file `dataFile`. The export command calls ModelManager's `exportTaskCollection`.
+Step 1. The user types in an export command. The Logic component parses the user's command, and calls ModelManager's `exportTaskCollection`.
 
-Step 2. The `ModelManager` posts the `ExportRequestEvent` to the `EventsCenter`.
+Step 2. The `ModelManager` posts an `ExportRequestEvent` to the `EventsCenter`.
 
-Step 3. The `EventsCenter` will dispatch the `ExportRequestEvent` to `Storage`.
+Step 3. The `EventsCenter` dispatches the `ExportRequestEvent` to `Storage`.
 
-Step 4. `Storage` will handle the `ExportRequestEvent` and write to file.
+Step 4. `Storage` handles the `ExportRequestEvent` and writes to file. At this stage, the export is complete.
 
-Given below is a sequence diagram illustrating the interactions between `Model` and `Storage` when importing.
+A similar interaction is seen when importing from a file.
 
 .Sequence diagram for importing tasks
 image::ImportSequenceDiagram.png[width="800"]
 
-Step 1. The user executes import from file `dataFile`. The import command calls ModelManager's `importTaskCollection`.
+The sequence diagram above shows the interactions that happen when a user attempts to import data from a file. The interactions are similar to export, with an additional step to resolve import conflict.
+
+Step 1. The user types in an import command. The Logic component parses the user's command, and calls ModelManager's `importTaskCollection`.
 
 Step 2. The `ModelManager` posts the `ImportRequestEvent` to the `EventsCenter`.
 
-Step 3. The `EventsCenter` will dispatch the `ImportRequestEvent` to `Storage`.
+Step 3. The `EventsCenter` dispatches the `ImportRequestEvent` to `Storage`.
 
-Step 4. `Storage` will handle the `ImportRequestEvent`, read from file, then post a new `ImportDataAvailableEvent` to `EventsCenter` to signal that data is available.
+Step 4. `Storage` handles the `ImportRequestEvent`, reads from file, then posts a new `ImportDataAvailableEvent` to `EventsCenter` to signal that data is available.
 
-Step 5. The `EventsCenter` will dispatch the `ImportDataAvailableEvent` back to `ModelManager`.
+Step 5. The `EventsCenter` dispatches the `ImportDataAvailableEvent` back to `ModelManager`.
 
-Step 6. `ModelManager` will take the imported data and de-conflict the merged entries.
+Step 6. `ModelManager` takes the imported data and adds it to the Model. If necessary, it also de-conflicts the new entries.
 
 ==== Import Conflict Resolver
 
@@ -516,19 +519,22 @@ If the user attempts to import a new task that conflicts with an existing task, 
 * `OverwriteImportConflictResolver`: Updates the existing task to reflect the values of the incoming task.
 * `DuplicateImportConflictResolver`: Keep both copies.
 
-The user can specify the deconflict algorithm with flags. By default, the `IgnoreResolver` is used.
+The user can specify the de-conflict algorithm with flags. By default, the `IgnoreResolver` is used.
 
+Given below is a sequence diagram to illustrate the interactions between `ModelManager` and `OverwriteImportConflictResolver`. While `OverwriteImportConflictResolver` is used as an example, the interactions with `IgnoreImportConflictResolver` and `DuplicateImportConflictResolver` are similar.
+
+.Sequence diagram for import conflict resolver
 image::ImportConflictResolverSequenceDiagram.png[width="800"]
 
-Given above is a sequence diagram for the Import Conflict Resolver, illustrating the interactions between ModelManager and ImportConflictResolver. The OverwriteImportConflictResolver is used as an example.
+Step 1. After requesting for import, Storage returns the `Tasks` that are serialised from file through an `ImportDataAvailableEvent`. This event is dispatched to `ModelManager` via `EventsCenter`.
 
-Step 1. After requesting for import, Storage communicates the model serialised from file by firing a `handleImportDataAvailableEvent(event)`.
+Step 2. `ModelManager` retrieves the TaskCollection data, and for each task, `ModelManager` checks whether the task already exists in the Model.
 
-Step 2. `ModelManager` retrieves the TaskCollection, and for each task, `ModelManager` decides whether the task already exists in the Model.
+Step 3a. If the task already exists, the functional method `resolve(() -> add(), () -> delete(), task)` of `OverwriteImportConflictResolver` is invoked. The Functional Programming style is used here, and ModelManager passes a reference to its `add` and `delete` methods.
 
-Step 2a. If the task already exists, the functional method `resolve(() -> add(), () -> delete(), task)` of `OverwriteImportConflictResolver` is invoked. By passing in a reference to ModelManager's `add` and `delete` methods, the Functional Programming style is used here. `OverwriteImportConflictResolver` will first `delete()` the existing task, before it calls `add()` on the new one.
+Step 3b. `OverwriteImportConflictResolver` will first `delete()` the existing task, before it calls `add()` on the new one. This behaviour is specific to `OverwriteImportConflictResolver`. A `DuplicateImportConflictResolver` will simply add the new entry, while a `IgnoreImportConflictResolver` will do nothing.
 
-Step 2b. Otherwise, the task doesn't exist, so `ModelManager` adds the task to the model.
+Step 4. Otherwise, if the task doesn't exist, `ModelManager` adds the task to the model.
 
 ==== CSV Format support
 
@@ -543,6 +549,13 @@ The `TaskCollectionReadStorage` specifies APIs that is responsible for reading f
 The `TaskCollectionWriteStorage` specifies APIs that is responsible for de-serialising `Tasks` into a text format to be written to a file. Classes that implement `TaskCollectionWriteStorage` should support:
 
 * `saveTaskCollection`: De-serialises the `TaskCollection` and saves the data into a file at `filePath`.
+
+As a summary for the CSV/XML format discussion, the class diagram below shows the structure of `CsvTaskCollectionStorage` and `XmlTaskCollectionStorage`. This diagram is also replicated in <<Storage, `Storage`>> above.
+
+.Class diagram of Csv/XmlTaskCollectionStorage
+image::CsvXmlClassDiagram.png[width="800"]
+
+Notably, the `CsvTaskCollectionStorage` only implements the `TaskCollectionWriteStorage`, while `XmlTaskCollectionStorage` implements both.
 
 ==== Design Considerations
 
