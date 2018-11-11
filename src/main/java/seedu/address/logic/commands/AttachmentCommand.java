@@ -63,9 +63,7 @@ public class AttachmentCommand extends Command {
      * @param attachmentAction action that is to be performed on the task
      */
     public AttachmentCommand(Index index, AttachmentAction attachmentAction) {
-        requireNonNull(index);
-        requireNonNull(attachmentAction);
-
+        requireAllNonNull(index, attachmentAction);
         this.index = index;
         this.attachmentAction = attachmentAction;
     }
@@ -96,6 +94,7 @@ public class AttachmentCommand extends Command {
      * @param updatedTask  Updated Task to replace the original task
      */
     private void updateModel(Model model, Task originalTask, Task updatedTask) {
+        requireAllNonNull(model, originalTask, updatedTask);
         if (originalTask.equals(updatedTask)) {
             return;
         }
@@ -136,6 +135,7 @@ public class AttachmentCommand extends Command {
      * @throws CommandException
      */
     private static void checkAttachmentReadability(Attachment attachment, String format) throws CommandException {
+        requireAllNonNull(attachment, format);
         if (!attachment.isReadable()) {
             logger.info(String.format("Attachment %s is not readable. Checked %s.",
                 attachment.getName(), attachment.file.getAbsolutePath()));
@@ -151,6 +151,7 @@ public class AttachmentCommand extends Command {
      * @return Null if there is no attachment with the provided name in the set.
      */
     private static Attachment getAttachment(Set<Attachment> attachments, String name) {
+        requireAllNonNull(attachments, name);
         Map<String, Attachment> attachmentNameMap = attachments.stream()
             .collect(Collectors.toMap(x -> x.getName(), x -> x));
         return attachmentNameMap.get(name);
@@ -164,6 +165,7 @@ public class AttachmentCommand extends Command {
      * @return True if there is an attachment with name (@code name)
      */
     private static boolean isAttachmentName(Set<Attachment> attachments, String name) {
+        requireAllNonNull(attachments, name);
         Set<String> attachmentNames = attachments
             .stream()
             .map(x -> x.getName())
@@ -180,8 +182,7 @@ public class AttachmentCommand extends Command {
      * @throws CommandException
      */
     private static void checkAttachmentNameUnique(Task task, String name) throws CommandException {
-        assert task != null;
-        assert name != null;
+        requireAllNonNull(task, name);
         if (isAttachmentName(task.getAttachments(), name)) {
             logger.info(String.format("Task already contains an attachment with filename %s.",
                 name));
@@ -198,8 +199,7 @@ public class AttachmentCommand extends Command {
      * @throws CommandException
      */
     private static void checkAttachmentNameExists(Task task, String name) throws CommandException {
-        assert task != null;
-        assert name != null;
+        requireAllNonNull(task, name);
         if (!isAttachmentName(task.getAttachments(), name)) {
             logger.info(String.format("Task does not contains an attachment with filename %s.",
                 name));
@@ -217,6 +217,7 @@ public class AttachmentCommand extends Command {
 
 
         public ActionResult(Task updatedTask, String resultMessage) {
+            requireAllNonNull(updatedTask, resultMessage);
             this.updatedTask = updatedTask;
             this.resultMessage = resultMessage;
         }
@@ -267,7 +268,7 @@ public class AttachmentCommand extends Command {
 
         @Override
         public ActionResult perform(Task taskToEdit) throws CommandException {
-            assert taskToEdit != null;
+            requireNonNull(taskToEdit);
             Attachment newAttachment = buildAttachment();
             checkAttachmentNameUnique(taskToEdit, newAttachment.getName());
             HashSet<Attachment> updatedAttachments = new HashSet<>(taskToEdit.getAttachments());
@@ -325,7 +326,7 @@ public class AttachmentCommand extends Command {
 
         @Override
         public ActionResult perform(Task taskToEdit) throws CommandException {
-            assert taskToEdit != null;
+            requireNonNull(taskToEdit);
             Set<Attachment> attachments = taskToEdit.getAttachments();
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(String.format(MESSAGE_TOTAL_ATTACHMENTS, attachments.size()));
@@ -376,7 +377,7 @@ public class AttachmentCommand extends Command {
 
         @Override
         public ActionResult perform(Task taskToEdit) throws CommandException {
-            assert taskToEdit != null;
+            requireNonNull(taskToEdit);
             checkAttachmentNameExists(taskToEdit, nameToDelete);
             Attachment attachmentToDelete = getAttachment(taskToEdit.getAttachments(), nameToDelete);
             HashSet<Attachment> updatedAttachments = new HashSet<>(taskToEdit.getAttachments());
@@ -416,10 +417,10 @@ public class AttachmentCommand extends Command {
      * Action to get/retrieve attachment.
      */
     public static class GetAttachmentAction implements AttachmentAction {
-        public static final String MESSAGE_GET_FAILED = "Failed to save to %1$s.";
+        public static final String MESSAGE_GET_FAILED = "Failed to save to %1$s. Do note that FILEPATH should be a file to a path, not a directory/folder.";
         public static final String MESSAGE_SUCCESS = "%1$s is now saved to %2$s.";
         public static final String MESSAGE_GET_NOT_A_FILE = "%1$s is not a valid file."
-            + "It might have been deleted or moved";
+            + "It might have been deleted, moved or Deadline Manager does not have permissions to read from it.";
 
         private final String fileName;
         private final String savePath;
@@ -437,6 +438,7 @@ public class AttachmentCommand extends Command {
          * @param savePath   path to save the attachment to
          */
         private File copyFileToDestination(Attachment attachment, String savePath) throws CommandException {
+            requireAllNonNull(attachment, savePath);
             checkAttachmentReadability(attachment, MESSAGE_GET_NOT_A_FILE);
             try {
                 return attachment.saveTo(savePath);
@@ -449,7 +451,7 @@ public class AttachmentCommand extends Command {
 
         @Override
         public ActionResult perform(Task taskToEdit) throws CommandException {
-            assert taskToEdit != null;
+            requireNonNull(taskToEdit);
             checkAttachmentNameExists(taskToEdit, fileName);
             Attachment attachmentToGet = getAttachment(taskToEdit.getAttachments(), fileName);
             copyFileToDestination(attachmentToGet, savePath);
