@@ -5,46 +5,48 @@
 
 == PROJECT: Deadline Manager
 
----
+This portfolio serves to document my contributions to the CS2103T Software Engineering project - Deadline Manager. The project was developed by a team of 5 students in a span of 6 weeks.
+
+:sectnums:
+:sectnumlevels: 6
 
 == Overview
 
 Deadline Manager is a tool written for students in NUS School of Computing to better manage their deadlines and priorities. Interacting through a Command Line Interface (CLI), users can easily manage their schedules and focus on what is most important to them.
 
-Written in Java, Deadline Manager builds upon AddressBook - Level 4, a code base originally designed to teach Software Engineering principles. For more information and to take our project for a test run, please visit our home page [https://cs2103-ay1819s1-w17-4.github.io/main[on GitHub]].
+Written in Java, Deadline Manager builds upon AddressBook - Level 4, a code base originally designed to teach Software Engineering principles. +
+For more information and to do a test run, please visit our home page [https://cs2103-ay1819s1-w17-4.github.io/main[on GitHub]].
 
-== Summary of contributions
+== Summary of Contributions
+
+My key contributions to the project includes:
 
 * *Major enhancement*: Added *the ability to sort tasks of the Deadline Manager in a user-defined manner*.
-** What it does: It allows the users to sort the tasks using a user-defined sort comparator. A single sort comparator can be composed of multiple comparators, where each comparator is based on a certain attribute of the tasks.
-** Justification: This feature is a very important feature for the Deadline Manager because if a user has a lot of deadlines/tasks due and they only want to focus on the most important ones. The sort functionality enables them to view those deadlines which are more important at the top of the list followed by the those which are less important.
-** Highlights: The sort functionality supports chaining of comparators, which enables the user to fine-tune how they want the sorting to work. Example - If a user has a lot of tasks with the same due date, the sort function supports them to first sort by due date and then by priority which means all those tasks with the same due date can be sorted by priority within themselves.
-** Credits: Referenced https://www.codejava.net/java-core/collections/sorting-a-list-by-multiple-attributes-example
+** What it does: It allows the users to order the tasks using a user-defined sort expression. A single sort expression can be composed of multiple comparators, where each comparator is based on a certain attribute(Example - Name, Due Date, Priority) of the task.
+** Justification: This feature is a critical to the Deadline Manager because if a user has lots of deadlines/tasks due and they only want to focus on the most important ones. The sort functionality enables them to view those deadlines which are more important at the top of the list followed by the those which are less important.
+** Highlights: The sort functionality supports chaining of comparators, which enables the user to fine-tune how they want to order the tasks. Example - If a user has a lot of tasks with the very close due dates, the sort function allows them to first sort by due date and then by priority. This sorts all the tasks by due date first and all those tasks with the same due date are sorted by priority within themselves.
+** Credits: Referenced https://www.codejava.net/java-core/collections/sorting-a-list-by-multiple-attributes-example[Java Comparator Chaining] and https://stackoverflow.com/questions/25451331/how-to-remove-empty-results-after-splitting-with-regex-in-java/31005313[Regex fine-tuning]
 
 * *Minor enhancement*: Implemented natural comparison for some of the attributes of the task (Ex. Priority, Name)
-** What it does: Allows comparison for the different attributes of the task. Primarily used for filtering and sorting tasks.
+** What it does: Allows comparison for the different attributes of the task. Primarily used for filtering and sorting of the tasks.
 
 * *Code contributed*: [https://github.com/CS2103-AY1819S1-W17-4/main/commits?author=sidhant007[Commits]]
 
 * *Other contributions*:
 
 ** Project management:
-*** Contributed to user stories on GitHub issue tracker
+*** Contributed to user stories on GitHub issue tracker (https://github.com/CS2103-AY1819S1-W17-4/main/issues?q=is%3Aissue+author%3Asidhant007+is%3Aclosed[User Stories])
 *** Manage milestones on GitHub
-** Enhancements to existing features:
-*** Significant modification of Address Book's code base for use in Deadline Manager:
-*** Renaming of class and variable names (https://github.com/CS2103-AY1819S1-W17-4/main/pull/126[#126])
+** Significant modification of Address Book's code base for use in Deadline Manager:
+*** Renaming of classes and variable names from Address Book to Deadline Manager: https://github.com/CS2103-AY1819S1-W17-4/main/pull/117[#117]
 ** Community:
-*** Reviewed Pull Requests (with non-trivial review comments): https://github.com/CS2103-AY1819S1-W17-4/main/pull/169[#169], https://github.com/CS2103-AY1819S1-W17-4/main/pull/206[#206]
+*** Reviewed Pull Requests (with non-trivial review comments): https://github.com/CS2103-AY1819S1-W17-4/main/pull/71[#71], https://github.com/CS2103-AY1819S1-W17-4/main/pull/92[#92]
 
 == Contributions to the User Guide
-
 
 |===
 |_Given below are sections I contributed to the User Guide. They showcase my ability to write documentation targeting end-users._
 |===
-
-include::../UserGuide.adoc[tag=sort]
 
 include::../UserGuide.adoc[tag=sort]
 
