@@ -2,10 +2,11 @@
 :site-section: AboutUs
 :imagesDir: ../images
 :stylesDir: ../stylesheets
+:sectnums:
 
 == PROJECT: Deadline Manager
 
----
+// ---
 
 == Overview
 
@@ -13,16 +14,18 @@ Deadline Manager is a tool written for students in NUS School of Computing to be
 
 Written in Java, Deadline Manager builds upon AddressBook - Level 4, a code base originally designed to teach Software Engineering principles. For more information and to take our project for a test run, please visit our home page [https://cs2103-ay1819s1-w17-4.github.io/main[on GitHub]].
 
-== Summary of contributions
+== Summary of Contributions
 
-* *Major enhancement*: Added *the ability to sort tasks of the Deadline Manager in a user-defined manner*.
-** What it does: It allows the users to sort the tasks using a user-defined sort comparator. A single sort comparator can be composed of multiple comparators, where each comparator is based on a certain attribute of the tasks.
+My key contributions to the project includes:
+
+* *Major enhancement*: Developed *the ability to sort tasks of the Deadline Manager in a user-defined manner*.
+** What it does: It allows the users to order the tasks using a user-defined sort comparator. A single sort comparator can be composed of multiple comparators, where each comparator is based on a certain attribute(Example - Name, Due Date, Priority) of the task.
 ** Justification: This feature is a very important feature for the Deadline Manager because if a user has a lot of deadlines/tasks due and they only want to focus on the most important ones. The sort functionality enables them to view those deadlines which are more important at the top of the list followed by the those which are less important.
-** Highlights: The sort functionality supports chaining of comparators, which enables the user to fine-tune how they want the sorting to work. Example - If a user has a lot of tasks with the same due date, the sort function supports them to first sort by due date and then by priority which means all those tasks with the same due date can be sorted by priority within themselves.
-** Credits: Referenced https://www.codejava.net/java-core/collections/sorting-a-list-by-multiple-attributes-example
+** Highlights: The sort functionality supports chaining of comparators, which enables the user to fine-tune how they want the order. Example - If a user has a lot of tasks with the very close due dates, the sort function supports them to first sort by due date and then by priority which means all those tasks with the same due date can be sorted by priority within themselves.
+** Credits: Referenced https://www.codejava.net/java-core/collections/sorting-a-list-by-multiple-attributes-example[this]
 
 * *Minor enhancement*: Implemented natural comparison for some of the attributes of the task (Ex. Priority, Name)
-** What it does: Allows comparison for the different attributes of the task. Primarily used for filtering and sorting tasks.
+** What it does: Allows comparison for the different attributes of the task. Primarily used for filtering and sorting of the tasks.
 
 * *Code contributed*: [https://github.com/CS2103-AY1819S1-W17-4/main/commits?author=sidhant007[Commits]]
 

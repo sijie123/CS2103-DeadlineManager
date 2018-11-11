@@ -573,23 +573,23 @@ Step 5. The method `updateSortedTaskList` sorts the `versionTaskCollection` usin
 
 ==== Design Considerations
 
-===== Aspect: Which Task List to Sort
+===== Aspect: Which task list to sort
 
-* **Alternative 1 (current choice):** The entire `versionedTaskList` is sorted using JavaFx inbuilt sort method
+* **Alternative 1 (current choice):** The entire `versionedTaskList` is sorted using JavaFx inbuilt sort method.
 ** Pros: Easy to implement.
-** Cons: May have performance issues in terms of slow running.
+** Cons: Slow in performance.
 * **Alternative 2:** The sorting is done ONLY on the viewable `filteredTasks` list.
-** Pros: Will be more efficient in terms of time complexity.
+** Pros: Fast in terms of performance.
 ** Cons: Requires significant changes to the codebase since sorting the `filteredTasks` requires it to be modifiable.
 
-===== Aspect: How to sort mechanism for Tags
+===== Aspect: How to sort for tags
 
 * **Alternative 1 (current choice):** The sort command takes in user input so that the user can specify the priority order of tags.
-** Pros: Provides immense flexibility to the user. Also follows Law of Demeter / Law of Least Knowledge since the `Tag` model itself does NOT know that it can be compared.
+** Pros: Provides immense flexibility to the user. Also follows Law of Demeter / Law of Least Knowledge since the `Tag` model itself does not know that it can be compared.
 ** Cons: The flexibility comes at the cost of making sorting by tags complex for newbie users.
 * **Alternative 2:** The sorting is done in a pre-defined manner, example sorting tasks according to their alphabetical order of tags.
 ** Pros: Easier to implement and simpler for newbie users.
-** Cons: Might not be useful for the user in many situations. Disobeys the Law of Demeter / Law of Least Knowledge since the `Tag` model will know that it can be compared with other tags.
+** Cons: Not useful for the user in many situations. Disobeys the Law of Demeter / Law of Least Knowledge since the `Tag` model will know that it can be compared with other tags.
 // end::sort[]
 
 // tag::filter[]
@@ -1760,3 +1760,16 @@ These instructions only provide a starting point for testers to work on; testers
 .. Test case: `attachment 1 get n/"nothere.txt" p/"hello2.txt"` +
    Expected: Error details saying that `nothere.txt` is not an attachment would be displayed as the status message. No file is copied.
 
+=== Sorting a list of tasks
+
+. Sorting a list of tasks
+
+.. Prerequisites: List all tasks using the `list` command. Multiple tasks in the list.
+.. Test case: `sort n<` +
+   Expected: Sorts the list of tasks according to names in alphabetical ascending order.
+.. Test case: `sort p< name>` +
+   Expected: Sorts the list of tasks first according to ascending order of priority and then in case some tasks have the same priority. Ties are broken in descending order of names (alphabetical order).
+.. Test case: `sort name=` +
+   Expected: The view of the tasks does not change. Error details shown in the status message. Status bar remains the same.
+.. Other incorrect sort commands to try: `sort`, `sort name=`, `sort tag<cs2101` +
+   Expected: Similar to previous.
