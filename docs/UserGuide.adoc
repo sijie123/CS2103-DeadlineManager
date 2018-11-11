@@ -518,7 +518,7 @@ Format: `sort SORT_COMPARATOR [SORT_COMPARATOR] [SORT_COMPARATOR] ...` +
 * Sorts the list by the 1st comparator, in case of ties, it sorts by 2nd comparator and so on.
 * Meaning of the operators for each valid key:
 ** When `key` is `n` or `name`, the task name is compared. Comparison is case-insensitive.
-** When `key` is `d` or `due`, the task's due date is compared.
+** When `key` is `d` or `due` or `deadline`, the task's due date is compared.
 ** When `key` is `p` or `priority`, the task's priority is compared. Note that 1 is the highest priority and 4 is the lowest priority.
 ** When `key` is `f` or `frequency`, the task's frequency (i.e. the number of days between consecutive occurrences of that task) is compared.  A non-recurring task is treated as if it has a frequency of positive infinity.
 ** When `key` is `t` or `tag`, the task's tags are compared. In case `<` is used, it means `TAG1` is placed eariler in the sorted order as compared to `TAG2` and so on. For `>` it is vice-versa.
