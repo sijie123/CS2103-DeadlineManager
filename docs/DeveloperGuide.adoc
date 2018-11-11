@@ -740,7 +740,7 @@ The above diagram demonstrates how each of the three possible ways are distingui
 
 * A non-quoted field identifier only matches alphabets.  There is never a need to use any other kind of character for the field identifier (see <<Field identifier>> below).
 * A non-quoted test phrase only allows alphanumeric characters and the characters `_`, `-`, `/`, `\`, `,`, and `.`.  (The `/` character allows dates to work, and the `,` character allows tag lists to work.)  The string tokenizer provides the bindings to facilitate this check.  If other characters are required, then the test phrase must be placed in quotes (either single or double quotes are acceptable, but they must match).
-* An operator (both the field and set operators) only matches `<`, `=`, `>`, and `:`.
+* An operator (both the filter operator and set operator) only matches `<`, `=`, `>`, and `:`.
 * The "save tokenizer position" action saves the current read position (of the string tokenizer) into a local variable, so that the position may be restored (thus "rewinding" the string tokenizer) if the "restore tokenizer position" action is encountered.
 
 The four parts of a filter unit are described in the following sections.
@@ -855,7 +855,7 @@ The following inheritance diagram shows the inheritance hierarchy of each kind o
 
 image::FilterParserErrorInheritanceDiagram.png[width="800"]
 
-In the diagram above, the blue classes are exceptions thrown by `StringTokenizer`, while the red classes are exceptions thrown by `BooleanExpressionParser`.  In order to reduce coupling between `StringTokenizer` and `BooleanExpressionParser`, and to be able to distinguish (by type-based `catch` clauses) the end-of-string exceptions of those components, they do not shared the same class for end-of-string exceptions.
+In the diagram above, the [blue]#*blue*# classes are exceptions thrown by `StringTokenizer`, while the [red]#*red*# classes are exceptions thrown by `BooleanExpressionParser`.  In order to reduce coupling between `StringTokenizer` and `BooleanExpressionParser`, and to be able to distinguish (by type-based `catch` clauses) the end-of-string exceptions of those components, they do not shared the same class for end-of-string exceptions.
 
 `TokenizationInvalidPredicateException` is a wrapper class for `InvalidPredicateException`, which is thrown when the field-specific parser or set parser encounters an error.  The diagram below shows the different exceptions that may be thrown to indicate the types of issues that may be encountered when parsing a filter unit, and how they may be propagated to `FilterCommandParser` via wrapping by `TokenizationInvalidPredicateException`:
 
@@ -883,11 +883,11 @@ In total, there are around 15 distinct kinds of error conditions when parsing a 
 
 ===== Aspect: Whether to support simplified filter semantics
 
-* **Alternative 1 (current choice):** Support simplified filter semantics (implicit-AND and any-match).
+* **Alternative 1 (current choice):** Support simplified filter semantics (implicitly inserting `&` between adjacent predicates, and the simplified filter unit syntax).
 ** Pros: Reduces cognitive overhead and typing time for most common cases, and makes `filter` feel like a standard keyword search function.
-** Cons: Not possible to detect when user accidentally omits the boolean operator or filter field.
-* **Alternative 2:** Only support the unsimplified version.
-** Pros: Easier to implement, can display an error if the user accidentally omits a boolean operator or filter field.
+** Cons: It is not possible to detect when user accidentally omits the boolean operator or filter field, so the displayed tasks may not be what the user intended to view.
+* **Alternative 2:** Only support the unsimplified semantics.
+** Pros: Easier to implement because there are less cases to consider.  Also, we can display an error if the user accidentally omits a boolean operator or field identifier.
 ** Cons: More verbose filter expressions which may require higher cognitive overhead.
 
 // tag::filter-design-considerations-extract[]
@@ -899,18 +899,21 @@ In total, there are around 15 distinct kinds of error conditions when parsing a 
 * **Alternative 2:** Support a convenience operator that is an alias of a fixed operator regardless of field.
 ** Pros: Easier for users to remember what the convenience operator does.
 ** Cons: Convenience operator is not really _convenient_ -- the behaviour might be surprising or awkward for some fields.
+* **Alternative 3:** Don't support the convenience operator at all.
+** Pros: Least amount of implementation work.
+** Cons: Additional cognitive overhead as users need to figure out which of the available operators they actually want.
 
 ===== Aspect: How to signal exceptional conditions when parsing filter expressions
 
 * **Alternative 1 (current choice):** Use a different type of checked exception for every possible type of failure condition.
 ** Pros: Every possible failure condition is listed in the `throws` clause of all methods -- developers can easily tell how exactly each aspect of parsing could fail, and Java will statically check that every possible failure condition is handled (which makes it impossible to overlook any failure conditions).
-** Cons: Method signatures are more verbose.
+** Cons: More verbose method signatures.
 * **Alternative 2:** Use a single checked exception for all possible failure conditions, and distinguish errors by the message string instead.
 ** Pros: Less verbose method signatures, and yet the benefit of checked exceptions is retained.
 ** Cons: Developers can only tell what exact failure conditions are possible by inspecting the whole call graph of the method.  Furthermore, it is difficult to distinguish different error conditions in order to customize and show relevant messages to the user.
 * **Alternative 3:** Use unchecked exceptions.
 ** Pros: Simplest method signatures.
-** Cons: Easy to overlook possible failure conditions when modifying the code.
+** Cons: Easy to overlook possible failure conditions when modifying the code, so future developers might inadvertently introduce bugs.
 
 // end::filter-design-considerations-extract[]
 // end::filter[]
