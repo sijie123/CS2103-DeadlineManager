@@ -22,7 +22,7 @@ public class ParserUtil {
 
     public static final String MESSAGE_INVALID_INDEX = "Index is not a non-zero unsigned integer.";
     public static final String MESSAGE_INVALID_FILENAME = "Invalid filename! File name can only contain alphanumeric"
-        + " characters, full stop and the underscore [_] characters";
+            + " characters, full stop and the underscore [_] characters";
 
     /**
      * Parses {@code oneBasedIndex} into an {@code Index} and returns it. Leading and trailing

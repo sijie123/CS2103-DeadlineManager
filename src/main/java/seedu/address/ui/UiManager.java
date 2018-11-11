@@ -71,16 +71,14 @@ public class UiManager extends ComponentManager implements Ui {
     private void showFileOperationAlertAndWait(String description, String details,
                                                Throwable cause) {
         final String content = details + ":\n" + cause.toString();
-        showAlertDialogAndWait(AlertType.ERROR, FILE_OPS_ERROR_DIALOG_STAGE_TITLE, description,
-            content);
+        showAlertDialogAndWait(AlertType.ERROR, FILE_OPS_ERROR_DIALOG_STAGE_TITLE, description, content);
     }
 
     private Image getImage(String imagePath) {
         return new Image(MainApp.class.getResourceAsStream(imagePath));
     }
 
-    void showAlertDialogAndWait(Alert.AlertType type, String title, String headerText,
-                                String contentText) {
+    void showAlertDialogAndWait(Alert.AlertType type, String title, String headerText, String contentText) {
         showAlertDialogAndWait(mainWindow.getPrimaryStage(), type, title, headerText, contentText);
     }
 
@@ -89,8 +87,7 @@ public class UiManager extends ComponentManager implements Ui {
      * after the user has closed the alert dialog.
      */
     private static void showAlertDialogAndWait(Stage owner, AlertType type, String title,
-                                               String headerText,
-                                               String contentText) {
+                                               String headerText, String contentText) {
         final Alert alert = new Alert(type);
         alert.getDialogPane().getStylesheets().add("view/DarkTheme.css");
         alert.initOwner(owner);
@@ -113,14 +110,12 @@ public class UiManager extends ComponentManager implements Ui {
     }
 
 
-
     //==================== Event Handling Code ===============================================================
 
     @Subscribe
     private void handleDataSavingExceptionEvent(DataSavingExceptionEvent event) {
         logger.info(LogsCenter.getEventHandlingLogMessage(event));
         showFileOperationAlertAndWait(FILE_OPS_ERROR_DIALOG_HEADER_MESSAGE,
-            FILE_OPS_ERROR_DIALOG_CONTENT_MESSAGE,
-            event.exception);
+                FILE_OPS_ERROR_DIALOG_CONTENT_MESSAGE, event.exception);
     }
 }

@@ -15,13 +15,13 @@ public class SortCommand extends Command {
 
     public static final String COMMAND_WORD = "sort";
 
-    public static final String MESSAGE_USAGE =
-            COMMAND_WORD + ": Sort the tasks using a user defined custom operator "
-                    + "and displays them as a list with index numbers.\n"
-                    + "Parameters: SORT_COMPARATOR [SORT_COMPARATORS]...\n"
-                    + "Example 1: " + COMMAND_WORD + " name> due<\n"
-                    + "Example 2: " + COMMAND_WORD + " d>\n"
-                    + "Example 3: " + COMMAND_WORD + " tag<{tag1 tag2 tag3} priority<\n";
+    public static final String MESSAGE_USAGE = COMMAND_WORD
+            + ": Sort the tasks using a user defined custom operator "
+            + "and displays them as a list with index numbers.\n"
+            + "Parameters: SORT_COMPARATOR [SORT_COMPARATORS]...\n"
+            + "Example 1: " + COMMAND_WORD + " name> due<\n"
+            + "Example 2: " + COMMAND_WORD + " d>\n"
+            + "Example 3: " + COMMAND_WORD + " tag<{tag1 tag2 tag3} priority<\n";
 
     public static final String MESSAGE_SUCCESS = "Sorted list.";
 

@@ -28,8 +28,7 @@ public class CsvSerializableTaskCollection {
      */
     public CsvSerializableTaskCollection(ReadOnlyTaskCollection src) {
         this();
-        tasks.addAll(
-            src.getTaskList().stream().map(CsvAdaptedTask::new).collect(Collectors.toList()));
+        tasks.addAll(src.getTaskList().stream().map(CsvAdaptedTask::new).collect(Collectors.toList()));
     }
 
     @Override
@@ -47,7 +46,7 @@ public class CsvSerializableTaskCollection {
     @Override
     public String toString() {
         StringBuilder csvOutput = new StringBuilder(CSV_HEADER);
-        for (CsvAdaptedTask task: tasks) {
+        for (CsvAdaptedTask task : tasks) {
             csvOutput.append(task.toString() + "\n");
         }
         return csvOutput.toString();

@@ -31,13 +31,13 @@ public class StringUtil {
         String preppedWord = word.trim();
         checkArgument(!preppedWord.isEmpty(), "Word parameter cannot be empty");
         checkArgument(preppedWord.split("\\s+").length == 1,
-            "Word parameter should be a single word");
+                "Word parameter should be a single word");
 
         String preppedSentence = sentence;
         String[] wordsInPreppedSentence = preppedSentence.split("\\s+");
 
         return Arrays.stream(wordsInPreppedSentence)
-            .anyMatch(preppedWord::equalsIgnoreCase);
+                .anyMatch(preppedWord::equalsIgnoreCase);
     }
 
     /**
@@ -111,7 +111,7 @@ public class StringUtil {
         try {
             int value = Integer.parseInt(s);
             return value > 0 && !s
-                .startsWith("+"); // "+1" is successfully parsed by Integer#parseInt(String)
+                    .startsWith("+"); // "+1" is successfully parsed by Integer#parseInt(String)
         } catch (NumberFormatException nfe) {
             return false;
         }

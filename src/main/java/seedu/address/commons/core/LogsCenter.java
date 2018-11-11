@@ -78,7 +78,7 @@ public class LogsCenter {
      */
     private static void removeHandlers(Logger logger) {
         Arrays.stream(logger.getHandlers())
-            .forEach(logger::removeHandler);
+                .forEach(logger::removeHandler);
     }
 
     /**
@@ -103,7 +103,7 @@ public class LogsCenter {
      */
     private static FileHandler createFileHandler() throws IOException {
         FileHandler fileHandler = new FileHandler(LOG_FILE, MAX_FILE_SIZE_IN_BYTES, MAX_FILE_COUNT,
-            true);
+                true);
         fileHandler.setFormatter(new SimpleFormatter());
         fileHandler.setLevel(currentLogLevel);
         return fileHandler;

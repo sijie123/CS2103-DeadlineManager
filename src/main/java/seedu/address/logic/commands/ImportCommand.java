@@ -21,8 +21,8 @@ public class ImportCommand extends Command {
     public static final String MESSAGE_IMPORT_ERROR = "Import failed. Error: %s";
     public static final String MESSAGE_SUCCESS = "Imported successfully from file: %s";
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": imports a previously saved file. "
-        + "Usage: import p/FILEPATH [r/all | r/overwrite | r/skip] \n"
-        + "Example: import p/saveFile.xml r/overwrite";
+            + "Usage: import p/FILEPATH [r/all | r/overwrite | r/skip] \n"
+            + "Example: import p/saveFile.xml r/overwrite";
     private String fileName;
     private ImportConflictResolver conflictResolver;
     private String importError = "";
@@ -30,6 +30,7 @@ public class ImportCommand extends Command {
     public ImportCommand(String fileName) {
         this(fileName, new IgnoreImportConflictResolver());
     }
+
     public ImportCommand(String fileName, ImportConflictResolver conflictResolver) {
         this.fileName = fileName;
         this.conflictResolver = conflictResolver;
@@ -53,9 +54,10 @@ public class ImportCommand extends Command {
     @Override
     public boolean equals(Object other) {
         return other == this // short circuit if same object
-            || (other instanceof ImportCommand // instanceof handles nulls
-            && fileName.equals(((ImportCommand) other).fileName)
-            && conflictResolver.getClass().equals(((ImportCommand) other).conflictResolver.getClass())); // state check
+                || (other instanceof ImportCommand // instanceof handles nulls
+                && fileName.equals(((ImportCommand) other).fileName)
+                && conflictResolver.getClass().equals((
+                        (ImportCommand) other).conflictResolver.getClass())); // state check
     }
 
     private boolean hasImportError() {

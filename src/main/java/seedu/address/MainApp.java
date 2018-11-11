@@ -54,8 +54,7 @@ public class MainApp extends Application {
 
     @Override
     public void init() throws Exception {
-        logger.info(
-            "=============================[ Initializing DeadlineManager ]===========================");
+        logger.info("=============================[ Initializing DeadlineManager ]===========================");
         super.init();
 
         AppParameters appParameters = AppParameters.parse(getParameters());
@@ -64,7 +63,7 @@ public class MainApp extends Application {
         UserPrefsStorage userPrefsStorage = new JsonUserPrefsStorage(config.getUserPrefsFilePath());
         userPrefs = initPrefs(userPrefsStorage);
         TaskCollectionStorage taskCollectionStorage = new XmlTaskCollectionStorage(
-            userPrefs.getDeadlineManagerFilePath());
+                userPrefs.getDeadlineManagerFilePath());
         storage = new StorageManager(taskCollectionStorage, userPrefsStorage);
 
         initLogging(config);
@@ -94,12 +93,10 @@ public class MainApp extends Application {
             }
             initialData = taskCollectionOptional.orElseGet(SampleDataUtil::getSampleTaskCollection);
         } catch (DataConversionException e) {
-            logger.warning(
-                "Data file not in the correct format. Will be starting with an empty deadline manager");
+            logger.warning("Data file not in the correct format. Will be starting with an empty deadline manager");
             initialData = new TaskCollection();
         } catch (IOException e) {
-            logger.warning(
-                "Problem while reading from the file. Will be starting with an empty deadline manager");
+            logger.warning("Problem while reading from the file. Will be starting with an empty deadline manager");
             initialData = new TaskCollection();
         }
 
@@ -131,8 +128,7 @@ public class MainApp extends Application {
             Optional<Config> configOptional = ConfigUtil.readConfig(configFilePathUsed);
             initializedConfig = configOptional.orElse(new Config());
         } catch (DataConversionException e) {
-            logger.warning(
-                "Config file at " + configFilePathUsed + " is not in the correct format. "
+            logger.warning("Config file at " + configFilePathUsed + " is not in the correct format. "
                     + "Using default config properties");
             initializedConfig = new Config();
         }
@@ -160,11 +156,10 @@ public class MainApp extends Application {
             initializedPrefs = prefsOptional.orElse(new UserPrefs());
         } catch (DataConversionException e) {
             logger.warning("UserPrefs file at " + prefsFilePath + " is not in the correct format. "
-                + "Using default user prefs");
+                    + "Using default user prefs");
             initializedPrefs = new UserPrefs();
         } catch (IOException e) {
-            logger.warning(
-                "Problem while reading from the file. Will be starting with an empty TaskCollection");
+            logger.warning("Problem while reading from the file. Will be starting with an empty TaskCollection");
             initializedPrefs = new UserPrefs();
         }
 
@@ -191,7 +186,7 @@ public class MainApp extends Application {
     @Override
     public void stop() {
         logger.info(
-            "============================ [ Stopping deadline manager ] =============================");
+                "============================ [ Stopping deadline manager ] =============================");
         ui.stop();
         try {
             storage.saveUserPrefs(userPrefs);
