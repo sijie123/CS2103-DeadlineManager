@@ -1,6 +1,17 @@
 package seedu.address.logic.parser;
 
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+import static seedu.address.logic.parser.CliSyntax.KEY_DEADLINE_LONG;
+import static seedu.address.logic.parser.CliSyntax.KEY_DEADLINE_MEDIUM;
+import static seedu.address.logic.parser.CliSyntax.KEY_DEADLINE_SHORT;
+import static seedu.address.logic.parser.CliSyntax.KEY_FREQUENCY_LONG;
+import static seedu.address.logic.parser.CliSyntax.KEY_FREQUENCY_SHORT;
+import static seedu.address.logic.parser.CliSyntax.KEY_NAME_LONG;
+import static seedu.address.logic.parser.CliSyntax.KEY_NAME_SHORT;
+import static seedu.address.logic.parser.CliSyntax.KEY_PRIORITY_LONG;
+import static seedu.address.logic.parser.CliSyntax.KEY_PRIORITY_SHORT;
+import static seedu.address.logic.parser.CliSyntax.KEY_TAG_LONG;
+import static seedu.address.logic.parser.CliSyntax.KEY_TAG_SHORT;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -18,6 +29,12 @@ import seedu.address.model.task.Task;
 public class SortCommandParser implements Parser<SortCommand> {
 
     private static final String MESSAGE_INVALID_KEY_FORMAT = "Invalid key: %1$s";
+    private static final char BRACKET_OPEN = '{';
+    private static final char BRACKET_CLOSE = '}';
+    private static final char COMPARATOR_ASCENDING = '<';
+    private static final char COMPARATOR_DESCENDING = '>';
+    private static final char SENTINEL_VALUE = '~';
+    private static final char WHITESPACE = ' ';
 
     /**
      * Parses the given {@code String} of arguments in the context of the SortCommand and returns an
@@ -35,14 +52,15 @@ public class SortCommandParser implements Parser<SortCommand> {
 
         int bracketDepth = 0;
         for (int i = 0; i < trimmedArgs.length(); i++) {
-            if (trimmedArgs.charAt(i) == '{') {
+            if (trimmedArgs.charAt(i) == BRACKET_OPEN) {
                 bracketDepth++;
-            } else if (trimmedArgs.charAt(i) == '}') {
+            } else if (trimmedArgs.charAt(i) == BRACKET_CLOSE) {
                 bracketDepth--;
-            } else if (trimmedArgs.charAt(i) == ' ' && bracketDepth > 0) {
-                trimmedArgs.setCharAt(i, '~');
+            } else if (trimmedArgs.charAt(i) == WHITESPACE && bracketDepth > 0) {
+                trimmedArgs.setCharAt(i, SENTINEL_VALUE);
             }
         }
+
         String[] splittedArgs = trimmedArgs.toString().split("\\s+");
 
         // pattern that matches things like:
@@ -66,55 +84,57 @@ public class SortCommandParser implements Parser<SortCommand> {
             final String taskField = splittedComparator[0].substring(0, splittedComparator[0].length() - 1);
             final char comparisonCharacter = splittedComparator[0].charAt(splittedComparator[0].length() - 1);
 
-            if (comparisonCharacter != '>' && comparisonCharacter != '<') {
+            if (comparisonCharacter != COMPARATOR_ASCENDING && comparisonCharacter != COMPARATOR_DESCENDING) {
                 throw new SimpleParseException(
                         String.format(MESSAGE_INVALID_KEY_FORMAT, element));
             }
 
-            if (splittedComparator.length > 1 && (!taskField.equals("t") && !taskField.equals("tag"))) {
+            if (splittedComparator.length > 1 && (!taskField.equals(KEY_TAG_SHORT)
+                    && !taskField.equals(KEY_TAG_LONG))) {
                 throw new SimpleParseException(
                         String.format(MESSAGE_INVALID_KEY_FORMAT, element));
             }
 
             switch (taskField) {
-            case "n": // fallthrough
-            case "name": {
-                if (comparisonCharacter == '<') {
+            case KEY_NAME_SHORT: // fallthrough
+            case KEY_NAME_LONG: {
+                if (comparisonCharacter == COMPARATOR_ASCENDING) {
                     comparator = comparator.thenComparing(Task::getName);
                 } else {
                     comparator = comparator.thenComparing(Task::getName, Comparator.reverseOrder());
                 }
                 break;
             }
-            case "d": // fallthrough
-            case "due": {
-                if (comparisonCharacter == '<') {
+            case KEY_DEADLINE_SHORT: // fallthrough
+            case KEY_DEADLINE_MEDIUM: // fallthrough
+            case KEY_DEADLINE_LONG: {
+                if (comparisonCharacter == COMPARATOR_ASCENDING) {
                     comparator = comparator.thenComparing(Task::getDeadline);
                 } else {
                     comparator = comparator.thenComparing(Task::getDeadline, Comparator.reverseOrder());
                 }
                 break;
             }
-            case "p": // fallthrough
-            case "priority": {
-                if (comparisonCharacter == '<') {
+            case KEY_PRIORITY_SHORT: // fallthrough
+            case KEY_PRIORITY_LONG: {
+                if (comparisonCharacter == COMPARATOR_ASCENDING) {
                     comparator = comparator.thenComparing(Task::getPriority);
                 } else {
                     comparator = comparator.thenComparing(Task::getPriority, Comparator.reverseOrder());
                 }
                 break;
             }
-            case "f": // fallthrough
-            case "frequency": {
-                if (comparisonCharacter == '<') {
+            case KEY_FREQUENCY_SHORT: // fallthrough
+            case KEY_FREQUENCY_LONG: {
+                if (comparisonCharacter == COMPARATOR_ASCENDING) {
                     comparator = comparator.thenComparing(Task::getFrequency);
                 } else {
                     comparator = comparator.thenComparing(Task::getFrequency, Comparator.reverseOrder());
                 }
                 break;
             }
-            case "t": // fallthrough
-            case "tag": {
+            case KEY_TAG_SHORT: // fallthrough
+            case KEY_TAG_LONG: {
                 if (splittedComparator.length < 2) {
                     throw new SimpleParseException(
                             String.format(MESSAGE_INVALID_KEY_FORMAT, element));
@@ -122,15 +142,15 @@ public class SortCommandParser implements Parser<SortCommand> {
 
                 String tags = splittedComparator[1];
 
-                if (tags.isEmpty() || tags.length() < 2 || tags.charAt(0) != '{'
-                        || tags.charAt(tags.length() - 1) != '}') {
+                if (tags.isEmpty() || tags.length() < 2 || tags.charAt(0) != BRACKET_OPEN
+                        || tags.charAt(tags.length() - 1) != BRACKET_CLOSE) {
                     throw new SimpleParseException(
-                            String.format(MESSAGE_INVALID_COMMAND_FORMAT, element));
+                            String.format(MESSAGE_INVALID_KEY_FORMAT, element));
                 }
 
                 tags = tags.substring(1, tags.length() - 1); // removing '{' and '}'
 
-                String[] tagsOrder = tags.split("~+");
+                String[] tagsOrder = tags.split(SENTINEL_VALUE + "+");
                 tagsOrder = Arrays.asList(tagsOrder)
                         .stream()
                         .filter(str -> !str.isEmpty())
@@ -138,7 +158,7 @@ public class SortCommandParser implements Parser<SortCommand> {
                         .toArray(new String[0]);
                 // ^to remove empty strings
 
-                if (comparisonCharacter == '>') {
+                if (comparisonCharacter == COMPARATOR_DESCENDING) {
                     tagsOrder = reverseString(tagsOrder);
                 }
 
@@ -148,7 +168,7 @@ public class SortCommandParser implements Parser<SortCommand> {
                         tagsArray[i] = new Tag(tagsOrder[i]);
                     } catch (IllegalArgumentException e) {
                         throw new SimpleParseException(
-                                String.format(MESSAGE_INVALID_COMMAND_FORMAT, SortCommand.MESSAGE_USAGE));
+                                String.format(MESSAGE_INVALID_KEY_FORMAT, element));
                     }
                 }
 

@@ -308,8 +308,8 @@ The `Storage` component
 * can save `UserPref` objects in json format and read it back.
 * can save the deadline manager data in xml format and read it back.
 * can export the last view in xml format and import it back.
-* is event-based. Methods are executed by listening to events such as TaskCollectionChangedEvent.
-Return data and errors are also passed back by firing events.
+* can export the last view in csv format.
+* can handle requests and return output through event-driven architecture. Methods are executed by listening to events such as TaskCollectionChangedEvent.
 
 
 == Implementation
@@ -373,6 +373,7 @@ If the `currentStatePointer` is at index 0, pointing to the initial deadline man
 
 The following sequence diagram shows how the undo operation works:
 
+.Sequence diagram for `undo`
 image::UndoRedoSequenceDiagram.png[width="800"]
 
 The `redo` command does the opposite -- it calls `Model#redoTaskCollection()`, which shifts the `currentStatePointer` once to the right, pointing to the previously undone state, and restores the deadline manager to that state.
@@ -390,6 +391,7 @@ image::UndoRedoNewCommand4StateListDiagram.png[width="800"]
 
 The following activity diagram summarizes what happens when a user executes a new command:
 
+.Activity diagram when a command is executed
 image::UndoRedoActivityDiagram.png[width="650"]
 
 ==== Design Considerations
@@ -418,8 +420,11 @@ image::UndoRedoActivityDiagram.png[width="650"]
 //==== Current implementation
 
 The deadline manager supports import and export features. This feature uses 2 components: `Storage` and `Model`.
+This section will first provide an overview into the components and API involved, before focusing on interactions between the components.
 
 ==== Current Implementation
+
+This section will give an overview of how the import and export features work with `Model` and `Storage`.
 
 ===== Overview of components
 Internally, `StorageManager` implements the following APIs from `ImportExportStorage` interface:
@@ -427,19 +432,18 @@ Internally, `StorageManager` implements the following APIs from `ImportExportSto
 * `importTaskCollection`:  Given a filename, imports and returns a `TaskCollection`.
 * `exportTaskCollection`: Given a `TaskCollection`, exports and writes to a specified file.
 
-Internally, it uses the same API as reading and saving the working taskCollection file.
-However, additional checks are performed to ensure that the user does not inadvertently overwrite the current working file, or import and corrupt the current working file.
-`StorageManager` only handles the I/O from file, and the data read and written is handled by `Model`.
+Import/Export uses the same API as reading and saving the working `TaskCollection` file when exporting. However, additional checks are performed to ensure that the user does not inadvertently overwrite files, or corrupt the Deadline Manager.
+`StorageManager` only handles writing to and reading from file, and relies on `ModelManager` to decide what data should be read or written.
 
 [NOTE]
-An ImportExportExceptionEvent is raised if I/O fails for any reason.
+An ImportExportExceptionEvent is raised if Deadline Manager fails to read or write files for any reason.
 
-ModelManager implements the following APIs necessary for Import and Export:
+The complementary `ModelManager` implements the following APIs necessary for Import and Export:
 
 * `importTaskCollection`: Creates and posts a new import request event
 * `exportTaskCollection`: Creates and posts a new export request event.
 
-The request events are posted to the `EventCenter`, which will dispatch to all subscribed methods.
+The request events are posted to the `EventCenter`, which will dispatch to all subscribed components, such as `Storage`.
 
 ===== Inter-component communication
 
@@ -471,10 +475,11 @@ Similarly, `StorageManager` returns the result of imports and errors with the fo
 * `handleImportRequestEvent`: Processes an import event and reads from file.
 * `handleExportRequestEvent`: Processes an export event and writes to file.
 
-===== Sequence Flow
+==== Sequence Flow
 
 Given below is a sequence diagram illustrating the interactions between `Model` and `Storage` when exporting.
 
+.Sequence diagram for exporting tasks
 image::ExportSequenceDiagram.png[width="800"]
 
 Step 1. The user executes export to file `dataFile`. The export command calls ModelManager's `exportTaskCollection`.
@@ -487,6 +492,7 @@ Step 4. `Storage` will handle the `ExportRequestEvent` and write to file.
 
 Given below is a sequence diagram illustrating the interactions between `Model` and `Storage` when importing.
 
+.Sequence diagram for importing tasks
 image::ImportSequenceDiagram.png[width="800"]
 
 Step 1. The user executes import from file `dataFile`. The import command calls ModelManager's `importTaskCollection`.
@@ -501,16 +507,42 @@ Step 5. The `EventsCenter` will dispatch the `ImportDataAvailableEvent` back to 
 
 Step 6. `ModelManager` will take the imported data and de-conflict the merged entries.
 
-===== Import Conflict Resolver
+==== Import Conflict Resolver
 
 An imported task is deemed conflicting with an existing task if the two tasks compare `equal` with the internal implementation of Task's `equal` method.
 If the user attempts to import a new task that conflicts with an existing task, the task needs to be de-conflicted with one of the following resolver:
 
-* `IgnoreResolver`: Discards the incoming task in favour of the existing task.
-* `OverwriteResolver`: Updates the existing task to reflect the values of the incoming task.
-* `DuplicateResolver`: Keep both copies.
+* `IgnoreImportConflictResolver`: Discards the incoming task in favour of the existing task.
+* `OverwriteImportConflictResolver`: Updates the existing task to reflect the values of the incoming task.
+* `DuplicateImportConflictResolver`: Keep both copies.
 
 The user can specify the deconflict algorithm with flags. By default, the `IgnoreResolver` is used.
+
+image::ImportConflictResolverSequenceDiagram.png[width="800"]
+
+Given above is a sequence diagram for the Import Conflict Resolver, illustrating the interactions between ModelManager and ImportConflictResolver. The OverwriteImportConflictResolver is used as an example.
+
+Step 1. After requesting for import, Storage communicates the model serialised from file by firing a `handleImportDataAvailableEvent(event)`.
+
+Step 2. `ModelManager` retrieves the TaskCollection, and for each task, `ModelManager` decides whether the task already exists in the Model.
+
+Step 2a. If the task already exists, the functional method `resolve(() -> add(), () -> delete(), task)` of `OverwriteImportConflictResolver` is invoked. By passing in a reference to ModelManager's `add` and `delete` methods, the Functional Programming style is used here. `OverwriteImportConflictResolver` will first `delete()` the existing task, before it calls `add()` on the new one.
+
+Step 2b. Otherwise, the task doesn't exist, so `ModelManager` adds the task to the model.
+
+==== CSV Format support
+
+The discussion above has been format-agnostic, abstracting away details about the file formats. Deadline Manager supports both eXtensible Markup Language (XML) and Comma Separated Values (CSV) format. Currently, while XML format can be freely used to import and export data, CSV format can only be used to export data.
+
+The CSV/XML format support is implemented using the respective `{*}TaskCollectionStorage` class. `XMLTaskCollectionStorage` is able to import and export data, so it implements both `TaskCollectionReadStorage` and `TaskCollectionWriteStorage` interface. On the other hand, `CSVTaskCollectionStorage` can only export data, so it implements only the `TaskCollectionWriteStorage` interface.
+
+The `TaskCollectionReadStorage` specifies APIs that is responsible for reading from a file and serialising data into `Tasks` usable by `Model`. Classes that implement `TaskCollectionReadStorage` should support:
+
+* `readTaskCollection`: Reads a file and returns a `TaskCollection` serialised based on the contents of the file.
+
+The `TaskCollectionWriteStorage` specifies APIs that is responsible for de-serialising `Tasks` into a text format to be written to a file. Classes that implement `TaskCollectionWriteStorage` should support:
+
+* `saveTaskCollection`: De-serialises the `TaskCollection` and saves the data into a file at `filePath`.
 
 ==== Design Considerations
 
@@ -535,6 +567,18 @@ As described in <<Import Deconflict, Import Deconflict>>, an import conflict ari
 * **Alternative 2:** Use an `enum` to implement ImportConflictResolver. The `ImportConflictResolver` enum provides a pre-defined selection of algorithms that the user can specify.
 ** Pros: There is no need to implement separate classes. Since the `ImportConflictResolver` enum is only useful within Model, it reside within Model as a private variable.
 ** Cons: If/else statements are required to determine which algorithm should be used. Additionally, an `ImportConflictResolver` implemented this way cannot be easily reused or extended.
+
+===== Aspect: How to support different file formats
+
+As Deadline Manager supports multiple file formats, it is essential to consider how to modularise the file formatting component so that `Storage` can seamlessly process different types of supported files. Furthermore,  some formats such as CSV may not support importing, so it is necessary to distinguish between reading and writing operations.
+
+* **Alternative 1 (current choice):** Maintain separate `TaskCollectionReadStorage` and `TaskCollectionWriteStorage` interfaces. Classes that support import/export can choose to support `ReadStorage`, `WriteStorage`, or both. This is written in an OOP style, and `StorageManager` is agnostic to the export format.
+** Pros: This provides more flexibility that could support more file formats in the future. With the required API in place, future implementations only need to ensure that they support reading and/or writing. Furthermore, this allows implementations to have the option of supporting either reading or writing, instead of having to support both. This could be a more sensible option for formats like CSV, where importing from CSV might not be as useful as exporting to one.
+** Cons: The behaviour might be a little harder to understand from an end-user's perspective. For example, in the current implementation, a user can export to CSV, but cannot import from one as only TaskCollectionWriteStorage is implemented.
+* **Alternative 2:** Combine TaskCollectionReadStorage and TaskCollectionWriteStorage into a single interface, so that implementations that support import/export must support both at once.
+** Pros: It is more intuitive for the user, as they can freely import from and export to any format.
+** Cons: It is more difficult to support a new format, as both the reading and writing features need to be supported at once. If a developer wants to implement only either reading or writing, they would violate the Liskov Substitution Principle. Thus, combining the interfaces would make implementation less flexible.
+
 // end::importexport[]
 
 // tag::sort[]
@@ -564,8 +608,8 @@ Step 2. The `SortCommandParser` receives the command with the user comparator gi
 
 Step 3. The `SortCommandParser` parses the string into a valid comparator and calls the `SortCommand` with this comparator provided.
 
+.Sequence Diagram for executing Sort Command.
 image::SortOperationSequenceDiagram.png[width="800"]
-Figure 10 illustrates the sequence diagram for Sort Command
 
 Step 4. The `SortCommand` calls the `updateSortedTaskList` API method of `ModelManager`
 
@@ -573,23 +617,23 @@ Step 5. The method `updateSortedTaskList` sorts the `versionTaskCollection` usin
 
 ==== Design Considerations
 
-===== Aspect: Which Task List to Sort
+===== Aspect: Which task list to sort
 
-* **Alternative 1 (current choice):** The entire `versionedTaskList` is sorted using JavaFx inbuilt sort method
+* **Alternative 1 (current choice):** The entire `versionedTaskList` is sorted using JavaFx inbuilt sort method.
 ** Pros: Easy to implement.
-** Cons: May have performance issues in terms of slow running.
+** Cons: Slow in performance.
 * **Alternative 2:** The sorting is done ONLY on the viewable `filteredTasks` list.
-** Pros: Will be more efficient in terms of time complexity.
+** Pros: Fast in terms of performance.
 ** Cons: Requires significant changes to the codebase since sorting the `filteredTasks` requires it to be modifiable.
 
-===== Aspect: How to sort mechanism for Tags
+===== Aspect: How to sort for tags
 
 * **Alternative 1 (current choice):** The sort command takes in user input so that the user can specify the priority order of tags.
-** Pros: Provides immense flexibility to the user. Also follows Law of Demeter / Law of Least Knowledge since the `Tag` model itself does NOT know that it can be compared.
+** Pros: Provides immense flexibility to the user. Also follows Law of Demeter / Law of Least Knowledge since the `Tag` model itself does not know that it can be compared.
 ** Cons: The flexibility comes at the cost of making sorting by tags complex for newbie users.
 * **Alternative 2:** The sorting is done in a pre-defined manner, example sorting tasks according to their alphabetical order of tags.
 ** Pros: Easier to implement and simpler for newbie users.
-** Cons: Might not be useful for the user in many situations. Disobeys the Law of Demeter / Law of Least Knowledge since the `Tag` model will know that it can be compared with other tags.
+** Cons: Not useful for the user in many situations. Disobeys the Law of Demeter / Law of Least Knowledge since the `Tag` model will know that it can be compared with other tags.
 // end::sort[]
 
 // tag::filter[]
@@ -642,6 +686,7 @@ The second component in the list above also accepts a filter unit that contains 
 
 A general string tokenizer (this is the `StringTokenizer` class in the `parser` subdirectory) is shared by parts 1 and 2 to split the filter expression into tokens.
 
+.Sequence diagram for parsing a filter command (for non-set-based fields)
 image::FilterOperationSequenceDiagram.png[width="800"]
 
 The above diagram shows the simplified sequence of operations to parse a filter expression into a predicate for non-set-based fields.  Take note of the following simplifications in the sequence diagram above:
@@ -714,10 +759,12 @@ There are three possible ways to express a filter unit:
 
 The following diagram is describes a filter unit that is specified using the full syntax:
 
+.Structure of a filter unit that uses the full syntax
 image::FilterUnitDiagram.png[width="200"]
 
 The following diagram is describes a filter unit that is specified using the extended full syntax for sets:
 
+.Structure of a filter unit that uses the extended full syntax for sets
 image::FilterUnitDiagramSet.png[width="250"]
 
 As shown in the diagram above, a filter unit (using the full syntax or extended syntax) consists of these parts:
@@ -732,6 +779,7 @@ The simplified syntax only contains the test phrase, and is explained in a separ
 
 The filter unit parser distinguishes between the three possible ways to express a filter unit, as per the activity diagram below:
 
+.Activity diagram for parsing a filter unit
 image::FilterUnitActivityDiagram.png[width="800"]
 
 // end::filter-unit-parser[]
@@ -740,7 +788,7 @@ The above diagram demonstrates how each of the three possible ways are distingui
 
 * A non-quoted field identifier only matches alphabets.  There is never a need to use any other kind of character for the field identifier (see <<Field identifier>> below).
 * A non-quoted test phrase only allows alphanumeric characters and the characters `_`, `-`, `/`, `\`, `,`, and `.`.  (The `/` character allows dates to work, and the `,` character allows tag lists to work.)  The string tokenizer provides the bindings to facilitate this check.  If other characters are required, then the test phrase must be placed in quotes (either single or double quotes are acceptable, but they must match).
-* An operator (both the field and set operators) only matches `<`, `=`, `>`, and `:`.
+* An operator (both the filter operator and set operator) only matches `<`, `=`, `>`, and `:`.
 * The "save tokenizer position" action saves the current read position (of the string tokenizer) into a local variable, so that the position may be restored (thus "rewinding" the string tokenizer) if the "restore tokenizer position" action is encountered.
 
 The four parts of a filter unit are described in the following sections.
@@ -827,6 +875,7 @@ The set operator is orthogonal to the filter operator, and hence they may be com
 
 The set parser is implemented in the `makeFilter()` method of the `seedu.address.model.util.SetUtil` class.  It parses the comma-separated list (i.e. the test phrase) using a new instance of `StringTokenizer`, and then uses reflection to invoke the relevant field-specific parser for each item in the comma-separated list.  This is illustrated in the sequence diagram below:
 
+.Sequence diagram for parsing a filter command (for set-based fields)
 image::FilterOperationSequenceDiagramSet.png[width="800"]
 
 As with the sequence diagram for non-set-based fields, the above diagram is simplified and omits details about how the test phrase is split into tokens using a new `StringTokenizer` instance.  "Field" represents any filterable set-based field -- `Tag` or `Attachment`.
@@ -853,12 +902,14 @@ Error conditions are signalled via checked exceptions that inherit from `seedu.a
 
 The following inheritance diagram shows the inheritance hierarchy of each kind of exception that can be thrown from parsing a filter expression:
 
+.Inheritance tree for exceptions that may be thrown from parsing a filter expression
 image::FilterParserErrorInheritanceDiagram.png[width="800"]
 
-In the diagram above, the blue classes are exceptions thrown by `StringTokenizer`, while the red classes are exceptions thrown by `BooleanExpressionParser`.  In order to reduce coupling between `StringTokenizer` and `BooleanExpressionParser`, and to be able to distinguish (by type-based `catch` clauses) the end-of-string exceptions of those components, they do not shared the same class for end-of-string exceptions.
+In the diagram above, the [blue]#*blue*# classes are exceptions thrown by `StringTokenizer`, while the [red]#*red*# classes are exceptions thrown by `BooleanExpressionParser`.  In order to reduce coupling between `StringTokenizer` and `BooleanExpressionParser`, and to be able to distinguish (by type-based `catch` clauses) the end-of-string exceptions of those components, they do not shared the same class for end-of-string exceptions.
 
 `TokenizationInvalidPredicateException` is a wrapper class for `InvalidPredicateException`, which is thrown when the field-specific parser or set parser encounters an error.  The diagram below shows the different exceptions that may be thrown to indicate the types of issues that may be encountered when parsing a filter unit, and how they may be propagated to `FilterCommandParser` via wrapping by `TokenizationInvalidPredicateException`:
 
+.Inheritance tree for exceptions that may be thrown from parsing a filter unit
 image::FilterParserErrorPredicateInheritanceDiagram.png[width="500"]
 
 The filter unit parser is responsible for constructing a `TokenizationInvalidPredicateException` from any thrown `InvalidPredicateException` and associating the `TokenizationInvalidPredicateException` with the offending character range (which will be one of the three parts (or four, if using the extended set syntax) of the filter unit).
@@ -883,14 +934,14 @@ In total, there are around 15 distinct kinds of error conditions when parsing a 
 
 ===== Aspect: Whether to support simplified filter semantics
 
-* **Alternative 1 (current choice):** Support simplified filter semantics (implicit-AND and any-match).
+* **Alternative 1 (current choice):** Support simplified filter semantics (implicitly inserting `&` between adjacent predicates, and the simplified filter unit syntax).
 ** Pros: Reduces cognitive overhead and typing time for most common cases, and makes `filter` feel like a standard keyword search function.
-** Cons: Not possible to detect when user accidentally omits the boolean operator or filter field.
-* **Alternative 2:** Only support the unsimplified version.
-** Pros: Easier to implement, can display an error if the user accidentally omits a boolean operator or filter field.
+** Cons: It is not possible to detect when user accidentally omits the boolean operator or filter field, so the displayed tasks may not be what the user intended to view.
+* **Alternative 2:** Only support the unsimplified semantics.
+** Pros: Easier to implement because there are less cases to consider.  Also, we can display an error if the user accidentally omits a boolean operator or field identifier.
 ** Cons: More verbose filter expressions which may require higher cognitive overhead.
 
-// tag::filter-design-considerations-extract[]
+// tag::filter-design-considerations-convenience[]
 ===== Aspect: What the convenience operator should do
 
 * **Alternative 1 (current choice):** Support a convenience operator that is an alias of the most common filter operator for each field.
@@ -899,20 +950,25 @@ In total, there are around 15 distinct kinds of error conditions when parsing a 
 * **Alternative 2:** Support a convenience operator that is an alias of a fixed operator regardless of field.
 ** Pros: Easier for users to remember what the convenience operator does.
 ** Cons: Convenience operator is not really _convenient_ -- the behaviour might be surprising or awkward for some fields.
+// end::filter-design-considerations-convenience[]
+* **Alternative 3:** Don't support the convenience operator at all.
+** Pros: Least amount of implementation work.
+** Cons: Additional cognitive overhead as users need to figure out which of the available operators they actually want.
 
+// tag::filter-design-considerations-exceptions[]
 ===== Aspect: How to signal exceptional conditions when parsing filter expressions
 
 * **Alternative 1 (current choice):** Use a different type of checked exception for every possible type of failure condition.
 ** Pros: Every possible failure condition is listed in the `throws` clause of all methods -- developers can easily tell how exactly each aspect of parsing could fail, and Java will statically check that every possible failure condition is handled (which makes it impossible to overlook any failure conditions).
-** Cons: Method signatures are more verbose.
+** Cons: More verbose method signatures.
 * **Alternative 2:** Use a single checked exception for all possible failure conditions, and distinguish errors by the message string instead.
 ** Pros: Less verbose method signatures, and yet the benefit of checked exceptions is retained.
 ** Cons: Developers can only tell what exact failure conditions are possible by inspecting the whole call graph of the method.  Furthermore, it is difficult to distinguish different error conditions in order to customize and show relevant messages to the user.
 * **Alternative 3:** Use unchecked exceptions.
 ** Pros: Simplest method signatures.
-** Cons: Easy to overlook possible failure conditions when modifying the code.
+** Cons: Easy to overlook possible failure conditions when modifying the code, so future developers might inadvertently introduce bugs.
 
-// end::filter-design-considerations-extract[]
+// end::filter-design-considerations-exceptions[]
 // end::filter[]
 
 // tag::attachments[]
@@ -1695,18 +1751,132 @@ These instructions only provide a starting point for testers to work on; testers
 .. Re-launch the app by double-clicking the jar file. +
    Expected: The most recent window size and location is retained.
 
+=== Adding a task
+. Add a new task
+.. Run the `add n/New Program d/01/02/2018` command. +
+   Expected: A new task is added to Deadline Manager with name: New Program, deadline: 01/02/2018, priority: 0, frequency: 0, no tags and no attachments.
+.. Run the add n/New Program d/01/02/2018` command again. +
+   Expected: Another new task is added to Deadline Manager with the same parameters as (a) above.
 
 === Deleting a task
 
 . Deleting a task while all tasks are listed
 
-.. Prerequisites: List all tasks using the `list` command. Multiple tasks in the list.
-.. Test case: `delete 1` +
-   Expected: First contact is deleted from the list. Details of the deleted contact shown in the status message. Timestamp in the status bar is updated.
+.. List all tasks using the `list` command.
+.. Ensure that there is at least 1 task, otherwise follow <<Adding a task, adding a task>> to add a task first.
+.. Run the `delete 1` command +
+   Expected: First task is deleted from Deadline Manager. Details of the deleted task shown in the status message. Timestamp in the status bar is updated.
 .. Test case: `delete 0` +
    Expected: No task is deleted. Error details shown in the status message. Status bar remains the same.
-.. Other incorrect delete commands to try: `delete`, `delete x` (where x is larger than the list size) +
-   Expected: Similar to previous.
+
+=== Filtering the list of tasks
+
+[NOTE]
+All unspecified fields of a task should be set to some value that does not match the filter predicate being tested.
+
+. Filtering using the simplified filter syntax
+
+.. Prerequisites: Task list contains a task with name `Presentation` and another task with tag `present`.
+.. Test case: `filter present` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter presentation` +
+   Expected: Only the task with name `Presentation` is displayed.
+.. Test case: `filter presentations` +
+   Expected: None of the two tasks are displayed.
+
+. Filtering with field identifier
+
+.. Prerequisites: Task list contains a task with name `Presentation` and another task with tag `present`.
+.. Test case: `filter n:present` +
+   Expected: Only the task with name `Presentation` is displayed.
+.. Test case: `filter t:present` +
+   Expected: Only the task with tag `present` is displayed.
+
+. Filtering by deadline
+
+.. Prerequisites: Task list contains a task with deadline `1/12/2018` and another task with deadline `15/12/2018`.
+.. Test case: `filter 15/12/2018` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter d:15/12/2018` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter 10/12/2018` +
+   Expected: Only the task with deadline `1/12/2018` is displayed.
+.. Test case: `filter d=15/12/2018` +
+   Expected: Only the task with deadline `15/12/2018` is displayed.
+.. Test case: `filter d>15/12/2018` +
+   Expected: Only the task with deadline `15/12/2018` is displayed.
+.. Test case: `filter 15/12` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter d=15/12` +
+   Expected: Only the task with deadline `15/12/2018` is displayed.
+
+. Filtering by tag
+
+.. Prerequisites: Task list contains a task with tags `homework` and `CS2103`, and another task with tags `homework`.
+.. Test case: `filter home` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter t:home` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter t:home,cs` +
+   Expected: Only the first task is displayed.
+.. Test case: `filter t=home` +
+   Expected: None of the tasks are displayed.
+.. Test case: `filter t=homework` +
+   Expected: Both tasks are displayed.
+
+. Filtering using set-based filter operators
+
+.. Prerequisites: Task list contains a task with tags `homework` and `CS2103`, and another task with tags `homework`.
+.. Test case: `filter t:=homework` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter t==homework` +
+   Expected: Only the second task is displayed.
+.. Test case: `filter t>=homework` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter t>=homework,cs2103` +
+   Expected: Only the first task is displayed.
+.. Test case: `filter t<=homework,cs2103` +
+   Expected: Both tasks are displayed.
+
+. Filtering with composite filters
+
+.. Prerequisites: Task list contains a task with name `CS2103 Presentation` and another task with name `MA1101R Homework`.
+.. Test case: `filter present home` +
+   Expected: None of the two tasks are displayed.
+.. Test case: `filter present & home` +
+   Expected: None of the two tasks are displayed.
+.. Test case: `filter present && home` +
+   Expected: None of the two tasks are displayed.
+.. Test case: `filter present | home` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter present || home` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter present | !home` +
+   Expected: Only the task with name `CS2103 Presentation` is displayed.
+.. Test case: `filter !present | home` +
+   Expected: Only the task with name `MA1101R Homework` is displayed.
+.. Test case: `filter (present | home) & !MA1101` +
+   Expected: Only the task with name `CS2103 Presentation` is displayed.
+.. Test case: `filter (present | home) & ! MA1101` +
+   Expected: Only the task with name `CS2103 Presentation` is displayed.
+.. Test case: `filter (present|home)&!MA1101` +
+   Expected: Only the task with name `CS2103 Presentation` is displayed.
+.. Test case: `filter (present|home)!MA1101` +
+   Expected: Only the task with name `CS2103 Presentation` is displayed.
+
+. Comprehensive error messages
+
+.. Prerequisites: None.
+.. Each of these test cases should produce a distinct error message and the error is indicated in the user interface.  (While the error message may not be what you expect (e.g. the first test case highlights the `)` character instead of the preceding `&`, and which character should be highlighted depends on your point of view), the error message should be nonetheless reasonable.)
+... `filter cs&(("presentation slide"&f=7&)|meeting)&!csp`
+... `filter cs&(("presentation slide"&f=7)|meeting)&!`
+... `filter cs&(("presentation slide"&f=7)|meeting)&!csp)`
+... `filter cs&((("presentation slide"&f=7)|meeting)&!csp`
+... `filter cs&(("presentation slide"&f=7)|meeting)$!csp`
+... `filter cs&(("presentation slide&f=7)|meeting)&!csp`
+... `filter cs&((presentation slide"&f=7)|meeting)&!csp`
+... `filter cs&(("presentation slide"&f=xxx)|meeting)&!csp`
+... `filter cs&(("presentation slide"&g=7)|meeting)&!csp`
 
 === Attachments
 . Adding an attachment to a task
@@ -1760,3 +1930,53 @@ These instructions only provide a starting point for testers to work on; testers
 .. Test case: `attachment 1 get n/"nothere.txt" p/"hello2.txt"` +
    Expected: Error details saying that `nothere.txt` is not an attachment would be displayed as the status message. No file is copied.
 
+=== Adding a task
+. Add a new task
+.. Run the `add n/New Program d/01/02/2018` command. +
+   Expected: A new task is added to Deadline Manager with name: New Program, deadline: 01/02/2018, priority: 0, frequency: 0, no tags and no attachments.
+.. Run the add n/New Program d/01/02/2018` command again. +
+   Expected: Another new task is added to Deadline Manager with the same parameters as (a) above.
+
+=== Exporting tasks
+. Export in XML format
+.. List all tasks using the `list` command.
+.. Ensure that there is at least 1 task, otherwise follow <<Adding a task>> to add a task first.
+.. Ensure that you can write to the directory that Deadline Manager is running from, and that you don't already have a file named `tasks.xml`, then run the `export p/"tasks.xml"` command. +
+   Expected: A new file, tasks.xml, is created in the same directory from where Deadline Manager is run. A success message is displayed, indicating that export completed successfully.
+.. Run the `export p/"tasks.xml"` command again. +
+   Expected: An error message is displayed indicating that export failed. This is because tasks.xml already exists, and Deadline Manager will refuse to export in order to protect your data.
+.. Run the `export p/"tasks.xml" r/overwrite` command. +
+   Expected: Expected: A new file, tasks.xml, is created in the same directory from where Deadline Manager is run, and overwrites the existing file. A success message is displayed, indicating that export completed  successfully.
+
+. Export in CSV format
+.. List all tasks using the `list` command.
+.. Ensure that there is at least 1 task, otherwise follow <<Adding a task, adding a task>> to add a task first.
+.. Ensure that you can write to the directory that Deadline Manager is running from, and that you don't already have a file named `tasks.csv`, then run the `export csv p/"tasks.csv"` command. +
+   Expected: A new file, tasks.csv, is created in the same directory from where Deadline Manager is run. A success message is displayed, indicating that export completed successfully.
+
+=== Importing tasks
+. Import tasks in XML format
+.. Follow <<Exporting tasks, exporting tasks>> first to ensure that you have already exported a set of tasks into a readable `tasks.xml` file in the same directory that Deadline Manager is running from.
+.. Run the `clear` command to remove all existing tasks.
+.. Run the `import p/"tasks.xml"` command to import tasks from `tasks.xml` into Deadline Manager. +
+   Expected: Deadline Manager is re-populated with all the tasks in tasks.xml. Additionally, a success message is displayed, indicating that import completed successfully.
+.. Run the `import p/"tasks.xml"` command again. +
+   Expected: A success message is displayed, indicating that import completed successfully. However, no new tasks are imported, because by default, Deadline Manager skips tasks that already exist in Deadline Manager.
+.. Run the `import p/"tasks.xml r/all"` command. +
+   Expected: A success message is displayed, indicating that import completed successfully. All the tasks from `tasks.xml` are imported again, creating duplicate entries.
+.. Run the `import p/"non_existent_file.xml"` command, where `non_existent_file.xml` refers to any file that does not exist. +
+   Expected: An error message is displayed, indicating that Deadline Manager is unable to import the xml file specified.
+
+
+=== Sorting a list of tasks
+
+. Sorting a list of tasks
+.. Prerequisites: List all tasks using the `list` command. Multiple tasks in the list.
+.. Test case: `sort n<` +
+   Expected: Sorts the list of tasks according to names in alphabetical ascending order.
+.. Test case: `sort p< name>` +
+   Expected: Sorts the list of tasks first according to ascending order of priority and then in case some tasks have the same priority. Ties are broken in descending order of names (alphabetical order).
+.. Test case: `sort name=` +
+   Expected: The view of the tasks does not change. Error details shown in the status message. Status bar remains the same.
+.. Other incorrect sort commands to try: `sort`, `sort name=`, `sort tag<cs2101` +
+   Expected: Similar to previous.
