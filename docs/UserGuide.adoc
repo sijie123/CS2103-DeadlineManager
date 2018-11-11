@@ -558,26 +558,30 @@ Format (in general): `INDEX ACTION [p/"FILEPATH"] [n/"FILENAME"]`
 
 More specific formats for each actions are listed below.
 
-* Format for *Add* Action: `attachment INDEX add p/"FILEPATH"`
+* Format for *Add* Actions: `attachment INDEX add p/"FILEPATH"`
 
-* Format for *Delete* Action: `attachment INDEX delete n/"FILENAME"`
+* Format for *Delete* Actions: `attachment INDEX delete n/"FILENAME"`
 
-* Format for *List* Action: `attachment INDEX list`
+* Format for *List* Actions: `attachment INDEX list`
 
-* Format for *Get* Action: `attachment INDEX get n/"FILENAME" p/"FILEPATH"`
+* Format for *Get* Actions: `attachment INDEX get n/"FILENAME" p/"FILEPATH"`
 [TIP]
 The application does not allow adding more than one file with the same filename to the same task, even if they are in different locations on the computer. For this application, filename includes the file extension as well.
 ****
 *  Modify and manages the attachments of the task at the specified INDEX. The index refers to the index number shown in the displayed task list. The index must be a positive integer 1, 2, 3, …​
-* `ACTION` is either `add`, `list`, `delete` or `get` +
+* `ACTION` is either `add`, `list`, `delete` or `get`
+
 * For `add` actions, the `FILEPATH` argument is required to denote the file you intend to attach to the task. A file must exist at the `FILEPATH` specified. The `FILEPATH` must be enclosed in quotation marks. For example: `"D:/Documents/HelloWorld.txt"`
+
 * For `list` actions, no additional arguments are required.
+
 * For `delete` actions, the `FILENAME` argument is required to represent the file to delete. The `FILENAME` must be enclosed in quotation marks. For example: `"Hello World.docx"`.
+
 * For `get` actions, the `FILENAME` argument is required to represent the file to retrieve and the `FILEPATH` argument is required to denote the destination you want the file to be exported to. If there is an existing file at `FILEPATH`, it would be overwritten without warning. The `FILEPATH` and `FILENAME` must be enclosed in quotation marks, similar to the arguments in `add` and `delete` actions. Do note that `FILEPATH` should be a path to a file, not a folder in the computer.
 ****
 
 [TIP]
-The application might still be able to parse the command if `FILENAME` and `FILEPATH` are not specified. However, this behaviour is not guaranteed and it is still recommended to enclose them in quotation marks.
+To avoid ambiguity, it is recommended to use quotation marks when specifying a `FILEPATH` or `FILENAME`. Those that are not enclosed in quotations will still be parsed. However, the correct behaviour is not guaranteed.
 [TIP]
 If your filename contains double quotation marks `"` but not single quotation marks `'`, you may enclose the filename with single quotation marks `'` instead. However, the application will not be able to work with files that have both double quotation marks and single quotation marks.
 
