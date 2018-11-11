@@ -205,16 +205,6 @@ public class StorageManager extends ComponentManager implements Storage {
      */
     private static boolean isExistingFile(Path filePath) {
         File file = new File(filePath.toString());
-        /*
-        try {
-            if (!file.exists()) {
-                return false;
-            }
-            //Conduct case-insensitive check on filename, for Windows-based systems.
-            return file.getCanonicalFile().getName().equals(file.getName());
-        } catch (IOException ioe) {
-            return false;
-        }*/
         return file.exists();
     }
 
@@ -226,9 +216,6 @@ public class StorageManager extends ComponentManager implements Storage {
      */
     private static boolean isWritablePath(Path filePath) {
         File file = new File(filePath.toString());
-        if (file.isDirectory()) {
-            return false;
-        }
         return file.canWrite();
     }
 

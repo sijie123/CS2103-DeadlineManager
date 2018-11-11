@@ -166,15 +166,19 @@ public class StorageManagerTest {
     }
 
     @Test
-    public void overwriteExportOnUnwritableFile_exceptionThrown() throws IOException {
+    public void overwriteExportOnUnwritableFile_exceptionThrown() {
         // Exporting with file name "." should throw as directory is unwritable.
         TaskCollection original = getTypicalTaskCollections();
         Assert.assertThrows(IOException.class,
-            String.format(Storage.MESSAGE_WRITE_FILE_NO_PERMISSION_ERROR, getTempFilePath(".")), () ->
+            String.format(Storage.MESSAGE_WRITE_FILE_EXISTS_ERROR, getTempFilePath(".")), () ->
             storageManager.exportTaskCollection(original, getTempFilePath("."),
                 false, false));
         Assert.assertThrows(IOException.class,
             String.format(Storage.MESSAGE_WRITE_FILE_NO_PERMISSION_ERROR, getTempFilePath(".")), () ->
+                storageManager.exportTaskCollection(original, getTempFilePath("."),
+                    true, false));
+        Assert.assertThrows(IOException.class,
+            String.format(Storage.MESSAGE_WRITE_FILE_EXISTS_ERROR, getTempFilePath(".")), () ->
                 storageManager.exportTaskCollection(original, getTempFilePath("."),
                     false, true));
     }
