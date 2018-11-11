@@ -1,11 +1,7 @@
 package seedu.address.model.task;
 
 import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 import org.junit.Test;
 
@@ -26,9 +22,9 @@ public class FrequencyTest {
         assertFalse(Frequency.isValidFrequency("-1000000000000000"));
         assertFalse(Frequency.isValidFrequency(Frequency.FREQUENCY_LIMIT.toString()));
         assertFalse(Frequency.isValidFrequency(
-            Frequency.FREQUENCY_LIMIT.toString()+"0000000000000000000000000000000000000"));
+            Frequency.FREQUENCY_LIMIT.toString() + "0000000000000000000000000000000000000"));
         assertFalse(Frequency.isValidFrequency("abcdefg"));
-        assertFalse(Frequency.isValidFrequency("01/01/01"));;
+        assertFalse(Frequency.isValidFrequency("01/01/01"));
     }
 
     @Test
@@ -50,6 +46,8 @@ public class FrequencyTest {
     public void isValidFrequency_validFrequencyInInt_returnTrue() {
         assertTrue(Frequency.isValidFrequency(0));
         assertTrue(Frequency.isValidFrequency(1));
-        assertTrue(Frequency.isValidFrequency(Frequency.FREQUENCY_LIMIT-1));
+        assertTrue(Frequency.isValidFrequency(Frequency.FREQUENCY_LIMIT - 1));
     }
+
+
 }
