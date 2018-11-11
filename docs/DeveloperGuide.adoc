@@ -1769,6 +1769,115 @@ These instructions only provide a starting point for testers to work on; testers
 .. Test case: `delete 0` +
    Expected: No task is deleted. Error details shown in the status message. Status bar remains the same.
 
+=== Filtering the list of tasks
+
+[NOTE]
+All unspecified fields of a task should be set to some value that does not match the filter predicate being tested.
+
+. Filtering using the simplified filter syntax
+
+.. Prerequisites: Task list contains a task with name `Presentation` and another task with tag `present`.
+.. Test case: `filter present` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter presentation` +
+   Expected: Only the task with name `Presentation` is displayed.
+.. Test case: `filter presentations` +
+   Expected: None of the two tasks are displayed.
+
+. Filtering with field identifier
+
+.. Prerequisites: Task list contains a task with name `Presentation` and another task with tag `present`.
+.. Test case: `filter n:present` +
+   Expected: Only the task with name `Presentation` is displayed.
+.. Test case: `filter t:present` +
+   Expected: Only the task with tag `present` is displayed.
+
+. Filtering by deadline
+
+.. Prerequisites: Task list contains a task with deadline `1/12/2018` and another task with deadline `15/12/2018`.
+.. Test case: `filter 15/12/2018` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter d:15/12/2018` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter 10/12/2018` +
+   Expected: Only the task with deadline `1/12/2018` is displayed.
+.. Test case: `filter d=15/12/2018` +
+   Expected: Only the task with deadline `15/12/2018` is displayed.
+.. Test case: `filter d>15/12/2018` +
+   Expected: Only the task with deadline `15/12/2018` is displayed.
+.. Test case: `filter 15/12` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter d=15/12` +
+   Expected: Only the task with deadline `15/12/2018` is displayed.
+
+. Filtering by tag
+
+.. Prerequisites: Task list contains a task with tags `homework` and `CS2103`, and another task with tags `homework`.
+.. Test case: `filter home` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter t:home` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter t:home,cs` +
+   Expected: Only the first task is displayed.
+.. Test case: `filter t=home` +
+   Expected: None of the tasks are displayed.
+.. Test case: `filter t=homework` +
+   Expected: Both tasks are displayed.
+
+. Filtering using set-based filter operators
+
+.. Prerequisites: Task list contains a task with tags `homework` and `CS2103`, and another task with tags `homework`.
+.. Test case: `filter t:=homework` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter t==homework` +
+   Expected: Only the second task is displayed.
+.. Test case: `filter t>=homework` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter t>=homework,cs2103` +
+   Expected: Only the first task is displayed.
+.. Test case: `filter t<=homework,cs2103` +
+   Expected: Both tasks are displayed.
+
+. Filtering with composite filters
+
+.. Prerequisites: Task list contains a task with name `CS2103 Presentation` and another task with name `MA1101R Homework`.
+.. Test case: `filter present home` +
+   Expected: None of the two tasks are displayed.
+.. Test case: `filter present & home` +
+   Expected: None of the two tasks are displayed.
+.. Test case: `filter present && home` +
+   Expected: None of the two tasks are displayed.
+.. Test case: `filter present | home` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter present || home` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter present | !home` +
+   Expected: Only the task with name `CS2103 Presentation` is displayed.
+.. Test case: `filter !present | home` +
+   Expected: Only the task with name `MA1101R Homework` is displayed.
+.. Test case: `filter (present | home) & !MA1101` +
+   Expected: Only the task with name `CS2103 Presentation` is displayed.
+.. Test case: `filter (present | home) & ! MA1101` +
+   Expected: Only the task with name `CS2103 Presentation` is displayed.
+.. Test case: `filter (present|home)&!MA1101` +
+   Expected: Only the task with name `CS2103 Presentation` is displayed.
+.. Test case: `filter (present|home)!MA1101` +
+   Expected: Only the task with name `CS2103 Presentation` is displayed.
+
+. Comprehensive error messages
+
+.. Prerequisites: None.
+.. Each of these test cases should produce a distinct error message and the error is indicated in the user interface.  (While the error message may not be what you expect (e.g. the first test case highlights the `)` character instead of the preceding `&`, and which character should be highlighted depends on your point of view), the error message should be nonetheless reasonable.)
+... `filter cs&(("presentation slide"&f=7&)|meeting)&!csp`
+... `filter cs&(("presentation slide"&f=7)|meeting)&!`
+... `filter cs&(("presentation slide"&f=7)|meeting)&!csp)`
+... `filter cs&((("presentation slide"&f=7)|meeting)&!csp`
+... `filter cs&(("presentation slide"&f=7)|meeting)$!csp`
+... `filter cs&(("presentation slide&f=7)|meeting)&!csp`
+... `filter cs&((presentation slide"&f=7)|meeting)&!csp`
+... `filter cs&(("presentation slide"&f=xxx)|meeting)&!csp`
+... `filter cs&(("presentation slide"&g=7)|meeting)&!csp`
+
 === Attachments
 . Adding an attachment to a task
 
