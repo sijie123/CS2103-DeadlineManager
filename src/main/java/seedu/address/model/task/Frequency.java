@@ -15,9 +15,9 @@ import seedu.address.model.task.exceptions.InvalidPredicateTestPhraseException;
  */
 public class Frequency implements Comparable<Frequency> {
 
-    public static final Integer frequencyLimit = 1000; //Strictly less than
+    public static final Integer FREQUENCY_LIMIT = 1000; //Strictly less than
     public static final String MESSAGE_FREQUENCY_CONSTRAINTS =
-        "Frequency should only be a non negative integer not exceeding " + frequencyLimit.toString();
+        "Frequency should only be a non negative integer not exceeding " + FREQUENCY_LIMIT.toString();
     public static final String FREQUENCY_VALIDATION_REGEX = "[0-9]+";
     public static final String NO_FREQUENCY = "0";
     public final int value;
@@ -49,7 +49,7 @@ public class Frequency implements Comparable<Frequency> {
      * Returns true if a given integer is a valid frequency number.
      */
     public static boolean isValidFrequency(int test) {
-        return test >= 0 && test < (int) frequencyLimit;
+        return test >= 0 && test < (int) FREQUENCY_LIMIT;
     }
 
     /**
@@ -61,7 +61,7 @@ public class Frequency implements Comparable<Frequency> {
             return false;
         }
         BigInteger bigInt = new BigInteger(test);
-        BigInteger bigFreqLimit = new BigInteger(frequencyLimit.toString());
+        BigInteger bigFreqLimit = new BigInteger(FREQUENCY_LIMIT.toString());
 
         // If less than 0 --> false
         if (bigInt.compareTo(BigInteger.ZERO) < 0) {
