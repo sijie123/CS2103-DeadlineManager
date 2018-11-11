@@ -30,7 +30,7 @@ My key contributions to the project includes:
 * *Minor enhancement*: Implemented *natural comparison for some of the attributes of the task* (Ex. Priority, Name)
 ** What it does: Allows comparison for the different attributes of the task. Primarily used for filtering and sorting of the tasks.
 
-* *Code contributed*: [https://nus-cs2103-ay1819s1.github.io/cs2103-dashboard/#=undefined&search=sidhant007&sort=displayName&since=2018-09-12&until=2018-11-11&timeframe=day&reverse=false&repoSort=true[Commits]]
+* *Code contributed*: [https://nus-cs2103-ay1819s1.github.io/cs2103-dashboard/#=undefined&search=sidhant007[Commits]]
 
 * *Other contributions*:
 
