@@ -95,7 +95,7 @@ dates are: 29/03/2018, 29/3/2018, 1/1/2018.
 * `PRIORITY` should only be 0, 1, 2, 3, or 4.
 The lower the number, the higher the priority of the task.
 (1 = Highest Priority, 4 = Lowest Priority)
-* `FREQUENCY` should be a non-negative integer (number of days).
+* `FREQUENCY` should be a non-negative integer (number of days) not exceeding 1000.
 Zero frequency denotes a non-recurring task.
 Non-zero frequency denotes a recurring task.
 ****
