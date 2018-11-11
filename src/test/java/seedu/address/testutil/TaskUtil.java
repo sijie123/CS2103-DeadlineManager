@@ -35,7 +35,7 @@ public class TaskUtil {
         sb.append(PREFIX_FREQUENCY + task.getFrequency().toString() + " ");
         sb.append(PREFIX_DEADLINE + task.getDeadline().toString() + " ");
         task.getTags().stream().forEach(
-            s -> sb.append(PREFIX_TAG + s.tagName + " ")
+                s -> sb.append(PREFIX_TAG + s.tagName + " ")
         );
         return sb.toString();
     }
@@ -46,13 +46,13 @@ public class TaskUtil {
     public static String getEditTaskDescriptorDetails(EditCommand.EditTaskDescriptor descriptor) {
         StringBuilder sb = new StringBuilder();
         descriptor.getName()
-            .ifPresent(name -> sb.append(PREFIX_NAME).append(name.value).append(" "));
+                .ifPresent(name -> sb.append(PREFIX_NAME).append(name.value).append(" "));
         descriptor.getPriority()
-            .ifPresent(priority -> sb.append(PREFIX_PRIORITY).append(priority.toString()).append(" "));
+                .ifPresent(priority -> sb.append(PREFIX_PRIORITY).append(priority.toString()).append(" "));
         descriptor.getFrequency()
-            .ifPresent(frequency -> sb.append(PREFIX_FREQUENCY).append(frequency.toString()).append(" "));
+                .ifPresent(frequency -> sb.append(PREFIX_FREQUENCY).append(frequency.toString()).append(" "));
         descriptor.getDeadline()
-            .ifPresent(deadline -> sb.append(PREFIX_DEADLINE).append(deadline.toString()).append(" "));
+                .ifPresent(deadline -> sb.append(PREFIX_DEADLINE).append(deadline.toString()).append(" "));
         if (descriptor.getTags().isPresent()) {
             Set<Tag> tags = descriptor.getTags().get();
             if (tags.isEmpty()) {

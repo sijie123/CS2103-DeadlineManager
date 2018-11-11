@@ -59,7 +59,7 @@ public class DeadlineTest {
         assertEquals(new GregorianCalendar(22, 11, 15).getTime(), new Deadline("15/12/22").value);
         assertEquals(new GregorianCalendar(123, 11, 15).getTime(), new Deadline("15/12/123").value);
         assertEquals(new GregorianCalendar(new GregorianCalendar().get(Calendar.YEAR), 11, 15).getTime(),
-            new Deadline("15/12").value);
+                new Deadline("15/12").value);
     }
 
     @Test

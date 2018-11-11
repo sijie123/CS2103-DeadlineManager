@@ -28,12 +28,12 @@ public class Assert {
 
             if (!actualException.getClass().isAssignableFrom(expectedException)) {
                 errorMessage = String.format("Expected exception thrown: %s, actual: %s",
-                    expectedException.getName(), actualException.getClass().getName());
+                        expectedException.getName(), actualException.getClass().getName());
             } else if (expectedMessage != null && !expectedMessage
-                .equals(actualException.getMessage())) {
+                    .equals(actualException.getMessage())) {
                 errorMessage = String.format(
-                    "Expected message thrown: %s, actual: %s", expectedMessage,
-                    actualException.getMessage());
+                        "Expected message thrown: %s, actual: %s", expectedMessage,
+                        actualException.getMessage());
             } else {
                 return;
             }
@@ -42,7 +42,7 @@ public class Assert {
         }
 
         throw new AssertionError(String.format(
-            "Expected %s to be thrown, but nothing was thrown.", expectedException.getName()));
+                "Expected %s to be thrown, but nothing was thrown.", expectedException.getName()));
     }
 
     /**

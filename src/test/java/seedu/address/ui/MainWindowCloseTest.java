@@ -33,8 +33,7 @@ public class MainWindowCloseTest extends GuiUnitTest {
     public void setUp() throws Exception {
         FxToolkit.setupStage(stage -> {
             this.stage = stage;
-            mainWindow = new MainWindow(stage, new Config(), new UserPrefs(),
-                new LogicManager(new ModelManager()));
+            mainWindow = new MainWindow(stage, new Config(), new UserPrefs(), new LogicManager(new ModelManager()));
             mainWindowHandle = new EmptyMainWindowHandle(stage);
 
             stage.setScene(mainWindow.getRoot().getScene());
@@ -47,7 +46,7 @@ public class MainWindowCloseTest extends GuiUnitTest {
     public void close_menuBarExitButton_exitAppRequestEventPosted() {
         mainWindowHandle.clickOnMenuExitButton();
         assertTrue(
-            eventsCollectorRule.eventsCollector.getMostRecent() instanceof ExitAppRequestEvent);
+                eventsCollectorRule.eventsCollector.getMostRecent() instanceof ExitAppRequestEvent);
         assertTrue(eventsCollectorRule.eventsCollector.getSize() == 1);
     }
 
@@ -55,7 +54,7 @@ public class MainWindowCloseTest extends GuiUnitTest {
     public void close_externalRequest_exitAppRequestEventPosted() {
         mainWindowHandle.closeMainWindowExternally();
         assertTrue(
-            eventsCollectorRule.eventsCollector.getMostRecent() instanceof ExitAppRequestEvent);
+                eventsCollectorRule.eventsCollector.getMostRecent() instanceof ExitAppRequestEvent);
         assertTrue(eventsCollectorRule.eventsCollector.getSize() == 1);
     }
 
@@ -84,7 +83,7 @@ public class MainWindowCloseTest extends GuiUnitTest {
          */
         private void closeMainWindowExternally() {
             guiRobot.interact(() -> stage
-                .fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST)));
+                    .fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST)));
         }
     }
 }
