@@ -320,10 +320,29 @@ This section describes some noteworthy details on how major features are impleme
 
 === Add feature
 
-The `add` command enables the user to create
-a new task with a name and a deadline. The user can
-also provide additional information like priority,
-frequency and tags.
+The `add` command enables the user to create a new task with a name and a deadline.
+The user can also provide additional information including priority, frequency and tags.
+
+Given below is a sequence of steps, illustrating the interaction between `AddCommandParser`, `AddCommand` and `Model`:
+
+Step 1. The user enters an `add` command with the index of a task in the task list.
+
+Step 2. The `AddCommandParser#parse` method is invoked.
+The `AddCommandParser` receives the command with the arguments given as a string.
+
+Step 3. The `AddCommandParser` interprets the arguments and constructs a `AddCommand`.
+
+Step 4. The `AddCommand` with a `Task` specified by the user is returned.
+
+Step 5. The `AddCommand#execute` method is invoked.
+
+Step 6. The task identified by the user is retrieved from the `Model`.
+
+Step 7. The `Model` is updated: The `Model#addTask` method and the `Model#commitTaskCollection` method are invoked.
+
+Step 8. A `CommandResult` object is returned.
+
+TODO: KIEN: Add figures
 
 === Complete feature
 
@@ -336,17 +355,16 @@ The complete feature is implemented by `CompleteCommand` and `CompleteCommandPar
 
 After the task specified by the user is retrieved, the `CompleteCommand` will consider these two cases:
 
-1. If the task is not recurred, it will be deleted.
+* If the task is not recurred, it will be deleted.
 
-2. Otherwise, the task will be updated using the following formula: +
+* Otherwise, the task will be updated using the following formula: +
 `NewDeadline = OldDeadline + Frequency`
-
 
 ==== Sequence Flow
 
 TODO: KIEN: Add Figure
 
-Given below is a sequence of steps, illustrating the interaction between `CompleteCommandParser`, `CompleteCommand` and `Model`.
+Given below is a sequence of steps, illustrating the interaction between `CompleteCommandParser`, `CompleteCommand` and `Model`:
 
 Step 1. The user enters a complete command with the index of a task in the task list.
 
