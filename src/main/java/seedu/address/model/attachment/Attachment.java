@@ -21,7 +21,7 @@ import seedu.address.model.task.exceptions.InvalidPredicateOperatorException;
  */
 public class Attachment {
     public static final String MESSAGE_DUPLICATE_ATTACHMENT_NAME = "There cannot be more than one attachment"
-            + "with the same file name. Please rename one of them.";
+            + " with the same file name. Please rename one of them.";
     private static final Logger logger = LogsCenter.getLogger(Attachment.class);
 
     public final File file;
