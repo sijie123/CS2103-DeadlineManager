@@ -99,16 +99,15 @@ public class StorageManagerTest {
         // Exporting with file name equal to the working file should throw IllegalValueException.
         TaskCollection original = getTypicalTaskCollections();
         storageManager.saveTaskCollection(original);
+        Path filePath = storageManager.getTaskCollectionFilePath();
         Assert.assertThrows(IOException.class,
-                String.format(Storage.MESSAGE_WRITE_FILE_EXISTS_ERROR, storageManager.getTaskCollectionFilePath()),
-                () -> storageManager.exportTaskCollection(original, storageManager.getTaskCollectionFilePath(),
-                        false, false));
+                String.format(Storage.MESSAGE_WRITE_FILE_EXISTS_ERROR, filePath), () ->
+                        storageManager.exportTaskCollection(original, filePath, false, false));
 
         // Exporting with CSV file name equal to the working file should throw IllegalValueException.
         Assert.assertThrows(IOException.class,
-                String.format(Storage.MESSAGE_WRITE_FILE_EXISTS_ERROR, storageManager.getTaskCollectionFilePath()),
-                () -> storageManager.exportTaskCollection(original, storageManager.getTaskCollectionFilePath(),
-                        false, true));
+                String.format(Storage.MESSAGE_WRITE_FILE_EXISTS_ERROR, filePath), () ->
+                        storageManager.exportTaskCollection(original, filePath, false, true));
     }
 
     @Test
@@ -143,29 +142,27 @@ public class StorageManagerTest {
     public void overwriteExportOnUnwritableFile_exceptionThrown() throws IOException {
         // Exporting with file name "." should throw as directory is unwritable.
         TaskCollection original = getTypicalTaskCollections();
+        Path filePath = getTempFilePath(".");
         Assert.assertThrows(IOException.class,
-                String.format(Storage.MESSAGE_WRITE_FILE_NO_PERMISSION_ERROR, getTempFilePath(".")),
-                () -> storageManager.exportTaskCollection(original, getTempFilePath("."), false,
-                        false));
+                String.format(Storage.MESSAGE_WRITE_FILE_NO_PERMISSION_ERROR, filePath), () ->
+                        storageManager.exportTaskCollection(original, filePath, false, false));
         Assert.assertThrows(IOException.class,
-                String.format(Storage.MESSAGE_WRITE_FILE_NO_PERMISSION_ERROR, getTempFilePath(".")),
-                () -> storageManager.exportTaskCollection(original, getTempFilePath("."), true,
-                        false));
+                String.format(Storage.MESSAGE_WRITE_FILE_NO_PERMISSION_ERROR, filePath), () ->
+                        storageManager.exportTaskCollection(original, filePath, true, false));
         Assert.assertThrows(IOException.class,
-                String.format(Storage.MESSAGE_WRITE_FILE_NO_PERMISSION_ERROR, getTempFilePath(".")),
-                () -> storageManager.exportTaskCollection(original, getTempFilePath("."), false,
-                        true));
+                String.format(Storage.MESSAGE_WRITE_FILE_NO_PERMISSION_ERROR, filePath), () ->
+                        storageManager.exportTaskCollection(original, filePath, false, true));
     }
 
     @Test
     public void exportExistingFileCapitalisation_unix_success() {
         org.junit.Assume.assumeFalse(System.getProperty("os.name").startsWith("Windows"));
         TaskCollection original = getTypicalTaskCollections();
+        Path filePathCamel = getTempFilePath("exportNewNonExistent");
+        Path filePathCaps = getTempFilePath("exportNewNonEXISTENT");
         try {
-            storageManager.exportTaskCollection(original, getTempFilePath("exportNewNonExistent"),
-                    false, false);
-            storageManager.exportTaskCollection(original, getTempFilePath("exportNewNonEXISTENT"),
-                    false, true);
+            storageManager.exportTaskCollection(original, filePathCamel, false, false);
+            storageManager.exportTaskCollection(original, filePathCaps, false, false);
         } catch (IOException ioe) {
             throw new AssertionError("Export on non-existent file should not throw.");
         }
@@ -175,12 +172,13 @@ public class StorageManagerTest {
     public void exportExistingFileCapitalisation_windows_exceptionThrown() throws IOException {
         org.junit.Assume.assumeTrue(System.getProperty("os.name").startsWith("Windows"));
         TaskCollection original = getTypicalTaskCollections();
-        storageManager.exportTaskCollection(original, getTempFilePath("exportNewNonExistent"),
-                false, false);
+        Path filePathCamel = getTempFilePath("exportNewNonExistent");
+        Path filePathCaps = getTempFilePath("exportNewNonEXISTENT");
+
+        storageManager.exportTaskCollection(original, filePathCamel, false, false);
         Assert.assertThrows(IOException.class,
-                String.format(Storage.MESSAGE_WRITE_FILE_EXISTS_ERROR, getTempFilePath("exportNewNonEXISTENT")),
-                () -> storageManager.exportTaskCollection(original, getTempFilePath("exportNewNonEXISTENT"),
-                        false, true));
+                String.format(Storage.MESSAGE_WRITE_FILE_EXISTS_ERROR, filePathCaps), () ->
+                        storageManager.exportTaskCollection(original, filePathCaps, false, true));
     }
 
     @Test
@@ -194,8 +192,8 @@ public class StorageManagerTest {
         String rubbishFile = "rubbishFile";
         createTempFile(rubbishFile);
         Assert.assertThrows(IOException.class,
-                String.format(Storage.MESSAGE_READ_FILE_PARSE_ERROR, getTempFilePath(rubbishFile)),
-                () -> storageManager.importTaskCollection(getTempFilePath(rubbishFile)));
+                String.format(Storage.MESSAGE_READ_FILE_PARSE_ERROR, getTempFilePath(rubbishFile)), () ->
+                        storageManager.importTaskCollection(getTempFilePath(rubbishFile)));
         removeTempFile(rubbishFile);
     }
 
@@ -285,15 +283,15 @@ public class StorageManagerTest {
          * More extensive testing of importing exporting is done in {@link XmlTaskCollectionStorageTest} class.
          */
         TaskCollection original = getTypicalTaskCollections();
-        storageManager.exportTaskCollection(original, getTempFilePath("dummyExport"),
-                false, false);
-        ReadOnlyTaskCollection retrieved = storageManager.importTaskCollection(getTempFilePath("dummyExport"))
-                .get();
+        Path filePath = getTempFilePath("dummyExport");
+        storageManager.exportTaskCollection(original, filePath, false, false);
+        ReadOnlyTaskCollection retrieved =
+                storageManager.importTaskCollection(filePath).get();
         assertEquals(original, new TaskCollection(retrieved));
+
         Assert.assertThrows(IOException.class,
-                String.format(Storage.MESSAGE_WRITE_FILE_EXISTS_ERROR, getTempFilePath("dummyExport")),
-                () -> storageManager.exportTaskCollection(original, getTempFilePath("dummyExport"),
-                        false, false));
+                String.format(Storage.MESSAGE_WRITE_FILE_EXISTS_ERROR, filePath), () ->
+                        storageManager.exportTaskCollection(original, filePath, false, false));
 
         try {
             storageManager.exportTaskCollection(original, storageManager.getTaskCollectionFilePath(),
