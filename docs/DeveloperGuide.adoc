@@ -564,8 +564,8 @@ Step 2. The `SortCommandParser` receives the command with the user comparator gi
 
 Step 3. The `SortCommandParser` parses the string into a valid comparator and calls the `SortCommand` with this comparator provided.
 
+.Sequence Diagram for executing Sort Command.
 image::SortOperationSequenceDiagram.png[width="800"]
-Figure 10 illustrates the sequence diagram for Sort Command
 
 Step 4. The `SortCommand` calls the `updateSortedTaskList` API method of `ModelManager`
 
