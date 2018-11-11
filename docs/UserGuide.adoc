@@ -161,7 +161,7 @@ Completes the first task in the task list.
 Because the task is a non-recurring task, it will be deleted.
 See Figure X.X below.
 
-TODO: Insert figures.
+TODO: KIEN: Insert figures.
 
 === Listing all tasks : `list`
 
