@@ -36,7 +36,7 @@ In <<Setting up, Section 2>>, this guide will first provide instructions on sett
 
 Finally, <<Documentation, Section 5>>, <<Testing, Section 6>> and <<Dev Ops, Section 7>> will detail documentation, testing and post-development procedures.
 
-=== Development Team
+=== Development team
 
 This project is developed by Team W17-4 based on the https://se-edu.github.io/index.html[original SE-EDU AddressBook Project]. For more information, please refer to our https://cs2103-ay1819s1-w17-4.github.io/main/AboutUs.html[About Us] guide.
 
@@ -185,7 +185,7 @@ For example, the `Logic` component (see the class diagram given below) defines i
 .Class Diagram of the Logic Component
 image::LogicClassDiagram.png[width="800"]
 
-==== Events-Driven Design
+==== Events-driven design
 
 The _Sequence Diagram_ below shows how the components interact for the scenario where the user issues the command `delete 1`.
 
@@ -353,7 +353,7 @@ The `complete` command provides users a natural way to complete a task:
 either delete a task if it is a non-recurring task
 or shift the deadline to the next occurrence if the task is a recurring task.
 
-==== Current Implementation
+==== Current implementation
 
 The complete feature is implemented by `CompleteCommand` and `CompleteCommandParser`.
 
@@ -364,7 +364,7 @@ After the task specified by the user is retrieved, the `CompleteCommand` will co
 * Otherwise, the task will be updated using the following formula: +
 `NewDeadline = OldDeadline + Frequency`
 
-==== Sequence Flow
+==== Sequence flow
 
 Given below is a sequence of steps, illustrating the interaction between `CompleteCommandParser`, `CompleteCommand`, and `Model`:
 
@@ -397,9 +397,9 @@ Step 9. A `CommandResult` object is returned.
 
 // tag::undoredo[]
 
-=== Undo/Redo feature
+=== Undo/redo feature
 
-==== Current Implementation
+==== Current implementation
 
 The undo/redo mechanism is facilitated by `VersionedTaskCollection`.
 It extends `TaskCollection` with an undo/redo history, stored internally as an `taskCollectionStateList` and `currentStatePointer`.
@@ -458,7 +458,7 @@ The following activity diagram summarizes what happens when a user executes a ne
 .Activity diagram when a command is executed
 image::UndoRedoActivityDiagram.png[width="650"]
 
-==== Design Considerations
+==== Design considerations
 
 ===== Aspect: How undo & redo executes
 
@@ -481,13 +481,13 @@ image::UndoRedoActivityDiagram.png[width="650"]
 
 // tag::importexport[]
 //tag::sijie_include3[]
-=== Import and Export feature
+=== Import and export feature
 //==== Current implementation
 
 The deadline manager supports import and export features. This feature uses 2 components: `Storage` and `Model`.
 This section will first provide an overview into the components and API involved, before focusing on interactions between the components.
 
-==== Current Implementation
+==== Current implementation
 
 This section will give an overview of how the import and export features work with `Model` and `Storage`.
 
@@ -543,7 +543,7 @@ Similarly, `StorageManager` returns the result of imports and errors with the fo
 
 //tag::sijie_include5[]
 
-==== Sequence Flow
+==== Sequence flow
 
 The above interactions between `Model` and `Storage` can be illustrated with the following sequence diagrams.
 
@@ -578,7 +578,7 @@ Step 5. The `EventsCenter` dispatches the `ImportDataAvailableEvent` back to `Mo
 
 Step 6. `ModelManager` takes the imported data and adds it to the Model. If necessary, it also de-conflicts the new entries.
 
-==== Import Conflict Resolver
+==== Import conflict resolver
 
 An imported task is deemed conflicting with an existing task if the two tasks compare `equal` with the internal implementation of Task's `equal` method.
 If the user attempts to import a new conflicting task, Deadline Manager de-conflicts the task with one of the following resolvers:
@@ -604,7 +604,7 @@ Step 3b. `OverwriteImportConflictResolver` will first `delete()` the existing ta
 
 Step 4. Otherwise, if the task doesn't exist, `ModelManager` simply adds the task to the model.
 
-==== CSV Format support
+==== CSV format support
 
 The discussion above has been format-agnostic, abstracting away details about the file formats. Deadline Manager supports both eXtensible Markup Language (XML) and Comma Separated Values (CSV) format.
 //end::sijie_include5[]
@@ -632,7 +632,7 @@ Notably, the `CsvTaskCollectionStorage` only implements the `TaskCollectionWrite
 
 //tag::sijie_include7[]
 
-==== Design Considerations
+==== Design considerations
 
 ===== Aspect: Communication between `Model` and `Storage`
 
@@ -676,7 +676,7 @@ As Deadline Manager supports multiple file formats, it is essential to consider 
 The sort command enables the user to sort the tasks currently being shown according to a user-defined custom comparator.
 It is made up of two main components - `SortCommandParser` and `SortCommand`
 
-==== Current Implementation
+==== Current implementation
 The sort command is facilitated by `VersionedTaskCollection`. +
 
 The sort command exposes the operation `updateSortedTaskList` to sort the task list.
@@ -688,7 +688,7 @@ Then the comparator is passed onto the `SortCommand` which sorts the `versionedT
 [NOTE]
 A `NullPointerException` is raised in case the `SortCommand` receives a `null` comparator.
 
-==== Sequence Flow
+==== Sequence flow
 
 Given below is a sequence of steps, illustrating the interaction between `SortCommandParser`, `SortCommand` and `ModelManager`
 
@@ -705,7 +705,7 @@ image::SortOperationSequenceDiagram.png[width="800"]
 
 . The method `updateSortedTaskList` sorts the `versionTaskCollection` using JavaFx sort method
 
-==== Implementation of Sort Parser
+==== Implementation of sort parser
 `SortCommandParser` implements `Parser<>` interface. The most essential portion of `SortCommandParser`, which is chaining of comparators is shown below:
 [source,java]
 ----
@@ -746,7 +746,7 @@ public SortCommand parse(String args) throws SimpleParseException {
 }
 ----
 
-==== Design Considerations
+==== Design considerations
 
 ===== Aspect: Which task list to sort
 
@@ -1062,7 +1062,7 @@ Each error message gets translated into a _styled_ message string (encapsulated 
 In total, there are around 15 distinct kinds of error conditions when parsing a filter expression, and each of these error conditions produce a customised message that is displayed to the user.
 
 // tag::filter-design-considerations-header[]
-==== Design Considerations
+==== Design considerations
 // end::filter-design-considerations-header[]
 
 ===== Aspect: How to parse composite filter expressions
@@ -1117,10 +1117,10 @@ In total, there are around 15 distinct kinds of error conditions when parsing a 
 === Attachment Feature
 The attachment feature aims to help users organise and keep track of important files needed for the respective tasks. It allows users to associate files in their computer with a particular task. When the user subsequently decides to perform a particular task, this feature provides functionality to identify files previously associated with the task and facilitates exporting it to an appropriate location.
 
-==== Current Implementation
+==== Current implementation
 The attachment feature is mainly implemented by `AttachmentCommand`. As `AttachmentCommand` is an all-purpose command involving numerous actions, an interface `AttachmentAction` is defined within `AttachmentCommand` in order to facilitate this. There are 4 classes that implements `AttachmentAction` in order to implement the various actions of the attachment feature. The command line arguments for the attachment command is parsed by `AttachmentCommandParser`.
 
-==== Sequence Flow
+==== Sequence flow
 // end::attachments-excerpt-1[]
 Given below is a sequence of steps, illustrating the interaction between `AttachmentCommandParser`, `AttachmentCommand` and classes that implement `AttachmentAction` after a user enters a relevant command.
 
@@ -1149,7 +1149,7 @@ Step 5. The message to be shown to the user is retrieved from the returned `Acti
 // end::attachments-excerpt-2[]
 
 // tag::attachments-excerpt-3[]
-==== AttachmentAction and Implementing Classes
+==== AttachmentAction and implementing classes
 `AttachmentAction` is an interface nested within `AttachmentCommand`. It defines and requires implementing classes to implement a `perform` method. The implementation for `AttachmentAction` is shown below:
 [source,java]
 ----
@@ -1215,7 +1215,7 @@ private static class ActionResult {
 
 // tag::attachments-excerpt-4[]
 
-==== Design Considerations
+==== Design considerations
 
 ===== Aspect: How to associate files to tasks
 * **Alternative 1 (current choice):** Saves the path of the file.
@@ -1271,16 +1271,16 @@ Asciidoc is used to write documentation. It is imperative that the documentation
 [NOTE]
 We chose asciidoc over Markdown because asciidoc, although a bit more complex than Markdown, provides more flexibility in formatting.
 
-=== Editing Documentation
+=== Editing documentation
 
 See <<UsingGradle#rendering-asciidoc-files, UsingGradle.adoc>> to learn how to render `.adoc` files locally to preview the end result of your edits.
 Alternatively, you can download the AsciiDoc plugin for IntelliJ, which allows you to preview the changes you have made to your `.adoc` files in real-time.
 
-=== Publishing Documentation
+=== Publishing documentation
 
 See <<UsingTravis#deploying-github-pages, UsingTravis.adoc>> to learn how to deploy GitHub Pages using Travis.
 
-=== Converting Documentation to PDF format
+=== Converting documentation to PDF format
 
 We use https://www.google.com/chrome/browser/desktop/[Google Chrome] for converting documentation to PDF format, as Chrome's PDF engine preserves hyperlinks used in webpages.
 
@@ -1295,7 +1295,7 @@ Here are the steps to convert the project documentation files to PDF format.
 image::chrome_save_as_pdf.png[width="300"]
 
 [[Docs-SiteWideDocSettings]]
-=== Site-wide Documentation Settings
+=== Site-wide documentation settings
 
 The link:{repoURL}/build.gradle[`build.gradle`] file specifies some project-specific https://asciidoctor.org/docs/user-manual/#attributes[asciidoc attributes] which affects how all documentation files within this project are rendered.
 
@@ -1325,7 +1325,7 @@ This will render the SE-EDU navigation bar at the top of the page, and add some 
 |===
 
 [[Docs-PerFileDocSettings]]
-=== Per-file Documentation Settings
+=== Per-file documentation settings
 
 Each `.adoc` file may also specify some file-specific https://asciidoctor.org/docs/user-manual/#attributes[asciidoc attributes] which affects how the file is rendered.
 
@@ -1353,7 +1353,7 @@ _{asterisk} Official SE-EDU projects only_
 
 |===
 
-=== Site Template
+=== Site template
 
 The files in link:{repoURL}/docs/stylesheets[`docs/stylesheets`] are the https://developer.mozilla.org/en-US/docs/Web/CSS[CSS stylesheets] of the site.
 You can modify them to change some properties of the site's design.
@@ -1373,7 +1373,7 @@ The SE-EDU team does not provide support for modified template files.
 
 Testing is important to the development of this project as it gives the developers and users assurance that the App will function as intended.
 
-=== Running Tests
+=== Running tests
 
 There are three ways to run tests.
 
@@ -1414,7 +1414,7 @@ e.g. `seedu.address.storage.StorageManagerTest`
 e.g. `seedu.address.logic.LogicManagerTest`
 
 
-=== Troubleshooting Testing
+=== Troubleshooting testing
 
 Sometimes, you would encounter problems with testing, and certain tests may fail with unexpected exceptions.
 An example is illustrated below:
@@ -1428,22 +1428,22 @@ An example is illustrated below:
 
 As we develop the app, some tasks are repeated very often. These tasks can be better done if we utilise Dev Ops, to automatically process these repetitive tasks.
 
-=== Build Automation
+=== Build automation
 
 See <<UsingGradle#, UsingGradle.adoc>> to learn how to use Gradle for build automation.
 
-=== Continuous Integration
+=== Continuous integration
 
 We use https://travis-ci.org/[Travis CI] and https://www.appveyor.com/[AppVeyor] to perform _Continuous Integration_ on our projects. See <<UsingTravis#, UsingTravis.adoc>> and <<UsingAppVeyor#, UsingAppVeyor.adoc>> for more details.
 
-=== Coverage Reporting
+=== Coverage reporting
 
 We use https://coveralls.io/[Coveralls] to track the code coverage of our projects. See <<UsingCoveralls#, UsingCoveralls.adoc>> for more details.
 
-=== Documentation Previews
+=== Documentation previews
 When a pull request has changes to asciidoc files, you can use https://www.netlify.com/[Netlify] to see a preview of how the HTML version of those asciidoc files will look like when the pull request is merged. See <<UsingNetlify#, UsingNetlify.adoc>> for more details.
 
-=== Making a Release
+=== Making a release
 
 Here are the steps to create a new release.
 
@@ -1452,7 +1452,7 @@ Here are the steps to create a new release.
 .  Tag the repo with the version number. e.g. `v0.1`
 .  https://help.github.com/articles/creating-releases/[Create a new release using GitHub] and upload the JAR file you created.
 
-=== Managing Dependencies
+=== Managing dependencies
 
 A project often depends on third-party libraries. For example, deadline manager depends on the http://wiki.fasterxml.com/JacksonHome[Jackson library] for XML parsing. Managing these _dependencies_ can be automated using Gradle. For example, Gradle can download the dependencies automatically, which is better than these alternatives. +
 a. Include those libraries in the repo (this bloats the repo size) +
@@ -1460,7 +1460,7 @@ b. Require developers to download those libraries manually (this creates extra w
 
 [[GetStartedProgramming]]
 [appendix]
-== Suggested Programming Tasks to Get Started
+== Suggested programming tasks to get started
 
 Suggested path for new programmers:
 
@@ -1627,7 +1627,7 @@ Edits the remark for the first task to `Likes to drink coffee.`
 * `remark 1 r/` +
 Removes the remark for the first task.
 
-==== Step-by-step Instructions
+==== Step-by-step instructions
 
 ===== [Step 1] Logic: Teach the app to accept 'remark' which does nothing
 Let's start by teaching the application how to parse a `remark` command. We will add the logic of `remark` later.
@@ -1732,12 +1732,12 @@ We now have everything set up... but we still can't modify the remarks. Let's fi
 
 . Update `RemarkCommandTest` to test that the `execute()` logic works.
 
-==== Full Solution
+==== Full solution
 
 See this https://github.com/se-edu/addressbook-level4/pull/599[PR] for the step-by-step solution.
 
 [appendix]
-== Product Scope
+== Product scope
 
 *Target user profile*:
 
@@ -1750,7 +1750,7 @@ See this https://github.com/se-edu/addressbook-level4/pull/599[PR] for the step-
 *Value proposition*: manage contacts faster than a typical mouse/GUI driven app
 
 [appendix]
-== User Stories
+== User stories
 
 Priorities: High (must have) - `* * \*`, Medium (nice to have) - `* \*`, Low (unlikely to have) - `*`
 
@@ -1772,7 +1772,7 @@ Priorities: High (must have) - `* * \*`, Medium (nice to have) - `* \*`, Low (un
 _{More to be added}_
 
 [appendix]
-== Use Cases
+== Use cases
 
 (For all use cases below, the *System* is the `DeadlineManager` and the *Actor* is the `user`, unless specified otherwise)
 
@@ -1843,7 +1843,7 @@ Use case resumes at step 2.
 
 
 [appendix]
-== Non Functional Requirements
+== Non-functional requirements
 
 .  The application should work on any <<mainstream-os,mainstream OS>> as long as it has Java `9` or higher installed.
 .  The application should be able to hold up to 1000 tasks without a noticeable sluggishness in performance for typical usage.
@@ -1861,7 +1861,7 @@ Windows, Linux, Unix, OS-X
 a string that defines the unique location of a file in the file system. You may like to refer to the User Guide for instructions on how to obtain the File Path of a file on your computer.
 
 [appendix]
-== Product Survey
+== Product survey
 
 *Product Name*
 
@@ -1878,14 +1878,14 @@ Cons:
 * ...
 
 [appendix]
-== Instructions for Manual Testing
+== Instructions for manual testing
 
 Given below are instructions to test the app manually.
 
 [NOTE]
 These instructions only provide a starting point for testers to work on; testers are expected to do more _exploratory_ testing.
 
-=== Launch and Shutdown
+=== Launch and shutdown
 
 . Initial launch
 
