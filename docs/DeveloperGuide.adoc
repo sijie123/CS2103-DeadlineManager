@@ -479,6 +479,7 @@ image::UndoRedoActivityDiagram.png[width="650"]
 // end::undoredo[]
 
 // tag::importexport[]
+//tag::sijie_include3[]
 === Import and Export feature
 //==== Current implementation
 
@@ -494,10 +495,11 @@ Internally, `StorageManager` implements the following APIs from `ImportExportSto
 
 * `importTaskCollection`:  Given a filename, imports and returns a `TaskCollection`.
 * `exportTaskCollection`: Given a `TaskCollection`, exports and writes to a specified file.
+//end::sijie_include3[]
 
 Import/Export uses the same API as reading and saving the working `TaskCollection` file when exporting. However, additional checks are performed to ensure that the user does not inadvertently overwrite files, or corrupt the Deadline Manager.
 `StorageManager` only handles writing to and reading from file, and relies on `ModelManager` to decide what data should be read or written.
-
+//tag::sijie_include4[]
 [NOTE]
 An ImportExportExceptionEvent is raised if Deadline Manager fails to read or write files for any reason.
 
@@ -526,7 +528,6 @@ To achieve the above, `ModelManager` indicates an import/export request by creat
 
 [NOTE]
 It is the responsibility of the `Model` to feedback to the user in the case of an exception.
-
 
 Similarly, `StorageManager` returns the result of imports and errors with the following events:
 
@@ -602,6 +603,7 @@ Step 4. Otherwise, if the task doesn't exist, `ModelManager` adds the task to th
 ==== CSV Format support
 
 The discussion above has been format-agnostic, abstracting away details about the file formats. Deadline Manager supports both eXtensible Markup Language (XML) and Comma Separated Values (CSV) format. Currently, while XML format can be freely used to import and export data, CSV format can only be used to export data.
+//end::sijie_include4[]
 
 The CSV/XML format support is implemented using the respective `{*}TaskCollectionStorage` class. `XMLTaskCollectionStorage` is able to import and export data, so it implements both `TaskCollectionReadStorage` and `TaskCollectionWriteStorage` interface. On the other hand, `CSVTaskCollectionStorage` can only export data, so it implements only the `TaskCollectionWriteStorage` interface.
 
@@ -615,10 +617,16 @@ The `TaskCollectionWriteStorage` specifies APIs that is responsible for de-seria
 
 As a summary for the CSV/XML format discussion, the class diagram below shows the structure of `CsvTaskCollectionStorage` and `XmlTaskCollectionStorage`. This diagram is also replicated in <<Storage, `Storage`>> above.
 
+//tag::sijie_include5[]
+
 .Class diagram of Csv/XmlTaskCollectionStorage
 image::CsvXmlClassDiagram.png[width="800"]
 
+//end::sijie_include5[]
+
 Notably, the `CsvTaskCollectionStorage` only implements the `TaskCollectionWriteStorage`, while `XmlTaskCollectionStorage` implements both.
+
+//tag::sijie_include6[]
 
 ==== Design Considerations
 
@@ -643,6 +651,8 @@ As described in <<Import Deconflict, Import Deconflict>>, an import conflict ari
 * **Alternative 2:** Use an `enum` to implement ImportConflictResolver. The `ImportConflictResolver` enum provides a pre-defined selection of algorithms that the user can specify.
 ** Pros: There is no need to implement separate classes. Since the `ImportConflictResolver` enum is only useful within Model, it reside within Model as a private variable.
 ** Cons: If/else statements are required to determine which algorithm should be used. Additionally, an `ImportConflictResolver` implemented this way cannot be easily reused or extended.
+
+//end::sijie_include6[]
 
 ===== Aspect: How to support different file formats
 

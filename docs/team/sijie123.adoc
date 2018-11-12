@@ -39,8 +39,8 @@ Deadline Manager is written in Java and builds upon https://github.com/nus-cs210
 ** Project management:
 *** Set up project repository and labels for Issue Tracker.
 *** Managed releases `v1.2` and `v1.3` on GitHub
-*** Contributed to user stories on GitHub Issue Tracker (https://github.com/CS2103-AY1819S1-W17-4/main/issues/1[#1], https://github.com/CS2103-AY1819S1-W17-4/main/issues/2[#2], https://github.com/CS2103-AY1819S1-W17-4/main/issues/3[#3], https://github.com/CS2103-AY1819S1-W17-4/main/issues/4[#4])
-*** Reported and resolved bugs in Deadline Manager (https://github.com/CS2103-AY1819S1-W17-4/main/issues/147[#147], https://github.com/CS2103-AY1819S1-W17-4/main/issues/170[#170], https://github.com/CS2103-AY1819S1-W17-4/main/issues/191[#191], https://github.com/CS2103-AY1819S1-W17-4/main/pull/286[#286])
+*** Contributed to user stories on GitHub Issue Tracker: https://github.com/CS2103-AY1819S1-W17-4/main/issues/1[#1], https://github.com/CS2103-AY1819S1-W17-4/main/issues/2[#2], https://github.com/CS2103-AY1819S1-W17-4/main/issues/3[#3], https://github.com/CS2103-AY1819S1-W17-4/main/issues/4[#4]
+*** Reported and resolved bugs in Deadline Manager: https://github.com/CS2103-AY1819S1-W17-4/main/issues/147[#147], https://github.com/CS2103-AY1819S1-W17-4/main/issues/170[#170], https://github.com/CS2103-AY1819S1-W17-4/main/issues/191[#191], https://github.com/CS2103-AY1819S1-W17-4/main/pull/286[#286]
 ** Enhancements to existing features:
 *** Added additional checks to detect potential errors in file I/O operations (e.g. saving).
 *** Refactored unit test for `AddCommandTest` by creating  `ModelStub`, a class containing scaffolding code common to other instances of `CommandTest`. (https://github.com/CS2103-AY1819S1-W17-4/main/blob/master/src/test/java/seedu/address/logic/commands/ModelStub.java[ModelStub.java])
@@ -48,8 +48,8 @@ Deadline Manager is written in Java and builds upon https://github.com/nus-cs210
 *** Rewrote introduction chapters and add more signposting for Developer Guide, so that Developer Guide is more structured and easier to understand: https://github.com/CS2103-AY1819S1-W17-4/main/pull/129/files[#129]
 
 ** Community:
-*** Reviewed Pull Requests (with non-trivial review comments) (https://github.com/CS2103-AY1819S1-W17-4/main/pull/169[#169], https://github.com/CS2103-AY1819S1-W17-4/main/pull/206[#206], https://github.com/CS2103-AY1819S1-W17-4/main/pull/275[#275])
-*** Reported bugs and suggested fixes in the original se-edu addressbook-level2 (Pull Requests: https://github.com/se-edu/addressbook-level2/pull/431[#431], https://github.com/se-edu/addressbook-level2/pull/436[436])
+*** Reviewed Pull Requests (with non-trivial review comments): https://github.com/CS2103-AY1819S1-W17-4/main/pull/169[#169], https://github.com/CS2103-AY1819S1-W17-4/main/pull/206[#206], https://github.com/CS2103-AY1819S1-W17-4/main/pull/275[#275]
+*** Reported bugs and suggested fixes in the original se-edu addressbook-level2: Pull Requests https://github.com/se-edu/addressbook-level2/pull/431[#431], https://github.com/se-edu/addressbook-level2/pull/436[#436]
 ** Tools:
 *** Integrated TravisCI to the project to the team repo.
 
@@ -60,14 +60,27 @@ Deadline Manager is written in Java and builds upon https://github.com/nus-cs210
 |_Given below is an excerpt of sections I contributed to the User Guide. They showcase my ability to write documentation targeting end-users._
 |===
 
-include::../UserGuide.adoc[tag=export]
+include::../UserGuide.adoc[tag=sijie_include1]
 
-include::../UserGuide.adoc[tag=import]
+include::../UserGuide.adoc[tag=sijie_include2]
 
 == Contributions to the Developer Guide
 
 |===
-|_Given below are sections I contributed to the Developer Guide. They showcase my ability to write technical documentation and the technical depth of my contributions to the project._
+|_Given below is an excerpt of the Import/Export section that I contributed to the Developer Guide. They showcase my ability to write technical documentation and the technical depth of my contributions to the project._
 |===
+include::../DeveloperGuide.adoc[tag=sijie_include3]
 
-include::../DeveloperGuide.adoc[tag=importexport]
+include::../DeveloperGuide.adoc[tag=sijie_include4]
+
+[NOTE]
+Due to limited space in the PPP, detailed technical discussion of the CSV implementation is omitted, and is summarised with the following Sequence Diagram instead. This diagram is also replicated in https://cs2103-ay1819s1-w17-4.github.io/main/DeveloperGuide.html#Design-Storage[`Storage`].
+
+include::../DeveloperGuide.adoc[tag=sijie_include5]
+
+Notably, `TaskCollectionReadStorage` and `TaskCollectionWriteStorage` represents the disk reading and writing capabilities respectively; file format implementations can choose to support reading only, writing only, or both.
+
+include::../DeveloperGuide.adoc[tag=sijie_include6]
+
+[NOTE]
+Due to limited space in the PPP, an aspect on supporting different file formats is omitted. Please refer to  https://cs2103-ay1819s1-w17-4.github.io/main/DeveloperGuide.html#aspect-how-to-support-different-file-formats[the Developer Guide] for more details.
