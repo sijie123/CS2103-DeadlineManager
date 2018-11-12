@@ -651,11 +651,11 @@ As Deadline Manager supports multiple file formats, it is essential to consider 
 
 // tag::sort[]
 === Sort feature
-The sort command enables the user to sort the tasks currently being shown according to user defined custom comparator.
+The sort command enables the user to sort the tasks currently being shown according to a user-defined custom comparator.
 It is made up of two main components - `SortCommandParser` and `SortCommand`
 
 ==== Current Implementation
-The sort command is facilitated by `VersionedTaskCollection`.
+The sort command is facilitated by `VersionedTaskCollection`. +
 
 The sort command exposes the operation `updateSortedTaskList` to sort the task list.
 
@@ -670,18 +670,18 @@ A `NullPointerException` is raised in case the `SortCommand` receives a `null` c
 
 Given below is a sequence of steps, illustrating the interaction between `SortCommandParser`, `SortCommand` and `ModelManager`
 
-Step 1. The user executes the sort command with a comparator typed by user.
-
-Step 2. The `SortCommandParser` receives the command with the user comparator given as a string.
-
-Step 3. The `SortCommandParser` parses the string into a valid comparator and calls the `SortCommand` with this comparator provided.
-
 .Sequence Diagram for executing Sort Command.
 image::SortOperationSequenceDiagram.png[width="800"]
 
-Step 4. The `SortCommand` calls the `updateSortedTaskList` API method of `ModelManager`
+. The user executes the sort command along with a user-specified comparator.
 
-Step 5. The method `updateSortedTaskList` sorts the `versionTaskCollection` using JavaFx sort method
+. The `SortCommandParser` receives the command with the user comparator given as a string.
+
+. The `SortCommandParser` parses the string into a valid comparator and calls the `SortCommand` with this comparator provided.
+
+. The `SortCommand` calls the `updateSortedTaskList` API method of `ModelManager`
+
+. The method `updateSortedTaskList` sorts the `versionTaskCollection` using JavaFx sort method
 
 ==== Implementation of Sort Parser
 `SortCommandParser` implements `Parser<>` interface. The most essential portion of `SortCommandParser`, which is chaining of comparators is shown below:

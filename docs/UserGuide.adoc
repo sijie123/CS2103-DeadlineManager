@@ -541,10 +541,10 @@ Returns a subset of the current list of tasks that do not have any tags that do 
 
 Sorts the lists of all the tasks which the user is currently viewing. Generally meant to be used in combination with `filter`. +
 
-When this command is used, Deadline Manager will sort all the currently displayed tasks according to the user specified comparison method. +
+When this command is used, Deadline Manager will sort all the currently displayed tasks according to the user-specified comparison method. +
 Sort comparators are the core of the `sort` command.  Each sort comparator specifies a particular attribute (Example - `name`, `priority`) and a comparison direction, i.e ascending or descending.
 
-The entire sorting command is composed of a chain of sort comparators. This chain helps the user to define which tasks to show earlier and which ones to show latter. +
+The entire sorting command is composed of a chain of sort comparators. This chain helps the user to define which tasks to show earlier and which ones to show later. +
 
 [TIP]
 The sort command results in a stable sort, i.e if two deadlines are equal according to the sort comparators then their relative order before the sort command and after the sort command remains the same.
@@ -563,11 +563,11 @@ Format: `sort SORT_COMPARATOR [SORT_COMPARATOR]...` +
 * `<` stands for sorting in ascending order and `>' stands for sorting in descending order.
 * Sorts the list by the 1st comparator, in case of ties, it sorts by 2nd comparator and so on.
 * Meaning of the operators for each valid key:
-** When `key` is `n` or `name`, the task name is compared. Comparison is case-insensitive.
+** When `key` is `n` or `name`, the task name is compared. The comparison is case-insensitive.
 ** When `key` is `d` or `due` or `deadline`, the task's due date is compared.
 ** When `key` is `p` or `priority`, the task's priority is compared. Note that 1 is the highest priority and 4 is the lowest priority.
 ** When `key` is `f` or `frequency`, the task's frequency (i.e. the number of days between consecutive occurrences of that task) is compared.  A non-recurring task is treated as if it has a frequency of positive infinity.
-** When `key` is `t` or `tag`, the task's tags are compared. In case `<` is used, it means `TAG1` is placed eariler in the sorted order as compared to `TAG2` and so on. For `>` it is vice-versa.
+** When `key` is `t` or `tag`, the task's tags are compared. In case `<` is used, it means `TAG1` is placed earlier in the sorted order as compared to `TAG2` and so on. For `>` it is vice-versa.
 [NOTE]
 For sorting by tags the user has to specify which tags are more important and which are less important.
 ** Any other `key` will cause Deadline Manager to produce an error.
@@ -600,7 +600,7 @@ The above figure shows the error message when user feeds in an invalid command.
 In case a task does not belong to any of the tags mentioned in the sort comparator it will be placed at the bottom of the sorted list.
 
 [TIP]
-In case a task contains more than one tag specified in the sort comparator, then it will be sorted according to those tags first which place it former in the sorted list.
+In case a task contains more than one tag specified in the sort comparator, then it will be sorted according to those tags first which place it formerly in the sorted list.
 
 // end::sort[]
 
