@@ -50,8 +50,10 @@ Deadline Manager is a desktop deadline manager application designed for students
 
 include::../UserGuide.adoc[tag=filter-overview]
 
+include::../UserGuide.adoc[tag=filter-simplified]
+
 |===
-|_The simplified filter syntax has been omitted for brievity.  Please see our https://cs2103-ay1819s1-w17-4.github.io/main/UserGuide.html#simplified-filter-syntax[user guide] for more details and command examples._
+|_Details of the simplified filter syntax have been omitted for brievity.  Please see our https://cs2103-ay1819s1-w17-4.github.io/main/UserGuide.html#simplified-filter-syntax[user guide] for more details and command examples._
 |===
 
 include::../UserGuide.adoc[tag=filter-field]

@@ -238,6 +238,8 @@ The following screenshot is an example to demonstrate that any field may be matc
 [caption="Figure 3.6.2.1: "]
 image::userguide/filterdemo_simplified.png[FilterDemo_Simplified, width="300"]
 
+// end::filter-simplified[]
+
 Numeric fields such as priority and frequency are not matched because the integer values used for priority and frequency often match many task names and tags too.  To filter by priority and frequency, the field must be specified explicitly (see <<Controlling the field being matched>> below).
 
 [NOTE]
@@ -268,7 +270,6 @@ Returns a subset of the current list of tasks that have a name, tag, or attachme
 * `filter 1/10/2018`
 Returns a subset of the current list of tasks that have a name, tag, attachment, or deadline that matches "3/10/2018".  Note that any deadline on or before 1^st^ October 2018 will match "1/10/2018".
 
-// end::filter-simplified[]
 // tag::filter-field[]
 ==== Controlling the field being matched
 
