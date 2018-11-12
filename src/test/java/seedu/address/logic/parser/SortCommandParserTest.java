@@ -25,7 +25,7 @@ public class SortCommandParserTest {
         assertParseSuccess(parser, "d<");
         assertParseSuccess(parser, "name>");
         assertParseSuccess(parser, "d<  name>");
-        assertParseSuccess(parser, "d> d<");
+        assertParseSuccess(parser, "d> deadline<");
         assertParseSuccess(parser, "p< due>");
         assertParseSuccess(parser, "p< tag<{cs2103t  cs2030 easy}");
         assertParseSuccess(parser, "p< tag<{ cs2103t  cs2030 easy }");

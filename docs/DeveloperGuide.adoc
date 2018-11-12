@@ -320,21 +320,76 @@ This section describes some noteworthy details on how major features are impleme
 
 === Add feature
 
-The `add` command enables the user to create
-a new task with a name and a deadline. The user can
-also provide additional information like priority,
-frequency and tags.
+The `add` command enables the user to create a new task with a name and a deadline.
+The user can also provide additional information including priority, frequency and tags.
+
+Given below is a sequence of steps, illustrating the interaction between `AddCommandParser`, `AddCommand` and `Model`:
+
+.Sequence diagram for adding a task
+image::AddOperationSequenceDiagram.png[width="800"]
+
+Step 1. The user enters an `add` command.
+
+Step 2. The `AddCommandParser#parse` method is invoked.
+The `AddCommandParser` receives the command with the arguments given as a string.
+
+Step 3. The `AddCommandParser` interprets the arguments and constructs a `AddCommand`.
+
+Step 4. The `AddCommand` with a `Task` specified by the user is returned.
+
+Step 5. The `AddCommand#execute` method is invoked.
+
+Step 6. The `Model` is updated: The `Model#addTask` method and the `Model#commitTaskCollection` method are invoked.
+
+Step 7. A `CommandResult` object is returned.
 
 === Complete feature
 
-The `complete` command allows the user
-to delete (if the task is not recurred)
-or shift the deadline to the next occurrence
-(if the task is recurred). Thanks to this command,
-the user no longer needs to decide if he/she needs
-to use `delete` command or `snooze` command.
+The `complete` command provides users a natural way to complete a task:
+either delete a task if it is not recurred or shift the deadline to the next occurrence if the task is recurred.
+
+==== Current Implementation
+
+The complete feature is implemented by `CompleteCommand` and `CompleteCommandParser`.
+
+After the task specified by the user is retrieved, the `CompleteCommand` will consider these two cases:
+
+* If the task is not recurred, it will be deleted.
+
+* Otherwise, the task will be updated using the following formula: +
+`NewDeadline = OldDeadline + Frequency`
+
+==== Sequence Flow
+
+Given below is a sequence of steps, illustrating the interaction between `CompleteCommandParser`, `CompleteCommand` and `Model`:
+
+.Sequence diagram for completing a task
+image::CompleteOperationSequenceDiagram.png[width="800"]
+
+Step 1. The user enters a `complete` command with the index of a task in the task list.
+
+Step 2. The `CompleteCommandParser#parse` method is invoked.
+The `CompleteCommandParser` receives the command with the arguments given as a string.
+
+Step 3. The `CompleteCommandParser` interprets the arguments and constructs a `CompleteCommand`.
+
+Step 4. The `CompleteCommand` with the index specified by the user is returned.
+
+Step 5. The `CompleteCommand#execute` method is invoked.
+
+Step 6. The task identified by the user is retrieved from the `Model`.
+
+Step 7. The `Model` is updated:
+If the task is not recurred, `Model#deleteTask` is invoked to delete the task.
+Otherwise, `Model#updateTask` (followed by `Model#updateFilteredTaskList`) is invoked
+with a new `Task` where the deadline is updated.
+
+Step 8. The `Model#commitTaskCollection` method is invoked.
+
+Step 9. A `CommandResult` object is returned.
 
 === Undo/Redo feature
+
 ==== Current Implementation
 
 The undo/redo mechanism is facilitated by `VersionedTaskCollection`.
@@ -621,34 +676,73 @@ Step 2. The `SortCommandParser` receives the command with the user comparator gi
 
 Step 3. The `SortCommandParser` parses the string into a valid comparator and calls the `SortCommand` with this comparator provided.
 
-.Sequence diagram for `sort` command
+.Sequence Diagram for executing Sort Command.
 image::SortOperationSequenceDiagram.png[width="800"]
-
-The above sequence diagram illustrates the Sort Command
 
 Step 4. The `SortCommand` calls the `updateSortedTaskList` API method of `ModelManager`
 
 Step 5. The method `updateSortedTaskList` sorts the `versionTaskCollection` using JavaFx sort method
 
+==== Implementation of Sort Parser
+`SortCommandParser` implements `Parser<>` interface. The most essential portion of `SortCommandParser`, which is chaining of comparators is shown below:
+[source,java]
+----
+public SortCommand parse(String args) throws SimpleParseException {
+
+    Comparator<Task> comparator = Comparator.comparing(Task::getClass, (a, b) -> {
+        return 0; // a default comparator which compares every task equal
+    });
+
+    // argumentsArray is an array of strings referring to all the arguments given to the sort command.
+
+    for (String arg: argumentsArray) {
+        final String taskField = arg.substring(0, arg.length() - 1);
+        final char comparisonChar = arg.charAt(arg.length() - 1);
+
+        switch(taskField) {
+        case "n":   // fallthrough
+        case "name": {
+            if (comparisonChar == '<') {
+                comparator = comparator.thenComparing(Task::getName);
+            } else {
+                comparator = comparator.thenComparing(Taks::getName, Comparator.reverseOrder());
+            }
+            break;
+        }
+        case "p":   // fallthrough
+        case "priority": {
+            if (comparisonChar == '<') {
+                comparator = comparator.thenComparaing(Task::getPriority);
+            }  else {
+                comparator = comparator.thenComparing(Task::getPriority, Comparator.reverseOrder());
+            }
+        }
+        // ... consists of case for other task fields as well
+        }
+    }
+    return new SortCommand(comparator);
+}
+----
+
 ==== Design Considerations
 
-===== Aspect: Which Task List to Sort
+===== Aspect: Which task list to sort
 
-* **Alternative 1 (current choice):** The entire `versionedTaskList` is sorted using JavaFx inbuilt sort method
+* **Alternative 1 (current choice):** The entire `versionedTaskList` is sorted using JavaFx inbuilt sort method.
 ** Pros: Easy to implement.
-** Cons: May have performance issues in terms of slow running.
+** Cons: Slow in performance.
 * **Alternative 2:** The sorting is done ONLY on the viewable `filteredTasks` list.
-** Pros: Will be more efficient in terms of time complexity.
+** Pros: Fast in terms of performance.
 ** Cons: Requires significant changes to the codebase since sorting the `filteredTasks` requires it to be modifiable.
 
-===== Aspect: How to sort mechanism for Tags
+===== Aspect: How to sort for tags
 
 * **Alternative 1 (current choice):** The sort command takes in user input so that the user can specify the priority order of tags.
-** Pros: Provides immense flexibility to the user. Also follows Law of Demeter / Law of Least Knowledge since the `Tag` model itself does NOT know that it can be compared.
+** Pros: Provides immense flexibility to the user. Also follows Law of Demeter / Law of Least Knowledge since the `Tag` model itself does not know that it can be compared.
 ** Cons: The flexibility comes at the cost of making sorting by tags complex for newbie users.
 * **Alternative 2:** The sorting is done in a pre-defined manner, example sorting tasks according to their alphabetical order of tags.
 ** Pros: Easier to implement and simpler for newbie users.
-** Cons: Might not be useful for the user in many situations. Disobeys the Law of Demeter / Law of Least Knowledge since the `Tag` model will know that it can be compared with other tags.
+** Cons: Not useful for the user in many situations. Disobeys the Law of Demeter / Law of Least Knowledge since the `Tag` model will know that it can be compared with other tags.
 // end::sort[]
 
 // tag::filter[]
@@ -956,7 +1050,7 @@ In total, there are around 15 distinct kinds of error conditions when parsing a 
 ** Pros: Easier to implement because there are less cases to consider.  Also, we can display an error if the user accidentally omits a boolean operator or field identifier.
 ** Cons: More verbose filter expressions which may require higher cognitive overhead.
 
-// tag::filter-design-considerations-extract[]
+// tag::filter-design-considerations-convenience[]
 ===== Aspect: What the convenience operator should do
 
 * **Alternative 1 (current choice):** Support a convenience operator that is an alias of the most common filter operator for each field.
@@ -965,10 +1059,12 @@ In total, there are around 15 distinct kinds of error conditions when parsing a 
 * **Alternative 2:** Support a convenience operator that is an alias of a fixed operator regardless of field.
 ** Pros: Easier for users to remember what the convenience operator does.
 ** Cons: Convenience operator is not really _convenient_ -- the behaviour might be surprising or awkward for some fields.
+// end::filter-design-considerations-convenience[]
 * **Alternative 3:** Don't support the convenience operator at all.
 ** Pros: Least amount of implementation work.
 ** Cons: Additional cognitive overhead as users need to figure out which of the available operators they actually want.
 
+// tag::filter-design-considerations-exceptions[]
 ===== Aspect: How to signal exceptional conditions when parsing filter expressions
 
 * **Alternative 1 (current choice):** Use a different type of checked exception for every possible type of failure condition.
@@ -981,7 +1077,7 @@ In total, there are around 15 distinct kinds of error conditions when parsing a 
 ** Pros: Simplest method signatures.
 ** Cons: Easy to overlook possible failure conditions when modifying the code, so future developers might inadvertently introduce bugs.
 
-// end::filter-design-considerations-extract[]
+// end::filter-design-considerations-exceptions[]
 // end::filter[]
 
 // tag::attachments[]
@@ -1782,6 +1878,115 @@ These instructions only provide a starting point for testers to work on; testers
 .. Test case: `delete 0` +
    Expected: No task is deleted. Error details shown in the status message. Status bar remains the same.
 
+=== Filtering the list of tasks
+
+[NOTE]
+All unspecified fields of a task should be set to some value that does not match the filter predicate being tested.
+
+. Filtering using the simplified filter syntax
+
+.. Prerequisites: Task list contains a task with name `Presentation` and another task with tag `present`.
+.. Test case: `filter present` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter presentation` +
+   Expected: Only the task with name `Presentation` is displayed.
+.. Test case: `filter presentations` +
+   Expected: None of the two tasks are displayed.
+
+. Filtering with field identifier
+
+.. Prerequisites: Task list contains a task with name `Presentation` and another task with tag `present`.
+.. Test case: `filter n:present` +
+   Expected: Only the task with name `Presentation` is displayed.
+.. Test case: `filter t:present` +
+   Expected: Only the task with tag `present` is displayed.
+
+. Filtering by deadline
+
+.. Prerequisites: Task list contains a task with deadline `1/12/2018` and another task with deadline `15/12/2018`.
+.. Test case: `filter 15/12/2018` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter d:15/12/2018` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter 10/12/2018` +
+   Expected: Only the task with deadline `1/12/2018` is displayed.
+.. Test case: `filter d=15/12/2018` +
+   Expected: Only the task with deadline `15/12/2018` is displayed.
+.. Test case: `filter d>15/12/2018` +
+   Expected: Only the task with deadline `15/12/2018` is displayed.
+.. Test case: `filter 15/12` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter d=15/12` +
+   Expected: Only the task with deadline `15/12/2018` is displayed.
+
+. Filtering by tag
+
+.. Prerequisites: Task list contains a task with tags `homework` and `CS2103`, and another task with tags `homework`.
+.. Test case: `filter home` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter t:home` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter t:home,cs` +
+   Expected: Only the first task is displayed.
+.. Test case: `filter t=home` +
+   Expected: None of the tasks are displayed.
+.. Test case: `filter t=homework` +
+   Expected: Both tasks are displayed.
+
+. Filtering using set-based filter operators
+
+.. Prerequisites: Task list contains a task with tags `homework` and `CS2103`, and another task with tags `homework`.
+.. Test case: `filter t:=homework` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter t==homework` +
+   Expected: Only the second task is displayed.
+.. Test case: `filter t>=homework` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter t>=homework,cs2103` +
+   Expected: Only the first task is displayed.
+.. Test case: `filter t<=homework,cs2103` +
+   Expected: Both tasks are displayed.
+
+. Filtering with composite filters
+
+.. Prerequisites: Task list contains a task with name `CS2103 Presentation` and another task with name `MA1101R Homework`.
+.. Test case: `filter present home` +
+   Expected: None of the two tasks are displayed.
+.. Test case: `filter present & home` +
+   Expected: None of the two tasks are displayed.
+.. Test case: `filter present && home` +
+   Expected: None of the two tasks are displayed.
+.. Test case: `filter present | home` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter present || home` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter present | !home` +
+   Expected: Only the task with name `CS2103 Presentation` is displayed.
+.. Test case: `filter !present | home` +
+   Expected: Only the task with name `MA1101R Homework` is displayed.
+.. Test case: `filter (present | home) & !MA1101` +
+   Expected: Only the task with name `CS2103 Presentation` is displayed.
+.. Test case: `filter (present | home) & ! MA1101` +
+   Expected: Only the task with name `CS2103 Presentation` is displayed.
+.. Test case: `filter (present|home)&!MA1101` +
+   Expected: Only the task with name `CS2103 Presentation` is displayed.
+.. Test case: `filter (present|home)!MA1101` +
+   Expected: Only the task with name `CS2103 Presentation` is displayed.
+
+. Comprehensive error messages
+
+.. Prerequisites: None.
+.. Each of these test cases should produce a distinct error message and the error is indicated in the user interface.  (While the error message may not be what you expect (e.g. the first test case highlights the `)` character instead of the preceding `&`, and which character should be highlighted depends on your point of view), the error message should be nonetheless reasonable.)
+... `filter cs&(("presentation slide"&f=7&)|meeting)&!csp`
+... `filter cs&(("presentation slide"&f=7)|meeting)&!`
+... `filter cs&(("presentation slide"&f=7)|meeting)&!csp)`
+... `filter cs&((("presentation slide"&f=7)|meeting)&!csp`
+... `filter cs&(("presentation slide"&f=7)|meeting)$!csp`
+... `filter cs&(("presentation slide&f=7)|meeting)&!csp`
+... `filter cs&((presentation slide"&f=7)|meeting)&!csp`
+... `filter cs&(("presentation slide"&f=xxx)|meeting)&!csp`
+... `filter cs&(("presentation slide"&g=7)|meeting)&!csp`
+
 === Attachments
 . Adding an attachment to a task
 
@@ -1870,3 +2075,17 @@ These instructions only provide a starting point for testers to work on; testers
    Expected: A success message is displayed, indicating that import completed successfully. All the tasks from `tasks.xml` are imported again, creating duplicate entries.
 .. Run the `import p/"non_existent_file.xml"` command, where `non_existent_file.xml` refers to any file that does not exist. +
    Expected: An error message is displayed, indicating that Deadline Manager is unable to import the xml file specified.
+
+
+=== Sorting a list of tasks
+
+. Sorting a list of tasks
+.. Prerequisites: List all tasks using the `list` command. Multiple tasks in the list.
+.. Test case: `sort n<` +
+   Expected: Sorts the list of tasks according to names in alphabetical ascending order.
+.. Test case: `sort p< name>` +
+   Expected: Sorts the list of tasks first according to ascending order of priority and then in case some tasks have the same priority. Ties are broken in descending order of names (alphabetical order).
+.. Test case: `sort name=` +
+   Expected: The view of the tasks does not change. Error details shown in the status message. Status bar remains the same.
+.. Other incorrect sort commands to try: `sort`, `sort name=`, `sort tag<cs2101` +
+   Expected: Similar to previous.
