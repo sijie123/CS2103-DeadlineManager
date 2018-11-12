@@ -21,10 +21,8 @@ Deadline Manager is an easy-to-use application to assist students in managing de
 
 * *Major enhancement*: added *the ability to import to and export from Deadline Manager*
 ** What it does: This feature allows users to export a selection of tasks to a file. This file can be shared with friends, who can then import it to their own Deadline Manager. Furthermore, users can export their tasks as Comma Separated Values (CSV) format, which is compatible with other major Calendar applications.
-** Justification: This feature is essential to our Deadline Manager. Our Deadline Manager is targeted at users within NUS School of Computing. As most assignments/deadlines are common to the entire module, the ability to import/export tasks is essential as it allows students to share and remind each other of their schedules. Furthermore, even professors can make use of the import/export feature to update and remind students of upcoming assessments. The ability to export as CSV format further improves the user experience, as users can switch seamlessly to other major Calendar services such as Google Calendar.
-** Highlights:
-. As the File System is involved, it is necessary to consider and account for how the different Operating Systems conduct file operations. Extensive testing is required to ensure correctness.
-. Significant design consideration is required to ensure optimal user experiences are there are many potential usage scenarios. For example, it is likely that users may import duplicate tasks. To cater to the different scenarios, an entire ImportConflictResolver class is implemented to provide flexibility and simplicity for the user when importing.
+** Justification: Our Deadline Manager is targeted at users within NUS School of Computing. As most assignments/deadlines are common to the entire module, the ability to import/export tasks is essential as it allows students to share and remind each other of their schedules. Furthermore, even professors can make use of the import/export feature to update and remind students of upcoming assessments. The ability to export as CSV format further improves the user experience, as users can switch seamlessly to other major Calendar services such as Google Calendar.
+** Highlights: It is necessary to account for the various file I/O operations behaviour on different Operating Systems, and extensive testing is required. Furthermore, significant design consideration is required to ensure optimal user experiences are there are many potential usage scenarios. For example, it is likely that users may import duplicate tasks. To cater to the different scenarios, an entire ImportConflictResolver class is implemented to provide flexibility and simplicity for the user when importing.
 ** Credits: The resource at https://support.google.com/calendar/answer/37118?hl=en[CSV format compatible with Google Calendar] provides specifications for exporting in CSV format.
 
 * *Minor enhancement*: changed how parameters are parsed by the app.
@@ -39,7 +37,7 @@ Deadline Manager is an easy-to-use application to assist students in managing de
 ** Project management:
 *** Set up project repository and labels for Issue Tracker.
 *** Managed releases `v1.2`, `v1.3` and `v1.4` on GitHub
-*** Contributed to user stories on GitHub Issue Tracker: https://github.com/CS2103-AY1819S1-W17-4/main/issues/1[#1], https://github.com/CS2103-AY1819S1-W17-4/main/issues/2[#2], https://github.com/CS2103-AY1819S1-W17-4/main/issues/3[#3], https://github.com/CS2103-AY1819S1-W17-4/main/issues/4[#4]
+*** Contributed to user stories on GitHub Issue Tracker: https://github.com/CS2103-AY1819S1-W17-4/main/issues?q=label%3Atype.Story+is%3Aclosed+author%3Asijie123[#1-#4]
 *** Reported and resolved bugs in Deadline Manager: https://github.com/CS2103-AY1819S1-W17-4/main/issues/147[#147], https://github.com/CS2103-AY1819S1-W17-4/main/issues/170[#170], https://github.com/CS2103-AY1819S1-W17-4/main/issues/191[#191], https://github.com/CS2103-AY1819S1-W17-4/main/pull/286[#286]
 ** Enhancements to existing features:
 *** Added additional checks to detect potential errors in file I/O operations (e.g. saving).
