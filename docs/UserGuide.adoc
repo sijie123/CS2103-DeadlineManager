@@ -257,16 +257,16 @@ Matching of each eligible field:
 Examples:
 
 * `filter homework`
-Returns a subset of the current list of tasks that have a name or tag list that contains "homework".  Note that "homework" cannot be interpreted as a valid date, so the deadline field is ignored.
+Returns a subset of the current list of tasks that have a name, tag, or attachment that matches "homework".  Note that "homework" cannot be interpreted as a valid date, so the deadline field is ignored.
 
 * `filter assignment CS2103`
-Returns a subset of the current list of tasks that have a name or tag list that contains "assignment" and a name or tag list that contains "CS2103".  Note that neither "assignment" or "CS2103" can be interpreted as a valid date, so the deadline field is ignored for both keywords.
+Returns a subset of the current list of tasks that have a name, tag, or attachment that matches "assignment" and a name, tag, or attachment that matches "CS2103".  Note that neither "assignment" or "CS2103" can be interpreted as a valid date, so the deadline field is ignored for both keywords.
 
 * `filter badminton utown 3/10/2018`
-Returns a subset of the current list of tasks that have a name or tag list that contains "badminton", a name or tag list that contains "utown", and a name, tag list, or deadline that matches "3/10/2018".  Note that any deadline on or before 3 October 2018 will match "3/10/2018".
+Returns a subset of the current list of tasks that have a name, tag, or attachment that matches "badminton"; a name, tag, or attachment that matches "utown"; and a name, tag, attachment, or deadline that matches "3/10/2018".  Note that any deadline on or before 3^rd^ October 2018 will match "3/10/2018".
 
 * `filter 1/10/2018`
-Returns a subset of the current list of tasks that have a name, tag list, or deadline on or before 1st October 2018.
+Returns a subset of the current list of tasks that have a name, tag, attachment, or deadline that matches "3/10/2018".  Note that any deadline on or before 1^st^ October 2018 will match "1/10/2018".
 
 // end::filter-simplified[]
 // tag::filter-field[]
@@ -470,13 +470,26 @@ When it is unambiguous, whitespace between the operators and filter expressions 
 [TIP]
 Intuitively, the syntax for filter expressions mirrors that of arithmetic expressions such as `1+3*4` and `(1+4+6)*2`.
 
+[NOTE]
+In the examples below, when we say that a task _has_ a test phrase, we mean that the task has a name, tag, or attachment that contains the test phrase as a substring.
+
 Examples:
 
 * `filter assignment|CS2101`
-Returns a subset of the current list of tasks that have a name or tag list that contains "assignment" or "CS2101".
+Returns a subset of the current list of tasks that has "assignment" or "CS2101".
 
 * `filter ! t:CS2101`
 Returns a subset of the current list of tasks that do not have the tag "CS2101".
+
+* `filter cs & ((present & f=7) | meeting)`
+Returns a subset of the current list of tasks that has "cs" and either (1) has "present" and repeats exactly once a week, or (2) has "meeting". +
+The following screenshot is an example of a list of tasks that could be displayed by the above example:
+
+[filterdemo_complex]
+.Result of `filter cs & ((present & f=7) | meeting)` command
+[#img-filterdemo_complex]
+[caption="Figure 3.6.4.1: "]
+image::userguide/filterdemo_complex.png[FilterDemo_Complex, width="300"]
 
 * `filter n:assignment | (p:3 & t:CS2101)`
 Returns a subset of the current list of tasks that have a name that contains "assignment", or have priority at least 3 and contains tag "CS2101".
