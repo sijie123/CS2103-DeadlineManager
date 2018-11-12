@@ -24,10 +24,8 @@ public class HelpCommandTest {
 
     @Test
     public void execute_help_success() {
-        assertCommandSuccess(new HelpCommand(), model, commandHistory, SHOWING_HELP_MESSAGE,
-            expectedModel);
-        assertTrue(eventsCollectorRule.eventsCollector
-            .getMostRecent() instanceof ShowHelpRequestEvent);
+        assertCommandSuccess(new HelpCommand(), model, commandHistory, SHOWING_HELP_MESSAGE, expectedModel);
+        assertTrue(eventsCollectorRule.eventsCollector.getMostRecent() instanceof ShowHelpRequestEvent);
         assertTrue(eventsCollectorRule.eventsCollector.getSize() == 1);
     }
 }

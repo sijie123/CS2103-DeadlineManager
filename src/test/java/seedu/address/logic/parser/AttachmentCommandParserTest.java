@@ -60,7 +60,7 @@ public class AttachmentCommandParserTest {
         Index targetIndex = INDEX_SECOND_TASK;
         String filePath = "helloworld.docx";
         AttachmentCommand expected = new AttachmentCommand(targetIndex,
-            new AttachmentCommand.AddAttachmentAction(filePath));
+                new AttachmentCommand.AddAttachmentAction(filePath));
         String command = String.format(ATTACHMENT_ADD_FORMAT, targetIndex.getOneBased(), filePath);
         assertParseSuccess(parser, command, expected);
     }
@@ -70,12 +70,12 @@ public class AttachmentCommandParserTest {
         Index targetIndex = INDEX_SECOND_TASK;
         String filePath = "/123 p/";
         AttachmentCommand expected = new AttachmentCommand(targetIndex,
-            new AttachmentCommand.AddAttachmentAction(filePath));
+                new AttachmentCommand.AddAttachmentAction(filePath));
         String command = String.format(ATTACHMENT_ADD_FORMAT, targetIndex.getOneBased(),
-            "\"" + filePath + "\"");
+                "\"" + filePath + "\"");
         assertParseSuccess(parser, command, expected);
         command = String.format(ATTACHMENT_ADD_FORMAT, targetIndex.getOneBased(),
-            "\'" + filePath + "\'");
+                "\'" + filePath + "\'");
         assertParseSuccess(parser, command, expected);
     }
 
@@ -92,7 +92,7 @@ public class AttachmentCommandParserTest {
     public void parse_listAction_returnsAttachmentCommand() {
         Index targetIndex = INDEX_FIRST_TASK;
         AttachmentCommand expected = new AttachmentCommand(targetIndex,
-            new AttachmentCommand.ListAttachmentAction());
+                new AttachmentCommand.ListAttachmentAction());
         String command = String.format(ATTACHMENT_LIST_FORMAT, targetIndex.getOneBased());
         assertParseSuccess(parser, command, expected);
     }
@@ -102,7 +102,7 @@ public class AttachmentCommandParserTest {
         Index targetIndex = INDEX_SECOND_TASK;
         String fileName = "123";
         AttachmentCommand expected = new AttachmentCommand(targetIndex,
-            new AttachmentCommand.DeleteAttachmentAction(fileName));
+                new AttachmentCommand.DeleteAttachmentAction(fileName));
         String command = String.format(ATTACHMENT_DELETE_FORMAT, targetIndex.getOneBased(), fileName);
         assertParseSuccess(parser, command, expected);
     }
@@ -112,7 +112,7 @@ public class AttachmentCommandParserTest {
         Index targetIndex = INDEX_SECOND_TASK;
         String fileName = "p  .docx";
         AttachmentCommand expected = new AttachmentCommand(targetIndex,
-            new AttachmentCommand.DeleteAttachmentAction(fileName));
+                new AttachmentCommand.DeleteAttachmentAction(fileName));
         String command = String.format(ATTACHMENT_DELETE_FORMAT, targetIndex.getOneBased(), "'" + fileName + "'");
         assertParseSuccess(parser, command, expected);
     }
@@ -133,13 +133,13 @@ public class AttachmentCommandParserTest {
         String fileName = "hello_world...";
 
         AttachmentCommand expected = new AttachmentCommand(targetIndex,
-            new AttachmentCommand.GetAttachmentAction(fileName, filePath));
+                new AttachmentCommand.GetAttachmentAction(fileName, filePath));
         String command = String.format(ATTACHMENT_GET_WITH_PATH_NAME_FORMAT,
-            targetIndex.getOneBased(), filePath, fileName);
+                targetIndex.getOneBased(), filePath, fileName);
         assertParseSuccess(parser, command, expected);
 
         command = String.format(ATTACHMENT_GET_WITH_NAME_PATH_FORMAT,
-            targetIndex.getOneBased(), filePath, fileName);
+                targetIndex.getOneBased(), filePath, fileName);
         assertParseSuccess(parser, command, expected);
     }
 
@@ -150,13 +150,13 @@ public class AttachmentCommandParserTest {
         String fileName = "hello  world.in";
 
         AttachmentCommand expected = new AttachmentCommand(targetIndex,
-            new AttachmentCommand.GetAttachmentAction(fileName, filePath));
+                new AttachmentCommand.GetAttachmentAction(fileName, filePath));
         String command = String.format(ATTACHMENT_GET_WITH_PATH_NAME_FORMAT,
-            targetIndex.getOneBased(), "'" + filePath + "'", "'" + fileName + "'");
+                targetIndex.getOneBased(), "'" + filePath + "'", "'" + fileName + "'");
         assertParseSuccess(parser, command, expected);
 
         command = String.format(ATTACHMENT_GET_WITH_NAME_PATH_FORMAT,
-            targetIndex.getOneBased(), "\"" + filePath + "\"", "\"" + fileName + "\"");
+                targetIndex.getOneBased(), "\"" + filePath + "\"", "\"" + fileName + "\"");
         assertParseSuccess(parser, command, expected);
     }
 

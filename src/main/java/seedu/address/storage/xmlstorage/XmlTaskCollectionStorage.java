@@ -35,7 +35,7 @@ public class XmlTaskCollectionStorage implements TaskCollectionStorage {
 
     @Override
     public Optional<ReadOnlyTaskCollection> readTaskCollection()
-        throws DataConversionException, IOException {
+            throws DataConversionException, IOException {
         return readTaskCollection(filePath);
     }
 
@@ -46,8 +46,8 @@ public class XmlTaskCollectionStorage implements TaskCollectionStorage {
      * @throws DataConversionException if the file is not in the correct format.
      */
     public Optional<ReadOnlyTaskCollection> readTaskCollection(Path filePath)
-        throws DataConversionException,
-        FileNotFoundException {
+            throws DataConversionException,
+            FileNotFoundException {
         requireNonNull(filePath);
 
         if (!Files.exists(filePath)) {

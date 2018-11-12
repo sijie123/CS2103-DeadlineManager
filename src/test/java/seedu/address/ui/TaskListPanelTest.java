@@ -26,11 +26,9 @@ import seedu.address.storage.xmlstorage.XmlSerializableTaskCollection;
 
 public class TaskListPanelTest extends GuiUnitTest {
 
-    private static final ObservableList<Task> TYPICAL_TASKS =
-        FXCollections.observableList(getTypicalTasks());
+    private static final ObservableList<Task> TYPICAL_TASKS = FXCollections.observableList(getTypicalTasks());
 
-    private static final JumpToListRequestEvent JUMP_TO_SECOND_EVENT = new JumpToListRequestEvent(
-        INDEX_SECOND_TASK);
+    private static final JumpToListRequestEvent JUMP_TO_SECOND_EVENT = new JumpToListRequestEvent(INDEX_SECOND_TASK);
 
     private static final Path TEST_DATA_FOLDER = Paths.get("src", "test", "data", "sandbox");
 
@@ -58,8 +56,7 @@ public class TaskListPanelTest extends GuiUnitTest {
         postNow(JUMP_TO_SECOND_EVENT);
         guiRobot.pauseForHuman();
 
-        TaskCardHandle expectedTask = taskListPanelHandle
-            .getTaskCardHandle(INDEX_SECOND_TASK.getZeroBased());
+        TaskCardHandle expectedTask = taskListPanelHandle.getTaskCardHandle(INDEX_SECOND_TASK.getZeroBased());
         TaskCardHandle selectedTask = taskListPanelHandle.getHandleToSelectedCard();
         assertCardEquals(expectedTask, selectedTask);
     }
@@ -85,7 +82,7 @@ public class TaskListPanelTest extends GuiUnitTest {
     private ObservableList<Task> createBackingList(int taskCount) throws Exception {
         Path xmlFile = createXmlFileWithTasks(taskCount);
         XmlSerializableTaskCollection xmlDeadlineManager =
-            XmlUtil.getDataFromFile(xmlFile, XmlSerializableTaskCollection.class);
+                XmlUtil.getDataFromFile(xmlFile, XmlSerializableTaskCollection.class);
         return FXCollections.observableArrayList(xmlDeadlineManager.toModelType().getTaskList());
     }
 
@@ -122,6 +119,6 @@ public class TaskListPanelTest extends GuiUnitTest {
         TaskListPanel taskListPanel = new TaskListPanel(backingList);
         uiPartRule.setUiPart(taskListPanel);
         taskListPanelHandle = new TaskListPanelHandle(getChildNode(taskListPanel.getRoot(),
-            TaskListPanelHandle.TASK_LIST_VIEW_ID));
+                TaskListPanelHandle.TASK_LIST_VIEW_ID));
     }
 }

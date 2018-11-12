@@ -85,8 +85,8 @@ public class VersionedTaskCollection extends TaskCollection {
 
         // state check
         return super.equals(otherVersionedTaskCollection)
-            && taskCollectionStateList.equals(otherVersionedTaskCollection.taskCollectionStateList)
-            && currentStatePointer == otherVersionedTaskCollection.currentStatePointer;
+                && taskCollectionStateList.equals(otherVersionedTaskCollection.taskCollectionStateList)
+                && currentStatePointer == otherVersionedTaskCollection.currentStatePointer;
     }
 
     /**

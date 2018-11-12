@@ -40,8 +40,7 @@ public class AddCommandTest {
 
         CommandResult commandResult = new AddCommand(validTask).execute(modelStub, commandHistory);
 
-        assertEquals(String.format(AddCommand.MESSAGE_SUCCESS, validTask),
-            commandResult.feedbackToUser);
+        assertEquals(String.format(AddCommand.MESSAGE_SUCCESS, validTask), commandResult.feedbackToUser);
         assertEquals(Arrays.asList(validTask), modelStub.tasksAdded);
         assertEquals(EMPTY_COMMAND_HISTORY, commandHistory);
     }
@@ -54,8 +53,7 @@ public class AddCommandTest {
         modelStub.addTask(validTask);
 
         CommandResult commandResult = new AddCommand(validTask).execute(modelStub, commandHistory);
-        assertEquals(String.format(AddCommand.MESSAGE_SUCCESS, validTask),
-            commandResult.feedbackToUser);
+        assertEquals(String.format(AddCommand.MESSAGE_SUCCESS, validTask), commandResult.feedbackToUser);
         assertEquals(Arrays.asList(validTask, validTask), modelStub.tasksAdded);
         assertEquals(EMPTY_COMMAND_HISTORY, commandHistory);
     }
@@ -83,7 +81,6 @@ public class AddCommandTest {
         // different task -> returns false
         assertFalse(addAliceCommand.equals(addBobCommand));
     }
-
 
 
     /**

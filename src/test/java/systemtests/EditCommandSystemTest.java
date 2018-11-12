@@ -58,17 +58,16 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
          * -> edited
          */
         Index index = INDEX_FIRST_TASK;
-        String command =
-            " " + EditCommand.COMMAND_WORD + "  " + index.getOneBased() + "   " + NAME_DESC_BOB
+        String command = " " + EditCommand.COMMAND_WORD + "  " + index.getOneBased() + "   " + NAME_DESC_BOB
                 + "  " + PRIORITY_DESC_BOB + "  " + FREQUENCY_DESC_BOB + "  "
                 + DEADLINE_DESC_BOB + " " + TAG_DESC_HUSBAND + " ";
         Task uneditedTask = getModel().getFilteredTaskList().get(index.getZeroBased());
         Task bobWithOriginalAttachments = new TaskBuilder(BOB)
-            .withAttachments(uneditedTask.getAttachments())
-            .build();
+                .withAttachments(uneditedTask.getAttachments())
+                .build();
         Task editedTask = new TaskBuilder(bobWithOriginalAttachments)
-            .withTags(VALID_TAG_HUSBAND)
-            .build();
+                .withTags(VALID_TAG_HUSBAND)
+                .build();
         assertCommandSuccess(command, index, editedTask);
 
         /* Case: undo editing the last task in the list -> last task restored */
@@ -80,13 +79,13 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
         command = RedoCommand.COMMAND_WORD;
         expectedResultMessage = RedoCommand.MESSAGE_SUCCESS;
         model.updateTask(
-            getModel().getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased()),
-            editedTask);
+                getModel().getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased()),
+                editedTask);
         assertCommandSuccess(command, model, expectedResultMessage);
 
         /* Case: edit a task with new values same as existing values -> edited */
         command = EditCommand.COMMAND_WORD + " " + index.getOneBased() + NAME_DESC_BOB
-            + PRIORITY_DESC_BOB + FREQUENCY_DESC_BOB + DEADLINE_DESC_BOB + TAG_DESC_FRIEND + TAG_DESC_HUSBAND;
+                + PRIORITY_DESC_BOB + FREQUENCY_DESC_BOB + DEADLINE_DESC_BOB + TAG_DESC_FRIEND + TAG_DESC_HUSBAND;
         assertCommandSuccess(command, index, bobWithOriginalAttachments);
 
         /* Case: edit a task with new values same as another task's values but with different name -> edited */
@@ -94,7 +93,7 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
         index = INDEX_SECOND_TASK;
         assertNotEquals(getModel().getFilteredTaskList().get(index.getZeroBased()), editedTask);
         command = EditCommand.COMMAND_WORD + " " + index.getOneBased() + NAME_DESC_AMY
-            + PRIORITY_DESC_BOB + FREQUENCY_DESC_BOB + DEADLINE_DESC_BOB + TAG_DESC_FRIEND + TAG_DESC_HUSBAND;
+                + PRIORITY_DESC_BOB + FREQUENCY_DESC_BOB + DEADLINE_DESC_BOB + TAG_DESC_FRIEND + TAG_DESC_HUSBAND;
         editedTask = new TaskBuilder(bobWithOriginalAttachments).withName(VALID_NAME_AMY).build();
         assertCommandSuccess(command, index, editedTask);
 
@@ -103,18 +102,17 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
          */
         index = INDEX_SECOND_TASK;
         command = EditCommand.COMMAND_WORD + " " + index.getOneBased() + NAME_DESC_BOB
-            + PRIORITY_DESC_AMY + FREQUENCY_DESC_AMY + TAG_DESC_FRIEND + TAG_DESC_HUSBAND;
+                + PRIORITY_DESC_AMY + FREQUENCY_DESC_AMY + TAG_DESC_FRIEND + TAG_DESC_HUSBAND;
         editedTask =
-            new TaskBuilder(bobWithOriginalAttachments)
-                .withPriority(VALID_PRIORITY_AMY)
-                .withFrequency(VALID_FREQUENCY_AMY)
-                .build();
+                new TaskBuilder(bobWithOriginalAttachments)
+                        .withPriority(VALID_PRIORITY_AMY)
+                        .withFrequency(VALID_FREQUENCY_AMY)
+                        .build();
         assertCommandSuccess(command, index, editedTask);
 
         /* Case: clear tags -> cleared */
         index = INDEX_FIRST_TASK;
-        command =
-            EditCommand.COMMAND_WORD + " " + index.getOneBased() + " " + PREFIX_TAG.getPrefix();
+        command = EditCommand.COMMAND_WORD + " " + index.getOneBased() + " " + PREFIX_TAG.getPrefix();
         Task taskToEdit = getModel().getFilteredTaskList().get(index.getZeroBased());
         editedTask = new TaskBuilder(taskToEdit).withTags().build();
         assertCommandSuccess(command, index, editedTask);
@@ -136,7 +134,7 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
         showTasksWithName(KEYWORD_MATCHING_MEIER);
         int invalidIndex = getModel().getTaskCollection().getTaskList().size();
         assertCommandFailure(EditCommand.COMMAND_WORD + " " + invalidIndex + NAME_DESC_BOB,
-            Messages.MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
+                Messages.MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
 
         /* --------------------- Performing edit operation while a task card is selected -------------------------- */
 
@@ -147,61 +145,56 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
         index = INDEX_FIRST_TASK;
         selectTask(index);
         command = EditCommand.COMMAND_WORD + " " + index.getOneBased() + NAME_DESC_AMY
-            + PRIORITY_DESC_AMY + FREQUENCY_DESC_AMY + DEADLINE_DESC_AMY + TAG_DESC_FRIEND;
+                + PRIORITY_DESC_AMY + FREQUENCY_DESC_AMY + DEADLINE_DESC_AMY + TAG_DESC_FRIEND;
         // this can be misleading: card selection actually remains unchanged but the
         // browser's url is updated to reflect the new task's name
         Task amyWithAttachments = new TaskBuilder(AMY)
-            .withAttachments(getModel().getFilteredTaskList().get(index.getZeroBased()).getAttachments())
-            .build();
+                .withAttachments(getModel().getFilteredTaskList().get(index.getZeroBased()).getAttachments())
+                .build();
         assertCommandSuccess(command, index, amyWithAttachments, index);
 
         /* --------------------------------- Performing invalid edit operation -------------------------------------- */
 
         /* Case: invalid index (0) -> rejected */
         assertCommandFailure(EditCommand.COMMAND_WORD + " 0" + NAME_DESC_BOB,
-            String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
+                String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
 
         /* Case: invalid index (-1) -> rejected */
         assertCommandFailure(EditCommand.COMMAND_WORD + " -1" + NAME_DESC_BOB,
-            String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
+                String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
 
         /* Case: invalid index (size + 1) -> rejected */
         invalidIndex = getModel().getFilteredTaskList().size() + 1;
         assertCommandFailure(EditCommand.COMMAND_WORD + " " + invalidIndex + NAME_DESC_BOB,
-            Messages.MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
+                Messages.MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
 
         /* Case: missing index -> rejected */
         assertCommandFailure(EditCommand.COMMAND_WORD + NAME_DESC_BOB,
-            String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
+                String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
 
         /* Case: missing all fields -> rejected */
         assertCommandFailure(EditCommand.COMMAND_WORD + " " + INDEX_FIRST_TASK.getOneBased(),
-            EditCommand.MESSAGE_NOT_EDITED);
+                EditCommand.MESSAGE_NOT_EDITED);
 
         /* Case: invalid name -> rejected */
         assertCommandFailure(EditCommand.COMMAND_WORD + " " + INDEX_FIRST_TASK.getOneBased()
-                + INVALID_NAME_DESC,
-            Name.MESSAGE_NAME_CONSTRAINTS);
+                + INVALID_NAME_DESC, Name.MESSAGE_NAME_CONSTRAINTS);
 
         /* Case: invalid priority -> rejected */
         assertCommandFailure(EditCommand.COMMAND_WORD + " " + INDEX_FIRST_TASK.getOneBased()
-                + INVALID_PRIORITY_DESC,
-            Priority.MESSAGE_PRIORITY_CONSTRAINTS);
+                + INVALID_PRIORITY_DESC, Priority.MESSAGE_PRIORITY_CONSTRAINTS);
 
         /* Case: invalid frequency -> rejected */
         assertCommandFailure(EditCommand.COMMAND_WORD + " " + INDEX_FIRST_TASK.getOneBased()
-                + INVALID_FREQUENCY_DESC,
-            Frequency.MESSAGE_FREQUENCY_CONSTRAINTS);
+                + INVALID_FREQUENCY_DESC, Frequency.MESSAGE_FREQUENCY_CONSTRAINTS);
 
         /* Case: invalid deadline -> rejected */
         assertCommandFailure(EditCommand.COMMAND_WORD + " " + INDEX_FIRST_TASK.getOneBased()
-                + INVALID_DEADLINE_DESC,
-            Deadline.MESSAGE_DEADLINE_CONSTRAINTS);
+                + INVALID_DEADLINE_DESC, Deadline.MESSAGE_DEADLINE_CONSTRAINTS);
 
         /* Case: invalid tag -> rejected */
         assertCommandFailure(EditCommand.COMMAND_WORD + " " + INDEX_FIRST_TASK.getOneBased()
-                + INVALID_TAG_DESC,
-            Tag.MESSAGE_TAG_CONSTRAINTS);
+                + INVALID_TAG_DESC, Tag.MESSAGE_TAG_CONSTRAINTS);
     }
 
     /**
@@ -229,12 +222,12 @@ public class EditCommandSystemTest extends TaskCollectionSystemTest {
                                       Index expectedSelectedCardIndex) {
         Model expectedModel = getModel();
         expectedModel.updateTask(expectedModel.getFilteredTaskList().get(toEdit.getZeroBased()),
-            editedTask);
+                editedTask);
         expectedModel.updateFilteredTaskList(PREDICATE_SHOW_ALL_TASKS);
 
         assertCommandSuccess(command, expectedModel,
-            String.format(EditCommand.MESSAGE_EDIT_TASK_SUCCESS, editedTask),
-            expectedSelectedCardIndex);
+                String.format(EditCommand.MESSAGE_EDIT_TASK_SUCCESS, editedTask),
+                expectedSelectedCardIndex);
     }
 
     /**

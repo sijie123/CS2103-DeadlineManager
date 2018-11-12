@@ -26,12 +26,11 @@ import systemtests.ModelHelper;
  */
 public class TestApp extends MainApp {
 
-    public static final Path SAVE_LOCATION_FOR_TESTING = TestUtil
-        .getFilePathInSandboxFolder("sampleData.xml");
+    public static final Path SAVE_LOCATION_FOR_TESTING = TestUtil.getFilePathInSandboxFolder("sampleData.xml");
     public static final String APP_TITLE = "Test App";
 
     protected static final Path DEFAULT_PREF_FILE_LOCATION_FOR_TESTING =
-        TestUtil.getFilePathInSandboxFolder("pref_testing.json");
+            TestUtil.getFilePathInSandboxFolder("pref_testing.json");
     protected Supplier<ReadOnlyTaskCollection> initialDataSupplier = () -> null;
     protected Path saveFileLocation = SAVE_LOCATION_FOR_TESTING;
 
@@ -46,7 +45,7 @@ public class TestApp extends MainApp {
         // If some initial local data has been provided, write those to the file
         if (initialDataSupplier.get() != null) {
             createDataFileWithData(new XmlSerializableTaskCollection(this.initialDataSupplier.get()),
-                this.saveFileLocation);
+                    this.saveFileLocation);
         }
     }
 

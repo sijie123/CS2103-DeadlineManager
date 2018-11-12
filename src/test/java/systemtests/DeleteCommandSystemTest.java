@@ -23,7 +23,7 @@ import seedu.address.model.task.Task;
 public class DeleteCommandSystemTest extends TaskCollectionSystemTest {
 
     private static final String MESSAGE_INVALID_DELETE_COMMAND_FORMAT =
-        String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE);
+            String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE);
 
     @Test
     public void delete() {
@@ -32,8 +32,8 @@ public class DeleteCommandSystemTest extends TaskCollectionSystemTest {
         /* Case: delete the first task in the list, command with leading spaces and trailing spaces -> deleted */
         Model expectedModel = getModel();
         String command =
-            "     " + DeleteCommand.COMMAND_WORD + "      " + INDEX_FIRST_TASK.getOneBased()
-                + "       ";
+                "     " + DeleteCommand.COMMAND_WORD + "      " + INDEX_FIRST_TASK.getOneBased()
+                        + "       ";
         Task deletedTask = removePerson(expectedModel, INDEX_FIRST_TASK);
         String expectedResultMessage = String.format(MESSAGE_DELETE_TASK_SUCCESS, deletedTask);
         assertCommandSuccess(command, expectedModel, expectedResultMessage);
@@ -99,17 +99,15 @@ public class DeleteCommandSystemTest extends TaskCollectionSystemTest {
 
         /* Case: invalid index (size + 1) -> rejected */
         Index outOfBoundsIndex = Index.fromOneBased(
-            getModel().getTaskCollection().getTaskList().size() + 1);
+                getModel().getTaskCollection().getTaskList().size() + 1);
         command = DeleteCommand.COMMAND_WORD + " " + outOfBoundsIndex.getOneBased();
         assertCommandFailure(command, MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
 
         /* Case: invalid arguments (alphabets) -> rejected */
-        assertCommandFailure(DeleteCommand.COMMAND_WORD + " abc",
-            MESSAGE_INVALID_DELETE_COMMAND_FORMAT);
+        assertCommandFailure(DeleteCommand.COMMAND_WORD + " abc", MESSAGE_INVALID_DELETE_COMMAND_FORMAT);
 
         /* Case: invalid arguments (extra argument) -> rejected */
-        assertCommandFailure(DeleteCommand.COMMAND_WORD + " 1 abc",
-            MESSAGE_INVALID_DELETE_COMMAND_FORMAT);
+        assertCommandFailure(DeleteCommand.COMMAND_WORD + " 1 abc", MESSAGE_INVALID_DELETE_COMMAND_FORMAT);
 
         /* Case: mixed case command word -> rejected */
         assertCommandFailure("DelETE 1", MESSAGE_UNKNOWN_COMMAND);
@@ -139,8 +137,8 @@ public class DeleteCommandSystemTest extends TaskCollectionSystemTest {
         String expectedResultMessage = String.format(MESSAGE_DELETE_TASK_SUCCESS, deletedTask);
 
         assertCommandSuccess(
-            DeleteCommand.COMMAND_WORD + " " + toDelete.getOneBased(), expectedModel,
-            expectedResultMessage);
+                DeleteCommand.COMMAND_WORD + " " + toDelete.getOneBased(), expectedModel,
+                expectedResultMessage);
     }
 
     /**

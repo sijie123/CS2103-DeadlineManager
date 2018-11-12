@@ -129,7 +129,7 @@ public class ArgumentTokenizerTest {
         argMultimap = ArgumentTokenizer.tokenize(argsString, pSlash, dashT, hatQ);
         assertArgumentAbsent(argMultimap, unknownPrefix);
         assertPreamblePresent(argMultimap,
-            argsString); // Unknown prefix is taken as part of preamble
+                argsString); // Unknown prefix is taken as part of preamble
     }
 
     @Test

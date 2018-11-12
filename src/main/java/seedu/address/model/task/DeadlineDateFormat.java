@@ -88,7 +88,7 @@ public class DeadlineDateFormat extends DateFormat {
     }
 
     /**
-     * Set the current Calendar to the given date.
+     * Set the current Calendar to the given date, truncating the date to the nearest day.
      *
      * @param dayInt   The day of month.
      * @param monthInt The month of year.
@@ -106,7 +106,7 @@ public class DeadlineDateFormat extends DateFormat {
     }
 
     /**
-     * Set the current Calendar to the given date, using the current year.
+     * Set the current Calendar to the given date, using the current year, truncating the date to the nearest day.
      *
      * @param dayInt   The day of month.
      * @param monthInt The month of year.
@@ -125,6 +125,13 @@ public class DeadlineDateFormat extends DateFormat {
             throw new NumberFormatException();
         }
 
+        truncateToDay();
+    }
+
+    /**
+     * Truncate the current calendar to the nearest day.
+     */
+    private void truncateToDay() {
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);

@@ -28,7 +28,7 @@ public class ExportCommandTest {
     @Test
     public void execute_exportOnExistingFile_exceptionThrown() {
         IOException expectedException = new IOException(
-            String.format(StorageManager.MESSAGE_WRITE_FILE_EXISTS_ERROR, defaultFile));
+                String.format(StorageManager.MESSAGE_WRITE_FILE_EXISTS_ERROR, defaultFile));
         ExportCommand testCommand = new ExportCommand(defaultFile, false, false);
         ModelStubWithExportTaskCollection modelStub = new ModelStubWithExportTaskCollection(defaultFile, testCommand);
         assertCommandFailure(testCommand, modelStub, commandHistory,
@@ -40,7 +40,7 @@ public class ExportCommandTest {
         ExportCommand testCommand = new ExportCommand(temporaryFilePath, false, false);
         ModelStubWithExportTaskCollection modelStub = new ModelStubWithExportTaskCollection(defaultFile, testCommand);
         assertCommandSuccess(testCommand, modelStub, commandHistory,
-                 String.format(ExportCommand.MESSAGE_SUCCESS, temporaryFilePath), modelStub);
+                String.format(ExportCommand.MESSAGE_SUCCESS, temporaryFilePath), modelStub);
     }
 
     @Test
@@ -48,15 +48,17 @@ public class ExportCommandTest {
         ExportCommand testCommand = new ExportCommand(defaultFile, true, false);
         ModelStubWithExportTaskCollection modelStub = new ModelStubWithExportTaskCollection(defaultFile, testCommand);
         assertCommandSuccess(testCommand, modelStub, commandHistory,
-            String.format(ExportCommand.MESSAGE_SUCCESS, defaultFile), modelStub);
+                String.format(ExportCommand.MESSAGE_SUCCESS, defaultFile), modelStub);
     }
 
     private class ModelStubWithExportTaskCollection extends ModelStub {
         private String filename = "";
         private ExportCommand testCommand = null;
+
         public ModelStubWithExportTaskCollection(String defaultFile) {
             filename = defaultFile;
         }
+
         public ModelStubWithExportTaskCollection(String defaultFile, ExportCommand importCommand) {
             this(defaultFile);
             testCommand = importCommand;
@@ -80,7 +82,7 @@ public class ExportCommandTest {
             }
             if (filename.equals(this.filename)) {
                 Exception fileExistException = new IOException(
-                    String.format(Storage.MESSAGE_WRITE_FILE_EXISTS_ERROR, this.filename));
+                        String.format(Storage.MESSAGE_WRITE_FILE_EXISTS_ERROR, this.filename));
                 testCommand.handleImportExportExceptionEvent(new ImportExportExceptionEvent(fileExistException));
                 return;
             }

@@ -59,8 +59,7 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
          */
         Task toAdd = AMY;
 
-        String command =
-            "   " + AddCommand.COMMAND_WORD + "  " + NAME_DESC_AMY + " " + PRIORITY_DESC_AMY
+        String command = "   " + AddCommand.COMMAND_WORD + "  " + NAME_DESC_AMY + " " + PRIORITY_DESC_AMY
                 + " " + FREQUENCY_DESC_AMY + " " + DEADLINE_DESC_AMY + "   " + TAG_DESC_FRIEND + " ";
         assertCommandSuccess(command, toAdd);
 
@@ -78,7 +77,7 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
         /* Case: add a task with all fields same as another task in the deadline manager except name -> added */
         toAdd = new TaskBuilder(AMY).withName(VALID_NAME_BOB).build();
         command = AddCommand.COMMAND_WORD + NAME_DESC_BOB + PRIORITY_DESC_AMY + FREQUENCY_DESC_AMY
-            + DEADLINE_DESC_AMY + TAG_DESC_FRIEND;
+                + DEADLINE_DESC_AMY + TAG_DESC_FRIEND;
         assertCommandSuccess(command, toAdd);
 
         /* Case: add a task with all fields same as another task in the deadline manager except priority
@@ -102,7 +101,7 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
         /* Case: add a task with tags, command with parameters in random order -> added */
         toAdd = BOB;
         command = AddCommand.COMMAND_WORD + TAG_DESC_FRIEND + PRIORITY_DESC_BOB + FREQUENCY_DESC_BOB
-            + DEADLINE_DESC_BOB + NAME_DESC_BOB + TAG_DESC_HUSBAND;
+                + DEADLINE_DESC_BOB + NAME_DESC_BOB + TAG_DESC_HUSBAND;
         assertCommandSuccess(command, toAdd);
 
         /* Case: add a task, missing tags -> added */
@@ -147,40 +146,39 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
         /* Case: missing name -> rejected */
         command = AddCommand.COMMAND_WORD + PRIORITY_DESC_AMY + FREQUENCY_DESC_AMY + DEADLINE_DESC_AMY;
         assertCommandFailure(command,
-            String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE));
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE));
 
         /* Case: missing deadline -> rejected */
         command = AddCommand.COMMAND_WORD + NAME_DESC_AMY + PRIORITY_DESC_AMY + FREQUENCY_DESC_AMY;
         assertCommandFailure(command,
-            String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE));
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE));
 
         /* Case: invalid keyword -> rejected */
         command = "adds " + TaskUtil.getTaskDetails(toAdd);
         assertCommandFailure(command, Messages.MESSAGE_UNKNOWN_COMMAND);
 
         /* Case: invalid name -> rejected */
-        command =
-            AddCommand.COMMAND_WORD + INVALID_NAME_DESC + PRIORITY_DESC_AMY + FREQUENCY_DESC_AMY + DEADLINE_DESC_AMY;
+        command = AddCommand.COMMAND_WORD + INVALID_NAME_DESC + PRIORITY_DESC_AMY + FREQUENCY_DESC_AMY
+                + DEADLINE_DESC_AMY;
         assertCommandFailure(command, Name.MESSAGE_NAME_CONSTRAINTS);
 
         /* Case: invalid priority -> rejected */
-        command =
-            AddCommand.COMMAND_WORD + NAME_DESC_AMY + INVALID_PRIORITY_DESC + FREQUENCY_DESC_AMY + DEADLINE_DESC_AMY;
+        command = AddCommand.COMMAND_WORD + NAME_DESC_AMY + INVALID_PRIORITY_DESC + FREQUENCY_DESC_AMY
+                + DEADLINE_DESC_AMY;
         assertCommandFailure(command, Priority.MESSAGE_PRIORITY_CONSTRAINTS);
 
         /* Case: invalid frequency -> rejected */
-        command =
-            AddCommand.COMMAND_WORD + NAME_DESC_AMY + PRIORITY_DESC_AMY + INVALID_FREQUENCY_DESC + DEADLINE_DESC_AMY;
+        command = AddCommand.COMMAND_WORD + NAME_DESC_AMY + PRIORITY_DESC_AMY + INVALID_FREQUENCY_DESC
+                + DEADLINE_DESC_AMY;
         assertCommandFailure(command, Frequency.MESSAGE_FREQUENCY_CONSTRAINTS);
 
         /* Case: invalid deadline -> rejected */
-        command =
-            AddCommand.COMMAND_WORD + NAME_DESC_AMY + PRIORITY_DESC_AMY + FREQUENCY_DESC_AMY + INVALID_DEADLINE_DESC;
+        command = AddCommand.COMMAND_WORD + NAME_DESC_AMY + PRIORITY_DESC_AMY
+                + FREQUENCY_DESC_AMY + INVALID_DEADLINE_DESC;
         assertCommandFailure(command, Deadline.MESSAGE_DEADLINE_CONSTRAINTS);
 
         /* Case: invalid tag -> rejected */
-        command =
-            AddCommand.COMMAND_WORD + NAME_DESC_AMY + PRIORITY_DESC_AMY + FREQUENCY_DESC_AMY + DEADLINE_DESC_AMY
+        command = AddCommand.COMMAND_WORD + NAME_DESC_AMY + PRIORITY_DESC_AMY + FREQUENCY_DESC_AMY + DEADLINE_DESC_AMY
                 + INVALID_TAG_DESC;
         assertCommandFailure(command, Tag.MESSAGE_TAG_CONSTRAINTS);
 
@@ -208,8 +206,8 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
      */
     private void assertCommandSuccess(Task toAdd) {
         Task toAddWithoutAttachment = new TaskBuilder(toAdd)
-            .withAttachments()
-            .build();
+                .withAttachments()
+                .build();
         assertCommandSuccess(TaskUtil.getAddCommand(toAddWithoutAttachment), toAddWithoutAttachment);
     }
 
@@ -222,8 +220,8 @@ public class AddCommandSystemTest extends TaskCollectionSystemTest {
     private void assertCommandSuccess(String command, Task toAdd) {
         Model expectedModel = getModel();
         Task toAddWithoutAttachments = new TaskBuilder(toAdd)
-            .withAttachments()
-            .build();
+                .withAttachments()
+                .build();
         expectedModel.addTask(toAddWithoutAttachments);
         String expectedResultMessage = String.format(AddCommand.MESSAGE_SUCCESS, toAddWithoutAttachments);
 

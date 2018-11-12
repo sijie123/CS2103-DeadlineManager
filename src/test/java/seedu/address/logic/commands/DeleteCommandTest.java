@@ -34,8 +34,7 @@ public class DeleteCommandTest {
         Task taskToDelete = model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased());
         DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_TASK);
 
-        String expectedMessage = String
-            .format(DeleteCommand.MESSAGE_DELETE_TASK_SUCCESS, taskToDelete);
+        String expectedMessage = String.format(DeleteCommand.MESSAGE_DELETE_TASK_SUCCESS, taskToDelete);
 
         ModelManager expectedModel = new ModelManager(model.getTaskCollection(), new UserPrefs());
         expectedModel.deleteTask(taskToDelete);
@@ -49,8 +48,7 @@ public class DeleteCommandTest {
         Index outOfBoundIndex = Index.fromOneBased(model.getFilteredTaskList().size() + 1);
         DeleteCommand deleteCommand = new DeleteCommand(outOfBoundIndex);
 
-        assertCommandFailure(deleteCommand, model, commandHistory,
-            Messages.MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
+        assertCommandFailure(deleteCommand, model, commandHistory, Messages.MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
     }
 
     @Test
@@ -60,8 +58,7 @@ public class DeleteCommandTest {
         Task taskToDelete = model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased());
         DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_TASK);
 
-        String expectedMessage = String
-            .format(DeleteCommand.MESSAGE_DELETE_TASK_SUCCESS, taskToDelete);
+        String expectedMessage = String.format(DeleteCommand.MESSAGE_DELETE_TASK_SUCCESS, taskToDelete);
 
         Model expectedModel = new ModelManager(model.getTaskCollection(), new UserPrefs());
         expectedModel.deleteTask(taskToDelete);
@@ -81,8 +78,7 @@ public class DeleteCommandTest {
 
         DeleteCommand deleteCommand = new DeleteCommand(outOfBoundIndex);
 
-        assertCommandFailure(deleteCommand, model, commandHistory,
-            Messages.MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
+        assertCommandFailure(deleteCommand, model, commandHistory, Messages.MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
     }
 
     @Test
@@ -99,12 +95,11 @@ public class DeleteCommandTest {
         // undo -> reverts taskcollection back to previous state and filtered task list to show all tasks
         expectedModel.undoTaskCollection();
         assertCommandSuccess(new UndoCommand(), model, commandHistory, UndoCommand.MESSAGE_SUCCESS,
-            expectedModel);
+                expectedModel);
 
         // redo -> same first task deleted again
         expectedModel.redoTaskCollection();
-        assertCommandSuccess(new RedoCommand(), model, commandHistory, RedoCommand.MESSAGE_SUCCESS,
-            expectedModel);
+        assertCommandSuccess(new RedoCommand(), model, commandHistory, RedoCommand.MESSAGE_SUCCESS, expectedModel);
     }
 
     @Test
@@ -113,8 +108,7 @@ public class DeleteCommandTest {
         DeleteCommand deleteCommand = new DeleteCommand(outOfBoundIndex);
 
         // execution failed -> deadline manager state not added into model
-        assertCommandFailure(deleteCommand, model, commandHistory,
-            Messages.MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
+        assertCommandFailure(deleteCommand, model, commandHistory, Messages.MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
 
         // single deadline manager state in model -> undoCommand and redoCommand fail
         assertCommandFailure(new UndoCommand(), model, commandHistory, UndoCommand.MESSAGE_FAILURE);
@@ -142,15 +136,12 @@ public class DeleteCommandTest {
 
         // undo -> reverts taskcollection back to previous state and filtered task list to show all tasks
         expectedModel.undoTaskCollection();
-        assertCommandSuccess(new UndoCommand(), model, commandHistory, UndoCommand.MESSAGE_SUCCESS,
-            expectedModel);
+        assertCommandSuccess(new UndoCommand(), model, commandHistory, UndoCommand.MESSAGE_SUCCESS, expectedModel);
 
-        assertNotEquals(taskToDelete,
-            model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased()));
+        assertNotEquals(taskToDelete, model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased()));
         // redo -> deletes same second task in unfiltered task list
         expectedModel.redoTaskCollection();
-        assertCommandSuccess(new RedoCommand(), model, commandHistory, RedoCommand.MESSAGE_SUCCESS,
-            expectedModel);
+        assertCommandSuccess(new RedoCommand(), model, commandHistory, RedoCommand.MESSAGE_SUCCESS, expectedModel);
     }
 
     @Test

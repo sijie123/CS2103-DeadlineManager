@@ -73,11 +73,11 @@ public class XmlAdaptedTask {
         frequency = source.getFrequency().toString();
         deadline = source.getDeadline().toString();
         tagged = source.getTags().stream()
-            .map(XmlAdaptedTag::new)
-            .collect(Collectors.toList());
+                .map(XmlAdaptedTag::new)
+                .collect(Collectors.toList());
         attachments = source.getAttachments().stream()
-            .map(XmlAdaptedAttachment::new)
-            .collect(Collectors.toList());
+                .map(XmlAdaptedAttachment::new)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -91,7 +91,7 @@ public class XmlAdaptedTask {
 
         if (name == null) {
             throw new IllegalValueException(
-                String.format(MISSING_FIELD_MESSAGE_FORMAT, Name.class.getSimpleName()));
+                    String.format(MISSING_FIELD_MESSAGE_FORMAT, Name.class.getSimpleName()));
         }
         if (!Name.isValidName(name)) {
             throw new IllegalValueException(Name.MESSAGE_NAME_CONSTRAINTS);
@@ -100,7 +100,7 @@ public class XmlAdaptedTask {
 
         if (priority == null) {
             throw new IllegalValueException(
-                String.format(MISSING_FIELD_MESSAGE_FORMAT, Priority.class.getSimpleName()));
+                    String.format(MISSING_FIELD_MESSAGE_FORMAT, Priority.class.getSimpleName()));
         }
         if (!Priority.isValidPriority(priority)) {
             throw new IllegalValueException(Priority.MESSAGE_PRIORITY_CONSTRAINTS);
@@ -109,7 +109,7 @@ public class XmlAdaptedTask {
 
         if (frequency == null) {
             throw new IllegalValueException(
-                String.format(MISSING_FIELD_MESSAGE_FORMAT, Frequency.class.getSimpleName()));
+                    String.format(MISSING_FIELD_MESSAGE_FORMAT, Frequency.class.getSimpleName()));
         }
         if (!Frequency.isValidFrequency(frequency)) {
             throw new IllegalValueException(Frequency.MESSAGE_FREQUENCY_CONSTRAINTS);
@@ -118,7 +118,7 @@ public class XmlAdaptedTask {
 
         if (deadline == null) {
             throw new IllegalValueException(
-                String.format(MISSING_FIELD_MESSAGE_FORMAT, Deadline.class.getSimpleName()));
+                    String.format(MISSING_FIELD_MESSAGE_FORMAT, Deadline.class.getSimpleName()));
         }
         Deadline modelDeadline;
         try {
@@ -148,8 +148,7 @@ public class XmlAdaptedTask {
             }
         }
 
-        return new Task(modelName, modelPriority, modelFrequency,
-            modelDeadline, modelTags, modelAttachments);
+        return new Task(modelName, modelPriority, modelFrequency, modelDeadline, modelTags, modelAttachments);
     }
 
     @Override
@@ -164,9 +163,9 @@ public class XmlAdaptedTask {
 
         XmlAdaptedTask otherPerson = (XmlAdaptedTask) other;
         return Objects.equals(name, otherPerson.name)
-            && Objects.equals(priority, otherPerson.priority)
-            && Objects.equals(frequency, otherPerson.frequency)
-            && tagged.equals(otherPerson.tagged)
-            && attachments.equals(otherPerson.attachments);
+                && Objects.equals(priority, otherPerson.priority)
+                && Objects.equals(frequency, otherPerson.frequency)
+                && tagged.equals(otherPerson.tagged)
+                && attachments.equals(otherPerson.attachments);
     }
 }

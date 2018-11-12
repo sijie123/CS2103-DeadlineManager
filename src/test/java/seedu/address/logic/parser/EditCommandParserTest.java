@@ -42,7 +42,7 @@ public class EditCommandParserTest {
     private static final String TAG_EMPTY = " " + PREFIX_TAG;
 
     private static final String MESSAGE_INVALID_FORMAT =
-        String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE);
+            String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE);
 
     private EditCommandParser parser = new EditCommandParser();
 
@@ -76,13 +76,13 @@ public class EditCommandParserTest {
     @Test
     public void parse_invalidValue_failure() {
         assertParseFailure(parser, "1" + INVALID_NAME_DESC,
-            Name.MESSAGE_NAME_CONSTRAINTS); // invalid name
+                Name.MESSAGE_NAME_CONSTRAINTS); // invalid name
         assertParseFailure(parser, "1" + INVALID_PRIORITY_DESC,
-            Priority.MESSAGE_PRIORITY_CONSTRAINTS); // invalid priority
+                Priority.MESSAGE_PRIORITY_CONSTRAINTS); // invalid priority
         assertParseFailure(parser, "1" + INVALID_FREQUENCY_DESC,
-            Frequency.MESSAGE_FREQUENCY_CONSTRAINTS); // invalid frequency
+                Frequency.MESSAGE_FREQUENCY_CONSTRAINTS); // invalid frequency
         assertParseFailure(parser, "1" + INVALID_TAG_DESC,
-            Tag.MESSAGE_TAG_CONSTRAINTS); // invalid tag
+                Tag.MESSAGE_TAG_CONSTRAINTS); // invalid tag
 
         // valid priority followed by invalid priority. Fails because two priorities are specified.
         assertParseFailure(parser, "1" + PRIORITY_DESC_BOB + INVALID_PRIORITY_DESC, MESSAGE_INVALID_FORMAT);
@@ -93,28 +93,29 @@ public class EditCommandParserTest {
         // while parsing {@code PREFIX_TAG} alone will reset the tags of the {@code Task} being edited,
         // parsing it together with a valid tag results in error
         assertParseFailure(parser, "1" + TAG_DESC_FRIEND + TAG_DESC_HUSBAND + TAG_EMPTY,
-            Tag.MESSAGE_TAG_CONSTRAINTS);
+                Tag.MESSAGE_TAG_CONSTRAINTS);
         assertParseFailure(parser, "1" + TAG_DESC_FRIEND + TAG_EMPTY + TAG_DESC_HUSBAND,
-            Tag.MESSAGE_TAG_CONSTRAINTS);
+                Tag.MESSAGE_TAG_CONSTRAINTS);
         assertParseFailure(parser, "1" + TAG_EMPTY + TAG_DESC_FRIEND + TAG_DESC_HUSBAND,
-            Tag.MESSAGE_TAG_CONSTRAINTS);
+                Tag.MESSAGE_TAG_CONSTRAINTS);
 
         // multiple invalid values, but only the first invalid value is captured
         assertParseFailure(parser,
-            "1" + INVALID_NAME_DESC + INVALID_PRIORITY_DESC + INVALID_FREQUENCY_DESC, Name.MESSAGE_NAME_CONSTRAINTS);
+                "1" + INVALID_NAME_DESC + INVALID_PRIORITY_DESC + INVALID_FREQUENCY_DESC,
+                Name.MESSAGE_NAME_CONSTRAINTS);
     }
 
     @Test
     public void parse_allFieldsSpecified_success() {
         Index targetIndex = INDEX_SECOND_TASK;
         String userInput = targetIndex.getOneBased() + PRIORITY_DESC_BOB + FREQUENCY_DESC_BOB
-            + TAG_DESC_HUSBAND + NAME_DESC_AMY + TAG_DESC_FRIEND;
+                + TAG_DESC_HUSBAND + NAME_DESC_AMY + TAG_DESC_FRIEND;
 
         EditTaskDescriptor descriptor = new EditTaskDescriptorBuilder()
-            .withName(VALID_NAME_AMY)
-            .withPriority(VALID_PRIORITY_BOB)
-            .withFrequency(VALID_FREQUENCY_BOB)
-            .withTags(VALID_TAG_HUSBAND, VALID_TAG_FRIEND).build();
+                .withName(VALID_NAME_AMY)
+                .withPriority(VALID_PRIORITY_BOB)
+                .withFrequency(VALID_FREQUENCY_BOB)
+                .withTags(VALID_TAG_HUSBAND, VALID_TAG_FRIEND).build();
         EditCommand expectedCommand = new EditCommand(targetIndex, descriptor);
 
         assertParseSuccess(parser, userInput, expectedCommand);
@@ -126,9 +127,9 @@ public class EditCommandParserTest {
         String userInput = targetIndex.getOneBased() + PRIORITY_DESC_BOB + FREQUENCY_DESC_BOB;
 
         EditTaskDescriptor descriptor = new EditTaskDescriptorBuilder()
-            .withPriority(VALID_PRIORITY_BOB)
-            .withFrequency(VALID_FREQUENCY_BOB)
-            .build();
+                .withPriority(VALID_PRIORITY_BOB)
+                .withFrequency(VALID_FREQUENCY_BOB)
+                .build();
         EditCommand expectedCommand = new EditCommand(targetIndex, descriptor);
 
         assertParseSuccess(parser, userInput, expectedCommand);
@@ -140,7 +141,7 @@ public class EditCommandParserTest {
         Index targetIndex = INDEX_THIRD_TASK;
         String userInput = targetIndex.getOneBased() + NAME_DESC_AMY;
         EditTaskDescriptor descriptor = new EditTaskDescriptorBuilder().withName(VALID_NAME_AMY)
-            .build();
+                .build();
         EditCommand expectedCommand = new EditCommand(targetIndex, descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
 
@@ -167,22 +168,19 @@ public class EditCommandParserTest {
     public void parse_multipleRepeatedFields_failure() {
         //priority
         Index targetIndex = INDEX_FIRST_TASK;
-        String userInput =
-            targetIndex.getOneBased() + PRIORITY_DESC_AMY + TAG_DESC_FRIEND + PRIORITY_DESC_AMY
+        String userInput = targetIndex.getOneBased() + PRIORITY_DESC_AMY + TAG_DESC_FRIEND + PRIORITY_DESC_AMY
                 + TAG_DESC_FRIEND + PRIORITY_DESC_BOB + TAG_DESC_HUSBAND;
         assertParseFailure(parser, userInput, MESSAGE_INVALID_FORMAT);
 
         //garbage priority
         targetIndex = INDEX_FIRST_TASK;
-        userInput =
-            targetIndex.getOneBased() + PRIORITY_DESC_AMY + PRIORITY_DESC_BOB;
+        userInput = targetIndex.getOneBased() + PRIORITY_DESC_AMY + PRIORITY_DESC_BOB;
 
         assertParseFailure(parser, userInput, MESSAGE_INVALID_FORMAT);
 
         //frequency
         targetIndex = INDEX_FIRST_TASK;
-        userInput =
-            targetIndex.getOneBased() + FREQUENCY_DESC_AMY + TAG_DESC_FRIEND + FREQUENCY_DESC_AMY
+        userInput = targetIndex.getOneBased() + FREQUENCY_DESC_AMY + TAG_DESC_FRIEND + FREQUENCY_DESC_AMY
                 + TAG_DESC_FRIEND + FREQUENCY_DESC_BOB + TAG_DESC_HUSBAND;
 
         assertParseFailure(parser, userInput, MESSAGE_INVALID_FORMAT);
@@ -194,7 +192,7 @@ public class EditCommandParserTest {
         Index targetIndex = INDEX_FIRST_TASK;
         String userInput = targetIndex.getOneBased() + TAG_DESC_HUSBAND + TAG_DESC_FRIEND;
         EditCommand.EditTaskDescriptor descriptor = new EditTaskDescriptorBuilder()
-            .withTags(VALID_TAG_HUSBAND, VALID_TAG_FRIEND).build();
+                .withTags(VALID_TAG_HUSBAND, VALID_TAG_FRIEND).build();
         EditCommand expectedCommand = new EditCommand(targetIndex, descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
 
@@ -202,8 +200,8 @@ public class EditCommandParserTest {
         targetIndex = INDEX_FIRST_TASK;
         userInput = targetIndex.getOneBased() + PRIORITY_DESC_BOB + TAG_DESC_HUSBAND + TAG_DESC_FRIEND;
         descriptor = new EditTaskDescriptorBuilder()
-            .withTags(VALID_TAG_HUSBAND, VALID_TAG_FRIEND)
-            .withPriority(VALID_PRIORITY_BOB).build();
+                .withTags(VALID_TAG_HUSBAND, VALID_TAG_FRIEND)
+                .withPriority(VALID_PRIORITY_BOB).build();
         expectedCommand = new EditCommand(targetIndex, descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
     }

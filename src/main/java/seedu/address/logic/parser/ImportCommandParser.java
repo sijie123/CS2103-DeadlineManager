@@ -32,12 +32,10 @@ public class ImportCommandParser implements Parser<ImportCommand> {
     public ImportCommand parse(String args) throws SimpleParseException {
         ArgumentMultimap argMultimap;
         try {
-            argMultimap =
-                ArgumentTokenizer
-                    .tokenize(args, PREFIX_FILEPATH, PREFIX_RESOLVER);
+            argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_FILEPATH, PREFIX_RESOLVER);
         } catch (TokenizationException ime) {
             throw new SimpleParseException(
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, ImportCommand.MESSAGE_USAGE), ime);
+                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, ImportCommand.MESSAGE_USAGE), ime);
         }
         String filename = argMultimap.getValue(PREFIX_FILEPATH).orElseThrow(() -> new SimpleParseException(
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, ImportCommand.MESSAGE_USAGE)));
@@ -55,6 +53,7 @@ public class ImportCommandParser implements Parser<ImportCommand> {
 
     /**
      * Determines which resolver to use based on the user input.
+     *
      * @param input user command arguments
      * @return the appropriate ImportConflictResolver
      * @throws SimpleParseException if user's argument is not recognised
@@ -69,7 +68,7 @@ public class ImportCommandParser implements Parser<ImportCommand> {
             return new IgnoreImportConflictResolver();
         default:
             throw new SimpleParseException(
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, ImportCommand.MESSAGE_USAGE));
+                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, ImportCommand.MESSAGE_USAGE));
         }
     }
 }

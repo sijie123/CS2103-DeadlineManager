@@ -24,7 +24,7 @@ import seedu.address.storage.xmlstorage.XmlTaskCollectionStorage;
 public class XmlTaskCollectionStorageTest {
 
     private static final Path TEST_DATA_FOLDER = Paths
-        .get("src", "test", "data", "XmlTaskCollectionStorageTest");
+            .get("src", "test", "data", "XmlTaskCollectionStorageTest");
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -39,15 +39,15 @@ public class XmlTaskCollectionStorageTest {
     }
 
     private java.util.Optional<ReadOnlyTaskCollection> readTaskCollection(String filePath)
-        throws Exception {
+            throws Exception {
         return new XmlTaskCollectionStorage(Paths.get(filePath))
-            .readTaskCollection(addToTestDataPathIfNotNull(filePath));
+                .readTaskCollection(addToTestDataPathIfNotNull(filePath));
     }
 
     private Path addToTestDataPathIfNotNull(String prefsFileInTestDataFolder) {
         return prefsFileInTestDataFolder != null
-            ? TEST_DATA_FOLDER.resolve(prefsFileInTestDataFolder)
-            : null;
+                ? TEST_DATA_FOLDER.resolve(prefsFileInTestDataFolder)
+                : null;
     }
 
     @Test
@@ -68,14 +68,14 @@ public class XmlTaskCollectionStorageTest {
 
     @Test
     public void readTaskCollection_invalidPersonTaskCollection_throwDataConversionException()
-        throws Exception {
+            throws Exception {
         thrown.expect(DataConversionException.class);
         readTaskCollection("invalidTaskInTaskCollection.xml");
     }
 
     @Test
     public void readTaskCollection_invalidAndValidPersonTaskCollection_throwDataConversionException()
-        throws Exception {
+            throws Exception {
         thrown.expect(DataConversionException.class);
         readTaskCollection("invalidAndValidTaskInTaskCollection.xml");
     }
@@ -118,7 +118,7 @@ public class XmlTaskCollectionStorageTest {
     private void saveTaskCollection(ReadOnlyTaskCollection taskCollection, String filePath) {
         try {
             new XmlTaskCollectionStorage(Paths.get(filePath))
-                .saveTaskCollection(taskCollection, addToTestDataPathIfNotNull(filePath));
+                    .saveTaskCollection(taskCollection, addToTestDataPathIfNotNull(filePath));
         } catch (IOException ioe) {
             throw new AssertionError("There should not be an error writing to the file.", ioe);
         }

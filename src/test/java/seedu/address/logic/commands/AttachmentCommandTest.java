@@ -88,11 +88,11 @@ public class AttachmentCommandTest {
         Task task = model.getFilteredTaskList().get(0);
         String nonExistentFilePath = nonExistentFile.getPath();
         AttachmentCommand.AttachmentAction action =
-            new AttachmentCommand.AddAttachmentAction(nonExistentFilePath);
+                new AttachmentCommand.AddAttachmentAction(nonExistentFilePath);
         AttachmentCommand attachmentCommand = new AttachmentCommand(INDEX_FIRST_TASK, action);
 
         String expectedMessage = String.format(
-            AttachmentCommand.AddAttachmentAction.MESSAGE_ADD_NOT_A_FILE, nonExistentFilePath);
+                AttachmentCommand.AddAttachmentAction.MESSAGE_ADD_NOT_A_FILE, nonExistentFilePath);
 
         assertCommandFailure(attachmentCommand, model, commandHistory, expectedMessage);
     }
@@ -102,16 +102,16 @@ public class AttachmentCommandTest {
         File tempFile = createTestFile();
         String filePath = tempFile.getAbsolutePath();
         AttachmentCommand.AttachmentAction action =
-            new AttachmentCommand.AddAttachmentAction(filePath);
+                new AttachmentCommand.AddAttachmentAction(filePath);
         AttachmentCommand attachmentCommand = new AttachmentCommand(INDEX_FIRST_TASK, action);
         String expectedMessage = String.format(
-            AttachmentCommand.AddAttachmentAction.MESSAGE_SUCCESS, tempFile.getName());
+                AttachmentCommand.AddAttachmentAction.MESSAGE_SUCCESS, tempFile.getName());
         Task expectedTask = addAttachmentToTask(
-            model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased()),
-            new Attachment(tempFile));
+                model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased()),
+                new Attachment(tempFile));
 
         Model expectedModel = new ModelManager(new TaskCollection(model.getTaskCollection()),
-            new UserPrefs());
+                new UserPrefs());
         expectedModel.updateTask(model.getFilteredTaskList().get(0), expectedTask);
         expectedModel.commitTaskCollection();
 
@@ -125,17 +125,17 @@ public class AttachmentCommandTest {
         File tempFile = createTestFile();
         // Construct a file with one attachment
         Task task = addAttachmentToTask(
-            model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased()),
-            new Attachment(tempFile));
+                model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased()),
+                new Attachment(tempFile));
         Model modelStub = new ModelManager(new TaskCollection(model.getTaskCollection()),
-            new UserPrefs());
+                new UserPrefs());
         modelStub.updateTask(model.getFilteredTaskList().get(0), task);
         modelStub.commitTaskCollection();
 
         //Attempt to add it again using absolute path -> should fail
         String filePath = tempFile.getAbsolutePath();
         AttachmentCommand.AttachmentAction action =
-            new AttachmentCommand.AddAttachmentAction(filePath);
+                new AttachmentCommand.AddAttachmentAction(filePath);
         AttachmentCommand attachmentCommand = new AttachmentCommand(INDEX_FIRST_TASK, action);
         String expectedMessage = Attachment.MESSAGE_DUPLICATE_ATTACHMENT_NAME;
         assertCommandFailure(attachmentCommand, modelStub, commandHistory, expectedMessage);
@@ -151,7 +151,7 @@ public class AttachmentCommandTest {
         action = new AttachmentCommand.AddAttachmentAction(filePath);
         attachmentCommand = new AttachmentCommand(INDEX_FIRST_TASK, action);
         expectedMessage = String.format(
-            AttachmentCommand.AddAttachmentAction.MESSAGE_ADD_NOT_A_FILE, filePath);
+                AttachmentCommand.AddAttachmentAction.MESSAGE_ADD_NOT_A_FILE, filePath);
         assertCommandFailure(attachmentCommand, modelStub, commandHistory, expectedMessage);
 
         deleteTestFile(tempFile);
@@ -163,16 +163,16 @@ public class AttachmentCommandTest {
         File[] tempFiles = new File[numberOfFiles];
         Task task = model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased());
         Model expectedModel = new ModelManager(new TaskCollection(model.getTaskCollection()),
-            new UserPrefs());
+                new UserPrefs());
 
         for (int i = 0; i < numberOfFiles; i++) {
             tempFiles[i] = createTestFile();
             String filePath = tempFiles[i].getAbsolutePath();
             AttachmentCommand.AttachmentAction action =
-                new AttachmentCommand.AddAttachmentAction(filePath);
+                    new AttachmentCommand.AddAttachmentAction(filePath);
             AttachmentCommand attachmentCommand = new AttachmentCommand(INDEX_FIRST_TASK, action);
             String expectedMessage = String.format(
-                AttachmentCommand.AddAttachmentAction.MESSAGE_SUCCESS, tempFiles[i].getName());
+                    AttachmentCommand.AddAttachmentAction.MESSAGE_SUCCESS, tempFiles[i].getName());
             Task expectedTask = addAttachmentToTask(task, new Attachment(tempFiles[i]));
             expectedModel.updateTask(task, expectedTask);
             expectedModel.commitTaskCollection();
@@ -189,11 +189,9 @@ public class AttachmentCommandTest {
     public void execute_deleteAttachmentInvalid_error() {
         Task task = model.getFilteredTaskList().get(0);
         String nonExistentFileName = nonExistentFile.getName();
-        AttachmentCommand.AttachmentAction action =
-            new AttachmentCommand.DeleteAttachmentAction(nonExistentFileName);
+        AttachmentCommand.AttachmentAction action = new AttachmentCommand.DeleteAttachmentAction(nonExistentFileName);
         AttachmentCommand attachmentCommand = new AttachmentCommand(INDEX_FIRST_TASK, action);
-        String expectedMessage = String.format(
-            AttachmentCommand.MESSAGE_NAME_NOT_FOUND, nonExistentFileName);
+        String expectedMessage = String.format(AttachmentCommand.MESSAGE_NAME_NOT_FOUND, nonExistentFileName);
         assertCommandFailure(attachmentCommand, model, commandHistory, expectedMessage);
     }
 
@@ -203,24 +201,21 @@ public class AttachmentCommandTest {
         // Construct a file with one attachment
         Task originalTask = model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased());
         Task taskWithAttachment = addAttachmentToTask(originalTask, new Attachment(tempFile));
-        Model modelStub = new ModelManager(new TaskCollection(model.getTaskCollection()),
-            new UserPrefs());
+        Model modelStub = new ModelManager(new TaskCollection(model.getTaskCollection()), new UserPrefs());
         modelStub.updateTask(originalTask, taskWithAttachment);
         modelStub.commitTaskCollection();
 
-        Model baseModel = new ModelManager(new TaskCollection(modelStub.getTaskCollection()),
-            new UserPrefs());
+        Model baseModel = new ModelManager(new TaskCollection(modelStub.getTaskCollection()), new UserPrefs());
 
         //Attempt to remove it from attachments
         String fileName = tempFile.getName();
         AttachmentCommand.AttachmentAction action =
-            new AttachmentCommand.DeleteAttachmentAction(fileName);
+                new AttachmentCommand.DeleteAttachmentAction(fileName);
         AttachmentCommand attachmentCommand = new AttachmentCommand(INDEX_FIRST_TASK, action);
         String expectedMessage = String.format(
-            AttachmentCommand.DeleteAttachmentAction.MESSAGE_SUCCESS, fileName);
+                AttachmentCommand.DeleteAttachmentAction.MESSAGE_SUCCESS, fileName);
 
-        Model expectedModel = new ModelManager(new TaskCollection(modelStub.getTaskCollection()),
-            new UserPrefs());
+        Model expectedModel = new ModelManager(new TaskCollection(modelStub.getTaskCollection()), new UserPrefs());
         expectedModel.updateTask(taskWithAttachment, originalTask);
         expectedModel.commitTaskCollection();
 
@@ -237,13 +232,13 @@ public class AttachmentCommandTest {
 
         Set<Attachment> attachments = task.getAttachments();
         String expectedMessage = String.format(
-            AttachmentCommand.ListAttachmentAction.MESSAGE_TOTAL_ATTACHMENTS, attachments.size());
+                AttachmentCommand.ListAttachmentAction.MESSAGE_TOTAL_ATTACHMENTS, attachments.size());
         int indexCounter = 0;
         for (Attachment attachment : attachments) {
             indexCounter++;
             expectedMessage += String.format(
-                AttachmentCommand.ListAttachmentAction.MESSAGE_LIST_ATTACHMENT_DETAILS, indexCounter,
-                attachment.toString());
+                    AttachmentCommand.ListAttachmentAction.MESSAGE_LIST_ATTACHMENT_DETAILS, indexCounter,
+                    attachment.toString());
         }
 
         Model expectedModel = model;
@@ -265,11 +260,10 @@ public class AttachmentCommandTest {
         Task task = model.getFilteredTaskList().get(0);
         String nonExistentFileName = nonExistentFile.getName();
         AttachmentCommand.AttachmentAction action =
-            new AttachmentCommand.GetAttachmentAction(nonExistentFileName, nonExistentFileName);
+                new AttachmentCommand.GetAttachmentAction(nonExistentFileName, nonExistentFileName);
         AttachmentCommand attachmentCommand = new AttachmentCommand(INDEX_FIRST_TASK, action);
 
-        String expectedMessage = String.format(
-            AttachmentCommand.MESSAGE_NAME_NOT_FOUND, nonExistentFileName);
+        String expectedMessage = String.format(AttachmentCommand.MESSAGE_NAME_NOT_FOUND, nonExistentFileName);
 
         assertCommandFailure(attachmentCommand, model, commandHistory, expectedMessage);
     }
@@ -282,7 +276,7 @@ public class AttachmentCommandTest {
         Task originalTask = model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased());
         Task taskWithAttachment = addAttachmentToTask(originalTask, new Attachment(tempFile));
         Model modelStub = new ModelManager(new TaskCollection(model.getTaskCollection()),
-            new UserPrefs());
+                new UserPrefs());
         modelStub.updateTask(originalTask, taskWithAttachment);
         modelStub.commitTaskCollection();
 
@@ -296,10 +290,9 @@ public class AttachmentCommandTest {
         String fileName = tempFile.getName();
         String outputPath = outputFile.getPath();
         AttachmentCommand.AttachmentAction action =
-            new AttachmentCommand.GetAttachmentAction(fileName, outputPath);
+                new AttachmentCommand.GetAttachmentAction(fileName, outputPath);
         AttachmentCommand attachmentCommand = new AttachmentCommand(INDEX_FIRST_TASK, action);
-        String expectedMessage = String.format(
-            AttachmentCommand.GetAttachmentAction.MESSAGE_GET_FAILED, outputPath);
+        String expectedMessage = String.format(AttachmentCommand.GetAttachmentAction.MESSAGE_GET_FAILED, outputPath);
 
         Model expectedModel = modelStub;
 
@@ -322,7 +315,7 @@ public class AttachmentCommandTest {
         Task originalTask = model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased());
         Task taskWithAttachment = addAttachmentToTask(originalTask, new Attachment(tempFile));
         Model modelStub = new ModelManager(new TaskCollection(model.getTaskCollection()),
-            new UserPrefs());
+                new UserPrefs());
         modelStub.updateTask(originalTask, taskWithAttachment);
         modelStub.commitTaskCollection();
 
@@ -334,10 +327,10 @@ public class AttachmentCommandTest {
         String fileName = tempFile.getName();
         String outputPath = outputFile.getPath();
         AttachmentCommand.AttachmentAction action =
-            new AttachmentCommand.GetAttachmentAction(fileName, outputPath);
+                new AttachmentCommand.GetAttachmentAction(fileName, outputPath);
         AttachmentCommand attachmentCommand = new AttachmentCommand(INDEX_FIRST_TASK, action);
         String expectedMessage = String.format(
-            AttachmentCommand.GetAttachmentAction.MESSAGE_SUCCESS, fileName, outputPath);
+                AttachmentCommand.GetAttachmentAction.MESSAGE_SUCCESS, fileName, outputPath);
 
         Model expectedModel = modelStub;
 
@@ -369,7 +362,7 @@ public class AttachmentCommandTest {
         Task originalTask = model.getFilteredTaskList().get(INDEX_FIRST_TASK.getZeroBased());
         Task taskWithAttachment = addAttachmentToTask(originalTask, new Attachment(tempFile));
         Model modelStub = new ModelManager(new TaskCollection(model.getTaskCollection()),
-            new UserPrefs());
+                new UserPrefs());
         modelStub.updateTask(originalTask, taskWithAttachment);
         modelStub.commitTaskCollection();
 
@@ -380,10 +373,10 @@ public class AttachmentCommandTest {
         String fileName = tempFile.getName();
         String outputPath = outputFile.getPath();
         AttachmentCommand.AttachmentAction action =
-            new AttachmentCommand.GetAttachmentAction(fileName, outputPath);
+                new AttachmentCommand.GetAttachmentAction(fileName, outputPath);
         AttachmentCommand attachmentCommand = new AttachmentCommand(INDEX_FIRST_TASK, action);
         String expectedMessage = String.format(
-            AttachmentCommand.GetAttachmentAction.MESSAGE_SUCCESS, fileName, outputPath);
+                AttachmentCommand.GetAttachmentAction.MESSAGE_SUCCESS, fileName, outputPath);
 
         Model expectedModel = modelStub;
 
@@ -408,7 +401,7 @@ public class AttachmentCommandTest {
         assertNotEquals(add, new AttachmentCommand.AddAttachmentAction("meow.txt"));
 
         AttachmentCommand.AttachmentAction delete = new AttachmentCommand.DeleteAttachmentAction(
-            "delete please.docx");
+                "delete please.docx");
         assertEquals(delete, new AttachmentCommand.DeleteAttachmentAction("delete please.docx"));
         assertNotEquals(delete, new AttachmentCommand.DeleteAttachmentAction("hello.txt"));
         assertNotEquals(delete, add);
@@ -419,11 +412,11 @@ public class AttachmentCommandTest {
         assertNotEquals(list, delete);
 
         AttachmentCommand.AttachmentAction get = new AttachmentCommand.GetAttachmentAction("helloworld.txt",
-            "hello/world/helloworld.txt");
+                "hello/world/helloworld.txt");
         assertEquals(get, new AttachmentCommand.GetAttachmentAction(
-            "helloworld.txt", "hello/world/helloworld.txt"));
+                "helloworld.txt", "hello/world/helloworld.txt"));
         assertNotEquals(get, new AttachmentCommand.GetAttachmentAction("hello/world/helloworld.txt",
-            "helloworld.txt"));
+                "helloworld.txt"));
         assertNotEquals(get, list);
 
         AttachmentCommand attachmentCommand = new AttachmentCommand(INDEX_SECOND_TASK, list);
@@ -448,20 +441,20 @@ public class AttachmentCommandTest {
     public void toStringTest() {
         AttachmentCommand.AttachmentAction add = new AttachmentCommand.AddAttachmentAction("helloworld.docx");
         AttachmentCommand.AttachmentAction delete = new AttachmentCommand.DeleteAttachmentAction(
-            "delete please.docx");
+                "delete please.docx");
         AttachmentCommand.AttachmentAction list = new AttachmentCommand.ListAttachmentAction();
         AttachmentCommand.AttachmentAction get = new AttachmentCommand.GetAttachmentAction("helloworld.txt",
-            "hello/world/helloworld.txt");
+                "hello/world/helloworld.txt");
         AttachmentCommand attachmentCommand = new AttachmentCommand(INDEX_SECOND_TASK, delete);
 
         assertEquals(add.toString(), String.format("Add attachment at path %s", "helloworld.docx"));
         assertEquals(delete.toString(), String.format("Delete attachment with name %s", "delete please.docx"));
         assertEquals(list.toString(), "List attachments");
         assertEquals(get.toString(),
-            String.format("Put attachment with name %s to %s", "helloworld.txt", "hello/world/helloworld.txt"));
+                String.format("Put attachment with name %s to %s", "helloworld.txt", "hello/world/helloworld.txt"));
 
         String expected = String.format("AttachmentCommand at index %d, with action: %s",
-            INDEX_THIRD_TASK.getOneBased(), delete.toString());
+                INDEX_THIRD_TASK.getOneBased(), delete.toString());
         assertEquals(new AttachmentCommand(INDEX_THIRD_TASK, delete).toString(), expected);
 
     }

@@ -1,4 +1,5 @@
 package seedu.address.storage;
+
 import static java.util.Objects.requireNonNull;
 
 import java.io.File;
@@ -33,8 +34,7 @@ public class StorageManager extends ComponentManager implements Storage {
     private TaskCollectionStorage privateTaskCollectionStorage;
     private UserPrefsStorage userPrefsStorage;
 
-    public StorageManager(TaskCollectionStorage privateTaskCollectionStorage,
-                          UserPrefsStorage userPrefsStorage) {
+    public StorageManager(TaskCollectionStorage privateTaskCollectionStorage, UserPrefsStorage userPrefsStorage) {
         super();
         this.privateTaskCollectionStorage = privateTaskCollectionStorage;
         this.userPrefsStorage = userPrefsStorage;
@@ -65,14 +65,13 @@ public class StorageManager extends ComponentManager implements Storage {
     }
 
     @Override
-    public Optional<ReadOnlyTaskCollection> readTaskCollection()
-        throws DataConversionException, IOException {
+    public Optional<ReadOnlyTaskCollection> readTaskCollection() throws DataConversionException, IOException {
         return readTaskCollection(privateTaskCollectionStorage.getTaskCollectionFilePath());
     }
 
     @Override
     public Optional<ReadOnlyTaskCollection> readTaskCollection(Path filePath)
-        throws DataConversionException, IOException {
+            throws DataConversionException, IOException {
         logger.fine("Attempting to read data from file: " + filePath);
         return privateTaskCollectionStorage.readTaskCollection(filePath);
     }
@@ -89,8 +88,7 @@ public class StorageManager extends ComponentManager implements Storage {
     }
 
     @Override
-    public Optional<ReadOnlyTaskCollection> importTaskCollection(Path filePath)
-        throws IOException {
+    public Optional<ReadOnlyTaskCollection> importTaskCollection(Path filePath) throws IOException {
         if (!fileExists(filePath)) {
             throw new IOException(MESSAGE_READ_FILE_MISSING_ERROR);
         }
@@ -105,13 +103,12 @@ public class StorageManager extends ComponentManager implements Storage {
 
     @Override
     public void exportTaskCollection(ReadOnlyTaskCollection taskCollection, Path filePath, boolean shouldOverwrite,
-                                     boolean isCsvFormat)
-        throws IOException {
+                                     boolean isCsvFormat) throws IOException {
         if (!shouldWriteToPath(filePath, shouldOverwrite)) {
             throw new IOException(String.format(MESSAGE_WRITE_FILE_EXISTS_ERROR, filePath));
         }
         TaskCollectionWriteStorage exportStorage =
-            createExportStorageFromPathname(filePath, isCsvFormat);
+                createExportStorageFromPathname(filePath, isCsvFormat);
         logger.fine("Attempting to export to file: " + filePath);
         try {
             exportStorage.saveTaskCollection(taskCollection);
@@ -122,7 +119,8 @@ public class StorageManager extends ComponentManager implements Storage {
 
     /**
      * Determines whether export should be written to the path, or we should abort the export.
-     * @param filePath path to write to
+     *
+     * @param filePath        path to write to
      * @param shouldOverwrite whether we should overwrite if file exists
      * @return true if we should write, false otherwise
      */
@@ -137,7 +135,7 @@ public class StorageManager extends ComponentManager implements Storage {
     @Subscribe
     public void handleTaskCollectionChangedEvent(TaskCollectionChangedEvent event) {
         logger.info(
-            LogsCenter.getEventHandlingLogMessage(event, "Local data changed, saving to file"));
+                LogsCenter.getEventHandlingLogMessage(event, "Local data changed, saving to file"));
         try {
             saveTaskCollection(event.data);
         } catch (IOException e) {
@@ -164,7 +162,8 @@ public class StorageManager extends ComponentManager implements Storage {
 
     /**
      * Creates the relevant write storage from pathname and whether CSV is required.
-     * @param pathname the pathname to export to
+     *
+     * @param pathname    the pathname to export to
      * @param isCsvFormat whether the file should be exported in CSV format (or xml otherwise)
      * @return a TaskCollectionWriteStorage that can be used to export.
      */
@@ -196,6 +195,7 @@ public class StorageManager extends ComponentManager implements Storage {
 
     /**
      * Helper function to determine whether file exists.
+     *
      * @param filePath File to be inspected
      * @return true if file exists, false otherwise
      */

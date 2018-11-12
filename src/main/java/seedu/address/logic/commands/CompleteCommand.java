@@ -26,8 +26,8 @@ public class CompleteCommand extends Command {
 
     public static final String COMMAND_WORD = "complete";
 
-    public static final String MESSAGE_USAGE =
-        COMMAND_WORD + ": Complete a task. If the task is not a recurring task, it will be deleted. "
+    public static final String MESSAGE_USAGE = COMMAND_WORD
+            + ": Complete a task. If the task is not a recurring task, it will be deleted. "
             + "Otherwise, the deadline will be changed to the next occurrence of the task.\n"
             + "Parameters: INDEX (must be a positive integer) "
             + "Example: " + COMMAND_WORD + " 1";
@@ -63,7 +63,7 @@ public class CompleteCommand extends Command {
         Set<Attachment> updatedAttachments = taskToComplete.getAttachments();
 
         return new Task(updatedName, updatedPriority, updatedFrequency, updatedDeadline, updatedTags,
-            updatedAttachments);
+                updatedAttachments);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class CompleteCommand extends Command {
             model.updateFilteredTaskList(PREDICATE_SHOW_ALL_TASKS);
             model.commitTaskCollection();
             return new CommandResult(String.format(MESSAGE_COMPLETE_RECURRING_TASK_SUCCESS,
-                completedTask.getDeadline()));
+                    completedTask.getDeadline()));
         }
     }
 

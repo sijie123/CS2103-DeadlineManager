@@ -20,7 +20,7 @@ public class ModelHelper {
      */
     public static void setFilteredList(Model model, List<Task> toDisplay) {
         Optional<Predicate<Task>> predicate =
-            toDisplay.stream().map(ModelHelper::getPredicateMatching).reduce(Predicate::or);
+                toDisplay.stream().map(ModelHelper::getPredicateMatching).reduce(Predicate::or);
         model.updateFilteredTaskList(predicate.orElse(PREDICATE_MATCHING_NO_TASKS));
     }
 

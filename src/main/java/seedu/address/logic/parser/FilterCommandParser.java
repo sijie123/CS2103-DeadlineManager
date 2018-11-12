@@ -72,19 +72,19 @@ public class FilterCommandParser implements Parser<FilterCommand> {
     // name>"hello world"
     // note: '/' is necessary for dates, ',' is necessary for tags
     private static final Predicate<Character> ALLOWED_UNQUOTED_CHARACTER_PREDICATE =
-        ch -> (ch >= 'A' && ch <= 'Z')
-            || (ch >= 'a' && ch <= 'z')
-            || (ch >= '0' && ch <= '9')
-            || ch == '_'
-            || ch == '-'
-            || ch == '/'
-            || ch == '\\'
-            || ch == ','
-            || ch == '.';
+            ch -> (ch >= 'A' && ch <= 'Z')
+                || (ch >= 'a' && ch <= 'z')
+                || (ch >= '0' && ch <= '9')
+                || ch == '_'
+                || ch == '-'
+                || ch == '/'
+                || ch == '\\'
+                || ch == ','
+                || ch == '.';
 
     private static final Predicate<Character> ALLOWED_KEY_CHARACTER_PREDICATE =
-        ch -> (ch >= 'A' && ch <= 'Z')
-            || (ch >= 'a' && ch <= 'z');
+            ch -> (ch >= 'A' && ch <= 'Z')
+                || (ch >= 'a' && ch <= 'z');
 
     private static final Pattern FILTER_OPERATOR_PATTERN = Pattern.compile("[\\=\\<\\>\\:]");
 
@@ -471,7 +471,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
         int keyEndIndex = tokenizer.getLocation(); // get the key end location
         String opString;
         if (key != null && tokenizer.hasNextToken()
-            && (opString = tokenizer.tryNextPattern(FILTER_OPERATOR_PATTERN)) != null) {
+                && (opString = tokenizer.tryNextPattern(FILTER_OPERATOR_PATTERN)) != null) {
             int opEndIndex = tokenizer.getLocation();
             final FilterOperator operator = wrapPredicateOperatorException(keyEndIndex,
                     opEndIndex, () -> FilterOperator.parse(opString));

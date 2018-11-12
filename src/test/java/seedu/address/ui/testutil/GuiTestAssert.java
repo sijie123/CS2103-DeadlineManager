@@ -39,12 +39,11 @@ public class GuiTestAssert {
         assertEquals(expectedFrequency, actualCard.getFrequency());
         String expectedDeadline = String.format(DEADLINE_FORMAT, expectedTask.getDeadline().toString());
         assertEquals(expectedDeadline, actualCard.getDeadline());
-        assertEquals(expectedTask.getTags().stream().map(tag -> tag.tagName)
-                .collect(Collectors.toList()),
-            actualCard.getTags());
+        assertEquals(expectedTask.getTags().stream().map(tag -> tag.tagName).collect(Collectors.toList()),
+                actualCard.getTags());
         assertEquals(expectedTask.getAttachments().stream().map(attachment -> attachment.getName())
-                .collect(Collectors.toList()),
-            actualCard.getAttachments());
+                        .collect(Collectors.toList()),
+                actualCard.getAttachments());
     }
 
     /**

@@ -46,10 +46,10 @@ public class ExportCommand extends Command {
     @Override
     public boolean equals(Object other) {
         return other == this // short circuit if same object
-            || (other instanceof ExportCommand // instanceof handles nulls
-            && pathName.equals(((ExportCommand) other).pathName)
-            && shouldOverwrite == ((ExportCommand) other).shouldOverwrite
-            && isCsvFormat == ((ExportCommand) other).isCsvFormat); // state check
+                || (other instanceof ExportCommand // instanceof handles nulls
+                && pathName.equals(((ExportCommand) other).pathName)
+                && shouldOverwrite == ((ExportCommand) other).shouldOverwrite
+                && isCsvFormat == ((ExportCommand) other).isCsvFormat); // state check
     }
 
     private boolean hasExportError() {

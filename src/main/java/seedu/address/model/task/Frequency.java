@@ -17,7 +17,7 @@ public class Frequency implements Comparable<Frequency> {
 
     public static final Integer FREQUENCY_LIMIT = 1000; //Strictly less than
     public static final String MESSAGE_FREQUENCY_CONSTRAINTS =
-        "Frequency should only be a non negative integer lower than " + FREQUENCY_LIMIT.toString();
+            "Frequency should only be a non negative integer lower than " + FREQUENCY_LIMIT.toString();
     public static final String FREQUENCY_VALIDATION_REGEX = "[0-9]+";
     public static final String NO_FREQUENCY = "0";
     public final int value;
@@ -77,7 +77,7 @@ public class Frequency implements Comparable<Frequency> {
      * @param testPhrase The test phrase for this predicate.
      */
     public static Predicate<Frequency> makeFilter(FilterOperator operator, String testPhrase)
-        throws InvalidPredicateTestPhraseException, InvalidPredicateOperatorException {
+            throws InvalidPredicateTestPhraseException, InvalidPredicateOperatorException {
         Frequency tmpFrequency;
         try {
             tmpFrequency = new Frequency(testPhrase);
@@ -88,6 +88,7 @@ public class Frequency implements Comparable<Frequency> {
         case EQUAL:
             return frequency -> frequency.equals(tmpFrequency);
         case CONVENIENCE: // convenience operator, works the same as "<"
+            //Fallthrough
         case LESS:
             return frequency -> frequency.compareTo(tmpFrequency) <= 0;
         case GREATER:
@@ -105,8 +106,8 @@ public class Frequency implements Comparable<Frequency> {
     @Override
     public boolean equals(Object other) {
         return other == this // short circuit if same object
-            || (other instanceof Frequency // instanceof handles nulls
-            && value == ((Frequency) other).value); // state check
+                || (other instanceof Frequency // instanceof handles nulls
+                && value == ((Frequency) other).value); // state check
     }
 
     @Override

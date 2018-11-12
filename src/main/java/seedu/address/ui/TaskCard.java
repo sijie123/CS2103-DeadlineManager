@@ -63,14 +63,15 @@ public class TaskCard extends UiPart<Region> {
         deadline.setText(String.format(DEADLINE_FORMAT, task.getDeadline().toString()));
         task.getTags().forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
         task.getAttachments().forEach(attachment ->
-            attachments.getChildren().add(buildAttachmentLabel(attachment, displayedIndex)));
+                attachments.getChildren().add(buildAttachmentLabel(attachment, displayedIndex)));
     }
 
     /**
      * Helper method to construct a label for each attachment.
      * Adds a mouse click handler to invoke the attachment get command when the label is clicked
+     *
      * @param attachment the attachment
-     * @param index index of the attachmentin the current list/UI
+     * @param index      index of the attachmentin the current list/UI
      * @return label with mouse click handler
      */
     private Label buildAttachmentLabel(Attachment attachment, int index) {
@@ -78,10 +79,10 @@ public class TaskCard extends UiPart<Region> {
         label.setOnMouseClicked(event -> {
             raise(new SelectFileSaveEvent(file -> {
                 String commandText = String.format("%s %d %s %s\"%s\" %s\"%s\"",
-                    AttachmentCommand.COMMAND_WORD, index,
-                    AttachmentCommand.COMMAND_GET_ACTION,
-                    PREFIX_FILENAME, attachment.getName(),
-                    PREFIX_FILEPATH, file.getPath()
+                        AttachmentCommand.COMMAND_WORD, index,
+                        AttachmentCommand.COMMAND_GET_ACTION,
+                        PREFIX_FILENAME, attachment.getName(),
+                        PREFIX_FILEPATH, file.getPath()
                 );
                 raise(new ExecuteCommandEvent(commandText));
             }, attachment.getName()));
@@ -105,6 +106,6 @@ public class TaskCard extends UiPart<Region> {
         // state check
         TaskCard card = (TaskCard) other;
         return id.getText().equals(card.id.getText())
-            && task.equals(card.task);
+                && task.equals(card.task);
     }
 }

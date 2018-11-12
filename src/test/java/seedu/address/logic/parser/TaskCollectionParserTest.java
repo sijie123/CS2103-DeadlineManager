@@ -51,7 +51,7 @@ public class TaskCollectionParserTest {
     @Test
     public void parseCommand_delete() throws Exception {
         DeleteCommand command = (DeleteCommand) parser.parseCommand(
-            DeleteCommand.COMMAND_WORD + " " + INDEX_FIRST_TASK.getOneBased());
+                DeleteCommand.COMMAND_WORD + " " + INDEX_FIRST_TASK.getOneBased());
         assertEquals(new DeleteCommand(INDEX_FIRST_TASK), command);
     }
 
@@ -60,8 +60,8 @@ public class TaskCollectionParserTest {
         Task task = new TaskBuilder().build();
         EditTaskDescriptor descriptor = new EditTaskDescriptorBuilder(task).build();
         EditCommand command = (EditCommand) parser.parseCommand(EditCommand.COMMAND_WORD + " "
-            + INDEX_FIRST_TASK.getOneBased() + " " + TaskUtil
-            .getEditTaskDescriptorDetails(descriptor));
+                + INDEX_FIRST_TASK.getOneBased() + " " + TaskUtil
+                .getEditTaskDescriptorDetails(descriptor));
         assertEquals(new EditCommand(INDEX_FIRST_TASK, descriptor), command);
     }
 
@@ -81,7 +81,7 @@ public class TaskCollectionParserTest {
     public void parseCommand_history() throws Exception {
         assertTrue(parser.parseCommand(HistoryCommand.COMMAND_WORD) instanceof HistoryCommand);
         assertTrue(
-            parser.parseCommand(HistoryCommand.COMMAND_WORD + " 3") instanceof HistoryCommand);
+                parser.parseCommand(HistoryCommand.COMMAND_WORD + " 3") instanceof HistoryCommand);
 
         try {
             parser.parseCommand("histories");
@@ -100,7 +100,7 @@ public class TaskCollectionParserTest {
     @Test
     public void parseCommand_select() throws Exception {
         SelectCommand command = (SelectCommand) parser.parseCommand(
-            SelectCommand.COMMAND_WORD + " " + INDEX_FIRST_TASK.getOneBased());
+                SelectCommand.COMMAND_WORD + " " + INDEX_FIRST_TASK.getOneBased());
         assertEquals(new SelectCommand(INDEX_FIRST_TASK), command);
     }
 
@@ -120,7 +120,7 @@ public class TaskCollectionParserTest {
     public void parseCommand_unrecognisedInput_throwsParseException() throws Exception {
         thrown.expect(SimpleParseException.class);
         thrown.expectMessage(
-            String.format(MESSAGE_INVALID_COMMAND_FORMAT, HelpCommand.MESSAGE_USAGE));
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, HelpCommand.MESSAGE_USAGE));
         parser.parseCommand("");
     }
 

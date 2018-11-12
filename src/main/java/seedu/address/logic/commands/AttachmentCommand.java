@@ -33,8 +33,8 @@ public class AttachmentCommand extends Command {
     public static final String COMMAND_GET_ACTION = "get";
     public static final String COMMAND_DELETE_ACTION = "delete";
     public static final String COMMAND_LIST_ACTION = "list";
-    public static final String MESSAGE_USAGE =
-        COMMAND_WORD + ": Modify and manages the attachments of the task identified "
+    public static final String MESSAGE_USAGE = COMMAND_WORD
+            + ": Modify and manages the attachments of the task identified "
             + "by the index number used in the displayed task list.\n"
             + "Parameters: INDEX (must be a positive integer) "
             + "[add|get|delete|list] "
@@ -118,13 +118,13 @@ public class AttachmentCommand extends Command {
         // state check
         AttachmentCommand e = (AttachmentCommand) other;
         return index.equals(e.index)
-            && attachmentAction.equals(e.attachmentAction);
+                && attachmentAction.equals(e.attachmentAction);
     }
 
     @Override
     public String toString() {
         return String.format("AttachmentCommand at index %d, with action: %s",
-            index.getOneBased(), attachmentAction.toString());
+                index.getOneBased(), attachmentAction.toString());
     }
 
     /**
@@ -138,7 +138,7 @@ public class AttachmentCommand extends Command {
         requireAllNonNull(attachment, format);
         if (!attachment.isReadable()) {
             logger.info(String.format("Attachment %s is not readable. Checked %s.",
-                attachment.getName(), attachment.file.getAbsolutePath()));
+                    attachment.getName(), attachment.file.getAbsolutePath()));
             throw new CommandException(String.format(format, attachment.file));
         }
     }
@@ -153,7 +153,7 @@ public class AttachmentCommand extends Command {
     private static Attachment getAttachment(Set<Attachment> attachments, String name) {
         requireAllNonNull(attachments, name);
         Map<String, Attachment> attachmentNameMap = attachments.stream()
-            .collect(Collectors.toMap(x -> x.getName(), x -> x));
+                .collect(Collectors.toMap(x -> x.getName(), x -> x));
         return attachmentNameMap.get(name);
     }
 
@@ -167,9 +167,9 @@ public class AttachmentCommand extends Command {
     private static boolean isAttachmentName(Set<Attachment> attachments, String name) {
         requireAllNonNull(attachments, name);
         Set<String> attachmentNames = attachments
-            .stream()
-            .map(x -> x.getName())
-            .collect(Collectors.toSet());
+                .stream()
+                .map(x -> x.getName())
+                .collect(Collectors.toSet());
         return attachmentNames.contains(name);
     }
 
@@ -185,7 +185,7 @@ public class AttachmentCommand extends Command {
         requireAllNonNull(task, name);
         if (isAttachmentName(task.getAttachments(), name)) {
             logger.info(String.format("Task already contains an attachment with filename %s.",
-                name));
+                    name));
             throw new CommandException(Attachment.MESSAGE_DUPLICATE_ATTACHMENT_NAME);
         }
     }
@@ -202,7 +202,7 @@ public class AttachmentCommand extends Command {
         requireAllNonNull(task, name);
         if (!isAttachmentName(task.getAttachments(), name)) {
             logger.info(String.format("Task does not contains an attachment with filename %s.",
-                name));
+                    name));
             throw new CommandException(String.format(MESSAGE_NAME_NOT_FOUND, name));
         }
     }
@@ -274,7 +274,7 @@ public class AttachmentCommand extends Command {
             HashSet<Attachment> updatedAttachments = new HashSet<>(taskToEdit.getAttachments());
             updatedAttachments.add(newAttachment);
             Task updatedTask = new Task(taskToEdit.getName(), taskToEdit.getPriority(), taskToEdit.getFrequency(),
-                taskToEdit.getDeadline(), taskToEdit.getTags(), updatedAttachments);
+                    taskToEdit.getDeadline(), taskToEdit.getTags(), updatedAttachments);
             String resultMessage = String.format(MESSAGE_SUCCESS, newAttachment.getName());
             return new ActionResult(updatedTask, resultMessage);
         }
@@ -334,7 +334,7 @@ public class AttachmentCommand extends Command {
             for (Attachment attachment : attachments) {
                 indexCounter++;
                 stringBuilder.append(
-                    String.format(MESSAGE_LIST_ATTACHMENT_DETAILS, indexCounter, attachment.toString()));
+                        String.format(MESSAGE_LIST_ATTACHMENT_DETAILS, indexCounter, attachment.toString()));
             }
             return new ActionResult(taskToEdit, stringBuilder.toString());
         }
@@ -384,7 +384,7 @@ public class AttachmentCommand extends Command {
             updatedAttachments.remove(attachmentToDelete);
             String resultMessage = String.format(MESSAGE_SUCCESS, nameToDelete);
             Task updatedTask = new Task(taskToEdit.getName(), taskToEdit.getPriority(), taskToEdit.getFrequency(),
-                taskToEdit.getDeadline(), taskToEdit.getTags(), updatedAttachments);
+                    taskToEdit.getDeadline(), taskToEdit.getTags(), updatedAttachments);
             return new ActionResult(updatedTask, resultMessage);
         }
 
@@ -418,10 +418,10 @@ public class AttachmentCommand extends Command {
      */
     public static class GetAttachmentAction implements AttachmentAction {
         public static final String MESSAGE_GET_FAILED = "Failed to save to %1$s. "
-            + "Do note that FILEPATH should be a file to a path, not a directory/folder.";
+                + "Do note that FILEPATH should be a file to a path, not a directory/folder.";
         public static final String MESSAGE_SUCCESS = "%1$s is now saved to %2$s.";
         public static final String MESSAGE_GET_NOT_A_FILE = "%1$s is not a valid file. "
-            + "It might have been deleted, moved or Deadline Manager does not have permissions to read from it.";
+                + "It might have been deleted, moved or Deadline Manager does not have permissions to read from it.";
 
         private final String fileName;
         private final String savePath;
@@ -445,7 +445,7 @@ public class AttachmentCommand extends Command {
                 return attachment.saveTo(savePath);
             } catch (IOException ioe) {
                 logger.severe(String.format("Attachment copy from %s to %s failed due to: %s",
-                    attachment.file.getAbsolutePath(), savePath, ioe));
+                        attachment.file.getAbsolutePath(), savePath, ioe));
                 throw new CommandException(String.format(MESSAGE_GET_FAILED, savePath));
             }
         }
@@ -475,7 +475,7 @@ public class AttachmentCommand extends Command {
             // state check
             GetAttachmentAction e = (GetAttachmentAction) other;
             return fileName.equals(e.fileName)
-                && savePath.equals(e.savePath);
+                    && savePath.equals(e.savePath);
         }
 
         @Override
