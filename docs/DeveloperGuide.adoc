@@ -868,14 +868,14 @@ There are three possible ways to express a filter unit:
 2. The extended full syntax for sets -- this is like the full syntax, but enhanced with a way to specify how to compare sets
 3. The simplified syntax -- this improves terseness and reduces cognitive overhead
 
-The following diagram is describes a filter unit that is specified using the full syntax:
+The following diagram describes a filter unit that is specified using the full syntax:
 
 .Structure of a filter unit that uses the full syntax
 image::FilterUnitDiagram.png[width="200"]
 
 // end::filter-unit-parser-extract[]
 
-The following diagram is describes a filter unit that is specified using the extended full syntax for sets:
+The following diagram describes a filter unit that is specified using the extended full syntax for sets:
 
 .Structure of a filter unit that uses the extended full syntax for sets
 image::FilterUnitDiagramSet.png[width="250"]
