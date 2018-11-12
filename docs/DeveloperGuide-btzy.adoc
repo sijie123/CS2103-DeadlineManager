@@ -894,7 +894,7 @@ The simplified syntax only contains the test phrase, and is explained in a separ
 The filter unit parser distinguishes between the three possible ways to express a filter unit, as per the activity diagram below:
 
 .Activity diagram for parsing a filter unit
-image::FilterUnitActivityDiagram.png[width="600"]
+image::FilterUnitActivityDiagram.png[width="650"]
 
 // end::filter-unit-parser-diagram[]
 // end::filter-unit-parser[]
