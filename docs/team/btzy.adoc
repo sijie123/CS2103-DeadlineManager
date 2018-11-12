@@ -56,7 +56,7 @@ include::../UserGuide.adoc[tag=filter-overview]
 
 include::../UserGuide.adoc[tag=filter-field]
 
-The operator `:` is known as the *convenience* operator -- it is an alias for the operator that intuitively "does what you expect" for the given `key`.  
+The operator `:` is known as the *convenience* operator -- it is an alias for the operator that intuitively "does what you expect" for the given `key`.
 
 |===
 |_The behaviour for each given `key` is documentated in our https://cs2103-ay1819s1-w17-4.github.io/main/UserGuide.html#controlling-the-field-being-matched[user guide].  Ample examples are also available there._
