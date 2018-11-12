@@ -212,6 +212,8 @@ When this command is used, Deadline Manager will display only those tasks which 
 [NOTE]
 When executing any _modifying_ commands on a filtered list, the filter will be removed after that command (so all tasks will be shown).  Modifying commands are those commands that modify the deadline manager's content (e.g. `add`, `delete`, `edit` and `clear`).
 
+<<<
+
 ==== Overview
 
 .Screenshot of simplified filter syntax
@@ -513,8 +515,6 @@ The part that was called `operator` previously is called the `field operator` he
 Meaning of the set operator:
 
 * The operator `>` tests if every item in the specified set is contained within the task's set.  The operator `<` tests if every item in the task's set is contained within the specified set.  The operator `=` tests if the two sets are equivalent (meaning that every item in the task's set is contained within the specified set and vice-versa).  The convenience operator is an alias for `>`.
-
-Note that the definition of "contained" here is dependent on the kind of field operator being used - it does not necessarily mean a comparison for equality.  See the examples below for more information.
 
 ****
 
