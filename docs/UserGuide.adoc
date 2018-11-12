@@ -537,6 +537,8 @@ Examples to demonstrate each operator type (using the tag field):
 [TIP]
 The set operator works in the same way as the above table for the attachment field as well.
 
+// end::filter-set[]
+
 Examples:
 
 * `filter t=:CS`
@@ -554,8 +556,7 @@ Returns a subset of the current list of tasks that has the tag "CS2103T" (case-i
 * `filter t<:CS`
 Returns a subset of the current list of tasks that do not have any tags that do not contain the substring "CS" (case-insensitive).  The task need not have any tags that contain the substring "CS", and it could have no tags at all.  This is usually used in conjunction with other filter predicates to constrain the filtered list to be exported.
 
-// end::filter-set[]
-
+// tag::filter-errors[]
 ==== Error messages
 
 As filter expressions can be made arbitrarily complex, the filter command is also designed to provide comprehensive error messages that will help you to pinpoint any errors.
@@ -578,6 +579,7 @@ image::userguide/filterdemo_error1.png[FilterDemo_Error1, width="400"]
 [caption="Figure 3.6.6.2: "]
 image::userguide/filterdemo_error2.png[FilterDemo_Error2, width="400"]
 
+// end::filter-errors[]
 // end::filter[]
 
 //TODO: Sidhant
