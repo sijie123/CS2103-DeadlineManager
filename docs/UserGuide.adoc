@@ -90,14 +90,23 @@ Format: `add n/NAME [p/PRIORITY] [f/FREQUENCY] d/DEADLINE [t/TAG]...`
 A task can have any number of tags (including 0)
 
 ****
-* `DEADLINE` should be a date in the format DD/MM/YYYY. Examples of valid
-dates are: 29/03/2018, 29/3/2018, 1/1/2018.
+
+* `DEADLINE` should be a date in the format DD/MM/YYYY.
+Examples of valid dates are:
+29/03/2018, 29/3/2018, 1/1/2018.
+`DEADLINE` is a mandatory parameter.
+
 * `PRIORITY` should only be 0, 1, 2, 3, or 4.
-The lower the number, the higher the priority of the task.
-(1 = Highest Priority, 4 = Lowest Priority)
-* `FREQUENCY` should be a non-negative integer (number of days) not exceeding 1000.
+Priority 0 denotes a task with no priority (lowest priority).
+The order is: Priority 1 (highest priority) > Priority 2 > Priority 3 > Priority 4 > Priority 0 (lowest priority).
+`PRIORITY` is an optional parameter.
+If `PRIORITY` is not given, priority 0 is assumed.
+
+* `FREQUENCY` should be a non-negative integer between 0 and 999 (number of days).
 Zero frequency denotes a non-recurring task.
 Non-zero frequency denotes a recurring task.
+`FREQUENCY` is an optional parameter.
+If `FREQUENCY` is not given, frequency 0 is assumed.
 ****
 
 [TIP]
@@ -105,17 +114,23 @@ You can have two tasks with the same attributes!
 
 Examples:
 
+* `add n/Homework d/01/01/2018` +
+Adds a task with name `Homework` with a deadline on 1st January 2018.
+Because `PRIORITY` and `FREQUENCY` are omitted, this task has priority 0 (no priority/lowest priority) and frequency 0 (non-recurring task).
+
 * `add n/Assignment 2 d/1/1/2018 p/1` +
 Adds a task with name `Assignment 2` with a deadline on 1st January 2018 with priority 1 (highest priority).
+
 * `add n/v1 milestone d/9/10/2018 t/CS2103T t/Project p/2` +
 Adds a task with name `v1 milestone` with a deadline on 9th October 2018 with priority 2 (second highest priority). It is additionally tagged with 2 tags: `CS2103T` and `Project`.
 
+* `add n/Clean the house d/01/01/2018 f/7` +
+Adds a task with name `Clean the house` with a deadline on 1st January 2018 with frequency 7 (this is a recurring task).
+
 === Completing a task : `complete`
 Completes an existing task in the deadline manager.
-If the task is not recurred (the frequency is equal to 0),
-the task will be deleted.
-Otherwise, the deadline will be moved
-to the next occurrence. +
+If the task is not recurred (the frequency is equal to 0), the task will be deleted.
+Otherwise, the deadline will be shifted to the next occurrence. +
 Format: `complete INDEX`
 
 ****
@@ -123,10 +138,41 @@ Format: `complete INDEX`
 The index *must be a positive integer* 1, 2, 3, ...
 ****
 
-Examples:
+Example:
 
-* `complete 1` +
-Completes the first task in the displayed task list.
+* `clear` +
+Starts with an empty task list +
+`add n/Homework d/01/01/2018` +
+Adds a non-recurring task. +
+`add n/Clean the house d/01/01/2018 f/7` +
+Adds a recurring task with frequency 7.
+See Figure 3.3.1 below. +
+`complete 2` +
+Completes the second task in the task list.
+Because the task is a recurring task, the deadline will be changed to 08/01/2018.
+See Figure 3.3.2 below. +
+`complete 1`
+Completes the first task in the task list.
+Because the task is a non-recurring task, it will be deleted.
+See Figure 3.3.3 below.
+
+[completedemo1]
+.Result after one `clear` command and two `add` commands
+[#img-completedemo3]
+[caption="Figure 3.3.1: "]
+image::userguide/completedemo_1.png[CompleteDemo1, width="400"]
+
+[completedemo2]
+.Result of the `complete 2` command
+[#img-completedemo2]
+[caption="Figure 3.3.2: "]
+image::userguide/completedemo_2.png[CompleteDemo2, width="400"]
+
+[completedemo3]
+.Result of the `complete 1` command
+[#img-completedemo3]
+[caption="Figure 3.3.3: "]
+image::userguide/completedemo_3.png[CompleteDemo3, width="400"]
 
 === Listing all tasks : `list`
 
@@ -509,11 +555,11 @@ What this means is that in case two tasks are in tie according to the first comp
 
 ****
 
-Format: `sort SORT_COMPARATOR [SORT_COMPARATOR] [SORT_COMPARATOR] ...` +
+Format: `sort SORT_COMPARATOR [SORT_COMPARATOR]...` +
 
 ****
-* Format of a `SORT_COMPARATOR`: `(n|name|d|due|p|priority|f|frequency)(<|>)` OR `(t|tag)(<|>){TAG1 TAG2 TAG3 ...}`
-* In the above format `|` refers to an OR. `TAG1`, `TAG2` and `TAG3` are shown as example of tags that the user can input.
+* Format of a `SORT_COMPARATOR`: `(n|name|d|due|p|priority|f|frequency)(<|>)` OR `(t|tag)(<|>){TAG1 TAG2 ...}`
+* In the above format `|` refers to an OR. `TAG1` and `TAG2` are shown as example of tags that the user can input.
 * `<` stands for sorting in ascending order and `>' stands for sorting in descending order.
 * Sorts the list by the 1st comparator, in case of ties, it sorts by 2nd comparator and so on.
 * Meaning of the operators for each valid key:
@@ -530,11 +576,12 @@ Examples:
 
 * `sort n>` +
 Sorts the current list of tasks in view in descending order by name, where sorting is done in alphabetical order.
+
 [sortdemo1]
 .Result of "sort n<" command
 [#img-sortdemo1]
 [caption="Figure 3.10.1: "]
-image::userguide/sortdemo_1.png[SortDemo1, width="600"]
+image::userguide/sortdemo_1.png[SortDemo1, width="900"]
 
 * `sort due< name>` +
 Sorts the current list of tasks in view in ascending order by due date, where ties are broken by descending order of names.
@@ -547,6 +594,7 @@ Sorts the current list of tasks in view in ascending order by tags. In this case
 before those tasks with the tag `family`, finally followed by those tasks with the tag `cs2103t`.
 * `sort n< tag<{` +
 This is invalid syntax since the curly braces have not been closed. +
+
 [sortdemo2]
 .Result of "sort n< tag<{" command
 [#img-sortdemo2]
