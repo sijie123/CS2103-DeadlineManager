@@ -214,6 +214,9 @@ When executing any _modifying_ commands on a filtered list, the filter will be r
 
 ==== Overview
 
+.Screenshot of simplified filter syntax
+image::userguide/filterdemo_simplified.png[FilterDemo_Simplified, width="300",float=right]
+
 Filter predicates are the core of the `filter` command.  Each filter predicate specifies a testable condition that, for every task, may evaluate to either `true` or `false` (e.g. whether the deadline is earlier than 1/10/2018).  Filter predicates are regarded as "indivisible".
 
 // end::filter-overview[]
@@ -230,13 +233,7 @@ However, when there are many tasks in the deadline manager and the simplified sy
 
 Tasks can be filtered by typing `filter` followed by one or more space-separated keywords (e.g. `filter assignment`, `filter homework CS2103`, or `filter badminton utown 3/10/2018`).  Such a filter expression would display only those tasks that contain textual or date fields (i.e. name, deadline, tags, and attachments) that matches **every** keyword (e.g. `filter homework CS2103` will match a task with name `Homework 1` **and** tags `CS2103` and `easy`).
 
-The following screenshot is an example to demonstrate that any field may be matched:
-
-[filterdemo_simplified]
-.Result of `filter assignment` command (notice that the keyword "assignment" matches task name, tags, and attachments)
-[#img-filterdemo_simplified]
-[caption="Figure 3.6.2.1: "]
-image::userguide/filterdemo_simplified.png[FilterDemo_Simplified, width="300"]
+The screenshot on the right is an example to demonstrate that any field may be matched.
 
 // end::filter-simplified[]
 
@@ -273,9 +270,10 @@ Returns a subset of the current list of tasks that have a name, tag, attachment,
 // tag::filter-field[]
 ==== Controlling the field being matched
 
-Each keyword can instead be written as a _full predicate_, which is a string of the following format: `<key><operator><phrase>`. The following diagram is an example of a typical full predicate:
+.Filter unit format
+image::FilterUnitDiagramUG.png[width="120",role="thumb right"]
 
-image::FilterUnitDiagramUG.png[width="200"]
+Each keyword can instead be written as a _full predicate_, which is a string of the following format: `<key><operator><phrase>`. The diagram on the right is an example of a typical full predicate.
 
 Each of the three parts of a full predicate means the following:
 
@@ -504,9 +502,10 @@ Returns a subset of the current list of tasks that have a name that does not con
 // tag::filter-set[]
 ==== Set-based extensions for filter predicates
 
-For fields that represent a collection (i.e. tags and attachments), it is also possible to filter only tasks which **do not contain** other tags or attachments apart from those specified.  To do so, we introduce a set operator as per the diagram below:
+.Filter unit format (set-based)
+image::FilterUnitDiagramSetUG.png[width="150",role="thumb right"]
 
-image::FilterUnitDiagramSetUG.png[width="250"]
+For fields that represent a collection (i.e. tags and attachments), it is also possible to filter only tasks which **do not contain** other tags or attachments apart from those specified.  To do so, we introduce a set operator as per the diagram on the right.
 
 The part that was called `operator` previously is called the `field operator` here, and it retains its original meaning.  The `set operator` introduced here specifies how the specified set (in the filter predicate) compares to the task's set (of tags or attachments).
 
@@ -523,16 +522,7 @@ When comparing a set-based field without using this dual-operator syntax, the se
 
 Examples to demonstrate each operator type (using the tag field):
 
-[width="100%",options="header,autowidth"]
-|=========================================================
-|Task tags |Test phrase |Matches ">:" |Matches "=:" | Matches "<:"| Matches "::"
-|easy,CS2103,homework |CS2103 |Yes |No |No |Yes
-|easy,CS2103,homework |easy,CS2103,homework |Yes |Yes |Yes |Yes
-|easy,CS2103,homework |CS2103,homework,easy |Yes |Yes |Yes |Yes
-|CS2103 |CS2103,homework |No |No |Yes |No
-|easy,CS2103,homework |cs2103 |Yes |No |No |Yes
-|easy,CS2103,homework |cs |Yes |No |No |Yes
-|=========================================================
+image::userguide/filter_set_example.png[width="800"]
 
 [TIP]
 The set operator works in the same way as the above table for the attachment field as well.
@@ -567,17 +557,8 @@ There are a total of around *15 different types* of error messages.
 
 The following screenshots show two possible errors and the displayed result:
 
-[filterdemo_error1]
-.Possible error result #1
-[#img-filterdemo_error1]
-[caption="Figure 3.6.6.1: "]
-image::userguide/filterdemo_error1.png[FilterDemo_Error1, width="400"]
-
-[filterdemo_error2]
-.Possible error result #2
-[#img-filterdemo_error2]
-[caption="Figure 3.6.6.2: "]
-image::userguide/filterdemo_error2.png[FilterDemo_Error2, width="400"]
+.Screenshots displaying errors in the filter expression
+image::userguide/filterdemo_error_combined.png[FilterDemo_Combined, width="800"]
 
 // end::filter-errors[]
 // end::filter[]
@@ -624,7 +605,10 @@ Examples:
 * `sort n>` +
 Sorts the current list of tasks in view in descending order by name, where sorting is done in alphabetical order.
 
+[sortdemo1]
 .Result of "sort n<" command
+[#img-sortdemo1]
+[caption="Figure 3.10.1: "]
 image::userguide/sortdemo_1.png[SortDemo1, width="900"]
 
 * `sort due< name>` +
@@ -639,9 +623,12 @@ before those tasks with the tag `family`, finally followed by those tasks with t
 * `sort n< tag<{` +
 This is invalid syntax since the curly braces have not been closed. +
 
+[sortdemo2]
 .Result of "sort n< tag<{" command
+[#img-sortdemo2]
+[caption="Figure 3.10.2: "]
 image::userguide/sortdemo_2.png[SortDemo1, width="600"]
-The above figure shows the error message when user feeds in an invalid command.
+Figure 3.10.2 above shows the error message when user feeds in an invalid command.
 
 [TIP]
 In case a task does not belong to any of the tags mentioned in the sort comparator it will be placed at the bottom of the sorted list.
@@ -793,24 +780,29 @@ Creates and exports tasks to `cs2101.xml` in the same folder as Deadline Manager
 
 The following is a step-by-step guide on how the export command behaves.
 [exportdemo1]
-.A successful export command
+.Command box.
 [#img-exportdemo1]
 [caption="Figure 3.9.1: "]
-image::userguide/exportScreenshot_1.png[ExportDemo, width="790"]
-Figure 3.9.1 (left) shows the sequence of events, starting from when the user enters the `export p/cs2101.xml` command into the command box.
+image::userguide/exportdemo_1.PNG[ExportDemo, width="790"]
+In Figure 3.9.1 above, the user enters the `export p/cs2101.xml` command into the command box.
 
-Figure 3.9.1 (right) shows Deadline Manager exporting the file and displaying a success message. The exported file is located at cs2101.xml in the same folder, and contains the tasks displayed in the deadline manager, namely "CS2101 Oral Presentation" in the screenshot above.
+[exportdemo2]
+.Result of export command
+[#img-exportdemo2]
+[caption="Figure 3.9.2: "]
+image::userguide/exportdemo_2.png[ExportDemo2, width="790"]
+In Figure 3.9.2 above, after the user presses enter, Deadline Manager exports the file and display a success message. The exported file is located at cs2101.xml, and contains the tasks displayed in the deadline manager, namely "CS2101 Oral Presentation" in the screenshot above.
 
 * `export p/cs2101.txt` (Exports a file successfully) +
   `export p/cs2101.txt` +
 Fails and returns an error as `cs2101.txt` already exists when the second command is run. In order to protect your data, the second export command fails.
 
 [exportdemo3]
-.Export error message
+.Sample error message
 [#img-exportdemo3]
-[caption="Figure 3.9.2: "]
-image::userguide/exportScreenshot_2.png[ExportDemo3, width="790"]
-Figure 3.9.2 shows the error message when the user attempts to `export p/cs2101.txt` for the second time. Since the file `cs2101.txt` already exists, Deadline Manager will not overwrite any existing file so as to protect your data.
+[caption="Figure 3.9.3: "]
+image::userguide/exportdemo_3.png[ExportDemo3, width="790"]
+Figure 3.9.3 above shows the error message when the user attempts to export to a file that already exists. Deadline Manager will not overwrite any existing file so as to protect your data.
 
 [TIP]
 You can overwrite the file by specifying r/overwrite. The command would be `export p/cs2101.txt r/overwrite` in this case.
@@ -862,24 +854,30 @@ Examples:
 `import p/cs2101.xml r/all` +
 Imports all tasks from `cs2101.xml`. Deadline Manager will save all tasks, even if duplicates already exist.
 
-[importdemo]
-.Importing from XML, keeping duplicate tasks
-[#img-importdemo]
+[importdemo2]
+.User prepares to import from cs2101.xml
+[#img-importdemo2]
 [caption="Figure 3.10.1: "]
-image::userguide/importScreenshot_1.png[ImportDemo, width="790"]
-In Figure 3.10.1 (left), we assume that the user has previously exported to `cs2101.xml`. `cs2101.xml` contains another copy of "CS2101 Oral Presentation". The user now attempts to import from `cs2101.xml`.
+image::userguide/importdemo_2.png[ImportDemo2, width="790"]
+In Figure 3.10.1, we assume that the user has previously exported to `cs2101.xml`. `cs2101.xml` contains another copy of "CS2101 Oral Presentation". The user now attempts to import from `cs2101.xml`.
 
-The result of the import is shown in Figure 3.10.1 (right). Since the r/all command is used, both copies of "CS2101 Oral Presentation" are saved.
+[importdemo3]
+.Result of import command with the r/all command
+[#img-importdemo3]
+[caption="Figure 3.10.2: "]
+image::userguide/importdemo_3.png[ImportDemo3, width="790"]
+Figure 3.10.2 shows the success message after importing from cs2101.xml. Note that, as the r/all command is used, both copies of "CS2101 Oral Presentation" are saved.
 
-* `import p/cs2101.xml` +
+*
+`import p/cs2101.xml` +
 Imports all tasks from `cs2101.xml`. Since the r/all parameter is not specified, if an incoming task already exists in Deadline Manager, it is skipped.
 
-[importdemo2]
-.Result of import command with no parameters
+[importdemo4]
+.Result of import command with no additional parameters
 [#img-importdemo]
-[caption="Figure 3.10.2: "]
-image::userguide/importScreenshot_2.png[ImportDemo4, width="790"]
-Figure 3.10.2 shows the success message after importing from `cs2101.xml`. By default, duplicate entries are skipped. Since `cs2101.xml` contains a duplicate copy of "CS2101 Oral Presentation", nothing new is imported.
+[caption="Figure 3.10.3: "]
+image::userguide/importdemo_4.PNG[ImportDemo4, width="790"]
+Figure 3.10.3 shows the success message after importing from `cs2101.xml`. As `cs2101.xml` contains a duplicate copy of "CS2101 Oral Presentation", nothing new is imported.
 
 * `import p/"C:\Documents\cs2101.xml" r/all` +
 Imports all tasks from `C:\Documents\cs2101.xml`. Deadline Manager will save all tasks, even if duplicates already exist.
