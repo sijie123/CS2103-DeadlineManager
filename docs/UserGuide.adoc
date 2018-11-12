@@ -1051,7 +1051,7 @@ Attachments are merely linked in the deadline manager. A separate copy of the fi
 .`Copy path` button within the `File Explorer` application
 [#img-qnafilepath1]
 [caption="Figure 4.1: "]
-image::userguide/qna_filepath_1.png[QnAFilepath1, width="600"]
+image::userguide/qna_filepath_1.png[QnAFilepath1, width="500"]
 Figure 4.1 above indicates which button should be clicked in order to obtain the `FILEPATH`. The `FILEPATH` should look something similar to `"D:\Documents\123 p\Assignment.docx"`. You can use this for the `FILEPATH` argument in both <<Importing a set of tasks: `import`, `import`>>, <<Exporting a set of tasks: `export`, `export`>> and <<Managing attachments of a task : `attachment`, `attachments`>>.
 // end::faqfilepath[]
 
