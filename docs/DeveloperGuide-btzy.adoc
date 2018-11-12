@@ -1,0 +1,2101 @@
+= Deadline Manager - Developer Guide
+:site-section: DeveloperGuide
+:toc:
+:toc-title:
+:toc-placement: preamble
+:toclevels: 3
+:sectnums:
+:sectnumlevels: 6
+:imagesDir: images
+:stylesDir: stylesheets
+:xrefstyle: full
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:warning-caption: :warning:
+:experimental:
+endif::[]
+:repoURL: https://github.com/CS2103-AY1819S1-W17-4/main/tree/master
+
+By: `Team W17-4`      Since: `Sep 2018`      Licence: `MIT`
+
+The Deadline Manager is an app to help users keep track of upcoming deadlines. It is targeted for students in NUS School of Computing, and has features dedicated to improve their workflow.
+This *Developer Guide* help you get started with contributing to this open source project.
+
+== Introduction
+
+This guide is written with the intention of providing relevant and useful information for new developers to quickly familiarise themselves with the structure of the project.
+
+If you already have some experience developing this project, this guide should serve as a handy reference for specific implementations of features.
+
+=== Structure of this Developer Guide
+
+In <<Setting up, Section 2>>, this guide will first provide instructions on setting up your programming environment.
+
+<<Design, Section 3>> and <<Implementation, Section 4>> will then describe the structure of the project.
+
+Finally, <<Documentation, Section 5>>, <<Testing, Section 6>> and <<Dev Ops, Section 7>> will detail documentation, testing and post-development procedures.
+
+=== Development Team
+
+This project is developed by Team W17-4 based on the https://se-edu.github.io/index.html[original SE-EDU AddressBook Project]. For more information, please refer to our https://cs2103-ay1819s1-w17-4.github.io/main/AboutUs.html[About Us] guide.
+
+== Setting up
+
+This section of the developer guide will help you set up your programming environment to begin contributing to this project.
+
+=== Prerequisites
+
+The following software is required for building Deadline Manager.
+
+. *JDK `9`* or later
++
+[WARNING]
+JDK `10` on Windows will fail to run tests in <<UsingGradle#Running-Tests, headless mode>> due to a https://github.com/javafxports/openjdk-jfx/issues/66[JavaFX bug].
+Windows developers are highly recommended to use JDK `9`.
+
+. *IntelliJ* IDE
++
+[NOTE]
+IntelliJ by default has Gradle and JavaFx plugins installed. +
+Do not disable them. If you have disabled them, go to `File` > `Settings` > `Plugins` to re-enable them.
+
+
+=== Setting up the project on your computer
+
+. Fork this repo, and clone the fork to your computer
+. Open IntelliJ (if you are not in the welcome screen, click `File` > `Close Project` to close the existing project dialog first)
+. Set up the correct JDK version for Gradle
+.. Click `Configure` > `Project Defaults` > `Project Structure`
+.. Click `New...` and find the directory of the JDK
+. Click `Import Project`
+. Locate the `build.gradle` file and select it. Click `OK`
+. Click `Open as Project`
+. Click `OK` to accept the default settings
+. Open a console and run the command `gradlew processResources` (Mac/Linux: `./gradlew processResources`). It should finish with the `BUILD SUCCESSFUL` message. +
+This will generate all resources required by the application and tests.
+. Open link:{repoURL}/src/main/java/seedu/address/storage/XmlAdaptedTask.java[`XmlAdaptedTask.java`] and link:{repoURL}/src/main/java/seedu/address/ui/MainWindow.java[`MainWindow.java`] and check for any code errors
+.. Due to an ongoing https://youtrack.jetbrains.com/issue/IDEA-189060[issue] with some of the newer versions of IntelliJ, code errors may be detected even if the project can be built and run successfully
+.. To resolve this, place your cursor over any of the code section highlighted in red. Press kbd:[ALT + ENTER], and select `Add '--add-modules=...' to module compiler options` for each error
+. Repeat this for the test folder as well (e.g. check link:{repoURL}/src/test/java/seedu/address/commons/util/XmlUtilTest.java[`XmlUtilTest.java`] and link:{repoURL}/src/test/java/seedu/address/ui/HelpWindowTest.java[`HelpWindowTest.java`] for code errors, and if so, resolve it the same way)
+
+=== Building and running the project
+
+. Press the green `build` button on the top right corner of `IntelliJ` to build the project.
+. Press F10, then select `MainApp` to run the project.
+[NOTE]
+After you build for the first time, subsequently, the project can be run by pressing the green `play` button instead.
+
+=== Verifying the setup
+
+To test that you have correctly imported the project,
+
+
+. <<Building and running the project, Run>> the `seedu.address.MainApp` and ensure that the program launches successfully.
+. Run some sample commands and check that they do not cause any errors:
+.. `help`
+.. `list`
+. <<Testing,Run the tests>> to ensure that they all pass.
+
+=== Configurations to do before writing code
+
+Before you start contributing to this project, ensure that you have configured your `IntelliJ` as follows to conform with our coding standards and project structure.
+
+==== Configuring the coding style
+
+This project follows https://github.com/oss-generic/process/blob/master/docs/CodingStandards.adoc[oss-generic coding standards]. IntelliJ's default style is mostly compliant with ours but it uses a different import order from ours. To rectify,
+
+. Go to `File` > `Settings...` (Windows/Linux), or `IntelliJ IDEA` > `Preferences...` (macOS)
+. Select `Editor` > `Code Style` > `Java`
+. Click on the `Imports` tab to set the order
+
+* For `Class count to use import with '\*'` and `Names count to use static import with '*'`: Set to `999` to prevent IntelliJ from contracting the import statements
+* For `Import Layout`: The order is `import static all other imports`, `import java.\*`, `import javax.*`, `import org.\*`, `import com.*`, `import all other imports`. Add a `<blank line>` between each `import`
+
+Optionally, you can follow the <<UsingCheckstyle#, UsingCheckstyle.adoc>> document to configure Intellij to check style-compliance as you write code.
+
+==== Updating documentation to match your fork
+
+After forking the repo, the documentation will still have the W17-4 team branding and refer to the `CS2103-AY1819S1-W17-4/deadlineManager` repo.
+
+If you plan to develop this fork as a separate product (i.e. instead of contributing to `CS2103-AY1819S1-W17-4/deadlineManager`), you should do the following:
+
+. Configure the <<Docs-SiteWideDocSettings, site-wide documentation settings>> in link:{repoURL}/build.gradle[`build.gradle`], such as the `site-name`, to suit your own project.
+
+. Replace the URL in the attribute `repoURL` in link:{repoURL}/docs/DeveloperGuide.adoc[`DeveloperGuide.adoc`] and link:{repoURL}/docs/UserGuide.adoc[`UserGuide.adoc`] with the URL of your fork.
+
+==== Setting up CI
+
+Set up Travis to perform Continuous Integration (CI) for your fork. See <<UsingTravis#, UsingTravis.adoc>> to learn how to set it up.
+
+After setting up Travis, you can optionally set up coverage reporting for your team fork (see <<UsingCoveralls#, UsingCoveralls.adoc>>).
+
+[NOTE]
+Coverage reporting could be useful for a team repository that hosts the final version but it is not that useful for your personal fork.
+
+Optionally, you can set up AppVeyor as a second CI (see <<UsingAppVeyor#, UsingAppVeyor.adoc>>).
+
+[NOTE]
+Having both Travis and AppVeyor ensures your App works on both Unix-based platforms and Windows-based platforms (Travis is Unix-based and AppVeyor is Windows-based)
+
+==== Getting started with coding
+
+When you are ready to start coding,
+
+1. Get some sense of the overall design by reading <<Design-Architecture>>.
+2. Take a look at <<GetStartedProgramming>>.
+
+== Design
+
+This section aims to provide an overview of the structure behind Deadline Manager. For detailed implementation details on specific features, please refer to <<Implementation, Section 4>> instead.
+
+[[Design-Architecture]]
+=== Architecture
+
+This section (3.1) will give a brief overview on the components in Deadline Manager, as well as overview of design principles of the Deadline Manager. Sections <<Main, 3.2>> through <<Storage, 3.7>> below will give more details of each component.
+
+.Architecture Diagram
+image::Architecture.png[width="600"]
+
+The *_Architecture Diagram_* given above shows the high-level design of the Deadline Manager.
+
+==== Components
+
+The Deadline Manager consists of two shared components and four core components.
+
+==== Shared components
+
+* `Main`: The entry point of the App.
+* `Commons`: A collection of classes used by the other components in the App.
+
+==== Core components
+
+* <<Design-Ui,*`UI`*>>: The UI of the App.
+* <<Design-Logic,*`Logic`*>>: The command executor.
+* <<Design-Model,*`Model`*>>: Holds the data of the App in-memory.
+* <<Design-Storage,*`Storage`*>>: Reads data from, and writes data to, the hard disk.
+
+Each of the four core components
+
+* Defines its _API_ in an `interface` with the same name as the Component.
+* Exposes its functionality using a `{Component Name}Manager` class.
+
+For example, the `Logic` component (see the class diagram given below) defines it's API in the `Logic.java` interface and exposes its functionality using the `LogicManager.java` class.
+
+.Class Diagram of the Logic Component
+image::LogicClassDiagram.png[width="800"]
+
+==== Events-Driven Design
+
+The _Sequence Diagram_ below shows how the components interact for the scenario where the user issues the command `delete 1`.
+
+.Component interactions for `delete 1` command (part 1)
+image::SDforDeletePerson.png[width="800"]
+
+[NOTE]
+Note how the `Model` simply raises a `TaskCollectionChangedEvent` when the deadline manager data is changed, instead of asking the `Storage` to save the updates to the hard disk.
+
+The diagram below shows how the `EventsCenter` reacts to that event, which eventually results in the updates being saved to the hard disk and the status bar of the UI being updated to reflect the 'Last Updated' time.
+
+.Component interactions for `delete 1` command (part 2)
+image::SDforDeletePersonEventHandling.png[width="800"]
+
+[NOTE]
+Note how the event is propagated through the `EventsCenter` to the `Storage` and `UI` without `Model` having to be coupled to either of them. This is an example of how this Event Driven approach helps us reduce direct coupling between components.
+
+
+[TIP]
+The `.pptx` files used to create diagrams in this document can be found in the link:{repoURL}/docs/diagrams/[diagrams] folder. To update a diagram, modify the diagram in the pptx file, select the objects of the diagram, and choose `Save as picture`.
+
+=== Main
+
+`Main` has only one class called link:{repoURL}/src/main/java/seedu/address/MainApp.java[`MainApp`]. It is responsible for:
+
+* At app launch: initializing the components in the correct sequence, and connecting them up with each other.
+* At shut down: detaching the components and invoking cleanup methods where necessary.
+
+=== Commons
+
+Classes used by multiple components are placed in the `seedu.address.commons` package.
+<<Design-Commons,*`Commons`*>> represents a collection of classes used by multiple other components. Two of those classes play important roles at the architecture level.
+
+* `EventsCenter` : This class (written using https://github.com/google/guava/wiki/EventBusExplained[Google's Event Bus library]) is used by components to communicate with other components using events (i.e. a form of _Event Driven_ design)
+* `LogsCenter` : This class is used by components to write log messages to the App's log file.
+
+[[Design-Ui]]
+=== UI component
+
+.Structure of the UI Component
+image::UiClassDiagram.png[width="800"]
+
+*API* : link:{repoURL}/src/main/java/seedu/address/ui/Ui.java[`Ui.java`]
+
+Figure 5 shows the class diagram of `UI`.
+
+The `UI` consists of a `MainWindow` that is made up of parts e.g.`CommandBox`, `ResultDisplay`, `TaskListPanel`, `StatusBarFooter`, `BrowserPanel` etc. All of these, including the `MainWindow`, inherit from the abstract `UiPart` class.
+
+The `UI` component uses JavaFx UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the link:{repoURL}/src/main/java/seedu/address/ui/MainWindow.java[`MainWindow`] is specified in link:{repoURL}/src/main/resources/view/MainWindow.fxml[`MainWindow.fxml`]
+
+The `UI` component
+
+* Executes user commands using the `Logic` component.
+* Binds itself to some data in the `Model` so that it can automatically update when data in the `Model` changes.
+* Responds to events raised from various parts of the App and updates the UI accordingly.
+
+[[Design-Logic]]
+=== Logic component
+
+[[fig-LogicClassDiagram]]
+.Structure of the Logic Component
+image::LogicClassDiagram.png[width="800"]
+
+*API* :
+link:{repoURL}/src/main/java/seedu/address/logic/Logic.java[`Logic.java`]
+
+Figure 6 above shows the class diagram of `Logic`.
+
+.  `Logic` uses the `TaskCollectionParser` class to parse user commands.
+.  This results in a `Command` object which is executed by the `LogicManager`.
+.  The command execution can affect the `Model` (e.g. adding a task) and/or raise events.
+.  The result of the command execution is encapsulated as a `CommandResult` object which is passed back to the `UI`.
+
+As an example, given below is the Sequence Diagram for interactions within the `Logic` component for the `execute("delete 1")` API call.
+
+.Interactions Inside the Logic Component for the `delete 1` Command
+image::DeletePersonSdForLogic.png[width="800"]
+
+.  `Logic` uses the `TaskCollectionParser` class to parse the delete command.
+.  This results in a `DeleteCommand` object which is executed by the `LogicManager`.
+.  The command execution affects the `Model` by deleting a person.
+.  The result of the command execution is encapsulated as a `CommandResult` object which is passed back to the `UI`.
+
+[[Design-Model]]
+=== Model component
+
+.Structure of the Model Component
+image::ModelClassDiagram.png[width="800"]
+
+*API* : link:{repoURL}/src/main/java/seedu/address/model/Model.java[`Model.java`]
+
+Figure 8 shows the class diagram for `Model`.
+
+The `Model`
+
+* stores a `UserPref` object that represents the user's preferences.
+* stores the deadline manager data.
+* exposes an unmodifiable `ObservableList<Task>` that can be 'observed' e.g. the UI can be bound to this list so that the UI automatically updates when the data in the list change.
+* does not depend on any of the other three components.
+
+[NOTE]
+As a more OOP model, we can store a `Tag` list in `deadline manager`, which `Task` can reference. This would allow `deadline manager` to only require one `Tag` object per unique `Tag`, instead of each `Task` needing their own `Tag` object. An example of how such a model may look like is given below. +
+ +
+image:ModelClassBetterOopDiagram.png[width="800"]
+
+[[Design-Storage]]
+=== Storage component
+
+.Structure of the Storage Component
+image::StorageClassDiagram.png[width="800"]
+
+*API* : link:{repoURL}/src/main/java/seedu/address/storage/Storage.java[`Storage.java`]
+
+
+Figure 9 illustrates the class diagram of Storage.
+
+
+The `Storage` component
+
+* can save `UserPref` objects in json format and read it back.
+* can save the deadline manager data in xml format and read it back.
+* can export the last view in xml format and import it back.
+* can export the last view in csv format.
+* can handle requests and return output through event-driven architecture. Methods are executed by listening to events such as TaskCollectionChangedEvent.
+
+
+== Implementation
+
+This section describes some noteworthy details on how major features are implemented.
+
+// tag::undoredo[]
+
+=== Add feature
+
+The `add` command enables the user to create a new task with a name and a deadline.
+The user can also provide additional information including priority, frequency and tags.
+
+Given below is a sequence of steps, illustrating the interaction between `AddCommandParser`, `AddCommand` and `Model`:
+
+.Sequence diagram for adding a task
+image::AddOperationSequenceDiagram.png[width="800"]
+
+Step 1. The user enters an `add` command.
+
+Step 2. The `AddCommandParser#parse` method is invoked.
+The `AddCommandParser` receives the command with the arguments given as a string.
+
+Step 3. The `AddCommandParser` interprets the arguments and constructs a `AddCommand`.
+
+Step 4. The `AddCommand` with a `Task` specified by the user is returned.
+
+Step 5. The `AddCommand#execute` method is invoked.
+
+Step 6. The `Model` is updated: The `Model#addTask` method and the `Model#commitTaskCollection` method are invoked.
+
+Step 7. A `CommandResult` object is returned.
+
+=== Complete feature
+
+The `complete` command provides users a natural way to complete a task:
+either delete a task if it is not recurred or shift the deadline to the next occurrence if the task is recurred.
+
+==== Current Implementation
+
+The complete feature is implemented by `CompleteCommand` and `CompleteCommandParser`.
+
+After the task specified by the user is retrieved, the `CompleteCommand` will consider these two cases:
+
+* If the task is not recurred, it will be deleted.
+
+* Otherwise, the task will be updated using the following formula: +
+`NewDeadline = OldDeadline + Frequency`
+
+==== Sequence Flow
+
+Given below is a sequence of steps, illustrating the interaction between `CompleteCommandParser`, `CompleteCommand` and `Model`:
+
+.Sequence diagram for completing a task
+image::CompleteOperationSequenceDiagram.png[width="800"]
+
+Step 1. The user enters a `complete` command with the index of a task in the task list.
+
+Step 2. The `CompleteCommandParser#parse` method is invoked.
+The `CompleteCommandParser` receives the command with the arguments given as a string.
+
+Step 3. The `CompleteCommandParser` interprets the arguments and constructs a `CompleteCommand`.
+
+Step 4. The `CompleteCommand` with the index specified by the user is returned.
+
+Step 5. The `CompleteCommand#execute` method is invoked.
+
+Step 6. The task identified by the user is retrieved from the `Model`.
+
+Step 7. The `Model` is updated:
+If the task is not recurred, `Model#deleteTask` is invoked to delete the task.
+Otherwise, `Model#updateTask` (followed by `Model#updateFilteredTaskList`) is invoked
+with a new `Task` where the deadline is updated.
+
+Step 8. The `Model#commitTaskCollection` method is invoked.
+
+Step 9. A `CommandResult` object is returned.
+
+=== Undo/Redo feature
+
+==== Current Implementation
+
+The undo/redo mechanism is facilitated by `VersionedTaskCollection`.
+It extends `TaskCollection` with an undo/redo history, stored internally as an `taskCollectionStateList` and `currentStatePointer`.
+Additionally, it implements the following operations:
+
+* `VersionedTaskCollection#commit()` -- Saves the current deadline manager state in its history.
+* `VersionedTaskCollection#undo()` -- Restores the previous deadline manager state from its history.
+* `VersionedTaskCollection#redo()` -- Restores a previously undone deadline manager state from its history.
+
+These operations are exposed in the `Model` interface as `Model#commitTaskCollection()`, `Model#undoTaskCollection()` and `Model#redoTaskCollection()` respectively.
+
+Given below is an example usage scenario and how the undo/redo mechanism behaves at each step.
+
+Step 1. The user launches the application for the first time. The `VersionedTaskCollection` will be initialized with the initial deadline manager state, and the `currentStatePointer` pointing to that single deadline manager state.
+
+image::UndoRedoStartingStateListDiagram.png[width="800"]
+
+Step 2. The user executes `delete 5` command to delete the 5th task in the deadline manager. The `delete` command calls `Model#commitTaskCollection()`, causing the modified state of the deadline manager after the `delete 5` command executes to be saved in the `taskCollectionStateList`, and the `currentStatePointer` is shifted to the newly inserted deadline manager state.
+
+image::UndoRedoNewCommand1StateListDiagram.png[width="800"]
+
+Step 3. The user executes `add n/David ...` to add a new task. The `add` command also calls `Model#commitTaskCollection()`, causing another modified deadline manager state to be saved into the `taskCollectionStateList`.
+
+image::UndoRedoNewCommand2StateListDiagram.png[width="800"]
+
+[NOTE]
+If a command fails its execution, it will not call `Model#commitTaskCollection()`, so the deadline manager state will not be saved into the `taskCollectionStateList`.
+
+Step 4. The user now decides that adding the task was a mistake, and decides to undo that action by executing the `undo` command. The `undo` command will call `Model#undoTaskCollection()`, which will shift the `currentStatePointer` once to the left, pointing it to the previous deadline manager state, and restores the deadline manager to that state.
+
+image::UndoRedoExecuteUndoStateListDiagram.png[width="800"]
+
+[NOTE]
+If the `currentStatePointer` is at index 0, pointing to the initial deadline manager state, then there are no previous deadline manager states to restore. The `undo` command uses `Model#canUndoTaskCollection()` to check if this is the case. If so, it will return an error to the user rather than attempting to perform the undo.
+
+The following sequence diagram shows how the undo operation works:
+
+.Sequence diagram for `undo`
+image::UndoRedoSequenceDiagram.png[width="800"]
+
+The `redo` command does the opposite -- it calls `Model#redoTaskCollection()`, which shifts the `currentStatePointer` once to the right, pointing to the previously undone state, and restores the deadline manager to that state.
+
+[NOTE]
+If the `currentStatePointer` is at index `taskCollectionStateList.size() - 1`, pointing to the latest deadline manager state, then there are no undone deadline manager states to restore. The `redo` command uses `Model#canRedoTaskCollection()` to check if this is the case. If so, it will return an error to the user rather than attempting to perform the redo.
+
+Step 5. The user then decides to execute the command `list`. Commands that do not modify the deadline manager, such as `list`, will usually not call `Model#commitTaskCollection()`, `Model#undoTaskCollection()` or `Model#redoTaskCollection()`. Thus, the `taskCollectionStateList` remains unchanged.
+
+image::UndoRedoNewCommand3StateListDiagram.png[width="800"]
+
+Step 6. The user executes `clear`, which calls `Model#commitTaskCollection()`. Since the `currentStatePointer` is not pointing at the end of the `taskCollectionStateList`, all deadline manager states after the `currentStatePointer` will be purged. We designed it this way because it no longer makes sense to redo the `add n/David ...` command. This is the behavior that most modern desktop applications follow.
+
+image::UndoRedoNewCommand4StateListDiagram.png[width="800"]
+
+The following activity diagram summarizes what happens when a user executes a new command:
+
+.Activity diagram when a command is executed
+image::UndoRedoActivityDiagram.png[width="650"]
+
+==== Design Considerations
+
+===== Aspect: How undo & redo executes
+
+* **Alternative 1 (current choice):** Saves the entire deadline manager.
+** Pros: Easy to implement.
+** Cons: May have performance issues in terms of memory usage.
+* **Alternative 2:** Individual command knows how to undo/redo by itself.
+** Pros: Will use less memory (e.g. for `delete`, just save the task being deleted).
+** Cons: We must ensure that the implementation of each individual command are correct.
+
+===== Aspect: Data structure to support the undo/redo commands
+
+* **Alternative 1 (current choice):** Use a list to store the history of deadline manager states.
+** Pros: Easy for new Computer Science student undergraduates to understand, who are likely to be the new incoming developers of our project.
+** Cons: Logic is duplicated twice. For example, when a new command is executed, we must remember to update both `HistoryManager` and `VersionedTaskCollection`.
+* **Alternative 2:** Use `HistoryManager` for undo/redo
+** Pros: We do not need to maintain a separate list, and just reuse what is already in the codebase.
+** Cons: Requires dealing with commands that have already been undone: We must remember to skip these commands. Violates Single Responsibility Principle and Separation of Concerns as `HistoryManager` now needs to do two different things.
+// end::undoredo[]
+
+// tag::importexport[]
+=== Import and Export feature
+//==== Current implementation
+
+The deadline manager supports import and export features. This feature uses 2 components: `Storage` and `Model`.
+This section will first provide an overview into the components and API involved, before focusing on interactions between the components.
+
+==== Current Implementation
+
+This section will give an overview of how the import and export features work with `Model` and `Storage`.
+
+===== Overview of components
+Internally, `StorageManager` implements the following APIs from `ImportExportStorage` interface:
+
+* `importTaskCollection`:  Given a filename, imports and returns a `TaskCollection`.
+* `exportTaskCollection`: Given a `TaskCollection`, exports and writes to a specified file.
+
+Import/Export uses the same API as reading and saving the working `TaskCollection` file when exporting. However, additional checks are performed to ensure that the user does not inadvertently overwrite files, or corrupt the Deadline Manager.
+`StorageManager` only handles writing to and reading from file, and relies on `ModelManager` to decide what data should be read or written.
+
+[NOTE]
+An ImportExportExceptionEvent is raised if Deadline Manager fails to read or write files for any reason.
+
+The complementary `ModelManager` implements the following APIs necessary for Import and Export:
+
+* `importTaskCollection`: Creates and posts a new import request event
+* `exportTaskCollection`: Creates and posts a new export request event.
+
+The request events are posted to the `EventCenter`, which will dispatch to all subscribed components, such as `Storage`.
+
+===== Inter-component communication
+
+To facilitate communication between the two components, the deadline manager uses the event-driven model.
+An import or export request event is created by `ModelManager`, and a handler in `StorageManager` is invoked to handle the event.
+After data has been successfully read or written, the response is placed in another event for `ModelManager` to process.
+
+To achieve the above, `ModelManager` indicates an import/export request by creating these events:
+
+* `ImportRequestEvent`: Requests for a new import from file.
+* `ExportRequestEvent`: Requests to create a new export to file.
+
+`ModelManager` implements these additional methods to handle the responses from `Storage`:
+
+* `handleImportDataAvailableEvent`: Processes the read task collection and merges tasks into the current collection.
+* `handleImportExportExceptionEvent`: Indicates internally that the last import/export request has failed.
+
+[NOTE]
+It is the responsibility of the `Model` to feedback to the user in the case of an exception.
+
+
+Similarly, `StorageManager` returns the result of imports and errors with the following events:
+
+* `ImportExportExceptionEvent`: Indicates that an error has occurred with import or export.
+* `ImportDataAvailableEvent`: Indicates that the requested task collection has been read from disk.
+
+`StorageManager` implements these additional methods to handle requests from `Model`:
+
+* `handleImportRequestEvent`: Processes an import event and reads from file.
+* `handleExportRequestEvent`: Processes an export event and writes to file.
+
+==== Sequence Flow
+
+The above interactions between `Model` and `Storage` can be illustrated with the following sequence diagrams.
+
+.Sequence diagram for exporting tasks
+image::ExportSequenceDiagram.png[width="800"]
+The figure above shows the sequence diagram for the interaction that happens when the user requests to export tasks.
+
+Step 1. The user types in an export command. The Logic component parses the user's command, and calls ModelManager's `exportTaskCollection`.
+
+Step 2. The `ModelManager` posts an `ExportRequestEvent` to the `EventsCenter`.
+
+Step 3. The `EventsCenter` dispatches the `ExportRequestEvent` to `Storage`.
+
+Step 4. `Storage` handles the `ExportRequestEvent` and writes to file. At this stage, the export is complete.
+
+A similar interaction is seen when importing from a file.
+
+.Sequence diagram for importing tasks
+image::ImportSequenceDiagram.png[width="800"]
+
+The sequence diagram above shows the interactions that happen when a user attempts to import data from a file. The interactions are similar to export, with an additional step to resolve import conflict.
+
+Step 1. The user types in an import command. The Logic component parses the user's command, and calls ModelManager's `importTaskCollection`.
+
+Step 2. The `ModelManager` posts the `ImportRequestEvent` to the `EventsCenter`.
+
+Step 3. The `EventsCenter` dispatches the `ImportRequestEvent` to `Storage`.
+
+Step 4. `Storage` handles the `ImportRequestEvent`, reads from file, then posts a new `ImportDataAvailableEvent` to `EventsCenter` to signal that data is available.
+
+Step 5. The `EventsCenter` dispatches the `ImportDataAvailableEvent` back to `ModelManager`.
+
+Step 6. `ModelManager` takes the imported data and adds it to the Model. If necessary, it also de-conflicts the new entries.
+
+==== Import Conflict Resolver
+
+An imported task is deemed conflicting with an existing task if the two tasks compare `equal` with the internal implementation of Task's `equal` method.
+If the user attempts to import a new task that conflicts with an existing task, the task needs to be de-conflicted with one of the following resolver:
+
+* `IgnoreImportConflictResolver`: Discards the incoming task in favour of the existing task.
+* `OverwriteImportConflictResolver`: Updates the existing task to reflect the values of the incoming task.
+* `DuplicateImportConflictResolver`: Keep both copies.
+
+The user can specify the de-conflict algorithm with flags. By default, the `IgnoreResolver` is used.
+
+Given below is a sequence diagram to illustrate the interactions between `ModelManager` and `OverwriteImportConflictResolver`. While `OverwriteImportConflictResolver` is used as an example, the interactions with `IgnoreImportConflictResolver` and `DuplicateImportConflictResolver` are similar.
+
+.Sequence diagram for import conflict resolver
+image::ImportConflictResolverSequenceDiagram.png[width="800"]
+
+Step 1. After requesting for import, Storage returns the `Tasks` that are serialised from file through an `ImportDataAvailableEvent`. This event is dispatched to `ModelManager` via `EventsCenter`.
+
+Step 2. `ModelManager` retrieves the TaskCollection data, and for each task, `ModelManager` checks whether the task already exists in the Model.
+
+Step 3a. If the task already exists, the functional method `resolve(() -> add(), () -> delete(), task)` of `OverwriteImportConflictResolver` is invoked. The Functional Programming style is used here, and ModelManager passes a reference to its `add` and `delete` methods.
+
+Step 3b. `OverwriteImportConflictResolver` will first `delete()` the existing task, before it calls `add()` on the new one. This behaviour is specific to `OverwriteImportConflictResolver`. A `DuplicateImportConflictResolver` will simply add the new entry, while a `IgnoreImportConflictResolver` will do nothing.
+
+Step 4. Otherwise, if the task doesn't exist, `ModelManager` adds the task to the model.
+
+==== CSV Format support
+
+The discussion above has been format-agnostic, abstracting away details about the file formats. Deadline Manager supports both eXtensible Markup Language (XML) and Comma Separated Values (CSV) format. Currently, while XML format can be freely used to import and export data, CSV format can only be used to export data.
+
+The CSV/XML format support is implemented using the respective `{*}TaskCollectionStorage` class. `XMLTaskCollectionStorage` is able to import and export data, so it implements both `TaskCollectionReadStorage` and `TaskCollectionWriteStorage` interface. On the other hand, `CSVTaskCollectionStorage` can only export data, so it implements only the `TaskCollectionWriteStorage` interface.
+
+The `TaskCollectionReadStorage` specifies APIs that is responsible for reading from a file and serialising data into `Tasks` usable by `Model`. Classes that implement `TaskCollectionReadStorage` should support:
+
+* `readTaskCollection`: Reads a file and returns a `TaskCollection` serialised based on the contents of the file.
+
+The `TaskCollectionWriteStorage` specifies APIs that is responsible for de-serialising `Tasks` into a text format to be written to a file. Classes that implement `TaskCollectionWriteStorage` should support:
+
+* `saveTaskCollection`: De-serialises the `TaskCollection` and saves the data into a file at `filePath`.
+
+As a summary for the CSV/XML format discussion, the class diagram below shows the structure of `CsvTaskCollectionStorage` and `XmlTaskCollectionStorage`. This diagram is also replicated in <<Storage, `Storage`>> above.
+
+.Class diagram of Csv/XmlTaskCollectionStorage
+image::CsvXmlClassDiagram.png[width="800"]
+
+Notably, the `CsvTaskCollectionStorage` only implements the `TaskCollectionWriteStorage`, while `XmlTaskCollectionStorage` implements both.
+
+==== Design Considerations
+
+===== Aspect: Communication between `Model` and `Storage`
+
+Both the `Model` and the `Storage` components are required for import/export. However, they are separate components, and we need to establish a method of communication between the two components.
+
+* **Alternative 1 (current choice):** `Model` is maintained as being separate from `Storage`. The event-based style is used: an Import/Export event is created to signal a request, and another Import/Export event is created to signal that the data is ready.
+** Pros: `Storage` is decoupled from `Model`, i.e. changes to `Model` will not affect changes to `Storage`, and vice versa. This is a good OOP practice.
+** Cons: It is more difficult to implement and more overhead is incurred in passing data around. Calls are not immediate, and there is no way to immediately tell whether an execution succeeded or failed.
+* **Alternative 2:** Model executes an import/export method in Storage directly.
+** Pros: The data from the import/export request can be retrieved immediately and easily.
+** Cons: `Model` is more tightly coupled with `Storage`, i.e. `Model` and `Storage` will no longer be separate components, but will instead know the inner workings of each other.
+
+===== Aspect: How to resolve import conflicts
+
+As described in <<Import Deconflict, Import Deconflict>>, an import conflict arises when the user attempts to import tasks that already exist in Deadline Manager. We need an import conflict resolver to determine how to deal with these tasks.
+
+* **Alternative 1 (current choice):** An `ImportConflictResolver` class is implemented to resolve import conflicts. The user specifies which resolver algorithm to use, and the corresponding `{Method}ImportConflictResolver` object is created to resolve import conflicts.
+** Pros: This provides more flexibility for user to define how to resolve imports. Additionally, this is better Software Engineering practice as it follows the Single Responsibility Principle: the `ImportConflictResolver` object is responsible only for its own algorithm.
+** Cons: It is more difficult to implement an entirely separate `ImportConflictResolver` class, complete with separate sub-classes for different algorithms.
+* **Alternative 2:** Use an `enum` to implement ImportConflictResolver. The `ImportConflictResolver` enum provides a pre-defined selection of algorithms that the user can specify.
+** Pros: There is no need to implement separate classes. Since the `ImportConflictResolver` enum is only useful within Model, it reside within Model as a private variable.
+** Cons: If/else statements are required to determine which algorithm should be used. Additionally, an `ImportConflictResolver` implemented this way cannot be easily reused or extended.
+
+===== Aspect: How to support different file formats
+
+As Deadline Manager supports multiple file formats, it is essential to consider how to modularise the file formatting component so that `Storage` can seamlessly process different types of supported files. Furthermore,  some formats such as CSV may not support importing, so it is necessary to distinguish between reading and writing operations.
+
+* **Alternative 1 (current choice):** Maintain separate `TaskCollectionReadStorage` and `TaskCollectionWriteStorage` interfaces. Classes that support import/export can choose to support `ReadStorage`, `WriteStorage`, or both. This is written in an OOP style, and `StorageManager` is agnostic to the export format.
+** Pros: This provides more flexibility that could support more file formats in the future. With the required API in place, future implementations only need to ensure that they support reading and/or writing. Furthermore, this allows implementations to have the option of supporting either reading or writing, instead of having to support both. This could be a more sensible option for formats like CSV, where importing from CSV might not be as useful as exporting to one.
+** Cons: The behaviour might be a little harder to understand from an end-user's perspective. For example, in the current implementation, a user can export to CSV, but cannot import from one as only TaskCollectionWriteStorage is implemented.
+* **Alternative 2:** Combine TaskCollectionReadStorage and TaskCollectionWriteStorage into a single interface, so that implementations that support import/export must support both at once.
+** Pros: It is more intuitive for the user, as they can freely import from and export to any format.
+** Cons: It is more difficult to support a new format, as both the reading and writing features need to be supported at once. If a developer wants to implement only either reading or writing, they would violate the Liskov Substitution Principle. Thus, combining the interfaces would make implementation less flexible.
+
+// end::importexport[]
+
+// tag::sort[]
+=== Sort feature
+The sort command enables the user to sort the tasks currently being shown according to user defined custom comparator.
+It is made up of two main components - `SortCommandParser` and `SortCommand`
+
+==== Current Implementation
+The sort command is facilitated by `VersionedTaskCollection`.
+
+The sort command exposes the operation `updateSortedTaskList` to sort the task list.
+
+It is the responsibility of `SortCommandParser` to parse the user input into a comparator which can compare between two tasks.
+
+Then the comparator is passed onto the `SortCommand` which sorts the `versionedTaskCollection` according to the comparator.
+
+[NOTE]
+A `NullPointerException` is raised in case the `SortCommand` receives a `null` comparator.
+
+==== Sequence Flow
+
+Given below is a sequence of steps, illustrating the interaction between `SortCommandParser`, `SortCommand` and `ModelManager`
+
+Step 1. The user executes the sort command with a comparator typed by user.
+
+Step 2. The `SortCommandParser` receives the command with the user comparator given as a string.
+
+Step 3. The `SortCommandParser` parses the string into a valid comparator and calls the `SortCommand` with this comparator provided.
+
+.Sequence Diagram for executing Sort Command.
+image::SortOperationSequenceDiagram.png[width="800"]
+
+Step 4. The `SortCommand` calls the `updateSortedTaskList` API method of `ModelManager`
+
+Step 5. The method `updateSortedTaskList` sorts the `versionTaskCollection` using JavaFx sort method
+
+==== Implementation of Sort Parser
+`SortCommandParser` implements `Parser<>` interface. The most essential portion of `SortCommandParser`, which is chaining of comparators is shown below:
+[source,java]
+----
+public SortCommand parse(String args) throws SimpleParseException {
+
+    Comparator<Task> comparator = Comparator.comparing(Task::getClass, (a, b) -> {
+        return 0; // a default comparator which compares every task equal
+    });
+
+    // argumentsArray is an array of strings referring to all the arguments given to the sort command.
+
+    for (String arg: argumentsArray) {
+        final String taskField = arg.substring(0, arg.length() - 1);
+        final char comparisonChar = arg.charAt(arg.length() - 1);
+
+        switch(taskField) {
+        case "n":   // fallthrough
+        case "name": {
+            if (comparisonChar == '<') {
+                comparator = comparator.thenComparing(Task::getName);
+            } else {
+                comparator = comparator.thenComparing(Taks::getName, Comparator.reverseOrder());
+            }
+            break;
+        }
+        case "p":   // fallthrough
+        case "priority": {
+            if (comparisonChar == '<') {
+                comparator = comparator.thenComparaing(Task::getPriority);
+            }  else {
+                comparator = comparator.thenComparing(Task::getPriority, Comparator.reverseOrder());
+            }
+        }
+        // ... consists of case for other task fields as well
+        }
+    }
+    return new SortCommand(comparator);
+}
+----
+
+==== Design Considerations
+
+===== Aspect: Which task list to sort
+
+* **Alternative 1 (current choice):** The entire `versionedTaskList` is sorted using JavaFx inbuilt sort method.
+** Pros: Easy to implement.
+** Cons: Slow in performance.
+* **Alternative 2:** The sorting is done ONLY on the viewable `filteredTasks` list.
+** Pros: Fast in terms of performance.
+** Cons: Requires significant changes to the codebase since sorting the `filteredTasks` requires it to be modifiable.
+
+===== Aspect: How to sort for tags
+
+* **Alternative 1 (current choice):** The sort command takes in user input so that the user can specify the priority order of tags.
+** Pros: Provides immense flexibility to the user. Also follows Law of Demeter / Law of Least Knowledge since the `Tag` model itself does not know that it can be compared.
+** Cons: The flexibility comes at the cost of making sorting by tags complex for newbie users.
+* **Alternative 2:** The sorting is done in a pre-defined manner, example sorting tasks according to their alphabetical order of tags.
+** Pros: Easier to implement and simpler for newbie users.
+** Cons: Not useful for the user in many situations. Disobeys the Law of Demeter / Law of Least Knowledge since the `Tag` model will know that it can be compared with other tags.
+// end::sort[]
+
+// tag::filter[]
+// tag::filter-ppp-prefix[]
+=== Filter feature
+
+The deadline manager supports a very expressive filtering system.  The filtering system can be utilized with the `filter` command.
+
+// end::filter-ppp-prefix[]
+
+The filtering system is designed with two primary goals:
+
+* Expressiveness: Complex ways of filtering tasks can be expressed in the command format and be understood by the program.
+* Terseness: The amount of user input required to express a filter is as little as possible.
+
+// tag::filter-ppp-overview-header[]
+
+==== Overview
+
+// end::filter-ppp-overview-header[]
+
+When a user invokes the `filter` command (e.g. `filter t:CS2101 & n:Assignment`), the following steps are taken by the program:
+
+1. Extract the text describing the filter operation (e.g. `t:CS2101 & n:Assignment`)
+2. Parse the text describing the filter operation into a predicate (i.e. `Predicate<Task>`)
+3. Apply the predicate on the model (this simply calls `Model#updateFilteredPersonList()`, which internally leverages on JavaFX's `FilteredList` class to provide filtering by predicate)
+
+Step 1 is performed by the `AddressBookParser` class, and no special actions need to be taken by the filtering system.
+
+Step 3 is performed by the `FilterCommand` class.  It is a simple operation that simply delegates the task to `Model#updateFilteredPersonList()`.
+
+[NOTE]
+When executing any _modifying_ commands on a filtered list, the filter will be removed after that command (so all tasks will be shown).  Modifying commands are those commands that modify the deadline manager's content (e.g. `add`, `delete`, `edit` and `clear`).  This design decision has been made because modifying a task might cause a task to no longer remain satisfy a filter.
+
+The overwhelming majority of code for the filtering system comes from step 2, which is performed by the `FilterCommandParser` class.  The ability to parse complex filter descriptions into usable predicates forms the core of the filtering feature, and this ability makes the filtering system very flexible.
+
+In the rest of this guide that describes the filtering system, we use the term _filter expression_ to refer to the full filter operation that the user typed (e.g. `t:CS2101 & n:Assignment`, or even `t:CS2101 & ( n:Assignment | n:Homework) & p<3`), and the term _filter unit_ to refer to substrings of the filter expression that represent single indivisible predicates (e.g. `t:CS2101`, or `n:Homework`).
+
+// tag::filter-overview-condensed[]
+
+There are four components to parsing the filter operation:
+
+1. A boolean expression parser that understands the high-level syntax of the filter expression and digests the filter expression into filter units
+2. A parser that splits each filter unit (e.g. `t:CS2101`) into its three (or four) constituent parts if possible (e.g. `t`, `:`, `CS2101`) -- this is the lambda expression in the sequence diagram below, which resides in the `FilterCommandParser` class
+3. A parser that splits set-based fields (e.g. `CS2101,CS2103`) into individual keywords (this applies only to set-based fields (tags and attachments)) -- this is referred to as the _set parser_, and is implemented as a static method in a utility class
+4. A method for each field (e.g. `Name`, `Deadline`, `Priority`, `Tag`) that interprets the the parts of the splitted filter unit in the context of that particular field, and returns the predicate that is required  -- this is referred to as the _field-specific parser_, and is implemented as a static method in each filterable field
+
+[NOTE]
+The second component in the list above also accepts a filter unit that contains the third part alone (e.g. `CS2101`) without the other two parts -- this is known as the _simplified filter unit syntax_.  Also, when filtering by a set-based field, the filter unit can be splitted into four parts instead of three (e.g. `t=:CS2101,CS2103` will be plitted as `t`, `=`, `:`, `CS2101,CS2103`), and the additional symbol (`=` in this case) is used to specify how sets are compared.  These will be explained in more detail below.
+
+A general string tokenizer (this is the `StringTokenizer` class in the `parser` subdirectory) is shared by parts 1 and 2 to split the filter expression into tokens.
+
+.Sequence diagram for parsing a filter command (for non-set-based fields)
+image::FilterOperationSequenceDiagram.png[width="500"]
+
+The above diagram shows the simplified sequence of operations to parse a filter expression into a predicate for non-set-based fields.  Take note of the following simplifications in the sequence diagram above:
+
+* "Field" represents any filterable field -- `Name`, `Deadline`, `Priority`, or `Frequency`.
+* Strictly speaking, the "loop" is not actually a loop.  As the boolean expression parser parses the filter expression, it invokes the lambda expression whenever a filter unit is encountered.  For simplicity, the sequence diagram above hides the complexity within the boolean expression parser.
+// end::filter-overview-condensed[]
+* The construction of the `tokenizer` object is omitted so as to give focus to the interaction between the three components.  The `BooleanExpressionParser` actually constructs a `StringTokenizer` from the given `expression` (which is a `String`), before entering the loop.  This same `StringTokenizer` is fed into the lambda expression every time a filter unit is encountered.
+
+[NOTE]
+Set-based fields are described in <<Set parser>>.
+
+The sections below describe the string tokenizer and the aforementioned four components in more detail.
+
+==== String tokenizer
+
+This is represented by the class `seedu.address.logic.parser.tokenizer.StringTokenizer`.
+
+[NOTE]
+This class is not to be confused with `java.util.StringTokenizer`.
+
+This class is initialized with the whole filter expression, and can be queried for a token multiple times -- each query consumes and returns the next available token, in a similar way to `java.util.Scanner`.
+
+There are two ways to consume tokens using the string tokenizer:
+
+* Consume a text string.  This is used for consuming tokens that are intended to be textual (e.g. `t`, `CS2101`).  Consumption of text strings is quote-aware -- if the text string is quoted using single or double quotes, the text string would be consumed as a single token, even if it contains spaces or special characters.  This is useful when the user wants to search for a name that contains those characters.
+* Consume a token by a regular expression.  This is used for consuming symbolic tokens (e.g. `:`, `|`, `&`, `(`).
+
+When unambiguous, adjacent tokens need not be separated by whitespace.  This is usually the case when consuming a token specified by a regular expression.  This works because when consuming a token, it is often possible to know where the token ends even in the absense of whitespace (e.g. when encountering a matching closing quote or an operator symbol).
+
+[NOTE]
+The `StringTokenizer` class is also used in two other places -- in the `ArgumentTokenizer` class to tokenize arguments specified in the usual syntax for most other commands (e.g. `add n/Assignment 2 d/1/1/2018 p/1`), and in the `SetUtil` class to parse comma-separated set-based filter expressions (i.e. tags and attachments).
+
+==== Boolean expression parser
+
+This is represented by the generic class `seedu.address.logic.parser.tokenizer.BooleanExpressionParser<T>`, and it is a general boolean expression parser that is designed to be unaware of the syntax of individual filter units.
+
+The following operators are recognized (highest precedence first):
+
+* `!`: Logical negation (NOT) of two predicates
+* `&` or `&&`: Logical conjunction (AND) of two predicates
+* `|` or `||`: Logical disjunction (OR) of two predicates
+
+Parentheses (`(` and `)`) are also recognized and respected, and they may be nested to arbitrary depth.  When two predicates are adjacent, the `&` operator is inserted between them.  This allows for simpler filter expressions (especially when combined with the simplified filter unit syntax).
+
+The boolean expression parser uses the link:https://en.wikipedia.org/wiki/Shunting-yard_algorithm[shunting yard algorithm] to provide precedence-respecting parsing of the filter expression.
+
+The boolean expression parser functions as follows:
+
+1. The boolean expression parser is constructed with the filter expression, and it constructs a `StringTokenizer` instance from the given filter expression.
+2. When the start of an operand (i.e. filter unit) is encountered, it hands over the `StringTokenizer` instance to the filter unit parser (this is defined in the `FilterCommandParser` class).  The filter unit parser determines the field name, and then uses the field-specific parser to construct the predicate (i.e. `Predicate<Task>` instance) that the filter unit represents.  This predicate is returned to the boolean expression parser.
+
+Application of operators (i.e. `!`, `&`, `|`) is done by the boolean expression parser itself (i.e. without delegating the work to other classes).
+
+// tag::filter-unit-parser[]
+
+==== Filter unit parser
+
+The filter unit parser is written as a lambda expression inside the `FilterCommandParser` class.  This lambda expression then calls `FilterCommandParser#createFilterUnit`, which contains most of the logic for the filter unit parser.  There are two reasons for placing the filter unit parser in the `FilterCommandParser` class:
+
+* The filter unit parser parses syntax that is specific to filters only, and it cannot be easily adapted for other uses.
+* It frees both the boolean expression parser and the field-specific parser from having to depend on the `FilterCommandParser` class.
+
+// tag::filter-unit-parser-extract[]
+
+There are three possible ways to express a filter unit:
+
+.Structure of a filter unit
+image::FilterUnitDiagram.png[width="200", float=right]
+
+1. The full syntax -- this allows for specifying the field for comparison and the method of comparison used
+2. The extended full syntax for sets -- this is enhanced to specify how to compare sets
+3. The simplified syntax -- this improves terseness and reduces cognitive overhead
+
+The diagram on the right describes a filter unit that is specified using the full syntax.
+
+// end::filter-unit-parser-extract[]
+
+The following diagram describes a filter unit that is specified using the extended full syntax for sets:
+
+.Structure of a filter unit that uses the extended full syntax for sets
+image::FilterUnitDiagramSet.png[width="250"]
+
+As shown in the diagram above, a filter unit (using the full syntax or extended syntax) consists of these parts:
+
+1. The field identifier, which identifies the field (e.g. name or deadline) that is being filtered on
+2. The test phrase, which represents the value or keyword that tasks are being compared to
+3. The filter operator, which describes how the identified field is compared to the test phrase (for set-based fields, this describes how each item (tag or attachment) in the identified field is compared to each item in the test phrase) (more details below)
+4. (For the extended syntax only) The set operator, which describes the how the set of items (tags or attachments) in the identified field is compared to the set of items in the test phrase, when regarded as a set (more details below)
+
+[NOTE]
+The simplified syntax only contains the test phrase, and is explained in a separate section below.
+
+// tag::filter-unit-parser-diagram[]
+
+The filter unit parser distinguishes between the three possible ways to express a filter unit, as per the activity diagram below:
+
+.Activity diagram for parsing a filter unit
+image::FilterUnitActivityDiagram.png[width="600"]
+
+// end::filter-unit-parser-diagram[]
+// end::filter-unit-parser[]
+
+The above diagram demonstrates how each of the three possible ways are distinguished.  Note that in the diagram above:
+
+* A non-quoted field identifier only matches alphabets.  There is never a need to use any other kind of character for the field identifier (see <<Field identifier>> below).
+* A non-quoted test phrase only allows alphanumeric characters and the characters `_`, `-`, `/`, `\`, `,`, and `.`.  (The `/` character allows dates to work, and the `,` character allows tag lists to work.)  The string tokenizer provides the bindings to facilitate this check.  If other characters are required, then the test phrase must be placed in quotes (either single or double quotes are acceptable, but they must match).
+* An operator (both the filter operator and set operator) only matches `<`, `=`, `>`, and `:`.
+* The "save tokenizer position" action saves the current read position (of the string tokenizer) into a local variable, so that the position may be restored (thus "rewinding" the string tokenizer) if the "restore tokenizer position" action is encountered.
+
+The four parts of a filter unit are described in the following sections.
+
+===== Field identifier
+
+There are six filterable fields in a task, and each of these fields correspond to two or more field identifiers:
+
+* `n` or `name` -- the name of the task
+* `d`, `due` or `deadline` -- the deadline (i.e. due date) of the task
+* `p` or `priority` -- the priority of the task
+* `f` or `frequency` -- the frequency of the task (in days)
+* `t` or `tag` -- the set of tags associated with the task
+* `a` or `attachment` -- the set of attachments associated with the task
+
+Field identifiers that correspond to the same field are equivalent.
+
+===== Test phrase
+
+This is the value or keyword that tasks are compared to, and the syntax of this field depends on the field identifier of this filter unit.
+
+The following is the required syntax for each filterable field:
+
+* Name: Any text string
+* Deadline: Any date in the form `DD/MM/YYYY`
+* Priority: Any valid priority value (i.e. any integer between 0 and 4 inclusive)
+* Frequency: Any valid frequency value (i.e. any non-negative integer that does not exceed the maximum bounds of an integer)
+* Tag set: Any comma-separated list of tags, where each tag can be any text string (e.g. `CS2101,CS2103T`)
+* Attachment set: Any comma-separated list of attachments, where each attachment can be any text string (e.g. `helloworld.txt,Main.java`)
+
+[NOTE]
+The rules for quoted strings for the string tokenizer applies here as well, because the same string tokenizer is used here.
+
+Set-based fields that contain spaces may be specified by placing quotes around those the item with spaces.  This means that the whole test phrase must also be quoted with a different type of quote (e.g. `t:"CS2101,CS2103T,'Oral Presentation'"`).
+
+===== Filter operator
+
+The filter operator specifies exactly _how_ the task should be compared to the test phrase.
+
+For fields that are intrinsically ordered (i.e. deadline, priority and frequency), the `<`, `=`, and `>` operators have their usual mathematical meaning, except that the operators `<` and `>` are non-strict.  This means that `p>2` will return a superset of the tasks returned by `p=2`.
+
+For textual fields (e.g. name, tag), the `<`, `=`, `>` operators represent _substring_, _equivalence_, and _superstring_ relations respectively.
+
+[NOTE]
+For all fields, `=` is equivalent to the intersection of `<` and `>`.
+
+As most users do not usually require such fine-grained control over the filter operator, the `:` operator, known as the _convenience_ operator, is provided as well.  The convenience operator is an alias for one of the other filter operators, and the choice of filter operator depends on the field identifier.  For each field, the filter operator that is expected to be most commonly used is chosen as the target for the convenience operator.
+
+The following list shows what the convenience operator means, in the context of each field:
+
+* Name: `:` is an alias for `>`
+* Deadline: `:` is an alias for `<`
+* Priority: `:` is an alias for `>`
+* Frequency: `:` is an alias for `<`
+* Tag set: `:` is an alias for `>`
+* Attachment set: `:` is an alias for `>`
+
+===== Set operator =====
+
+Set-based fields can specify an additional level of comparison - how the task's set compares with the specified set.  It is distinct from the filter operator because the filter operator is used to compare each individual item in the set (in the context of the given field), while the set operator is used to compare at the set level (which is same regardless of which field is being compared).
+
+For set-based fields (e.g. tags), the filter unit parser does not invoke the field-specific parser directly.  Instead, control goes through the set parser, which is described in <<Set parser>> below.
+
+===== Simplified filter unit syntax
+
+The simplified filter unit syntax elides the field identifier and the filter operator.  A filter unit (specified with the simplified syntax) is tested against all _eligible_ fields.
+
+All textual and date fields are _eligible_.  This means that the name, deadline, tags, and attachments fields are tested against when the simplified syntax is used.  Numeric fields (i.e. priority and frequency) are omitted because they often inadvertently match a test phrase (e.g. when the user attempts to search for tasks which have a name or tag that contains numbers).
+
+Each eligible field is compared as if using the convenience operator (for both the filter operator and set operator, if necessary).  A match in _any_ eligible field of a task will cause the task to match this filter unit.  Errors in interpreting the test phrase in the context of a field are simply treated as a non-match of the field instead of a hard error (e.g. the test phrase `Assignment` cannot be interpreted as a deadline, so the deadline field will be skipped when attempting to match this test phrase).
+
+As with the full syntax, the simplified syntax supports quoting the test phrase if special characters are required.
+
+==== Set parser
+
+The set parser tokenizes the given test phrase, and feeds each item into the field-specific parser separately.
+
+The `<`, `=`, `>` set operators represent _subset_, _equivalence_, and _superset_ relations respectively.  Each individual item is compared using the specified filter operator as specified in <<Filter operator>>.
+
+Just like the filter operator, there is a convenience set operator (`:`), and it is an alias for `>`.
+
+[NOTE]
+The set operator is orthogonal to the filter operator, and hence they may be combined in any way.  Furthermore, when the set operator is omitted for a set-based field, the convenience set operator is implied.
+
+The set parser is implemented in the `makeFilter()` method of the `seedu.address.model.util.SetUtil` class.  It parses the comma-separated list (i.e. the test phrase) using a new instance of `StringTokenizer`, and then uses reflection to invoke the relevant field-specific parser for each item in the comma-separated list.  This is illustrated in the sequence diagram below:
+
+.Sequence diagram for parsing a filter command (for set-based fields)
+image::FilterOperationSequenceDiagramSet.png[width="800"]
+
+As with the sequence diagram for non-set-based fields, the above diagram is simplified and omits details about how the test phrase is split into tokens using a new `StringTokenizer` instance.  "Field" represents any filterable set-based field -- `Tag` or `Attachment`.
+
+[NOTE]
+Reflection is required here because the `makeFilter()` method is static, and the correct `makeFilter()` method has to be chosen at runtime (based on the given field).
+
+The resultant predicates returned by the field-specific parser are then combined based on the given set operator.
+
+==== Field-specific parser
+
+As field-specific parsers have to be implemented differently for each filterable field, the design choice was made to place each field-specific parser in its respective field class.  More precisely, each field-specific parser is implemented as a static method (`makeFilter()`) in its field class.
+
+When each filter unit is parsed, it invokes the field-specific parser for the given field identifier.  The field-specific parser then creates and returns a predicate from the given filter operator and test phrase.
+
+[NOTE]
+Priority values do not compare in the same order as their values as integers.  Priority values have this order (from highest to lowest priority): 1 > 2 > 3 > 4 > 0.
+
+==== Error messages
+
+As the filter expression syntax can be rather complicated, detecting syntax errors and displaying useful error messages help the user to rectify those errors quickly.  When a parse error is detected, the filter command is designed to the offending token and provides an error message customised for that error.
+
+// tag::filter-error-messages[]
+
+Error conditions are signalled via checked exceptions that inherit from `seedu.address.logic.parser.tokenizer.exception.TokenizationException`.  Those error conditions that are associated with a particular character range in the filter expression inherit from `seedu.address.logic.parser.tokenizer.exception.TokenizationMismatchException`, which provides the facilities for storing the start and end indices of the offending character range.  `TokenizationMismatchException` itself inherits from `TokenizationException`.  Checked exceptions were chosen because they allow the compiler to enforce that every possible exception is caught, and creating a subclass for each kind of error condition allows for the precise specification (in the `throws` clause) of the kind of error conditions that can happen in each and every method.
+
+The following inheritance diagram shows the inheritance hierarchy of each kind of exception that can be thrown from parsing a filter expression:
+
+.Inheritance tree for exceptions that may be thrown from parsing a filter expression
+image::FilterParserErrorInheritanceDiagram.png[width="800"]
+
+// end::filter-error-messages[]
+
+In the diagram above, the [blue]#*blue*# classes are exceptions thrown by `StringTokenizer`, while the [red]#*red*# classes are exceptions thrown by `BooleanExpressionParser`.  In order to reduce coupling between `StringTokenizer` and `BooleanExpressionParser`, and to be able to distinguish (by type-based `catch` clauses) the end-of-string exceptions of those components, they do not shared the same class for end-of-string exceptions.
+
+`TokenizationInvalidPredicateException` is a wrapper class for `InvalidPredicateException`, which is thrown when the field-specific parser or set parser encounters an error.  The diagram below shows the different exceptions that may be thrown to indicate the types of issues that may be encountered when parsing a filter unit, and how they may be propagated to `FilterCommandParser` via wrapping by `TokenizationInvalidPredicateException`:
+
+.Inheritance tree for exceptions that may be thrown from parsing a filter unit
+image::FilterParserErrorPredicateInheritanceDiagram.png[width="500"]
+
+The filter unit parser is responsible for constructing a `TokenizationInvalidPredicateException` from any thrown `InvalidPredicateException` and associating the `TokenizationInvalidPredicateException` with the offending character range (which will be one of the three parts (or four, if using the extended set syntax) of the filter unit).
+
+Each error message gets translated into a _styled_ message string (encapsulated as `ParseException`) by `FilterCommandParser`, and that message string is propagated to the UI via the event system.  The message string is styled such that the offending character range is coloured red and underlined in the `ResultDisplay` panel that is visible to the user.
+
+[NOTE]
+In total, there are around 15 distinct kinds of error conditions when parsing a filter expression, and each of these error conditions produce a customised message that is displayed to the user.
+
+// tag::filter-design-considerations-header[]
+==== Design Considerations
+// end::filter-design-considerations-header[]
+
+===== Aspect: How to parse composite filter expressions
+
+* **Alternative 1 (current choice):** Use an algorithm that can parse arbitrarily complex expressions (i.e. the https://en.wikipedia.org/wiki/Shunting-yard_algorithm[shunting yard algorithm]).
+** Pros: Provides full flexibility in specifying composite filters.
+** Cons: Difficult to implement.
+* **Alternative 2:** Use a more restrictive parsing algorithm that prohibits parentheses and does not take operator precedence into consideration.
+** Pros: Easy to implement.
+** Cons: Filter command will be limited in expressiveness.  As the order of operations do not follow usual programming languages or mathematical expressions, users need to spend more time to understand the parsing format before use, and they might use the command erroneously.
+
+===== Aspect: Whether to support simplified filter semantics
+
+* **Alternative 1 (current choice):** Support simplified filter semantics (implicitly inserting `&` between adjacent predicates, and the simplified filter unit syntax).
+** Pros: Reduces cognitive overhead and typing time for most common cases, and makes `filter` feel like a standard keyword search function.
+** Cons: It is not possible to detect when user accidentally omits the boolean operator or filter field, so the displayed tasks may not be what the user intended to view.
+* **Alternative 2:** Only support the unsimplified semantics.
+** Pros: Easier to implement because there are less cases to consider.  Also, we can display an error if the user accidentally omits a boolean operator or field identifier.
+** Cons: More verbose filter expressions which may require higher cognitive overhead.
+
+// tag::filter-design-considerations-convenience[]
+===== Aspect: What the convenience operator should do
+
+* **Alternative 1 (current choice):** Support a convenience operator that is an alias of the most common filter operator for each field.
+** Pros: Reduces cognitive overhead as the convenience operator is usually the expected behaviour for most applications.
+** Cons: Users might be surprised that the convenience operator is an alias for a different operator depending on the field identifier.
+* **Alternative 2:** Support a convenience operator that is an alias of a fixed operator regardless of field.
+** Pros: Easier for users to remember what the convenience operator does.
+** Cons: Convenience operator is not really _convenient_ -- the behaviour might be surprising or awkward for some fields.
+// end::filter-design-considerations-convenience[]
+* **Alternative 3:** Don't support the convenience operator at all.
+** Pros: Least amount of implementation work.
+** Cons: Additional cognitive overhead as users need to figure out which of the available operators they actually want.
+
+// tag::filter-design-considerations-exceptions[]
+===== Aspect: How to signal exceptional conditions when parsing filter expressions
+
+* **Alternative 1 (current choice):** Use a different type of checked exception for every possible type of failure condition.
+** Pros: Every possible failure condition is listed in the `throws` clause of all methods -- developers can easily tell how exactly each aspect of parsing could fail, and Java will statically check that every possible failure condition is handled (which makes it impossible to overlook any failure conditions).
+** Cons: More verbose method signatures.
+* **Alternative 2:** Use a single checked exception for all possible failure conditions, and distinguish errors by the message string instead.
+** Pros: Less verbose method signatures, and yet the benefit of checked exceptions is retained.
+** Cons: Developers can only tell what exact failure conditions are possible by inspecting the whole call graph of the method.  Furthermore, it is difficult to distinguish different error conditions in order to customize and show relevant messages to the user.
+* **Alternative 3:** Use unchecked exceptions.
+** Pros: Simplest method signatures.
+** Cons: Easy to overlook possible failure conditions when modifying the code, so future developers might inadvertently introduce bugs.
+
+// end::filter-design-considerations-exceptions[]
+// end::filter[]
+
+// tag::attachments[]
+=== Attachment Feature
+The attachment feature aims to help users organise and keep track of important files needed for the respective tasks. It allows users to associate files in their computer with a particular task. When the user subsequently decides to perform a particular task, this feature provides functionality to identify files previously associated with the task and facilitates exporting it to an appropriate location.
+
+==== Current Implementation
+The attachment feature is mainly implemented by `AttachmentCommand`. As `AttachmentCommand` is an all-purpose command involving numerous actions, an interface `AttachmentAction` is defined within `AttachmentCommand` in order to facilitate this. There are 4 classes that implements `AttachmentAction` in order to implement the various actions of the attachment feature. The command line arguments for the attachment command is parsed by `AttachmentCommandParser`.
+
+==== Sequence Flow
+Given below is a sequence of steps, illustrating the interaction between `AttachmentCommandParser`, `AttachmentCommand` and classes that implement `AttachmentAction` after a user enters a relevant command.
+
+Step 1. The user enters an attachment command which involves either `add`, `list`, `delete` or `get` actions.
+
+Step 2. The `AttachmentCommandParser` receives the command with the arguments given as a string.
+
+Step 3. The `AttachmentCommandParser` interprets the arguments and constructs either a `AddAttachmentAction` for `add`, `ListAttachmentAction` for `list`, `DeleteAttachmentAction` for `delete` or `GetAttachmentAction` for `get`. The relevant arguments will also be passed as parameters to the constructors of these classes. Do note that these classes all extends from the abstract class `AttachmentAction`.
+
+Step 4. An `AttachmentCommand` is constructed and initialized with the `AttachmentAction` constructed in Step 3.
+
+Given below is another sequence of steps, also illustrated by the sequence diagram. They describe the interaction between `AttachmentCommand` and classes that implement `AttachmentAction` after the `AttachmentCommand#execute` method is invoked by the `LogicManager`.
+
+.Sequence Diagram for performing the `execute` method of an `AttachmentCommand`.
+image::AttachmentExecuteSequenceDiagram.png[width="800"]
+
+Step 1. The task identified by the user is retrieved from the `Model`.
+
+Step 2. The `perform` method of the `AttachmentAction` is invoked, with the task retrieved in Step 1 as the parameter.
+
+Step 3. The invoked `AttachmentAction` performs specific application logic which is different for each action. Then, a `ActionResult` object containing a `Task` and a message is returned to the `execute` method.
+
+Step 4. The `Model` is updated with the `Task` object retrieved from the returned `ActionResult`.
+
+Step 5. The message to be shown to the user is retrieved from the returned `ActionResult`. Then, it is used to create a `CommandResult` object which is to be returned to the the `LogicManager`.
+
+==== AttachmentAction and Implementing Classes
+`AttachmentAction` is an interface nested within `AttachmentCommand`. It defines and requires implementing classes to implement a `perform` method. The implementation for `AttachmentAction` is shown below:
+[source,java]
+----
+public interface AttachmentAction {
+
+    ActionResult perform(Task taskToEdit) throws CommandException;
+
+}
+----
+
+
+* The `perform` method is invoked by `AttachmentCommand` to perform the action on the task provided. `ActionResult` is immutable and contains two properties: a `Task` and a `message` which can be used by implementing classes to return the updated `Task` together with any `message` that should be displayed to the user. Since `Task` is immutable, a new task with the modified values should be returned by the method, instead of modifying `taskToEdit`.
+
+The contents of `ActionResult` is shown below:
+[source,java]
+----
+private static class ActionResult {
+    public final String resultMessage;
+    public final Task updatedTask;
+
+    public ActionResult(Task updatedTask, String resultMessage) {
+        this.updatedTask = updatedTask;
+        this.resultMessage = resultMessage;
+    }
+
+    /**
+     * Returns the task
+     */
+    public Task getTask() { return updatedTask; }
+
+    /**
+     * Returns the result message
+     */
+    public String getMessage() { return resultMessage; }
+}
+----
+
+
+===== AddAttachmentAction
+`AddAttachmentAction` implements `AttachmentAction` and provides the implementations required for the user to associate a file with a task. In other words, it adds an attachment to a task. The constructor class takes in a single parameter, `filePath`, denoting the path to the file to be associated with the task. The `perform` method of `AddAttachmentAction` executes the following:
+
+. Checks if a file exists at the specified `filePath`. A `CommandException` will be raised if this is not the case.
+. Checks if the task already contains an attachment with the same filename. A `CommandException` will be raised if this is not the case.
+. Constructs a new `Attachment` object using the file at the specified `filePath`.
+. Constructs a new `Task` object with the same attributes as the original task, but with the additional `Attachment` object added to the set of attachments.
+
+
+===== ListAttachmentAction
+`ListAttachmentAction` implements `AttachmentAction` and provides the implementations required for the user to list all the files associated with a task. In other words, it provides a listing of all attachments that are added to the task. The constructor class requries no parameters. The `perform` method of `ListAttachmentAction` executes the following:
+
+. Prints the total number of attachments in the specified task.
+. Prints the filename of each of the attachments in the specified task, with one attachment per line.
+
+===== DeleteAttachmentAction
+`DeleteAttachmentAction` implements `AttachmentAction` and provides the implementations required for the user to remove the association of a file that was previously associated with the task. In other words, it removes an attachment from a task. The constructor class takes in a single parameter, `fileName`, denoting the name of the attachment that is to be unassociated with the task. The `perform` method of `DeleteAttachmentAction` executes the following:
+
+. Checks if `fileName` corresponds to a valid attachment in the specified task. A  `CommandException` will be raised if this is not the case. The `fileName` is case senstitive.
+. Constructs a new `Task` object with the same attributes as the original task, but with the `Attachment` object identified by the `fileName` removed from the set of attachments.
+
+===== GetAttachmentAction
+`GetAttachmentAction` implements `AttachmentAction` and provides the implementations required for the user to retrieve a file that was previously associated with the task as attachment. In other words, it allows users to copy an attachment from a task out to the file system. The constructor class takes in two parameters, `filename`, denoting the name of the attachment and `savePath`, denoting the path to copy the attachment to. The `perform` method of `GetAttachmentAction` executes the following:
+
+. Checks if `fileName` corresponds to a valid attachment in the specified task. A  `CommandException` will be raised if this is not the case. The `fileName` argument is case sensitive.
+. Checks if the attachment identified by `fileName` still exists on the user's filesystem and can be copied from. A `CommandException` will be raised if this is not the case.
+. Copies the identified attachment to the path denoted by `savePath` on the filesystem. A `CommandException` will be raised if there are errors in doing so.
+
+==== Design Considerations
+
+===== Aspect: How to associate files to tasks
+* **Alternative 1 (current choice):** Saves the path of the file.
+** Pros: Easy to implement. Reduces storage footprint.
+** Cons: Associated file can cease to exist, due to it being renamed, moved or deleted.
+
+* **Alternative 2:** Copies the entire file to a user specified directory.
+** Pros: Deletion of the associated file (in its original location) will not affect the application.
+** Cons: Harder to implement file management system on the file system. Uses more storage space. User will not be able to update the attachment without deleting and re-adding the file.
+
+===== Aspect: How to identify attachments within a task
+
+* **Alternative 1 (current choice):** Use the file name as an identifier.
+** Pros: More user friendly as there is less words to type.
+** Cons: Cannot have more than one attachment with the same file name in the same task. For example: `folder1/Template.docx` and `folder2/Template.docx` cannot be simultaneously added as attachments to the same task.
+* **Alternative 2:** Use the path to the file as an identifier.
+** Pros: Allows for more than one attachments with the same file name to be associated with the same task. For example: `folder1/Template.docx` and `folder2/Template.docx` can be added to the same task as attachments.
+** Cons: Cumbersome for the user to type the full path to identify the file.
+* **Alternative 3:** Prompt the user for an identifier for each attachment added.
+** Pros: Can be customized by the user to manage multiple files with the same file name in the same task.
+** Cons: Cumbersome for the user to type the identifier for every time they want to add attachments to a task.
+// end::attachments[]
+
+
+=== Logging
+
+The Deadline Manager uses `java.util.logging` for logging. The `LogsCenter` class is used to manage the logging levels and logging destinations.
+
+* The logging level can be controlled using the `logLevel` setting in the configuration file (See <<Implementation-Configuration>>)
+* The `Logger` for a class can be obtained using `LogsCenter.getLogger(Class)` which will log messages according to the specified logging level
+* Currently log messages are output through: `Console` and to a `.log` file.
+
+*Logging Levels*
+
+* `SEVERE` : Critical problem detected which may possibly cause the termination of the application
+* `WARNING` : Can continue, but with caution
+* `INFO` : Information showing the noteworthy actions by the App
+* `FINE` : Details that is not usually noteworthy but may be useful in debugging e.g. print the actual list instead of just its size
+
+[[Implementation-Configuration]]
+=== Configuration
+
+Certain properties of the application can be controlled (e.g App name, logging level) through the configuration file (default: `config.json`).
+
+== Documentation
+
+Asciidoc is used to write documentation. It is imperative that the documentation is updated as new features are implemented so that developers are aware of the changes made.
+
+[NOTE]
+We chose asciidoc over Markdown because asciidoc, although a bit more complex than Markdown, provides more flexibility in formatting.
+
+=== Editing Documentation
+
+See <<UsingGradle#rendering-asciidoc-files, UsingGradle.adoc>> to learn how to render `.adoc` files locally to preview the end result of your edits.
+Alternatively, you can download the AsciiDoc plugin for IntelliJ, which allows you to preview the changes you have made to your `.adoc` files in real-time.
+
+=== Publishing Documentation
+
+See <<UsingTravis#deploying-github-pages, UsingTravis.adoc>> to learn how to deploy GitHub Pages using Travis.
+
+=== Converting Documentation to PDF format
+
+We use https://www.google.com/chrome/browser/desktop/[Google Chrome] for converting documentation to PDF format, as Chrome's PDF engine preserves hyperlinks used in webpages.
+
+Here are the steps to convert the project documentation files to PDF format.
+
+.  Follow the instructions in <<UsingGradle#rendering-asciidoc-files, UsingGradle.adoc>> to convert the AsciiDoc files in the `docs/` directory to HTML format.
+.  Go to your generated HTML files in the `build/docs` folder, right click on them and select `Open with` -> `Google Chrome`.
+.  Within Chrome, click on the `Print` option in Chrome's menu.
+.  Set the destination to `Save as PDF`, then click `Save` to save a copy of the file in PDF format. For best results, use the settings indicated in the screenshot below.
+
+.Saving documentation as PDF files in Chrome
+image::chrome_save_as_pdf.png[width="300"]
+
+[[Docs-SiteWideDocSettings]]
+=== Site-wide Documentation Settings
+
+The link:{repoURL}/build.gradle[`build.gradle`] file specifies some project-specific https://asciidoctor.org/docs/user-manual/#attributes[asciidoc attributes] which affects how all documentation files within this project are rendered.
+
+[TIP]
+Attributes left unset in the `build.gradle` file will use their *default value*, if any.
+
+[cols="1,2a,1", options="header"]
+.List of site-wide attributes
+|===
+|Attribute name |Description |Default value
+
+|`site-name`
+|The name of the website.
+If set, the name will be displayed near the top of the page.
+|_not set_
+
+|`site-githuburl`
+|URL to the site's repository on https://github.com[GitHub].
+Setting this will add a "View on GitHub" link in the navigation bar.
+|_not set_
+
+|`site-seedu`
+|Define this attribute if the project is an official SE-EDU project.
+This will render the SE-EDU navigation bar at the top of the page, and add some SE-EDU-specific navigation items.
+|_not set_
+
+|===
+
+[[Docs-PerFileDocSettings]]
+=== Per-file Documentation Settings
+
+Each `.adoc` file may also specify some file-specific https://asciidoctor.org/docs/user-manual/#attributes[asciidoc attributes] which affects how the file is rendered.
+
+Asciidoctor's https://asciidoctor.org/docs/user-manual/#builtin-attributes[built-in attributes] may be specified and used as well.
+
+[TIP]
+Attributes left unset in `.adoc` files will use their *default value*, if any.
+
+[cols="1,2a,1", options="header"]
+.List of per-file attributes, excluding Asciidoctor's built-in attributes
+|===
+|Attribute name |Description |Default value
+
+|`site-section`
+|Site section that the document belongs to.
+This will cause the associated item in the navigation bar to be highlighted.
+One of: `UserGuide`, `DeveloperGuide`, ``LearningOutcomes``{asterisk}, `AboutUs`, `ContactUs`
+
+_{asterisk} Official SE-EDU projects only_
+|_not set_
+
+|`no-site-header`
+|Set this attribute to remove the site navigation bar.
+|_not set_
+
+|===
+
+=== Site Template
+
+The files in link:{repoURL}/docs/stylesheets[`docs/stylesheets`] are the https://developer.mozilla.org/en-US/docs/Web/CSS[CSS stylesheets] of the site.
+You can modify them to change some properties of the site's design.
+
+The files in link:{repoURL}/docs/templates[`docs/templates`] controls the rendering of `.adoc` files into HTML5.
+These template files are written in a mixture of https://www.ruby-lang.org[Ruby] and http://slim-lang.com[Slim].
+
+[WARNING]
+====
+Modifying the template files in link:{repoURL}/docs/templates[`docs/templates`] requires some knowledge and experience with Ruby and Asciidoctor's API.
+You should only modify them if you need greater control over the site's layout than what stylesheets can provide.
+The SE-EDU team does not provide support for modified template files.
+====
+
+[[Testing]]
+== Testing
+
+Testing is important to the development of this project as it gives the developers and users assurance that the App will function as intended.
+
+=== Running Tests
+
+There are three ways to run tests.
+
+[TIP]
+The most reliable way to run tests is the 3rd one. The first two methods might fail some GUI tests due to platform/resolution-specific idiosyncrasies.
+
+*Method 1: Using IntelliJ JUnit test runner*
+
+* To run all tests, right-click on the `src/test/java` folder and choose `Run 'All Tests'`
+* To run a subset of tests, you can right-click on a test package, test class, or a test and choose `Run 'ABC'`
+
+*Method 2: Using Gradle*
+
+* Open a console and run the command `gradlew clean allTests` (Mac/Linux: `./gradlew clean allTests`)
+
+[NOTE]
+See <<UsingGradle#, UsingGradle.adoc>> for more info on how to run tests using Gradle.
+
+*Method 3: Using Gradle (headless)*
+
+Thanks to the https://github.com/TestFX/TestFX[TestFX] library we use, our GUI tests can be run in the _headless_ mode. In the headless mode, GUI tests do not show up on the screen. That means the developer can do other things on the Computer while the tests are running.
+
+To run tests in headless mode, open a console and run the command `gradlew clean headless allTests` (Mac/Linux: `./gradlew clean headless allTests`)
+
+=== Types of tests
+
+We have two types of tests:
+
+.  *GUI Tests* - These are tests involving the GUI. They include
+.. _System Tests_ that test the entire App by simulating user actions on the GUI. These are in the `systemtests` package.
+.. _Unit tests_ that test the individual components. These are in `seedu.address.ui` package.
+.  *Non-GUI Tests* - These are tests not involving the GUI. They include
+..  _Unit tests_ targeting the lowest level methods/classes. +
+e.g. `seedu.address.commons.StringUtilTest`
+..  _Integration tests_ that are checking the integration of multiple code units (those code units are assumed to be working). +
+e.g. `seedu.address.storage.StorageManagerTest`
+..  Hybrids of unit and integration tests. These test are checking multiple code units as well as how the are connected together. +
+e.g. `seedu.address.logic.LogicManagerTest`
+
+
+=== Troubleshooting Testing
+
+Sometimes, you would encounter problems with testing, and certain tests may fail with unexpected exceptions.
+An example is illustrated below:
+
+**Problem: `HelpWindowTest` fails with a `NullPointerException`.**
+
+* Reason: One of its dependencies, `HelpWindow.html` in `src/main/resources/docs` is missing.
+* Solution: Execute Gradle task `processResources`.
+
+== Dev Ops
+
+As we develop the app, some tasks are repeated very often. These tasks can be better done if we utilise Dev Ops, to automatically process these repetitive tasks.
+
+=== Build Automation
+
+See <<UsingGradle#, UsingGradle.adoc>> to learn how to use Gradle for build automation.
+
+=== Continuous Integration
+
+We use https://travis-ci.org/[Travis CI] and https://www.appveyor.com/[AppVeyor] to perform _Continuous Integration_ on our projects. See <<UsingTravis#, UsingTravis.adoc>> and <<UsingAppVeyor#, UsingAppVeyor.adoc>> for more details.
+
+=== Coverage Reporting
+
+We use https://coveralls.io/[Coveralls] to track the code coverage of our projects. See <<UsingCoveralls#, UsingCoveralls.adoc>> for more details.
+
+=== Documentation Previews
+When a pull request has changes to asciidoc files, you can use https://www.netlify.com/[Netlify] to see a preview of how the HTML version of those asciidoc files will look like when the pull request is merged. See <<UsingNetlify#, UsingNetlify.adoc>> for more details.
+
+=== Making a Release
+
+Here are the steps to create a new release.
+
+.  Update the version number in link:{repoURL}/src/main/java/seedu/address/MainApp.java[`MainApp.java`].
+.  Generate a JAR file <<UsingGradle#creating-the-jar-file, using Gradle>>.
+.  Tag the repo with the version number. e.g. `v0.1`
+.  https://help.github.com/articles/creating-releases/[Create a new release using GitHub] and upload the JAR file you created.
+
+=== Managing Dependencies
+
+A project often depends on third-party libraries. For example, deadline manager depends on the http://wiki.fasterxml.com/JacksonHome[Jackson library] for XML parsing. Managing these _dependencies_ can be automated using Gradle. For example, Gradle can download the dependencies automatically, which is better than these alternatives. +
+a. Include those libraries in the repo (this bloats the repo size) +
+b. Require developers to download those libraries manually (this creates extra work for developers)
+
+[[GetStartedProgramming]]
+[appendix]
+== Suggested Programming Tasks to Get Started
+
+Suggested path for new programmers:
+
+1. First, add small local-impact (i.e. the impact of the change does not go beyond the component) enhancements to one component at a time. Some suggestions are given in <<GetStartedProgramming-EachComponent>>.
+
+2. Next, add a feature that touches multiple components to learn how to implement an end-to-end feature across all components. <<GetStartedProgramming-RemarkCommand>> explains how to go about adding such a feature.
+
+[[GetStartedProgramming-EachComponent]]
+=== Improving each component
+
+Each individual exercise in this section is component-based (i.e. you would not need to modify the other components to get it to work).
+
+[discrete]
+==== `Logic` component
+
+*Scenario:* You are in charge of `logic`. During dog-fooding, your team realize that it is troublesome for the user to type the whole command in order to execute a command. Your team devise some strategies to help cut down the amount of typing necessary, and one of the suggestions was to implement aliases for the command words. Your job is to implement such aliases.
+
+[TIP]
+Do take a look at <<Design-Logic>> before attempting to modify the `Logic` component.
+
+. Add a shorthand equivalent alias for each of the individual commands. For example, besides typing `clear`, the user can also type `c` to remove all tasks in the list.
++
+****
+* Hints
+** Just like we store each individual command word constant `COMMAND_WORD` inside `*Command.java` (e.g.  link:{repoURL}/src/main/java/seedu/address/logic/commands/FilterCommand.java[`FilterCommand#COMMAND_WORD`], link:{repoURL}/src/main/java/seedu/address/logic/commands/DeleteCommand.java[`DeleteCommand#COMMAND_WORD`]), you need a new constant for aliases as well (e.g. `FilterCommand#COMMAND_ALIAS`).
+** link:{repoURL}/src/main/java/seedu/address/logic/parser/TaskCollectionParser.java[`TaskCollectionParser`] is responsible for analyzing command words.
+* Solution
+** Modify the switch statement in link:{repoURL}/src/main/java/seedu/address/logic/parser/TaskCollectionParser.java[`TaskCollectionParser#parseCommand(String)`] such that both the proper command word and alias can be used to execute the same intended command.
+** Add new tests for each of the aliases that you have added.
+** Update the user guide to document the new aliases.
+** See this https://github.com/se-edu/addressbook-level4/pull/785[PR] for the full solution.
+****
+
+[discrete]
+==== `Model` component
+
+*Scenario:* You are in charge of `model`. One day, the `logic`-in-charge approaches you for help. He wants to implement a command such that the user is able to remove a particular tag from everyone in the deadline manager, but the model API does not support such a functionality at the moment. Your job is to implement an API method, so that your teammate can use your API to implement his command.
+
+[TIP]
+Do take a look at <<Design-Model>> before attempting to modify the `Model` component.
+
+. Add a `removeTag(Tag)` method. The specified tag will be removed from everyone in the deadline manager.
++
+****
+* Hints
+** The link:{repoURL}/src/main/java/seedu/address/model/Model.java[`Model`] and the link:{repoURL}/src/main/java/seedu/address/model/TaskCollection.java[`TaskCollection`] API need to be updated.
+** Think about how you can use SLAP to design the method. Where should we place the main logic of deleting tags?
+**  Find out which of the existing API methods in  link:{repoURL}/src/main/java/seedu/address/model/TaskCollection.java[`TaskCollection`] and link:{repoURL}/src/main/java/seedu/address/model/task/Task.java[`Task`] classes can be used to implement the tag removal logic. link:{repoURL}/src/main/java/seedu/address/model/TaskCollection.java[`TaskCollection`] allows you to update a task, and link:{repoURL}/src/main/java/seedu/address/model/task/Task.java[`Task`] allows you to update the tags.
+* Solution
+** Implement a `removeTag(Tag)` method in link:{repoURL}/src/main/java/seedu/address/model/TaskCollection.java[`TaskCollection`]. Loop through each task, and remove the `tag` from each task.
+** Add a new API method `deleteTag(Tag)` in link:{repoURL}/src/main/java/seedu/address/model/ModelManager.java[`ModelManager`]. Your link:{repoURL}/src/main/java/seedu/address/model/ModelManager.java[`ModelManager`] should call `TaskCollection#removeTag(Tag)`.
+** Add new tests for each of the new public methods that you have added.
+** See this https://github.com/se-edu/addressbook-level4/pull/790[PR] for the full solution.
+****
+
+[discrete]
+==== `Ui` component
+
+*Scenario:* You are in charge of `ui`. During a beta testing session, your team is observing how the users use your deadline manager application. You realize that one of the users occasionally tries to delete non-existent tags from a contact, because the tags all look the same visually, and the user got confused. Another user made a typing mistake in his command, but did not realize he had done so because the error message wasn't prominent enough. A third user keeps scrolling down the list, because he keeps forgetting the index of the last task in the list. Your job is to implement improvements to the UI to solve all these problems.
+
+[TIP]
+Do take a look at <<Design-Ui>> before attempting to modify the `UI` component.
+
+. Use different colors for different tags inside task cards. For example, `friends` tags can be all in brown, and `colleagues` tags can be all in yellow.
++
+**Before**
++
+image::getting-started-ui-tag-before.png[width="300"]
++
+**After**
++
+image::getting-started-ui-tag-after.png[width="300"]
++
+****
+* Hints
+** The tag labels are created inside link:{repoURL}/src/main/java/seedu/address/ui/TaskCard.java[the `TaskCard` constructor] (`new Label(tag.tagName)`). https://docs.oracle.com/javase/8/javafx/api/javafx/scene/control/Label.html[JavaFX's `Label` class] allows you to modify the style of each Label, such as changing its color.
+** Use the .css attribute `-fx-background-color` to add a color.
+** You may wish to modify link:{repoURL}/src/main/resources/view/DarkTheme.css[`DarkTheme.css`] to include some pre-defined colors using css, especially if you have experience with web-based css.
+* Solution
+** You can modify the existing test methods for `TaskCard` 's to include testing the tag's color as well.
+** See this https://github.com/se-edu/addressbook-level4/pull/798[PR] for the full solution.
+*** The PR uses the hash code of the tag names to generate a color. This is deliberately designed to ensure consistent colors each time the application runs. You may wish to expand on this design to include additional features, such as allowing users to set their own tag colors, and directly saving the colors to storage, so that tags retain their colors even if the hash code algorithm changes.
+****
+
+. Modify link:{repoURL}/src/main/java/seedu/address/commons/events/ui/NewResultAvailableEvent.java[`NewResultAvailableEvent`] such that link:{repoURL}/src/main/java/seedu/address/ui/ResultDisplay.java[`ResultDisplay`] can show a different style on error (currently it shows the same regardless of errors).
++
+**Before**
++
+image::getting-started-ui-result-before.png[width="200"]
++
+**After**
++
+image::getting-started-ui-result-after.png[width="200"]
++
+****
+* Hints
+** link:{repoURL}/src/main/java/seedu/address/commons/events/ui/NewResultAvailableEvent.java[`NewResultAvailableEvent`] is raised by link:{repoURL}/src/main/java/seedu/address/ui/CommandBox.java[`CommandBox`] which also knows whether the result is a success or failure, and is caught by link:{repoURL}/src/main/java/seedu/address/ui/ResultDisplay.java[`ResultDisplay`] which is where we want to change the style to.
+** Refer to link:{repoURL}/src/main/java/seedu/address/ui/CommandBox.java[`CommandBox`] for an example on how to display an error.
+* Solution
+** Modify link:{repoURL}/src/main/java/seedu/address/commons/events/ui/NewResultAvailableEvent.java[`NewResultAvailableEvent`] 's constructor so that users of the event can indicate whether an error has occurred.
+** Modify link:{repoURL}/src/main/java/seedu/address/ui/ResultDisplay.java[`ResultDisplay#handleNewResultAvailableEvent(NewResultAvailableEvent)`] to react to this event appropriately.
+** You can write two different kinds of tests to ensure that the functionality works:
+*** The unit tests for `ResultDisplay` can be modified to include verification of the color.
+*** The system tests link:{repoURL}/src/test/java/systemtests/TaskCollectionSystemTest.java[`TaskCollectionSystemTest#assertCommandBoxShowsDefaultStyle() and TaskCollectionSystemTest#assertCommandBoxShowsErrorStyle()`] to include verification for `ResultDisplay` as well.
+** See this https://github.com/se-edu/addressbook-level4/pull/799[PR] for the full solution.
+*** Do read the commits one at a time if you feel overwhelmed.
+****
+
+. Modify the link:{repoURL}/src/main/java/seedu/address/ui/StatusBarFooter.java[`StatusBarFooter`] to show the total number of people in the deadline manager.
++
+**Before**
++
+image::getting-started-ui-status-before.png[width="500"]
++
+**After**
++
+image::getting-started-ui-status-after.png[width="500"]
++
+****
+* Hints
+** link:{repoURL}/src/main/resources/view/StatusBarFooter.fxml[`StatusBarFooter.fxml`] will need a new `StatusBar`. Be sure to set the `GridPane.columnIndex` properly for each `StatusBar` to avoid misalignment!
+** link:{repoURL}/src/main/java/seedu/address/ui/StatusBarFooter.java[`StatusBarFooter`] needs to initialize the status bar on application start, and to update it accordingly whenever the deadline manager is updated.
+* Solution
+** Modify the constructor of link:{repoURL}/src/main/java/seedu/address/ui/StatusBarFooter.java[`StatusBarFooter`] to take in the number of tasks when the application just started.
+** Use link:{repoURL}/src/main/java/seedu/address/ui/StatusBarFooter.java[`StatusBarFooter#handleTaskCollectionChangedEvent(TaskCollectionChangedEvent)`] to update the number of tasks whenever there are new changes to the taskCollection.
+** For tests, modify link:{repoURL}/src/test/java/guitests/guihandles/StatusBarFooterHandle.java[`StatusBarFooterHandle`] by adding a state-saving functionality for the total number of people status, just like what we did for save location and sync status.
+** For system tests, modify link:{repoURL}/src/test/java/systemtests/TaskCollectionSystemTest.java[`TaskCollectionSystemTest`] to also verify the new total number of tasks status bar.
+** See this https://github.com/se-edu/addressbook-level4/pull/803[PR] for the full solution.
+****
+
+[discrete]
+==== `Storage` component
+
+*Scenario:* You are in charge of `storage`. For your next project milestone, your team plans to implement a new feature of saving the deadline manager to the cloud. However, the current implementation of the application constantly saves the deadline manager after the execution of each command, which is not ideal if the user is working on limited internet connection. Your team decided that the application should instead save the changes to a temporary local backup file first, and only upload to the cloud after the user closes the application. Your job is to implement a backup API for the deadline manager storage.
+
+[TIP]
+Do take a look at <<Design-Storage>> before attempting to modify the `Storage` component.
+
+. Add a new method `backupTaskCollection(ReadOnlyTaskCollection)`, so that the deadline manager can be saved in a fixed temporary location.
++
+****
+* Hint
+** Add the API method in link:{repoURL}/src/main/java/seedu/address/storage/TaskCollectionStorage.java[`TaskCollectionStorage`] interface.
+** Implement the logic in link:{repoURL}/src/main/java/seedu/address/storage/StorageManager.java[`StorageManager`] and link:{repoURL}/src/main/java/seedu/address/storage/XmlTaskCollectionStorage.java[`XmlTaskCollectionStorage`] class.
+* Solution
+** See this https://github.com/se-edu/addressbook-level4/pull/594[PR] for the full solution.
+****
+
+[[GetStartedProgramming-RemarkCommand]]
+=== Creating a new command: `remark`
+
+By creating this command, you will get a chance to learn how to implement a feature end-to-end, touching all major components of the app.
+
+*Scenario:* You are a software maintainer for `taskCollection`, as the former developer team has moved on to new projects. The current users of your application have a list of new feature requests that they hope the software will eventually have. The most popular request is to allow adding additional comments/notes about a particular contact, by providing a flexible `remark` field for each contact, rather than relying on tags alone. After designing the specification for the `remark` command, you are convinced that this feature is worth implementing. Your job is to implement the `remark` command.
+
+==== Description
+Edits the remark for a task specified in the `INDEX`. +
+Format: `remark INDEX r/[REMARK]`
+
+Examples:
+
+* `remark 1 r/Likes to drink coffee.` +
+Edits the remark for the first task to `Likes to drink coffee.`
+* `remark 1 r/` +
+Removes the remark for the first task.
+
+==== Step-by-step Instructions
+
+===== [Step 1] Logic: Teach the app to accept 'remark' which does nothing
+Let's start by teaching the application how to parse a `remark` command. We will add the logic of `remark` later.
+
+**Main:**
+
+. Add a `RemarkCommand` that extends link:{repoURL}/src/main/java/seedu/address/logic/commands/Command.java[`Command`]. Upon execution, it should just throw an `Exception`.
+. Modify link:{repoURL}/src/main/java/seedu/address/logic/parser/TaskCollectionParser.java[`TaskCollectionParser`] to accept a `RemarkCommand`.
+
+**Tests:**
+
+. Add `RemarkCommandTest` that tests that `execute()` throws an Exception.
+. Add new test method to link:{repoURL}/src/test/java/seedu/address/logic/parser/TaskCollectionParserTest.java[`TaskCollectionParserTest`], which tests that typing "remark" returns an instance of `RemarkCommand`.
+
+===== [Step 2] Logic: Teach the app to accept 'remark' arguments
+Let's teach the application to parse arguments that our `remark` command will accept. E.g. `1 r/Likes to drink coffee.`
+
+**Main:**
+
+. Modify `RemarkCommand` to take in an `Index` and `String` and print those two parameters as the error message.
+. Add `RemarkCommandParser` that knows how to parse two arguments, one index and one with prefix 'r/'.
+. Modify link:{repoURL}/src/main/java/seedu/address/logic/parser/TaskCollectionParser.java[`TaskCollectionParser`] to use the newly implemented `RemarkCommandParser`.
+
+**Tests:**
+
+. Modify `RemarkCommandTest` to test the `RemarkCommand#equals()` method.
+. Add `RemarkCommandParserTest` that tests different boundary values
+for `RemarkCommandParser`.
+. Modify link:{repoURL}/src/test/java/seedu/address/logic/parser/TaskCollectionParserTest.java[`TaskCollectionParserTest`] to test that the correct command is generated according to the user input.
+
+===== [Step 3] Ui: Add a placeholder for remark in `TaskCard`
+Let's add a placeholder on all our link:{repoURL}/src/main/java/seedu/address/ui/TaskCard.java[`TaskCard`] s to display a remark for each task later.
+
+**Main:**
+
+. Add a `Label` with any random text inside link:{repoURL}/src/main/resources/view/TaskListCard.fxml[`TaskListCard.fxml`].
+. Add FXML annotation in link:{repoURL}/src/main/java/seedu/address/ui/TaskCard.java[`TaskCard`] to tie the variable to the actual label.
+
+**Tests:**
+
+. Modify link:{repoURL}/src/test/java/guitests/guihandles/TaskCardHandle.java[`TaskCardHandle`] so that future tests can read the contents of the remark label.
+
+===== [Step 4] Model: Add `Remark` class
+We have to properly encapsulate the remark in our link:{repoURL}/src/main/java/seedu/address/model/task/Task.java[`Task`] class. Instead of just using a `String`, let's follow the conventional class structure that the codebase already uses by adding a `Remark` class.
+
+**Main:**
+
+. Add `Remark` to model component (you can copy from link:{repoURL}/src/main/java/seedu/address/model/task/Address.java[`Address`], remove the regex and change the names accordingly).
+. Modify `RemarkCommand` to now take in a `Remark` instead of a `String`.
+
+**Tests:**
+
+. Add test for `Remark`, to test the `Remark#equals()` method.
+
+===== [Step 5] Model: Modify `Task` to support a `Remark` field
+Now we have the `Remark` class, we need to actually use it inside link:{repoURL}/src/main/java/seedu/address/model/task/Task.java[`Task`].
+
+**Main:**
+
+. Add `getRemark()` in link:{repoURL}/src/main/java/seedu/address/model/task/Task.java[`Task`].
+. You may assume that the user will not be able to use the `add` and `edit` commands to modify the remarks field (i.e. the task will be created without a remark).
+. Modify link:{repoURL}/src/main/java/seedu/address/model/util/SampleDataUtil.java/[`SampleDataUtil`] to add remarks for the sample data (delete your `taskCollection.xml` so that the application will load the sample data when you launch it.)
+
+===== [Step 6] Storage: Add `Remark` field to `XmlAdaptedTask` class
+We now have `Remark` s for `Task` s, but they will be gone when we exit the application. Let's modify link:{repoURL}/src/main/java/seedu/address/storage/XmlAdaptedTask.java[`XmlAdaptedTask`] to include a `Remark` field so that it will be saved.
+
+**Main:**
+
+. Add a new Xml field for `Remark`.
+
+**Tests:**
+
+. Fix `invalidAndValidTaskTaskCollection.xml`, `typicalTaskCollection.xml`, `validTaskCollection.xml` etc., such that the XML tests will not fail due to a missing `<remark>` element.
+
+===== [Step 6b] Test: Add withRemark() for `TaskBuilder`
+Since `Task` can now have a `Remark`, we should add a helper method to link:{repoURL}/src/test/java/seedu/address/testutil/TaskBuilder.java[`TaskBuilder`], so that users are able to create remarks when building a link:{repoURL}/src/main/java/seedu/address/model/task/Task.java[`Task`].
+
+**Tests:**
+
+. Add a new method `withRemark()` for link:{repoURL}/src/test/java/seedu/address/testutil/TaskBuilder.java[`TaskBuilder`]. This method will create a new `Remark` for the task that it is currently building.
+. Try and use the method on any sample `Task` in link:{repoURL}/src/test/java/seedu/address/testutil/TypicalTasks.java[`TypicalTasks`].
+
+===== [Step 7] Ui: Connect `Remark` field to `TaskCard`
+Our remark label in link:{repoURL}/src/main/java/seedu/address/ui/TaskCard.java[`TaskCard`] is still a placeholder. Let's bring it to life by binding it with the actual `remark` field.
+
+**Main:**
+
+. Modify link:{repoURL}/src/main/java/seedu/address/ui/TaskCard.java[`TaskCard`]'s constructor to bind the `Remark` field to the `Task` 's remark.
+
+**Tests:**
+
+. Modify link:{repoURL}/src/test/java/seedu/address/ui/testutil/GuiTestAssert.java[`GuiTestAssert#assertCardDisplaysTask(...)`] so that it will compare the now-functioning remark label.
+
+===== [Step 8] Logic: Implement `RemarkCommand#execute()` logic
+We now have everything set up... but we still can't modify the remarks. Let's finish it up by adding in actual logic for our `remark` command.
+
+**Main:**
+
+. Replace the logic in `RemarkCommand#execute()` (that currently just throws an `Exception`), with the actual logic to modify the remarks of a task.
+
+**Tests:**
+
+. Update `RemarkCommandTest` to test that the `execute()` logic works.
+
+==== Full Solution
+
+See this https://github.com/se-edu/addressbook-level4/pull/599[PR] for the step-by-step solution.
+
+[appendix]
+== Product Scope
+
+*Target user profile*:
+
+* has a need to manage a significant number of contacts
+* prefer desktop apps over other types
+* can type fast
+* prefers typing over mouse input
+* is reasonably comfortable using CLI apps
+
+*Value proposition*: manage contacts faster than a typical mouse/GUI driven app
+
+[appendix]
+== User Stories
+
+Priorities: High (must have) - `* * \*`, Medium (nice to have) - `* \*`, Low (unlikely to have) - `*`
+
+[width="59%",cols="22%,<23%,<25%,<30%",options="header",]
+|=======================================================================
+|Priority |As a ... |I want to ... |So that I can...
+|`* * *` |new user |see usage instructions |refer to instructions when I forget how to use the App
+
+|`* * *` |user |add a new task |
+
+|`* * *` |user |delete a task |remove entries that I no longer need
+
+|`* * *` |user |find a task by name |locate details of tasks without having to go through the entire list
+
+
+|`*` |user with many tasks in the deadline manager |sort tasks by name |locate a task easily
+|=======================================================================
+
+_{More to be added}_
+
+[appendix]
+== Use Cases
+
+(For all use cases below, the *System* is the `DeadlineManager` and the *Actor* is the `user`, unless specified otherwise)
+
+[discrete]
+=== Use case: Delete task
+
+*MSS*
+
+1.  User requests to list tasks
+2.  TaskCollection shows a list of tasks
+3.  User requests to delete a specific task in the list
+4.  DeadlineManager deletes the task
++
+Use case ends.
+
+*Extensions*
+
+[none]
+* 2a. The list is empty.
++
+Use case ends.
+
+* 3a. The given index is invalid.
++
+[none]
+** 3a1. Deadline Manager shows an error message.
++
+Use case resumes at step 2.
+
+[discrete]
+=== Use case: Add attachment to task
+
+*MSS*
+
+1. User requests to list tasks
+2. User requests to add a file as attachment to the specific task in the list
+3. Deadline Manager adds the file as attachment to the task
+
+Use case ends.
+
+*Extensions*
+
+[none]
+* 1a. User is presented with too many tasks.
++
+[none]
+** 1a1. User requests Deadline Manager to only show a subset of tasks or to sort them in some specified order
+** 1a2. Deadline Manager shows the requested subset of all the tasks
++
+Use case resumes at step 2.
+
+[none]
+* 2a. The file to be added does not exist on the user's file system.
++
+[none]
+** 2a1. Deadline Manager shows an error message.
++
+Use case resumes at step 2.
+
+[none]
+* 2b. There is already an existing file attached to the task, with the same file name.
++
+[none]
+** 2a2. Deadline Manager shows an error message.
++
+Use case resumes at step 2.
+
+
+
+[appendix]
+== Non Functional Requirements
+
+.  The application should work on any <<mainstream-os,mainstream OS>> as long as it has Java `9` or higher installed.
+.  The application should be able to hold up to 1000 tasks without a noticeable sluggishness in performance for typical usage.
+.  For a user with above average typing speed for regular English text (i.e. not code, not system admin commands), he/she should be able to accomplish most of the tasks faster using commands than using the mouse.
+.  The information about tasks should be stored in the local filesystem and are able to be persisted across different runs of the application.
+
+
+[appendix]
+== Glossary
+
+[[mainstream-os]] Mainstream OS::
+Windows, Linux, Unix, OS-X
+
+[[filepath]] File Path::
+a string that defines the unique location of a file in the file system. You may like to refer to the User Guide for instructions on how to obtain the File Path of a file on your computer.
+
+[appendix]
+== Product Survey
+
+*Product Name*
+
+Author: ...
+
+Pros:
+
+* ...
+* ...
+
+Cons:
+
+* ...
+* ...
+
+[appendix]
+== Instructions for Manual Testing
+
+Given below are instructions to test the app manually.
+
+[NOTE]
+These instructions only provide a starting point for testers to work on; testers are expected to do more _exploratory_ testing.
+
+=== Launch and Shutdown
+
+. Initial launch
+
+.. Download the jar file and copy into an empty folder
+.. Double-click the jar file +
+   Expected: Shows the GUI with a set of sample contacts. The window size may not be optimum.
+
+. Saving window preferences
+
+.. Resize the window to an optimum size. Move the window to a different location. Close the window.
+.. Re-launch the app by double-clicking the jar file. +
+   Expected: The most recent window size and location is retained.
+
+=== Adding a task
+. Add a new task
+.. Run the `add n/New Program d/01/02/2018` command. +
+   Expected: A new task is added to Deadline Manager with name: New Program, deadline: 01/02/2018, priority: 0, frequency: 0, no tags and no attachments.
+.. Run the add n/New Program d/01/02/2018` command again. +
+   Expected: Another new task is added to Deadline Manager with the same parameters as (a) above.
+
+=== Deleting a task
+
+. Deleting a task while all tasks are listed
+
+.. List all tasks using the `list` command.
+.. Ensure that there is at least 1 task, otherwise follow <<Adding a task, adding a task>> to add a task first.
+.. Run the `delete 1` command +
+   Expected: First task is deleted from Deadline Manager. Details of the deleted task shown in the status message. Timestamp in the status bar is updated.
+.. Test case: `delete 0` +
+   Expected: No task is deleted. Error details shown in the status message. Status bar remains the same.
+
+=== Filtering the list of tasks
+
+[NOTE]
+All unspecified fields of a task should be set to some value that does not match the filter predicate being tested.
+
+. Filtering using the simplified filter syntax
+
+.. Prerequisites: Task list contains a task with name `Presentation` and another task with tag `present`.
+.. Test case: `filter present` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter presentation` +
+   Expected: Only the task with name `Presentation` is displayed.
+.. Test case: `filter presentations` +
+   Expected: None of the two tasks are displayed.
+
+. Filtering with field identifier
+
+.. Prerequisites: Task list contains a task with name `Presentation` and another task with tag `present`.
+.. Test case: `filter n:present` +
+   Expected: Only the task with name `Presentation` is displayed.
+.. Test case: `filter t:present` +
+   Expected: Only the task with tag `present` is displayed.
+
+. Filtering by deadline
+
+.. Prerequisites: Task list contains a task with deadline `1/12/2018` and another task with deadline `15/12/2018`.
+.. Test case: `filter 15/12/2018` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter d:15/12/2018` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter 10/12/2018` +
+   Expected: Only the task with deadline `1/12/2018` is displayed.
+.. Test case: `filter d=15/12/2018` +
+   Expected: Only the task with deadline `15/12/2018` is displayed.
+.. Test case: `filter d>15/12/2018` +
+   Expected: Only the task with deadline `15/12/2018` is displayed.
+.. Test case: `filter 15/12` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter d=15/12` +
+   Expected: Only the task with deadline `15/12/2018` is displayed.
+
+. Filtering by tag
+
+.. Prerequisites: Task list contains a task with tags `homework` and `CS2103`, and another task with tags `homework`.
+.. Test case: `filter home` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter t:home` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter t:home,cs` +
+   Expected: Only the first task is displayed.
+.. Test case: `filter t=home` +
+   Expected: None of the tasks are displayed.
+.. Test case: `filter t=homework` +
+   Expected: Both tasks are displayed.
+
+. Filtering using set-based filter operators
+
+.. Prerequisites: Task list contains a task with tags `homework` and `CS2103`, and another task with tags `homework`.
+.. Test case: `filter t:=homework` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter t==homework` +
+   Expected: Only the second task is displayed.
+.. Test case: `filter t>=homework` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter t>=homework,cs2103` +
+   Expected: Only the first task is displayed.
+.. Test case: `filter t<=homework,cs2103` +
+   Expected: Both tasks are displayed.
+
+. Filtering with composite filters
+
+.. Prerequisites: Task list contains a task with name `CS2103 Presentation` and another task with name `MA1101R Homework`.
+.. Test case: `filter present home` +
+   Expected: None of the two tasks are displayed.
+.. Test case: `filter present & home` +
+   Expected: None of the two tasks are displayed.
+.. Test case: `filter present && home` +
+   Expected: None of the two tasks are displayed.
+.. Test case: `filter present | home` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter present || home` +
+   Expected: Both tasks are displayed.
+.. Test case: `filter present | !home` +
+   Expected: Only the task with name `CS2103 Presentation` is displayed.
+.. Test case: `filter !present | home` +
+   Expected: Only the task with name `MA1101R Homework` is displayed.
+.. Test case: `filter (present | home) & !MA1101` +
+   Expected: Only the task with name `CS2103 Presentation` is displayed.
+.. Test case: `filter (present | home) & ! MA1101` +
+   Expected: Only the task with name `CS2103 Presentation` is displayed.
+.. Test case: `filter (present|home)&!MA1101` +
+   Expected: Only the task with name `CS2103 Presentation` is displayed.
+.. Test case: `filter (present|home)!MA1101` +
+   Expected: Only the task with name `CS2103 Presentation` is displayed.
+
+. Comprehensive error messages
+
+.. Prerequisites: None.
+.. Each of these test cases should produce a distinct error message and the error is indicated in the user interface.  (While the error message may not be what you expect (e.g. the first test case highlights the `)` character instead of the preceding `&`, and which character should be highlighted depends on your point of view), the error message should be nonetheless reasonable.)
+... `filter cs&(("presentation slide"&f=7&)|meeting)&!csp`
+... `filter cs&(("presentation slide"&f=7)|meeting)&!`
+... `filter cs&(("presentation slide"&f=7)|meeting)&!csp)`
+... `filter cs&((("presentation slide"&f=7)|meeting)&!csp`
+... `filter cs&(("presentation slide"&f=7)|meeting)$!csp`
+... `filter cs&(("presentation slide&f=7)|meeting)&!csp`
+... `filter cs&((presentation slide"&f=7)|meeting)&!csp`
+... `filter cs&(("presentation slide"&f=xxx)|meeting)&!csp`
+... `filter cs&(("presentation slide"&g=7)|meeting)&!csp`
+
+=== Attachments
+. Adding an attachment to a task
+
+.. Prerequisites:
+... List all tasks using the `list` command. There should be at least one task in the Deadline Manager.
+... Create a file named `hello.txt` in the same directory as the Deadline Manager's jar file. You must have read permission for that file.
+... The first task listed in the application does not have any attachments yet.
+... Ensure that there isn't a file named `nothere.txt` in the same directory as the Deadline Manager's jar file.
+
+.. Test case: `attachment 1 add p/"hello.txt"` +
+   Expected: `hello.txt` is added to the first task as attachment. A gray label containing `hello.txt` should appear in the Task card of the first task. All tasks should be listed.
+
+.. Test case: `attachment 1 add p/"nothere.txt"` +
+   Expected: `nothere.txt` is not added as attachment as the file does not exist. Error details is shown in the status message.
+
+. Deleting an attachment from a task
+.. Prerequisites:
+... List all tasks using the `list` command. There should be at least one task in the Deadline Manager.
+... An attachment named `hello.txt` in the same directory as the Deadline Manager's jar file is already added to the first task listed in the application. (To do so, you may refer to the previous section.)
+... The first task listed has only 1 single attachment: `hello.txt`.
+
+.. Test case: `attachment 1 delete n/"hello.txt"` +
+   Expected: `hello.txt` is unassociated with the first task. It should still remain in the filesystem. The gray label containing `hello.txt` in the Task card of the first task is removed. All tasks should now be listed.
+
+.. Test case: `attachment 1 delete n/"nothere.txt"` +
+   Expected: No attachment is unassociated from the first task. Error details is shown in the status message.
+
+. Listing attachments of a task
+.. Prerequisites:
+... List all tasks using the `list` command. There should be at least two tasks in the Deadline Manager.
+... The first task listed should already have some number of attachments.
+... The second task listed should have no attachments.
+
+.. Test case: `attachment 1 list` +
+   Expected: The status message is updated with a listing of all the attachments of the first task. The attachments are identified by their filename, not filepath.
+
+.. Test case: `attachment 2 list` +
+   Expected: The list command should still be successful but it should just indicate `0 attachment(s) in total.`
+
+. Retrieving attachments from a task
+.. Prerequisites:
+... List all tasks using the `list` command. There should be at least 1 task in Deadline Manager.
+... Create a file named `hello.txt` in the same directory as the Deadline Manager's jar file. You must have read permission for that file.
+... Add `hello.txt` as an attachment to the first task. (You may refer to the previous sections on how to do so.)
+... Ensure that you have write permissions to the file/location `hello2.txt` in the same directory as the Deadline Manager's jar file.
+
+.. Test case: `attachment 1 get n/"hello.txt" p/"hello2.txt"` +
+   Expected: The file contents of `hello.txt` is copied to `hello2.txt` in the same directory as the Deadline Manager's jar file. If `hello2.txt` is previously another file, it would have been overwritten by the command.
+
+.. Test case: `attachment 1 get n/"nothere.txt" p/"hello2.txt"` +
+   Expected: Error details saying that `nothere.txt` is not an attachment would be displayed as the status message. No file is copied.
+
+=== Adding a task
+. Add a new task
+.. Run the `add n/New Program d/01/02/2018` command. +
+   Expected: A new task is added to Deadline Manager with name: New Program, deadline: 01/02/2018, priority: 0, frequency: 0, no tags and no attachments.
+.. Run the add n/New Program d/01/02/2018` command again. +
+   Expected: Another new task is added to Deadline Manager with the same parameters as (a) above.
+
+=== Exporting tasks
+. Export in XML format
+.. List all tasks using the `list` command.
+.. Ensure that there is at least 1 task, otherwise follow <<Adding a task>> to add a task first.
+.. Ensure that you can write to the directory that Deadline Manager is running from, and that you don't already have a file named `tasks.xml`, then run the `export p/"tasks.xml"` command. +
+   Expected: A new file, tasks.xml, is created in the same directory from where Deadline Manager is run. A success message is displayed, indicating that export completed successfully.
+.. Run the `export p/"tasks.xml"` command again. +
+   Expected: An error message is displayed indicating that export failed. This is because tasks.xml already exists, and Deadline Manager will refuse to export in order to protect your data.
+.. Run the `export p/"tasks.xml" r/overwrite` command. +
+   Expected: Expected: A new file, tasks.xml, is created in the same directory from where Deadline Manager is run, and overwrites the existing file. A success message is displayed, indicating that export completed  successfully.
+
+. Export in CSV format
+.. List all tasks using the `list` command.
+.. Ensure that there is at least 1 task, otherwise follow <<Adding a task, adding a task>> to add a task first.
+.. Ensure that you can write to the directory that Deadline Manager is running from, and that you don't already have a file named `tasks.csv`, then run the `export csv p/"tasks.csv"` command. +
+   Expected: A new file, tasks.csv, is created in the same directory from where Deadline Manager is run. A success message is displayed, indicating that export completed successfully.
+
+=== Importing tasks
+. Import tasks in XML format
+.. Follow <<Exporting tasks, exporting tasks>> first to ensure that you have already exported a set of tasks into a readable `tasks.xml` file in the same directory that Deadline Manager is running from.
+.. Run the `clear` command to remove all existing tasks.
+.. Run the `import p/"tasks.xml"` command to import tasks from `tasks.xml` into Deadline Manager. +
+   Expected: Deadline Manager is re-populated with all the tasks in tasks.xml. Additionally, a success message is displayed, indicating that import completed successfully.
+.. Run the `import p/"tasks.xml"` command again. +
+   Expected: A success message is displayed, indicating that import completed successfully. However, no new tasks are imported, because by default, Deadline Manager skips tasks that already exist in Deadline Manager.
+.. Run the `import p/"tasks.xml r/all"` command. +
+   Expected: A success message is displayed, indicating that import completed successfully. All the tasks from `tasks.xml` are imported again, creating duplicate entries.
+.. Run the `import p/"non_existent_file.xml"` command, where `non_existent_file.xml` refers to any file that does not exist. +
+   Expected: An error message is displayed, indicating that Deadline Manager is unable to import the xml file specified.
+
+
+=== Sorting a list of tasks
+
+. Sorting a list of tasks
+.. Prerequisites: List all tasks using the `list` command. Multiple tasks in the list.
+.. Test case: `sort n<` +
+   Expected: Sorts the list of tasks according to names in alphabetical ascending order.
+.. Test case: `sort p< name>` +
+   Expected: Sorts the list of tasks first according to ascending order of priority and then in case some tasks have the same priority. Ties are broken in descending order of names (alphabetical order).
+.. Test case: `sort name=` +
+   Expected: The view of the tasks does not change. Error details shown in the status message. Status bar remains the same.
+.. Other incorrect sort commands to try: `sort`, `sort name=`, `sort tag<cs2101` +
+   Expected: Similar to previous.
