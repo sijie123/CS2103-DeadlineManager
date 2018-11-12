@@ -274,11 +274,11 @@ Each of the three parts of a full predicate means the following:
 * `operator` is one of `:`, `=`, `<`, `>`.
 * `phrase` is a string that describes what to search (this is called the search phrase, and it is similar to the _keyword_ in the simplified syntax).
 
+// end::filter-field[]
+
 As with the simplified syntax, an unquoted `phrase` string can contain only alphanumeric characters, `_`, `-`, `/`, `\`, `.`, and `,`.  To use other characters (including whitespace), the search phrase must be placed in quotes (both single (`'`) and double (`"`) quotes work, but the opening and closing quotes must match).
 
 The operator `:` is known as the *convenience* operator -- it is an alias for the operator that intuitively "does what you expect" for the given `key`.  More details are given below in the context of each key.
-
-// end::filter-field[]
 
 [NOTE]
 The `<` and `>` operators are non-strict: Every task that will be shown using `=` will also be shown using `<` or `>`.
