@@ -506,7 +506,8 @@ The request events are posted to the `EventCenter`, which will dispatch to all s
 
 To facilitate communication between the two components, the deadline manager uses the event-driven model.
 An import or export request event is created by `ModelManager`, and a handler in `StorageManager` is invoked to handle the event.
-After data has been successfully read or written, the response is placed in another event for `ModelManager` to process.
+After data has been successfully read or written, the response is placed in a `DataAvailableEvent` for `ModelManager` to process. Similarly, errors also are passed between the two components using events (such as `ImportExportExceptionEvent`).
+//end::sijie_include4[]
 
 To achieve the above, `ModelManager` indicates an import/export request by creating these events:
 
@@ -530,6 +531,8 @@ Similarly, `StorageManager` returns the result of imports and errors with the fo
 
 * `handleImportRequestEvent`: Processes an import event and reads from file.
 * `handleExportRequestEvent`: Processes an export event and writes to file.
+
+//tag::sijie_include5[]
 
 ==== Sequence Flow
 
@@ -569,7 +572,7 @@ Step 6. `ModelManager` takes the imported data and adds it to the Model. If nece
 ==== Import Conflict Resolver
 
 An imported task is deemed conflicting with an existing task if the two tasks compare `equal` with the internal implementation of Task's `equal` method.
-If the user attempts to import a new task that conflicts with an existing task, the task needs to be de-conflicted with one of the following resolver:
+If the user attempts to import a new conflicting task, Deadline Manager de-conflicts the task with one of the following resolvers:
 
 * `IgnoreImportConflictResolver`: Discards the incoming task in favour of the existing task.
 * `OverwriteImportConflictResolver`: Updates the existing task to reflect the values of the incoming task.
@@ -580,7 +583,7 @@ The user can specify the de-conflict algorithm with flags. By default, the `Igno
 Given below is a sequence diagram to illustrate the interactions between `ModelManager` and `OverwriteImportConflictResolver`. While `OverwriteImportConflictResolver` is used as an example, the interactions with `IgnoreImportConflictResolver` and `DuplicateImportConflictResolver` are similar.
 
 .Sequence diagram for import conflict resolver
-image::ImportConflictResolverSequenceDiagram.png[width="800"]
+image::ImportConflictResolverSequenceDiagram.png[width="600"]
 
 Step 1. After requesting for import, Storage returns the `Tasks` that are serialised from file through an `ImportDataAvailableEvent`. This event is dispatched to `ModelManager` via `EventsCenter`.
 
@@ -590,12 +593,12 @@ Step 3a. If the task already exists, the functional method `resolve(() -> add(),
 
 Step 3b. `OverwriteImportConflictResolver` will first `delete()` the existing task, before it calls `add()` on the new one. This behaviour is specific to `OverwriteImportConflictResolver`. A `DuplicateImportConflictResolver` will simply add the new entry, while a `IgnoreImportConflictResolver` will do nothing.
 
-Step 4. Otherwise, if the task doesn't exist, `ModelManager` adds the task to the model.
+Step 4. Otherwise, if the task doesn't exist, `ModelManager` simply adds the task to the model.
 
 ==== CSV Format support
 
-The discussion above has been format-agnostic, abstracting away details about the file formats. Deadline Manager supports both eXtensible Markup Language (XML) and Comma Separated Values (CSV) format. Currently, while XML format can be freely used to import and export data, CSV format can only be used to export data.
-//end::sijie_include4[]
+The discussion above has been format-agnostic, abstracting away details about the file formats. Deadline Manager supports both eXtensible Markup Language (XML) and Comma Separated Values (CSV) format.
+//end::sijie_include5[]
 
 The CSV/XML format support is implemented using the respective `{*}TaskCollectionStorage` class. `XMLTaskCollectionStorage` is able to import and export data, so it implements both `TaskCollectionReadStorage` and `TaskCollectionWriteStorage` interface. On the other hand, `CSVTaskCollectionStorage` can only export data, so it implements only the `TaskCollectionWriteStorage` interface.
 
@@ -609,16 +612,16 @@ The `TaskCollectionWriteStorage` specifies APIs that is responsible for de-seria
 
 As a summary for the CSV/XML format discussion, the class diagram below shows the structure of `CsvTaskCollectionStorage` and `XmlTaskCollectionStorage`. This diagram is also replicated in <<Storage, `Storage`>> above.
 
-//tag::sijie_include5[]
+//tag::sijie_include6[]
 
 .Class diagram of Csv/XmlTaskCollectionStorage
 image::CsvXmlClassDiagram.png[width="800"]
 
-//end::sijie_include5[]
+//end::sijie_include6[]
 
 Notably, the `CsvTaskCollectionStorage` only implements the `TaskCollectionWriteStorage`, while `XmlTaskCollectionStorage` implements both.
 
-//tag::sijie_include6[]
+//tag::sijie_include7[]
 
 ==== Design Considerations
 
@@ -644,7 +647,7 @@ As described in <<Import Deconflict, Import Deconflict>>, an import conflict ari
 ** Pros: There is no need to implement separate classes. Since the `ImportConflictResolver` enum is only useful within Model, it reside within Model as a private variable.
 ** Cons: If/else statements are required to determine which algorithm should be used. Additionally, an `ImportConflictResolver` implemented this way cannot be easily reused or extended.
 
-//end::sijie_include6[]
+//end::sijie_include7[]
 
 ===== Aspect: How to support different file formats
 
