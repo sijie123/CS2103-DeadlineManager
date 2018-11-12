@@ -1896,7 +1896,7 @@ These instructions only provide a starting point for testers to work on; testers
 . Add a new task
 .. Run the `add n/New Program d/01/02/2018` command. +
    Expected: A new task is added to Deadline Manager with name: New Program, deadline: 01/02/2018, priority: 0, frequency: 0, no tags and no attachments.
-.. Run the add n/New Program d/01/02/2018` command again. +
+.. Run the `add n/New Program d/01/02/2018` command again. +
    Expected: Another new task is added to Deadline Manager with the same parameters as (a) above.
 
 === Deleting a task
@@ -2070,13 +2070,6 @@ All unspecified fields of a task should be set to some value that does not match
 
 .. Test case: `attachment 1 get n/"nothere.txt" p/"hello2.txt"` +
    Expected: Error details saying that `nothere.txt` is not an attachment would be displayed as the status message. No file is copied.
-
-=== Adding a task
-. Add a new task
-.. Run the `add n/New Program d/01/02/2018` command. +
-   Expected: A new task is added to Deadline Manager with name: New Program, deadline: 01/02/2018, priority: 0, frequency: 0, no tags and no attachments.
-.. Run the add n/New Program d/01/02/2018` command again. +
-   Expected: Another new task is added to Deadline Manager with the same parameters as (a) above.
 
 === Exporting tasks
 . Export in XML format
