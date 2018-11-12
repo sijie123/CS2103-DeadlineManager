@@ -577,10 +577,7 @@ Examples:
 * `sort n>` +
 Sorts the current list of tasks in view in descending order by name, where sorting is done in alphabetical order.
 
-[sortdemo1]
 .Result of "sort n<" command
-[#img-sortdemo1]
-[caption="Figure 3.10.1: "]
 image::userguide/sortdemo_1.png[SortDemo1, width="900"]
 
 * `sort due< name>` +
@@ -595,12 +592,9 @@ before those tasks with the tag `family`, finally followed by those tasks with t
 * `sort n< tag<{` +
 This is invalid syntax since the curly braces have not been closed. +
 
-[sortdemo2]
 .Result of "sort n< tag<{" command
-[#img-sortdemo2]
-[caption="Figure 3.10.2: "]
 image::userguide/sortdemo_2.png[SortDemo1, width="600"]
-Figure 3.10.2 above shows the error message when user feeds in an invalid command.
+The above figure shows the error message when user feeds in an invalid command.
 
 [TIP]
 In case a task does not belong to any of the tags mentioned in the sort comparator it will be placed at the bottom of the sorted list.
