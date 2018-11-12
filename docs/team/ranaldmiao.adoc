@@ -63,8 +63,11 @@ include::../UserGuide.adoc[tag=attachment-excerpt]
 |_The description for `Delete` and `Get` actions are omitted. For the full text, please refer to the https://cs2103-ay1819s1-w17-4.github.io/main/UserGuide.html[User Guide]._
 |===
 
-//=== FAQ
-//include::../UserGuide.adoc[tag=faqfilepath]
+|===
+|_Below is a segment that I contributed to the Frequently Asked Question (FAQ) section of the User Guide._
+|===
+
+include::../UserGuide.adoc[tag=faqfilepath]
 
 == Contributions to the Developer Guide
 
