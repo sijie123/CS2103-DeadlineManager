@@ -673,7 +673,7 @@ Given below is a sequence of steps, illustrating the interaction between `SortCo
 .Sequence Diagram for executing Sort Command.
 image::SortOperationSequenceDiagram.png[width="800"]
 
-. The user executes the sort command along with a user-specified comparator.
+. The user executes the sort command along with providing a user-specified comparator.
 
 . The `SortCommandParser` receives the command with the user comparator given as a string.
 
