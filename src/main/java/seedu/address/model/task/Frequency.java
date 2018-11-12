@@ -17,7 +17,7 @@ public class Frequency implements Comparable<Frequency> {
 
     public static final Integer FREQUENCY_LIMIT = 1000; //Strictly less than
     public static final String MESSAGE_FREQUENCY_CONSTRAINTS =
-        "Frequency should only be a non negative integer not exceeding " + FREQUENCY_LIMIT.toString();
+        "Frequency should only be a non negative integer lower than " + FREQUENCY_LIMIT.toString();
     public static final String FREQUENCY_VALIDATION_REGEX = "[0-9]+";
     public static final String NO_FREQUENCY = "0";
     public final int value;
