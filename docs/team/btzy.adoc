@@ -3,7 +3,6 @@
 :imagesDir: ../images
 :stylesDir: ../stylesheets
 :1H: #
-:stylesheet: alternate-btzy.css
 
 == PROJECT: Deadline Manager
 
