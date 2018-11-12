@@ -72,19 +72,19 @@ public class FilterCommandParser implements Parser<FilterCommand> {
     // name>"hello world"
     // note: '/' is necessary for dates, ',' is necessary for tags
     private static final Predicate<Character> ALLOWED_UNQUOTED_CHARACTER_PREDICATE =
-            ch -> (ch >= 'A' && ch <= 'Z')
-                    || (ch >= 'a' && ch <= 'z')
-                    || (ch >= '0' && ch <= '9')
-                    || ch == '_'
-                    || ch == '-'
-                    || ch == '/'
-                    || ch == '\\'
-                    || ch == ','
-                    || ch == '.';
+        ch -> (ch >= 'A' && ch <= 'Z')
+            || (ch >= 'a' && ch <= 'z')
+            || (ch >= '0' && ch <= '9')
+            || ch == '_'
+            || ch == '-'
+            || ch == '/'
+            || ch == '\\'
+            || ch == ','
+            || ch == '.';
 
     private static final Predicate<Character> ALLOWED_KEY_CHARACTER_PREDICATE =
-            ch -> (ch >= 'A' && ch <= 'Z')
-                    || (ch >= 'a' && ch <= 'z');
+        ch -> (ch >= 'A' && ch <= 'Z')
+            || (ch >= 'a' && ch <= 'z');
 
     private static final Pattern FILTER_OPERATOR_PATTERN = Pattern.compile("[\\=\\<\\>\\:]");
 
@@ -134,7 +134,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
      * Creates a predicate that filters by tags.
      */
     private static Predicate<Task> createTagsPredicate(FilterOperator setOperator, FilterOperator fieldOperator,
-                                                       String testPhrase)
+            String testPhrase)
             throws InvalidPredicateTestPhraseException, InvalidPredicateOperatorException,
             InvalidPredicateSetOperatorException {
         logger.info("Making filter for tag " + setOperator.toString()
@@ -147,7 +147,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
      * Creates a predicate that filters by tags.
      */
     private static Predicate<Task> createAttachmentsPredicate(FilterOperator setOperator, FilterOperator fieldOperator,
-                                                              String testPhrase)
+            String testPhrase)
             throws InvalidPredicateTestPhraseException, InvalidPredicateOperatorException,
             InvalidPredicateSetOperatorException {
         logger.info("Making filter for attachment " + setOperator.toString()
@@ -245,7 +245,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
      * @return The predicate that is created.
      */
     private static Predicate<Task> createPredicate(String key, FilterOperator setOperator,
-                                                   FilterOperator fieldOperator, String testPhrase)
+            FilterOperator fieldOperator, String testPhrase)
             throws InvalidPredicateKeyException, InvalidPredicateSetKeyException, InvalidPredicateOperatorException,
             InvalidPredicateSetOperatorException, InvalidPredicateTestPhraseException {
 
@@ -303,9 +303,9 @@ public class FilterCommandParser implements Parser<FilterCommand> {
                 .or(silencePredicateException(() -> createNamePredicate(FilterOperator.CONVENIENCE, testPhrase)))
                 .or(silencePredicateException(() -> createDeadlinePredicate(FilterOperator.CONVENIENCE, testPhrase)))
                 .or(silencePredicateException(() -> createTagsPredicate(
-                        FilterOperator.CONVENIENCE, FilterOperator.CONVENIENCE, testPhrase)))
+                    FilterOperator.CONVENIENCE, FilterOperator.CONVENIENCE, testPhrase)))
                 .or(silencePredicateException(() -> createAttachmentsPredicate(
-                        FilterOperator.CONVENIENCE, FilterOperator.CONVENIENCE, testPhrase)));
+                    FilterOperator.CONVENIENCE, FilterOperator.CONVENIENCE, testPhrase)));
     }
 
 
@@ -350,7 +350,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
      * @throws ParseException if the user input does not conform the expected format.
      */
     private FilterCommand wrapTokenizationExceptions(String trimmedArgs,
-                                                     TokenizationExceptionalSupplier<FilterCommand> supplier)
+            TokenizationExceptionalSupplier<FilterCommand> supplier)
             throws ParseException {
         try {
             return supplier.get();
@@ -365,7 +365,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
         } catch (TokenizationEndOfStringException | BooleanExpressionUnexpectedEndOfStringException e) {
             throw createParseException(trimmedArgs,
                     new TokenizationMismatchException(trimmedArgs.length(), trimmedArgs.length(),
-                            "Unexpected end of tokenizer string"),
+                        "Unexpected end of tokenizer string"),
                     "Unexpected end of filter expression!");
         } catch (BooleanExpressionInvalidOperatorException e) {
             throw createParseException(trimmedArgs, e, "Unknown operator!");
@@ -391,7 +391,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
      * @throws ParseException if the user input does not conform the expected format.
      */
     private ParseException createParseExceptionFromInvalidPredicate(String trimmedArgs,
-                                                                    TokenizationInvalidPredicateException e) {
+            TokenizationInvalidPredicateException e) {
         final InvalidPredicateException predicateException = e.getPredicateException();
         if (predicateException instanceof InvalidPredicateKeyException) {
             return createParseException(trimmedArgs, e, "Invalid field identifier key!");
@@ -459,8 +459,8 @@ public class FilterCommandParser implements Parser<FilterCommand> {
      *                                            for filter field identifiers (i.e. keys).
      */
     private static Predicate<Task> createFilterUnit(StringTokenizer tokenizer,
-                                                    Predicate<Character> effectiveUnquotedCharacterPredicate,
-                                                    Predicate<Character> allowedKeyCharacterPredicate)
+            Predicate<Character> effectiveUnquotedCharacterPredicate,
+            Predicate<Character> allowedKeyCharacterPredicate)
             throws TokenizationMissingEndQuoteException, TokenizationUnexpectedQuoteException,
             TokenizationNoMatchableCharacterException, TokenizationEndOfStringException,
             TokenizationInvalidPredicateException {
@@ -471,7 +471,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
         int keyEndIndex = tokenizer.getLocation(); // get the key end location
         String opString;
         if (key != null && tokenizer.hasNextToken()
-                && (opString = tokenizer.tryNextPattern(FILTER_OPERATOR_PATTERN)) != null) {
+            && (opString = tokenizer.tryNextPattern(FILTER_OPERATOR_PATTERN)) != null) {
             int opEndIndex = tokenizer.getLocation();
             final FilterOperator operator = wrapPredicateOperatorException(keyEndIndex,
                     opEndIndex, () -> FilterOperator.parse(opString));
@@ -529,8 +529,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
      * Converts any thrown InvalidPredicateException to a wrapped TokenizationInvalidPredicateException.
      */
     private static Predicate<Task> wrapPredicateException(int keyStartIndex, int keyEndIndex, int fieldOpStartIndex,
-                                                          int fieldOpEndIndex, int testPhraseEndIndex,
-                                                          ExceptionalSupplier<Predicate<Task>> supplier)
+            int fieldOpEndIndex, int testPhraseEndIndex, ExceptionalSupplier<Predicate<Task>> supplier)
             throws TokenizationInvalidPredicateException {
         try {
             return supplier.get();
