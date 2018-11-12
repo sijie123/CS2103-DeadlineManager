@@ -20,6 +20,9 @@ import seedu.address.model.OverwriteImportConflictResolver;
  */
 public class ImportCommandParser implements Parser<ImportCommand> {
 
+    public static final String FLAG_DUPLICATE = "all";
+    public static final String FLAG_OVERWRITE = "overwrite";
+    public static final String FLAG_IGNORE = "skip";
     /**
      * Parses the given {@code String} of arguments in the context of the ImportCommand and returns an
      * ImportCommand object for execution.
@@ -58,11 +61,11 @@ public class ImportCommandParser implements Parser<ImportCommand> {
      */
     private ImportConflictResolver resolverParser(String input) throws SimpleParseException {
         switch (input) {
-        case "all":
+        case FLAG_DUPLICATE:
             return new DuplicateImportConflictResolver();
-        case "overwrite":
+        case FLAG_OVERWRITE:
             return new OverwriteImportConflictResolver();
-        case "skip":
+        case FLAG_IGNORE:
             return new IgnoreImportConflictResolver();
         default:
             throw new SimpleParseException(
