@@ -566,6 +566,8 @@ image::ImportSequenceDiagram.png[width="800"]
 
 The sequence diagram above shows the interactions that happen when a user attempts to import data from a file. The interactions are similar to export, with an additional step to resolve import conflict.
 
+//end::sijie_include5[]
+
 Step 1. The user types in an import command. The Logic component parses the user's command, and calls ModelManager's `importTaskCollection`.
 
 Step 2. The `ModelManager` posts the `ImportRequestEvent` to the `EventsCenter`.
@@ -577,6 +579,8 @@ Step 4. `Storage` handles the `ImportRequestEvent`, reads from file, then posts 
 Step 5. The `EventsCenter` dispatches the `ImportDataAvailableEvent` back to `ModelManager`.
 
 Step 6. `ModelManager` takes the imported data and adds it to the Model. If necessary, it also de-conflicts the new entries.
+
+//tag::sijie_include6[]
 
 ==== Import conflict resolver
 
@@ -607,7 +611,7 @@ Step 4. Otherwise, if the task doesn't exist, `ModelManager` simply adds the tas
 ==== CSV format support
 
 The discussion above has been format-agnostic, abstracting away details about the file formats. Deadline Manager supports both eXtensible Markup Language (XML) and Comma Separated Values (CSV) format.
-//end::sijie_include5[]
+//end::sijie_include6[]
 
 The CSV/XML format support is implemented using the respective `{*}TaskCollectionStorage` class. `XMLTaskCollectionStorage` is able to import and export data, so it implements both `TaskCollectionReadStorage` and `TaskCollectionWriteStorage` interface. On the other hand, `CSVTaskCollectionStorage` can only export data, so it implements only the `TaskCollectionWriteStorage` interface.
 
@@ -621,16 +625,16 @@ The `TaskCollectionWriteStorage` specifies APIs that is responsible for de-seria
 
 As a summary for the CSV/XML format discussion, the class diagram below shows the structure of `CsvTaskCollectionStorage` and `XmlTaskCollectionStorage`. This diagram is also replicated in <<Storage, `Storage`>> above.
 
-//tag::sijie_include6[]
+//tag::sijie_include7[]
 
 .Class diagram of Csv/XmlTaskCollectionStorage
 image::CsvXmlClassDiagram.png[width="800"]
 
-//end::sijie_include6[]
+//end::sijie_include7[]
 
 Notably, the `CsvTaskCollectionStorage` only implements the `TaskCollectionWriteStorage`, while `XmlTaskCollectionStorage` implements both.
 
-//tag::sijie_include7[]
+//tag::sijie_include8[]
 
 ==== Design considerations
 
@@ -656,7 +660,7 @@ As described in <<Import conflict resolver, Import conflict resolver>>, an impor
 ** Pros: There is no need to implement separate classes. Since the `ImportConflictResolver` enum is only useful within Model, it reside within Model as a private variable.
 ** Cons: If/else statements are required to determine which algorithm should be used. Additionally, an `ImportConflictResolver` implemented this way cannot be easily reused or extended.
 
-//end::sijie_include7[]
+//end::sijie_include8[]
 
 ===== Aspect: How to support different file formats
 
