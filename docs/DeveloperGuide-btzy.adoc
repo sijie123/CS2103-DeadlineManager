@@ -1024,7 +1024,7 @@ image::FilterParserErrorInheritanceDiagram.png[width="800"]
 
 // end::filter-error-messages[]
 
-In the diagram above, the [blue]#*blue*# classes are exceptions thrown by `StringTokenizer`, while the [red]#*red*# classes are exceptions thrown by `BooleanExpressionParser`.  In order to reduce coupling between `StringTokenizer` and `BooleanExpressionParser`, and to be able to distinguish (by type-based `catch` clauses) the end-of-string exceptions of those components, they do not share the same class for end-of-string exceptions.
+In the diagram above, the [blue]#*blue*# classes are exceptions thrown by `StringTokenizer`, while the [red]#*red*# classes are exceptions thrown by `BooleanExpressionParser`.  The [green]#*green*# `TokenizationInvalidPredicateException` class is a wrapper class for exceptions thrown by the filter unit parser.  In order to reduce coupling between `StringTokenizer` and `BooleanExpressionParser`, and to be able to distinguish (by type-based `catch` clauses) the end-of-string exceptions of those components, they do not share the same class for end-of-string exceptions.
 
 `TokenizationInvalidPredicateException` is a wrapper class for `InvalidPredicateException`, which is thrown when the field-specific parser or set parser encounters an error.  The diagram below shows the different exceptions that may be thrown to indicate the types of issues that may be encountered when parsing a filter unit, and how they may be propagated to `FilterCommandParser` via wrapping by `TokenizationInvalidPredicateException`:
 
