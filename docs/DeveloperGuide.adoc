@@ -2103,7 +2103,7 @@ All unspecified fields of a task should be set to some value that does not match
    Expected: Deadline Manager is re-populated with all the tasks in tasks.xml. Additionally, a success message is displayed, indicating that import completed successfully.
 .. Run the `import p/"tasks.xml"` command again. +
    Expected: A success message is displayed, indicating that import completed successfully. However, no new tasks are imported, because by default, Deadline Manager skips tasks that already exist in Deadline Manager.
-.. Run the `import p/"tasks.xml r/all"` command. +
+.. Run the `import p/"tasks.xml" r/all` command. +
    Expected: A success message is displayed, indicating that import completed successfully. All the tasks from `tasks.xml` are imported again, creating duplicate entries.
 .. Run the `import p/"non_existent_file.xml"` command, where `non_existent_file.xml` refers to any file that does not exist. +
    Expected: An error message is displayed, indicating that Deadline Manager is unable to import the xml file specified.
