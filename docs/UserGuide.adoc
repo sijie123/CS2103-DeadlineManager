@@ -88,7 +88,7 @@ Most commands follow the following format (characterized by `X/` parameter prefi
 ====
 *Frequency Format*
 
-* `FREQUENCY` should be a non-negative integer between 0 and 999 (number of days).
+* `FREQUENCY` should be a non-negative integer between 0 and 999 (number of days betweeen consecutive occurrences of the task).
 * Zero frequency denotes a non-recurring task.
 * Non-zero frequency denotes a recurring task.
 ====
