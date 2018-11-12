@@ -73,18 +73,23 @@ include::../DeveloperGuide.adoc[tag=sijie_include3]
 include::../DeveloperGuide.adoc[tag=sijie_include4]
 
 [NOTE]
-Due to limited space, detailed technical implementation of inter-component communication is omitted, and an overview is presented below in <<Sequence Flow, Sequence Flow>> instead. You may wish to refer to the https://cs2103-ay1819s1-w17-4.github.io/main/DeveloperGuide.html#inter-component-communication[Developer Guide] for details.
+Due to space constraints, detailed technical implementation of inter-component communication is omitted, and an overview is presented below in <<Sequence Flow, Sequence Flow>> instead. You may wish to refer to the https://cs2103-ay1819s1-w17-4.github.io/main/DeveloperGuide.html#inter-component-communication[Developer Guide] for details.
 
 include::../DeveloperGuide.adoc[tag=sijie_include5]
 
 [NOTE]
-Due to limited space in the PPP, detailed technical discussion of the CSV implementation is omitted, and is summarised with the following Sequence Diagram instead. This diagram is also replicated in https://cs2103-ay1819s1-w17-4.github.io/main/DeveloperGuide.html#Design-Storage[`Storage`].
+Due to space constraints, the step-by-step description for the import sequence diagram is omitted as the process is similar to export. Please refer to the https://cs2103-ay1819s1-w17-4.github.io/main/DeveloperGuide.html#sequence-flow-2[Developer Guide] for details.
 
 include::../DeveloperGuide.adoc[tag=sijie_include6]
 
-Notably, `TaskCollectionReadStorage` and `TaskCollectionWriteStorage` represents the disk reading and writing capabilities respectively; file format implementations can choose to support reading only, writing only, or both.
+[NOTE]
+Due to space constraints, detailed technical discussion of the CSV implementation is omitted, and is summarised with the following Sequence Diagram instead. This diagram is also replicated in https://cs2103-ay1819s1-w17-4.github.io/main/DeveloperGuide.html#Design-Storage[`Storage`].
 
 include::../DeveloperGuide.adoc[tag=sijie_include7]
+
+Notably, `TaskCollectionReadStorage` and `TaskCollectionWriteStorage` represents the disk reading and writing capabilities respectively; file format implementations can choose to support reading only, writing only, or both.
+
+include::../DeveloperGuide.adoc[tag=sijie_include8]
 
 [NOTE]
 Due to limited space in the PPP, an aspect on supporting different file formats is omitted. Please refer to  https://cs2103-ay1819s1-w17-4.github.io/main/DeveloperGuide.html#aspect-how-to-support-different-file-formats[the Developer Guide] for more details.
