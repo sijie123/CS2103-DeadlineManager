@@ -65,6 +65,9 @@ public class CommandTestUtil {
     public static final EditCommand.EditTaskDescriptor DESC_AMY;
     public static final EditCommand.EditTaskDescriptor DESC_BOB;
 
+    public static final String VALID_EXPORT_PATH = "exportFile";
+    public static final String INVALID_EXPORT_PATH = ".";
+
     static {
         DESC_AMY = new EditTaskDescriptorBuilder().withName(VALID_NAME_AMY)
                 .withPriority(VALID_PRIORITY_AMY)
