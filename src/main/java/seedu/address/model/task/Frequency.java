@@ -3,6 +3,7 @@ package seedu.address.model.task;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
 
+import java.math.BigInteger;
 import java.util.function.Predicate;
 
 import seedu.address.model.task.exceptions.InvalidPredicateOperatorException;
@@ -14,9 +15,9 @@ import seedu.address.model.task.exceptions.InvalidPredicateTestPhraseException;
  */
 public class Frequency implements Comparable<Frequency> {
 
-
+    public static final Integer FREQUENCY_LIMIT = 1000; //Strictly less than
     public static final String MESSAGE_FREQUENCY_CONSTRAINTS =
-            "Frequency should only be a non negative number";
+        "Frequency should only be a non negative integer lower than " + FREQUENCY_LIMIT.toString();
     public static final String FREQUENCY_VALIDATION_REGEX = "[0-9]+";
     public static final String NO_FREQUENCY = "0";
     public final int value;
@@ -48,14 +49,25 @@ public class Frequency implements Comparable<Frequency> {
      * Returns true if a given integer is a valid frequency number.
      */
     public static boolean isValidFrequency(int test) {
-        return test >= 0;
+        return test >= 0 && test < (int) FREQUENCY_LIMIT;
     }
 
     /**
      * Returns true if a given string is a valid frequency number.
      */
     public static boolean isValidFrequency(String test) {
-        return test.matches(FREQUENCY_VALIDATION_REGEX);
+        boolean isNumeric = test.matches(FREQUENCY_VALIDATION_REGEX);
+        if (!isNumeric) {
+            return false;
+        }
+        BigInteger bigInt = new BigInteger(test);
+        BigInteger bigFreqLimit = new BigInteger(FREQUENCY_LIMIT.toString());
+
+        // If more than equal to frequency limit --> false
+        if (bigInt.compareTo(bigFreqLimit) >= 0) {
+            return false;
+        }
+        return true;
     }
 
     /**
