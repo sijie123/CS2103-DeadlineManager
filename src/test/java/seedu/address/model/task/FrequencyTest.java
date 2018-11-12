@@ -19,7 +19,7 @@ public class FrequencyTest {
     public void constructor_success_returnFrequency() {
         assertEquals(new Frequency("0").value, new Frequency(0).value);
         assertEquals(new Frequency(((Integer) (Frequency.FREQUENCY_LIMIT - 1)).toString()).value,
-            new Frequency(Frequency.FREQUENCY_LIMIT - 1).value);
+                new Frequency(Frequency.FREQUENCY_LIMIT - 1).value);
     }
 
     @Test
@@ -30,7 +30,7 @@ public class FrequencyTest {
         assertFalse(Frequency.isValidFrequency("-1000000000000000"));
         assertFalse(Frequency.isValidFrequency(Frequency.FREQUENCY_LIMIT.toString()));
         assertFalse(Frequency.isValidFrequency(
-            Frequency.FREQUENCY_LIMIT.toString() + "0000000000000000000000000000000000000"));
+                Frequency.FREQUENCY_LIMIT.toString() + "0000000000000000000000000000000000000"));
         assertFalse(Frequency.isValidFrequency("abcdefg"));
         assertFalse(Frequency.isValidFrequency("01/01/01"));
     }
@@ -71,7 +71,7 @@ public class FrequencyTest {
     public void hashCode_sameFrequency() {
         assertEquals(new Frequency("0").hashCode(), new Frequency(0).hashCode());
         assertEquals(new Frequency(((Integer) (Frequency.FREQUENCY_LIMIT - 1)).toString()).hashCode(),
-            new Frequency(Frequency.FREQUENCY_LIMIT - 1).hashCode());
+                new Frequency(Frequency.FREQUENCY_LIMIT - 1).hashCode());
     }
 
     @Test
