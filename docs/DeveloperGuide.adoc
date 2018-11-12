@@ -2080,13 +2080,6 @@ All unspecified fields of a task should be set to some value that does not match
 .. Test case: `attachment 1 get n/"nothere.txt" p/"hello2.txt"` +
    Expected: Error details saying that `nothere.txt` is not an attachment would be displayed as the status message. No file is copied.
 
-=== Completing a task
-. Complete a non-recurring task
-.. Run the `clear` command, followed by `add n/Simple Task d/01/01/2018` command. +
-   Expected: The task list is cleared and a new task is added to Deadline Manager with name: Simple Task, deadline: 01/01/2018, priority: 0, frequency: 0, no tags and no attachments.
-.. Run the `complete 1` command. +
-   Expected: The task created above is deleted.
-
 . Complete a recurring task
 .. Run the `clear` command, followed by `add n/Weekly Task d/01/01/2018 f/7` command. +
    Expected: The task list is cleared and a new task is added to Deadline Manager with name: Weekly Task, deadline: 01/01/2018, priority: 0, frequency: 7, no tags and no attachments.
@@ -2118,7 +2111,7 @@ All unspecified fields of a task should be set to some value that does not match
    Expected: Deadline Manager is re-populated with all the tasks in tasks.xml. Additionally, a success message is displayed, indicating that import completed successfully.
 .. Run the `import p/"tasks.xml"` command again. +
    Expected: A success message is displayed, indicating that import completed successfully. However, no new tasks are imported, because by default, Deadline Manager skips tasks that already exist in Deadline Manager.
-.. Run the `import p/"tasks.xml r/all"` command. +
+.. Run the `import p/"tasks.xml" r/all` command. +
    Expected: A success message is displayed, indicating that import completed successfully. All the tasks from `tasks.xml` are imported again, creating duplicate entries.
 .. Run the `import p/"non_existent_file.xml"` command, where `non_existent_file.xml` refers to any file that does not exist. +
    Expected: An error message is displayed, indicating that Deadline Manager is unable to import the xml file specified.
