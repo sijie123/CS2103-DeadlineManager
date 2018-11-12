@@ -717,8 +717,8 @@ The <<Sorting a list of tasks : `sort`, `sort`>> command currently does *NOT* su
 // end::attachment[]
 
 
-//TODO: Add a picture on what I mean by "currently displayed"
 // tag::export[]
+// tag::sijie_include1[]
 === Exporting a set of tasks: `export`
 Exports the tasks that is currently displayed by the Deadline Manager. The tasks will be saved as a file at the provided `FILEPATH` location.
 
@@ -763,6 +763,7 @@ Figure 3.9.1 (right) shows Deadline Manager exporting the file and displaying a 
 * `export p/cs2101.txt` (Exports a file successfully) +
   `export p/cs2101.txt` +
 Fails and returns an error as `cs2101.txt` already exists when the second command is run. In order to protect your data, the second export command fails.
+// end::sijie_include1[]
 
 [exportdemo3]
 .Export error message
@@ -773,7 +774,7 @@ Figure 3.9.2 shows the error message when the user attempts to `export p/cs2101.
 
 [TIP]
 You can overwrite the file by specifying r/overwrite. The command would be `export p/cs2101.txt r/overwrite` in this case.
-
+//tag::sijie_include2[]
 * `export csv p/cs2103.csv` +
 Creates and exports tasks to `cs2103.csv` as CSV format. This file is compatible with most calendar applications and can be imported into Google Calendar.
 
@@ -804,7 +805,7 @@ Currently, Deadline Manager does not support importing from a CSV file. This fea
 Optional commands can provided to specify what Deadline Manager should do when there is an import conflict.
 
 [NOTE]
-An import conflict occurs when you try to import a task, but a similar task already exists in your Deadline Manager. When this happens, Deadline Manager needs to know what you want to do with these tasks.
+An import conflict occurs when you try to import a task, but the task (having the same name, deadline and other attributes) already exists in your Deadline Manager. When this happens, Deadline Manager needs to know what you want to do with these tasks.
 
 You can input either one of three commands to specify how to resolve an import conflict:
 
@@ -832,14 +833,14 @@ The result of the import is shown in Figure 3.10.1 (right). Since the r/all comm
 
 * `import p/cs2101.xml` +
 Imports all tasks from `cs2101.xml`. Since the r/all parameter is not specified, if an incoming task already exists in Deadline Manager, it is skipped.
-
+//end::sijie_include2[]
 [importdemo2]
 .Result of import command with no parameters
 [#img-importdemo]
 [caption="Figure 3.10.2: "]
 image::userguide/importScreenshot_2.png[ImportDemo4, width="790"]
 Figure 3.10.2 shows the success message after importing from `cs2101.xml`. By default, duplicate entries are skipped. Since `cs2101.xml` contains a duplicate copy of "CS2101 Oral Presentation", nothing new is imported.
-
+//tag::sijie_include3[]
 * `import p/"C:\Documents\cs2101.xml" r/all` +
 Imports all tasks from `C:\Documents\cs2101.xml`. Deadline Manager will save all tasks, even if duplicates already exist.
 // end::import[]
