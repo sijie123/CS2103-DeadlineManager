@@ -316,7 +316,7 @@ The `Storage` component
 
 This section describes some noteworthy details on how major features are implemented.
 
-// tag::undoredo[]
+// tag::add-feature[]
 
 === Add feature
 
@@ -342,6 +342,10 @@ Step 5. The `AddCommand#execute` method is invoked.
 Step 6. The `Model` is updated: The `Model#addTask` method and the `Model#commitTaskCollection` method are invoked.
 
 Step 7. A `CommandResult` object is returned.
+
+// end::add-feature[]
+
+// tag::complete-feature[]
 
 === Complete feature
 
@@ -387,6 +391,10 @@ with a new `Task` where the deadline is updated.
 Step 8. The `Model#commitTaskCollection` method is invoked.
 
 Step 9. A `CommandResult` object is returned.
+
+// end::complete-feature[]
+
+// tag::undoredo[]
 
 === Undo/Redo feature
 

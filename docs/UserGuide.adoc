@@ -82,6 +82,7 @@ Displays the list of available functions for the user to use. It acts as a guide
 
 Format: `help`
 
+// tag::adding-a-task[]
 === Adding a task: `add`
 Adds a task to the deadline manager +
 Format: `add n/NAME [p/PRIORITY] [f/FREQUENCY] d/DEADLINE [t/TAG]...`
@@ -126,6 +127,10 @@ Adds a task with name `v1 milestone` with a deadline on 9th October 2018 with pr
 
 * `add n/Clean the house d/01/01/2018 f/7` +
 Adds a task with name `Clean the house` with a deadline on 1st January 2018 with frequency 7 (this is a recurring task).
+
+// end::adding-a-task[]
+
+// tag::completing-a-task[]
 
 === Completing a task : `complete`
 Completes an existing task in the deadline manager.
@@ -173,6 +178,8 @@ image::userguide/completedemo_2.png[CompleteDemo2, width="400"]
 [#img-completedemo3]
 [caption="Figure 3.3.3: "]
 image::userguide/completedemo_3.png[CompleteDemo3, width="400"]
+
+// end::completing-a-task[]
 
 === Listing all tasks : `list`
 
