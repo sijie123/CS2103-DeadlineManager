@@ -597,7 +597,7 @@ Step 1. After requesting for import, Storage returns the `Tasks` that are serial
 
 Step 2. `ModelManager` retrieves the TaskCollection data, and for each task, `ModelManager` checks whether the task already exists in the Model.
 
-Step 3a. If the task already exists, the functional method `resolve(() -> add(), () -> delete(), task)` of `OverwriteImportConflictResolver` is invoked. The Functional Programming style is used here, and ModelManager passes a reference to its `add` and `delete` methods.
+Step 3a. If the task already exists, the functional method `resolve(() -> add(), () -> delete(), task)` is invoked. The Functional Programming style is used here, and ModelManager passes a reference to its `add` and `delete` methods.
 
 Step 3b. `OverwriteImportConflictResolver` will first `delete()` the existing task, before it calls `add()` on the new one. This behaviour is specific to `OverwriteImportConflictResolver`. A `DuplicateImportConflictResolver` will simply add the new entry, while a `IgnoreImportConflictResolver` will do nothing.
 
