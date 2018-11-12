@@ -326,14 +326,14 @@ The user can also provide additional information including priority, frequency a
 Given below is a sequence of steps, illustrating the interaction between `AddCommandParser`, `AddCommand` and `Model`:
 
 .Sequence diagram for adding a task
-image::AddOperationSequenceDiagram.png[width="800"]
+image::AddOperationSequenceDiagram.png[width="700"]
 
 Step 1. The user enters an `add` command.
 
 Step 2. The `AddCommandParser#parse` method is invoked.
 The `AddCommandParser` receives the command with the arguments given as a string.
 
-Step 3. The `AddCommandParser` interprets the arguments and constructs a `AddCommand`.
+Step 3. The `AddCommandParser` interprets the arguments and constructs an `AddCommand`.
 
 Step 4. The `AddCommand` with a `Task` specified by the user is returned.
 
@@ -350,7 +350,8 @@ Step 7. A `CommandResult` object is returned.
 === Complete feature
 
 The `complete` command provides users a natural way to complete a task:
-either delete a task if it is not recurred or shift the deadline to the next occurrence if the task is recurred.
+either delete a task if it is a non-recurring task
+or shift the deadline to the next occurrence if the task is a recurring task.
 
 ==== Current Implementation
 
@@ -358,17 +359,17 @@ The complete feature is implemented by `CompleteCommand` and `CompleteCommandPar
 
 After the task specified by the user is retrieved, the `CompleteCommand` will consider these two cases:
 
-* If the task is not recurred, it will be deleted.
+* If the task is a non-recurring task, it will be deleted.
 
 * Otherwise, the task will be updated using the following formula: +
 `NewDeadline = OldDeadline + Frequency`
 
 ==== Sequence Flow
 
-Given below is a sequence of steps, illustrating the interaction between `CompleteCommandParser`, `CompleteCommand` and `Model`:
+Given below is a sequence of steps, illustrating the interaction between `CompleteCommandParser`, `CompleteCommand`, and `Model`:
 
 .Sequence diagram for completing a task
-image::CompleteOperationSequenceDiagram.png[width="800"]
+image::CompleteOperationSequenceDiagram.png[width="700"]
 
 Step 1. The user enters a `complete` command with the index of a task in the task list.
 
@@ -384,7 +385,7 @@ Step 5. The `CompleteCommand#execute` method is invoked.
 Step 6. The task identified by the user is retrieved from the `Model`.
 
 Step 7. The `Model` is updated:
-If the task is not recurred, `Model#deleteTask` is invoked to delete the task.
+If the task is a non-recurring task, `Model#deleteTask` is invoked to delete the task.
 Otherwise, `Model#updateTask` (followed by `Model#updateFilteredTaskList`) is invoked
 with a new `Task` where the deadline is updated.
 
@@ -1896,8 +1897,10 @@ These instructions only provide a starting point for testers to work on; testers
 . Add a new task
 .. Run the `add n/New Program d/01/02/2018` command. +
    Expected: A new task is added to Deadline Manager with name: New Program, deadline: 01/02/2018, priority: 0, frequency: 0, no tags and no attachments.
-.. Run the add n/New Program d/01/02/2018` command again. +
+.. Run the `add n/New Program d/01/02/2018` command again. +
    Expected: Another new task is added to Deadline Manager with the same parameters as (a) above.
+.. Run the `add n/A Recurring Task d/01/01/2018 f/7 p/1 t/important` command. +
+   Expected: A new task is added to Deadline Manager with name: A Recurring Task, deadline: 01/01/2018, priority: 1, frequency: 7, tags: important.
 
 === Deleting a task
 
@@ -2071,12 +2074,18 @@ All unspecified fields of a task should be set to some value that does not match
 .. Test case: `attachment 1 get n/"nothere.txt" p/"hello2.txt"` +
    Expected: Error details saying that `nothere.txt` is not an attachment would be displayed as the status message. No file is copied.
 
-=== Adding a task
-. Add a new task
-.. Run the `add n/New Program d/01/02/2018` command. +
-   Expected: A new task is added to Deadline Manager with name: New Program, deadline: 01/02/2018, priority: 0, frequency: 0, no tags and no attachments.
-.. Run the add n/New Program d/01/02/2018` command again. +
-   Expected: Another new task is added to Deadline Manager with the same parameters as (a) above.
+=== Completing a task
+. Complete a non-recurring task
+.. Run the `clear` command, followed by `add n/Simple Task d/01/01/2018` command. +
+   Expected: The task list is cleared and a new task is added to Deadline Manager with name: Simple Task, deadline: 01/01/2018, priority: 0, frequency: 0, no tags and no attachments.
+.. Run the `complete 1` command. +
+   Expected: The task created above is deleted.
+
+. Complete a recurring task
+.. Run the `clear` command, followed by `add n/Weekly Task d/01/01/2018 f/7` command. +
+   Expected: The task list is cleared and a new task is added to Deadline Manager with name: Weekly Task, deadline: 01/01/2018, priority: 0, frequency: 7, no tags and no attachments.
+.. Run the `complete 1` command. +
+   Expected: The deadline of the task created above is modified to 08/01/2018.
 
 === Exporting tasks
 . Export in XML format
