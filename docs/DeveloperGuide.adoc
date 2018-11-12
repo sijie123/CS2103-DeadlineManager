@@ -860,6 +860,8 @@ The filter unit parser is written as a lambda expression inside the `FilterComma
 * The filter unit parser parses syntax that is specific to filters only, and it cannot be easily adapted for other uses.
 * It frees both the boolean expression parser and the field-specific parser from having to depend on the `FilterCommandParser` class.
 
+// tag::filter-unit-parser-extract[]
+
 There are three possible ways to express a filter unit:
 
 1. The full syntax -- this allows for specifying the field for comparison and the method of comparison to be used
@@ -870,6 +872,8 @@ The following diagram is describes a filter unit that is specified using the ful
 
 .Structure of a filter unit that uses the full syntax
 image::FilterUnitDiagram.png[width="200"]
+
+// end::filter-unit-parser-extract[]
 
 The following diagram is describes a filter unit that is specified using the extended full syntax for sets:
 
@@ -886,11 +890,14 @@ As shown in the diagram above, a filter unit (using the full syntax or extended 
 [NOTE]
 The simplified syntax only contains the test phrase, and is explained in a separate section below.
 
+// tag::filter-unit-parser-diagram[]
+
 The filter unit parser distinguishes between the three possible ways to express a filter unit, as per the activity diagram below:
 
 .Activity diagram for parsing a filter unit
 image::FilterUnitActivityDiagram.png[width="800"]
 
+// end::filter-unit-parser-diagram[]
 // end::filter-unit-parser[]
 
 The above diagram demonstrates how each of the three possible ways are distinguished.  Note that in the diagram above:
@@ -1003,6 +1010,8 @@ When each filter unit is parsed, it invokes the field-specific parser for the gi
 [NOTE]
 Priority values do not compare in the same order as their values as integers.  Priority values have this order (from highest to lowest priority): 1 > 2 > 3 > 4 > 0.
 
+// tag::filter-error-messages[]
+
 ==== Error messages
 
 As the filter expression syntax can be rather complicated, detecting syntax errors and displaying useful error messages help the user to rectify those errors quickly.  When a parse error is detected, the filter command is designed to the offending token and provides an error message customised for that error.
@@ -1015,6 +1024,8 @@ The following inheritance diagram shows the inheritance hierarchy of each kind o
 image::FilterParserErrorInheritanceDiagram.png[width="800"]
 
 In the diagram above, the [blue]#*blue*# classes are exceptions thrown by `StringTokenizer`, while the [red]#*red*# classes are exceptions thrown by `BooleanExpressionParser`.  In order to reduce coupling between `StringTokenizer` and `BooleanExpressionParser`, and to be able to distinguish (by type-based `catch` clauses) the end-of-string exceptions of those components, they do not shared the same class for end-of-string exceptions.
+
+// end::filter-error-messages[]
 
 `TokenizationInvalidPredicateException` is a wrapper class for `InvalidPredicateException`, which is thrown when the field-specific parser or set parser encounters an error.  The diagram below shows the different exceptions that may be thrown to indicate the types of issues that may be encountered when parsing a filter unit, and how they may be propagated to `FilterCommandParser` via wrapping by `TokenizationInvalidPredicateException`:
 
