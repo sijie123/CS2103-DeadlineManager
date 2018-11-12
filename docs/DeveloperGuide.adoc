@@ -326,14 +326,14 @@ The user can also provide additional information including priority, frequency a
 Given below is a sequence of steps, illustrating the interaction between `AddCommandParser`, `AddCommand` and `Model`:
 
 .Sequence diagram for adding a task
-image::AddOperationSequenceDiagram.png[width="800"]
+image::AddOperationSequenceDiagram.png[width="700"]
 
 Step 1. The user enters an `add` command.
 
 Step 2. The `AddCommandParser#parse` method is invoked.
 The `AddCommandParser` receives the command with the arguments given as a string.
 
-Step 3. The `AddCommandParser` interprets the arguments and constructs a `AddCommand`.
+Step 3. The `AddCommandParser` interprets the arguments and constructs an `AddCommand`.
 
 Step 4. The `AddCommand` with a `Task` specified by the user is returned.
 
@@ -350,7 +350,8 @@ Step 7. A `CommandResult` object is returned.
 === Complete feature
 
 The `complete` command provides users a natural way to complete a task:
-either delete a task if it is not recurred or shift the deadline to the next occurrence if the task is recurred.
+either delete a task if it is a non-recurring task
+or shift the deadline to the next occurrence if the task is a recurring task.
 
 ==== Current Implementation
 
@@ -358,17 +359,17 @@ The complete feature is implemented by `CompleteCommand` and `CompleteCommandPar
 
 After the task specified by the user is retrieved, the `CompleteCommand` will consider these two cases:
 
-* If the task is not recurred, it will be deleted.
+* If the task is a non-recurring task, it will be deleted.
 
 * Otherwise, the task will be updated using the following formula: +
 `NewDeadline = OldDeadline + Frequency`
 
 ==== Sequence Flow
 
-Given below is a sequence of steps, illustrating the interaction between `CompleteCommandParser`, `CompleteCommand` and `Model`:
+Given below is a sequence of steps, illustrating the interaction between `CompleteCommandParser`, `CompleteCommand`, and `Model`:
 
 .Sequence diagram for completing a task
-image::CompleteOperationSequenceDiagram.png[width="800"]
+image::CompleteOperationSequenceDiagram.png[width="700"]
 
 Step 1. The user enters a `complete` command with the index of a task in the task list.
 
@@ -384,7 +385,7 @@ Step 5. The `CompleteCommand#execute` method is invoked.
 Step 6. The task identified by the user is retrieved from the `Model`.
 
 Step 7. The `Model` is updated:
-If the task is not recurred, `Model#deleteTask` is invoked to delete the task.
+If the task is a non-recurring task, `Model#deleteTask` is invoked to delete the task.
 Otherwise, `Model#updateTask` (followed by `Model#updateFilteredTaskList`) is invoked
 with a new `Task` where the deadline is updated.
 
@@ -1112,7 +1113,7 @@ In total, there are around 15 distinct kinds of error conditions when parsing a 
 // end::filter-design-considerations-exceptions[]
 // end::filter[]
 
-// tag::attachments[]
+// tag::attachments-excerpt-1[]
 === Attachment Feature
 The attachment feature aims to help users organise and keep track of important files needed for the respective tasks. It allows users to associate files in their computer with a particular task. When the user subsequently decides to perform a particular task, this feature provides functionality to identify files previously associated with the task and facilitates exporting it to an appropriate location.
 
@@ -1120,6 +1121,7 @@ The attachment feature aims to help users organise and keep track of important f
 The attachment feature is mainly implemented by `AttachmentCommand`. As `AttachmentCommand` is an all-purpose command involving numerous actions, an interface `AttachmentAction` is defined within `AttachmentCommand` in order to facilitate this. There are 4 classes that implements `AttachmentAction` in order to implement the various actions of the attachment feature. The command line arguments for the attachment command is parsed by `AttachmentCommandParser`.
 
 ==== Sequence Flow
+// end::attachments-excerpt-1[]
 Given below is a sequence of steps, illustrating the interaction between `AttachmentCommandParser`, `AttachmentCommand` and classes that implement `AttachmentAction` after a user enters a relevant command.
 
 Step 1. The user enters an attachment command which involves either `add`, `list`, `delete` or `get` actions.
@@ -1129,7 +1131,7 @@ Step 2. The `AttachmentCommandParser` receives the command with the arguments gi
 Step 3. The `AttachmentCommandParser` interprets the arguments and constructs either a `AddAttachmentAction` for `add`, `ListAttachmentAction` for `list`, `DeleteAttachmentAction` for `delete` or `GetAttachmentAction` for `get`. The relevant arguments will also be passed as parameters to the constructors of these classes. Do note that these classes all extends from the abstract class `AttachmentAction`.
 
 Step 4. An `AttachmentCommand` is constructed and initialized with the `AttachmentAction` constructed in Step 3.
-
+// tag::attachments-excerpt-2[]
 Given below is another sequence of steps, also illustrated by the sequence diagram. They describe the interaction between `AttachmentCommand` and classes that implement `AttachmentAction` after the `AttachmentCommand#execute` method is invoked by the `LogicManager`.
 
 .Sequence Diagram for performing the `execute` method of an `AttachmentCommand`.
@@ -1144,7 +1146,9 @@ Step 3. The invoked `AttachmentAction` performs specific application logic which
 Step 4. The `Model` is updated with the `Task` object retrieved from the returned `ActionResult`.
 
 Step 5. The message to be shown to the user is retrieved from the returned `ActionResult`. Then, it is used to create a `CommandResult` object which is to be returned to the the `LogicManager`.
+// end::attachments-excerpt-2[]
 
+// tag::attachments-excerpt-3[]
 ==== AttachmentAction and Implementing Classes
 `AttachmentAction` is an interface nested within `AttachmentCommand`. It defines and requires implementing classes to implement a `perform` method. The implementation for `AttachmentAction` is shown below:
 [source,java]
@@ -1171,14 +1175,10 @@ private static class ActionResult {
         this.resultMessage = resultMessage;
     }
 
-    /**
-     * Returns the task
-     */
+    // Returns the task
     public Task getTask() { return updatedTask; }
 
-    /**
-     * Returns the result message
-     */
+    // Returns the result message
     public String getMessage() { return resultMessage; }
 }
 ----
@@ -1192,17 +1192,18 @@ private static class ActionResult {
 . Constructs a new `Attachment` object using the file at the specified `filePath`.
 . Constructs a new `Task` object with the same attributes as the original task, but with the additional `Attachment` object added to the set of attachments.
 
-
 ===== ListAttachmentAction
 `ListAttachmentAction` implements `AttachmentAction` and provides the implementations required for the user to list all the files associated with a task. In other words, it provides a listing of all attachments that are added to the task. The constructor class requries no parameters. The `perform` method of `ListAttachmentAction` executes the following:
 
 . Prints the total number of attachments in the specified task.
 . Prints the filename of each of the attachments in the specified task, with one attachment per line.
 
+// end::attachments-excerpt-3[]
+
 ===== DeleteAttachmentAction
 `DeleteAttachmentAction` implements `AttachmentAction` and provides the implementations required for the user to remove the association of a file that was previously associated with the task. In other words, it removes an attachment from a task. The constructor class takes in a single parameter, `fileName`, denoting the name of the attachment that is to be unassociated with the task. The `perform` method of `DeleteAttachmentAction` executes the following:
 
-. Checks if `fileName` corresponds to a valid attachment in the specified task. A  `CommandException` will be raised if this is not the case. The `fileName` is case senstitive.
+. Checks if `fileName` corresponds to a valid attachment in the specified task. A  `CommandException` will be raised if this is not the case. The `fileName` is case sensitive.
 . Constructs a new `Task` object with the same attributes as the original task, but with the `Attachment` object identified by the `fileName` removed from the set of attachments.
 
 ===== GetAttachmentAction
@@ -1211,6 +1212,8 @@ private static class ActionResult {
 . Checks if `fileName` corresponds to a valid attachment in the specified task. A  `CommandException` will be raised if this is not the case. The `fileName` argument is case sensitive.
 . Checks if the attachment identified by `fileName` still exists on the user's filesystem and can be copied from. A `CommandException` will be raised if this is not the case.
 . Copies the identified attachment to the path denoted by `savePath` on the filesystem. A `CommandException` will be raised if there are errors in doing so.
+
+// tag::attachments-excerpt-4[]
 
 ==== Design Considerations
 
@@ -1234,6 +1237,10 @@ private static class ActionResult {
 * **Alternative 3:** Prompt the user for an identifier for each attachment added.
 ** Pros: Can be customized by the user to manage multiple files with the same file name in the same task.
 ** Cons: Cumbersome for the user to type the identifier for every time they want to add attachments to a task.
+
+// end::attachments-excerpt-4[]
+
+
 // end::attachments[]
 
 
@@ -1898,6 +1905,8 @@ These instructions only provide a starting point for testers to work on; testers
    Expected: A new task is added to Deadline Manager with name: New Program, deadline: 01/02/2018, priority: 0, frequency: 0, no tags and no attachments.
 .. Run the `add n/New Program d/01/02/2018` command again. +
    Expected: Another new task is added to Deadline Manager with the same parameters as (a) above.
+.. Run the `add n/A Recurring Task d/01/01/2018 f/7 p/1 t/important` command. +
+   Expected: A new task is added to Deadline Manager with name: A Recurring Task, deadline: 01/01/2018, priority: 1, frequency: 7, tags: important.
 
 === Deleting a task
 
@@ -2070,6 +2079,12 @@ All unspecified fields of a task should be set to some value that does not match
 
 .. Test case: `attachment 1 get n/"nothere.txt" p/"hello2.txt"` +
    Expected: Error details saying that `nothere.txt` is not an attachment would be displayed as the status message. No file is copied.
+
+. Complete a recurring task
+.. Run the `clear` command, followed by `add n/Weekly Task d/01/01/2018 f/7` command. +
+   Expected: The task list is cleared and a new task is added to Deadline Manager with name: Weekly Task, deadline: 01/01/2018, priority: 0, frequency: 7, no tags and no attachments.
+.. Run the `complete 1` command. +
+   Expected: The deadline of the task created above is modified to 08/01/2018.
 
 === Exporting tasks
 . Export in XML format
