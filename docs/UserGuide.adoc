@@ -269,7 +269,7 @@ Matching of each eligible field:
 * When matching task names, a task is considered to match if the specified keyword is a substring (case-insensitive) of the task name (the given keyword need not be a whole word in the task name - e.g. `test` and `case` will both match `Testcase`).
 * When matching deadlines, a task is considered to match if its deadline is on or earlier than the specified date.
 * When matching tags, a task is considered to match if the specified tag is a substring (case-insensitive) of any tag of the task.
-* When matching attachments, a task is considered to match if the specified keyword is a substring (case-insensitive) of a filename of any attachment in the task.
+* When matching attachments, a task is considered to match if the specified keyword is a substring (case-insensitive) of the filename of any attachment in the task.
 
 ****
 
@@ -279,13 +279,13 @@ Examples:
 Returns a subset of the current list of tasks that have a name, tag, or attachment that matches "homework".  Note that "homework" cannot be interpreted as a valid date, so the deadline field is ignored.
 
 * `filter assignment CS2103`
-Returns a subset of the current list of tasks that have a name, tag, or attachment that matches "assignment" and a name, tag, or attachment that matches "CS2103".  Note that neither "assignment" or "CS2103" can be interpreted as a valid date, so the deadline field is ignored for both keywords.
+Returns a subset of the current list of tasks that have a name, tag, or attachment that matches "assignment" and a name, tag, or attachment that matches "CS2103".  Note that neither "assignment" nor "CS2103" can be interpreted as a valid date, so the deadline field is ignored for both keywords.
 
 * `filter badminton utown 3/10/2018`
 Returns a subset of the current list of tasks that have a name, tag, or attachment that matches "badminton"; a name, tag, or attachment that matches "utown"; and a name, tag, attachment, or deadline that matches "3/10/2018".  Note that any deadline on or before 3^rd^ October 2018 will match "3/10/2018".
 
 * `filter 1/10/2018`
-Returns a subset of the current list of tasks that have a name, tag, attachment, or deadline that matches "3/10/2018".  Note that any deadline on or before 1^st^ October 2018 will match "1/10/2018".
+Returns a subset of the current list of tasks that have a name, tag, attachment, or deadline that matches "1/10/2018".  Note that any deadline on or before 1^st^ October 2018 will match "1/10/2018".
 
 // tag::filter-field[]
 ==== Controlling the field being matched
@@ -296,7 +296,7 @@ image::FilterUnitDiagramUG.png[width="200"]
 
 Each of the three parts of a full predicate means the following:
 
-* `key` is an alphabetic string that describes the attribute being compared. For example: `priority`, `tag` and `name`.
+* `key` is an alphabetic string that describes the attribute being compared. For example: `priority`, `tag`, or `name`.
 * `operator` is one of `:`, `=`, `<`, `>`.
 * `phrase` is a string that describes what to search (this is called the search phrase, and it is similar to the _keyword_ in the simplified syntax).
 
@@ -310,9 +310,9 @@ The operator `:` is known as the *convenience* operator -- it is an alias for th
 The `<` and `>` operators are non-strict: Every task that will be shown using `=` will also be shown using `<` or `>`.
 
 [TIP]
-This full predicate syntax can be mixed arbitrary with the keyword syntax described in the previous section.  For example, `badminton n:utown 3/10/2018` is allowed.
+This full predicate syntax can be mixed arbitrarily with the keyword syntax described in the previous section.  For example, `badminton n:utown 3/10/2018` is allowed.
 
-The following subsections explain the meaning of the operators for each valid key:
+The following subsections explain the meaning of the operators for each valid key.  (Any other `key` will cause Deadline Manager to produce an error.)
 
 ===== Name
 
@@ -334,7 +334,7 @@ Examples to demonstrate each operator type:
 
 ===== Deadline
 
-When `key` is `d`, `due` or `deadline`, the task's due date is compared, and the search phrase is interpreted as a date.  Dates must in the format specified in the _Deadline Format_ section.  The operator `>` tests if the task's due date is on or after the specified due date.  The operator `<` tests if the task's due date is on or before the specified due date.  The operator `=` tests if the task's due date is exactly equal to the specified due date.  The convenience operator is an alias for `<`.
+When `key` is `d`, `due`, or `deadline`, the task's due date is compared, and the search phrase is interpreted as a date.  Dates must in the format specified in the _Deadline Format_ section.  The operator `>` tests if the task's due date is on or after the specified due date.  The operator `<` tests if the task's due date is on or before the specified due date.  The operator `=` tests if the task's due date is exactly equal to the specified due date.  The convenience operator is an alias for `<`.
 
 Examples to demonstrate each operator type:
 
@@ -348,7 +348,7 @@ Examples to demonstrate each operator type:
 
 ===== Priority
 
-When `key` is `p` or `priority`, the task's priority is compared, and the search phrase is interpreted as an integer, representing the priority to be searched.  A priority of zero matches all the tasks with no priority set.  The operator `>` tests if the task has priority at least as high as the specified priority.  The operator `<` tests if the task has priority at most as high as the specified priority.  The operator `=` tests if the task's priority is exactly equal to the specified priority.  The convenience operator is an alias for `>`.  Note that priority 1 is the highest priority, priority 4 is the lowest priority, and tasks without any priority are considered to be of lower priority than priority 4.  In other words, `1 > 2 > 3 > 4 > (no priority)`.
+When `key` is `p` or `priority`, the task's priority is compared, and the search phrase is interpreted as an integer, representing the priority to be searched.  A priority of zero matches all the tasks with no priority set.  The operator `>` tests if the task has priority at least as high as the specified priority.  The operator `<` tests if the task has priority at most as high as the specified priority.  The operator `=` tests if the task's priority is exactly equal to the specified priority.  The convenience operator is an alias for `>`.  Note that priority 1 is the highest priority, priority 4 is the lowest (non-zero) priority, and tasks without any priority are considered to be of lower priority than priority 4.  In other words, `1 > 2 > 3 > 4 > (no priority)`.
 
 Examples to demonstrate each operator type:
 
@@ -362,7 +362,7 @@ Examples to demonstrate each operator type:
 
 ===== Frequency
 
-When `key` is `f` or `frequency`, the task's frequency (i.e. the number of days between consecutive occurrences of that task) is compared, and the search phrase is interpreted as an integer, representing the frequency to be searched.  A non-recurring task is treated as if it has a frequency that is infinitely large (i.e. `f>100` also includes all non-recurring tasks).  The operator `>` tests if the task has a recurrence interval larger than or equal to the specified number of days.  The operator `<` tests if the task has a recurrence interval smaller than or equal to the specified number of days.  The operator `=` tests if the task has a recurrence interval exactly equal to the specified number of days.  The convenience operator is an alias for `<`.
+When `key` is `f` or `frequency`, the task's frequency (i.e. the number of days between consecutive occurrences of that task) is compared, and the search phrase is interpreted as an integer, representing the frequency to be searched.  A non-recurring task (frequency of zero) is treated as if it has a frequency that is infinitely large (e.g. `f>100` also includes all non-recurring tasks).  The operator `>` tests if the task has a recurrence interval larger than or equal to the specified number of days.  The operator `<` tests if the task has a recurrence interval smaller than or equal to the specified number of days.  The operator `=` tests if the task has a recurrence interval exactly equal to the specified number of days.  The convenience operator is an alias for `<`.
 
 Examples to demonstrate each operator type:
 
@@ -393,14 +393,13 @@ Examples to demonstrate each operator type:
 
 ===== Attachment
 
-When `key` is `a` or `attachment`, the task's attachments are compared, and the search phrase is interpreted as a (unordered) set of (substrings of) filenames.  Comparison is case-insensitive.  Multiple filenames are separated by commas, in the same way as tags.  The operator `>` tests if every specified filename is a substring of an attachment filename (of the given task).  The operator `<` tests if every specified tag is a superstring of an attachment filename.  The operator `=` tests if every specified tag exactly matches an attachment filename.  The convenience operator is an alias for `>`.
-* Any other `key` will cause Deadline Manager to produce an error.
+When `key` is `a` or `attachment`, the task's attachments are compared, and the search phrase is interpreted as a (unordered) set of (substrings of) filenames.  Comparison is case-insensitive.  Multiple filenames are separated by commas, in the same way as tags.  The operator `>` tests if every specified filename is a substring of an attachment filename (of the given task).  The operator `<` tests if every specified attachment is a superstring of an attachment filename.  The operator `=` tests if every specified attachment exactly matches an attachment filename.  The convenience operator is an alias for `>`.
 
 Examples to demonstrate each operator type:
 
 [width="100%",options="header,autowidth"]
 |=========================================================
-|Task tags |Test phrase |Matches ">" |Matches "=" | Matches "<"| Matches ":"
+|Task attachments |Test phrase |Matches ">" |Matches "=" | Matches "<"| Matches ":"
 |"file.txt","Test.java" |Test |Yes |No |No |Yes
 |"file.txt","Test.java" |Test.java |Yes |Yes |Yes |Yes
 |"file.txt","Test.java" |Test.java,file.txt |Yes |Yes |Yes |Yes
@@ -467,12 +466,12 @@ In the simplified filter syntax, multiple space-separated keywords mean that _ev
 Filter expressions (i.e. the `FILTER_EXPRESSION` strings) are composed from any number of filter predicates, and they create a composite rule to filter against.  The `filter` command is designed to accept arbitrarily complex filter expressions that can be composed from any number of filter predicates. +
 The format for `FILTER_EXPRESSION` is defined recursively in the following paragraphs.
 
-`FILTER_EXPRESSION` is a string in the following format:
+`FILTER_EXPRESSION` is a string any of the following possible formats:
 
 * `FILTER_PREDICATE` -- This filter expression contains a single filter predicate (each filter predicate can use either the full predicate or the keyword syntax)
 * `FILTER_EXPRESSION & FILTER_EXPRESSION` -- This filter expression is a logical conjunction (i.e. AND) of two other filter expressions.  The operator `&` may be substituted with `&&`.
 * `FILTER_EXPRESSION | FILTER_EXPRESSION` -- This filter expression is a logical disjunction (i.e. OR) of two other filter expressions.  The operator `|` may be substituted with `||`.
-* `! FILTER_EXPRESSION` -- This filter expression is a logical negation (i.e. NOT) of two other filter expressions.
+* `! FILTER_EXPRESSION` -- This filter expression is a logical negation (i.e. NOT) of another filter expression.
 * `( FILTER_EXPRESSION )` -- This filter expression is surrounded by parentheses.
 
 ****
@@ -497,10 +496,10 @@ Examples:
 Returns a subset of the current list of tasks that has "assignment" or "CS2101".
 
 * `filter ! t:CS2101`
-Returns a subset of the current list of tasks that do not have the tag "CS2101".
+Returns a subset of the current list of tasks that do not have a tag that contains "CS2101".
 
 * `filter cs & ((present & f=7) | meeting)`
-Returns a subset of the current list of tasks that has "cs" and either (1) has "present" and repeats exactly once a week, or (2) has "meeting". +
+Returns a subset of the current list of tasks that has "cs", and either (1) has "present" and recurs exactly once a week, or (2) has "meeting". +
 The following screenshot is an example of a list of tasks that could be displayed by the above example:
 
 [filterdemo_complex]
@@ -510,18 +509,18 @@ The following screenshot is an example of a list of tasks that could be displaye
 image::userguide/filterdemo_complex.png[FilterDemo_Complex, width="300"]
 
 * `filter n:assignment | (p:3 & t:CS2101)`
-Returns a subset of the current list of tasks that have a name that contains "assignment", or have priority at least 3 and contains tag "CS2101".
+Returns a subset of the current list of tasks that have a name that contains "assignment", or have priority at least 3 and a tag that contains "CS2101".
 
 * `filter n:assignment||(p:3 t:CS2101)`
-Returns a subset of the current list of tasks that have a name that contains "assignment", or have priority at least 3 and contains tag "CS2101".
+Returns a subset of the current list of tasks that have a name that contains "assignment", or have priority at least 3 and a tag that contains "CS2101".
 
 * `filter !n:homework||(p:3 t:CS2101)`
-Returns a subset of the current list of tasks that have a name that does not contain "homework", or have priority at least 3 and contains tag "CS2101".
+Returns a subset of the current list of tasks that have a name that does not contain "homework", or have priority at least 3 and a tag that contains "CS2101".
 
 // tag::filter-set[]
 ==== Set-based extensions for filter predicates
 
-For fields that represent a collection (i.e. tags and attachments), it is also possible to filter only tasks which **do not contain** other tags or attachments apart from those specified.  To do so, we introduce a set operator as per the diagram below:
+For fields that represent a collection (i.e. tags and attachments), it is also possible to filter only tasks which **do not contain** other tags or attachments **apart** from those specified.  To do so, we introduce a set operator as per the diagram below:
 
 image::FilterUnitDiagramSetUG.png[width="250"]
 
@@ -532,6 +531,8 @@ The part that was called `operator` previously is called the `field operator` he
 Meaning of the set operator:
 
 * The operator `>` tests if every item in the specified set is contained within the task's set.  The operator `<` tests if every item in the task's set is contained within the specified set.  The operator `=` tests if the two sets are equivalent (meaning that every item in the task's set is contained within the specified set and vice-versa).  The convenience operator is an alias for `>`.
+
+Note that the definition of "contained" here is dependent on the kind of field operator being used - it does not necessarily mean a comparison for equality.  See the examples below for more information.
 
 ****
 
@@ -571,7 +572,7 @@ Returns a subset of the current list of tasks that has both the tags "CS2103T" a
 Returns a subset of the current list of tasks that has the tag "CS2103T" (case-insensitive).  The task could also contain other tags.  (This is equivalent to `filter t=CS2103T`.)
 
 * `filter t<:CS`
-Returns a subset of the current list of tasks that do not have any tags that do not contain the substring "CS" (case-insensitive).  The task need not have any tags that contain the substring "CS", and it could have no tags at all.  This is usually used in conjunction with other filter predicates to constrain the filtered list to be exported.
+Returns a subset of the current list of tasks that do not have any tags that do not contain the substring "CS" (case-insensitive).  The task need not have any tags that contain the substring "CS", so it could have no tags at all.  This is usually used in conjunction with other filter predicates to constrain the filtered list to be exported.
 
 // tag::filter-errors[]
 ==== Error messages
@@ -579,6 +580,9 @@ Returns a subset of the current list of tasks that do not have any tags that do 
 As filter expressions can be made arbitrarily complex, the filter command is also designed to provide comprehensive error messages that will help you to pinpoint any errors.
 
 When an error is encountered, a copy of the filter expression will be displayed, with the error underlined and coloured in red, so that it becomes easier to identify the error.  A relevant error message will also be displayed.
+
+[NOTE]
+The underlined substring might not always be exactly what you expect, because there could be multiple possible candidates for the error.
 
 There are a total of around *15 different types* of error messages.
 

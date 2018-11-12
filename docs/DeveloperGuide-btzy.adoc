@@ -788,7 +788,7 @@ There are four components to parsing the filter operation:
 1. A boolean expression parser that understands the high-level syntax of the filter expression and digests the filter expression into filter units
 2. A parser that splits each filter unit (e.g. `t:CS2101`) into its three (or four) constituent parts if possible (e.g. `t`, `:`, `CS2101`) -- this is the lambda expression in the sequence diagram below, which resides in the `FilterCommandParser` class
 3. A parser that splits set-based fields (e.g. `CS2101,CS2103`) into individual keywords (this applies only to set-based fields (tags and attachments)) -- this is referred to as the _set parser_, and is implemented as a static method in a utility class
-4. A method for each field (e.g. `Name`, `Deadline`, `Priority`, `Tag`) that interprets the the parts of the splitted filter unit in the context of that particular field, and returns the predicate that is required  -- this is referred to as the _field-specific parser_, and is implemented as a static method in each filterable field
+4. A method for each field (e.g. `Name`, `Deadline`, `Priority`, `Tag`) that interprets the parts of the splitted filter unit in the context of that particular field, and returns the predicate that is required  -- this is referred to as the _field-specific parser_, and is implemented as a static method in each filterable field
 
 [NOTE]
 The second component in the list above also accepts a filter unit that contains the third part alone (e.g. `CS2101`) without the other two parts -- this is known as the _simplified filter unit syntax_.  Also, when filtering by a set-based field, the filter unit can be splitted into four parts instead of three (e.g. `t=:CS2101,CS2103` will be plitted as `t`, `=`, `:`, `CS2101,CS2103`), and the additional symbol (`=` in this case) is used to specify how sets are compared.  These will be explained in more detail below.
@@ -928,22 +928,22 @@ This is the value or keyword that tasks are compared to, and the syntax of this 
 The following is the required syntax for each filterable field:
 
 * Name: Any text string
-* Deadline: Any date in the form `DD/MM/YYYY`
+* Deadline: Any date in the form `D/M/Y` or `D/M` (will assume current year), for example `1/1/2019` or `16/11`
 * Priority: Any valid priority value (i.e. any integer between 0 and 4 inclusive)
-* Frequency: Any valid frequency value (i.e. any non-negative integer that does not exceed the maximum bounds of an integer)
+* Frequency: Any valid frequency value (i.e. any integer between 0 and 999 inclusive)
 * Tag set: Any comma-separated list of tags, where each tag can be any text string (e.g. `CS2101,CS2103T`)
 * Attachment set: Any comma-separated list of attachments, where each attachment can be any text string (e.g. `helloworld.txt,Main.java`)
 
 [NOTE]
 The rules for quoted strings for the string tokenizer applies here as well, because the same string tokenizer is used here.
 
-Set-based fields that contain spaces may be specified by placing quotes around those the item with spaces.  This means that the whole test phrase must also be quoted with a different type of quote (e.g. `t:"CS2101,CS2103T,'Oral Presentation'"`).
+Set-based fields that contain spaces may be specified by placing quotes around those the item with spaces.  This means that the whole test phrase must also be quoted with a different type of quote (e.g. `a:"test.txt,'hello world.txt'"`).
 
 ===== Filter operator
 
 The filter operator specifies exactly _how_ the task should be compared to the test phrase.
 
-For fields that are intrinsically ordered (i.e. deadline, priority and frequency), the `<`, `=`, and `>` operators have their usual mathematical meaning, except that the operators `<` and `>` are non-strict.  This means that `p>2` will return a superset of the tasks returned by `p=2`.
+For fields that have a natural total ordering (i.e. deadline, priority and frequency), the `<`, `=`, and `>` operators have their usual mathematical meaning, except that the operators `<` and `>` are non-strict.  This means that `p>2` will return a superset of the tasks returned by `p=2`.
 
 For textual fields (e.g. name, tag), the `<`, `=`, `>` operators represent _substring_, _equivalence_, and _superstring_ relations respectively.
 
@@ -1011,7 +1011,7 @@ Priority values do not compare in the same order as their values as integers.  P
 
 ==== Error messages
 
-As the filter expression syntax can be rather complicated, detecting syntax errors and displaying useful error messages help the user to rectify those errors quickly.  When a parse error is detected, the filter command is designed to the offending token and provides an error message customised for that error.
+As the filter expression syntax can be rather complicated, detecting syntax errors and displaying useful error messages help the user to rectify those errors quickly.  When a parse error is detected, the filter command is designed to highlight the offending token and provide an error message customised for that error.
 
 // tag::filter-error-messages[]
 
@@ -1024,7 +1024,7 @@ image::FilterParserErrorInheritanceDiagram.png[width="800"]
 
 // end::filter-error-messages[]
 
-In the diagram above, the [blue]#*blue*# classes are exceptions thrown by `StringTokenizer`, while the [red]#*red*# classes are exceptions thrown by `BooleanExpressionParser`.  In order to reduce coupling between `StringTokenizer` and `BooleanExpressionParser`, and to be able to distinguish (by type-based `catch` clauses) the end-of-string exceptions of those components, they do not shared the same class for end-of-string exceptions.
+In the diagram above, the [blue]#*blue*# classes are exceptions thrown by `StringTokenizer`, while the [red]#*red*# classes are exceptions thrown by `BooleanExpressionParser`.  In order to reduce coupling between `StringTokenizer` and `BooleanExpressionParser`, and to be able to distinguish (by type-based `catch` clauses) the end-of-string exceptions of those components, they do not share the same class for end-of-string exceptions.
 
 `TokenizationInvalidPredicateException` is a wrapper class for `InvalidPredicateException`, which is thrown when the field-specific parser or set parser encounters an error.  The diagram below shows the different exceptions that may be thrown to indicate the types of issues that may be encountered when parsing a filter unit, and how they may be propagated to `FilterCommandParser` via wrapping by `TokenizationInvalidPredicateException`:
 
