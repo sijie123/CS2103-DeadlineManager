@@ -54,7 +54,7 @@ For more information, the Github page with the full source can be found: [https:
 == Contributions to the User Guide
 
 |===
-|_Given below is that I contributed to the User Guide. They showcase my ability to write documentation targeting end-users._
+|_Given below is what I contributed to the User Guide. They showcase my ability to write documentation targeting end-users._
 |===
 
 include::../UserGuide.adoc[tag=attachment-excerpt]
