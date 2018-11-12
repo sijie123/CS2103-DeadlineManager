@@ -84,10 +84,11 @@ include::../DeveloperGuide.adoc[tag=attachments-excerpt-2]
 include::../DeveloperGuide.adoc[tag=attachments-excerpt-3]
 
 |===
-|_Description for `ListAttachmentAction`, `DeleteAttachmentAction` and `GetAttachmentAction` are omitted for brevity._
+|_Description for `DeleteAttachmentAction` and `GetAttachmentAction` are omitted for brevity._
 |===
 
+include::../DeveloperGuide.adoc[tag=attachments-excerpt-4]
 
 |===
-|_For the full content of this section, please do refer to the https://cs2103-ay1819s1-w17-4.github.io/main/DeveloperGuide.html[Developer Guide]._
+|_For the full content of the Attachment section, please do refer to the https://cs2103-ay1819s1-w17-4.github.io/main/DeveloperGuide.html[Developer Guide]._
 |===
