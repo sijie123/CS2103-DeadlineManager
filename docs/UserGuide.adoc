@@ -77,6 +77,22 @@ Most commands follow the following format (characterized by `X/` parameter prefi
 * The minimum year allowed is 1 (i.e. non-positive years are not allowed).  The maximum year allowed is rather large (more than 6 digits, but limited by Java's internal `Date` representation), but it will definitely work with year values less than 1000000.
 ====
 
+====
+*Priority Format*
+
+* `PRIORITY` should only be 0, 1, 2, 3, or 4.
+* Priority 0 denotes a task with no priority (lowest priority).
+* The order is: Priority 1 (highest priority) > Priority 2 > Priority 3 > Priority 4 > Priority 0 (lowest priority).
+====
+
+====
+*Frequency Format*
+
+* `FREQUENCY` should be a non-negative integer between 0 and 999 (number of days).
+* Zero frequency denotes a non-recurring task.
+* Non-zero frequency denotes a recurring task.
+====
+
 === Viewing help : `help`
 Displays the list of available functions for the user to use. It acts as a guide to help the user.
 
@@ -96,16 +112,10 @@ Examples of valid dates are:
 29/03/2018, 29/3/2018, 1/1/2018.
 `DEADLINE` is a mandatory parameter.
 
-* `PRIORITY` should only be 0, 1, 2, 3, or 4.
-Priority 0 denotes a task with no priority (lowest priority).
-The order is: Priority 1 (highest priority) > Priority 2 > Priority 3 > Priority 4 > Priority 0 (lowest priority).
-`PRIORITY` is an optional parameter.
+* `PRIORITY` is an optional parameter.
 If `PRIORITY` is not given, priority 0 is assumed.
 
-* `FREQUENCY` should be a non-negative integer between 0 and 999 (number of days).
-Zero frequency denotes a non-recurring task.
-Non-zero frequency denotes a recurring task.
-`FREQUENCY` is an optional parameter.
+* `FREQUENCY` is an optional parameter.
 If `FREQUENCY` is not given, frequency 0 is assumed.
 ****
 
@@ -565,7 +575,7 @@ Format: `sort SORT_COMPARATOR [SORT_COMPARATOR]...` +
 * Meaning of the operators for each valid key:
 ** When `key` is `n` or `name`, the task name is compared. The comparison is case-insensitive.
 ** When `key` is `d` or `due` or `deadline`, the task's due date is compared.
-** When `key` is `p` or `priority`, the task's priority is compared. Note that 1 is the highest priority and 4 is the lowest priority.
+** When `key` is `p` or `priority`, the task's priority is compared. Note that the order is: Priority 1 (highest priority) > Priority 2 > Priority 3 > Priority 4 > Priority 0 (lowest priority).
 ** When `key` is `f` or `frequency`, the task's frequency (i.e. the number of days between consecutive occurrences of that task) is compared.  A non-recurring task is treated as if it has a frequency of positive infinity.
 ** When `key` is `t` or `tag`, the task's tags are compared. In case `<` is used, it means `TAG1` is placed earlier in the sorted order as compared to `TAG2` and so on. For `>` it is vice-versa.
 [NOTE]
