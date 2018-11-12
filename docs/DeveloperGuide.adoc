@@ -647,7 +647,7 @@ Both the `Model` and the `Storage` components are required for import/export. Ho
 
 ===== Aspect: How to resolve import conflicts
 
-As described in <<Import Deconflict, Import Deconflict>>, an import conflict arises when the user attempts to import tasks that already exist in Deadline Manager. We need an import conflict resolver to determine how to deal with these tasks.
+As described in <<Import conflict resolver, Import conflict resolver>>, an import conflict arises when the user attempts to import tasks that already exist in Deadline Manager. We need an import conflict resolver to determine how to deal with these tasks.
 
 * **Alternative 1 (current choice):** An `ImportConflictResolver` class is implemented to resolve import conflicts. The user specifies which resolver algorithm to use, and the corresponding `{Method}ImportConflictResolver` object is created to resolve import conflicts.
 ** Pros: This provides more flexibility for user to define how to resolve imports. Additionally, this is better Software Engineering practice as it follows the Single Responsibility Principle: the `ImportConflictResolver` object is responsible only for its own algorithm.
@@ -1114,7 +1114,7 @@ In total, there are around 15 distinct kinds of error conditions when parsing a 
 // end::filter[]
 
 // tag::attachments-excerpt-1[]
-=== Attachment Feature
+=== Attachment feature
 The attachment feature aims to help users organise and keep track of important files needed for the respective tasks. It allows users to associate files in their computer with a particular task. When the user subsequently decides to perform a particular task, this feature provides functionality to identify files previously associated with the task and facilitates exporting it to an appropriate location.
 
 ==== Current implementation
